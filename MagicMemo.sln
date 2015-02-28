@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UI", "MagicMemo\MagicMemo.vcxproj", "{1B808976-3C6A-4304-B822-6EF36F1296CA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logic", "Logic\Logic.vcxproj", "{0C8663D4-0789-401F-A8CC-6674C2770DD0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Storage", "FileStorage\FileStorage.vcxproj", "{F59F9DEE-9B6E-4FCA-9AF3-331AD51F76D1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B808976-3C6A-4304-B822-6EF36F1296CA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1B808976-3C6A-4304-B822-6EF36F1296CA}.Debug|Win32.Build.0 = Debug|Win32
+		{1B808976-3C6A-4304-B822-6EF36F1296CA}.Release|Win32.ActiveCfg = Release|Win32
+		{1B808976-3C6A-4304-B822-6EF36F1296CA}.Release|Win32.Build.0 = Release|Win32
+		{0C8663D4-0789-401F-A8CC-6674C2770DD0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0C8663D4-0789-401F-A8CC-6674C2770DD0}.Debug|Win32.Build.0 = Debug|Win32
+		{0C8663D4-0789-401F-A8CC-6674C2770DD0}.Release|Win32.ActiveCfg = Release|Win32
+		{0C8663D4-0789-401F-A8CC-6674C2770DD0}.Release|Win32.Build.0 = Release|Win32
+		{F59F9DEE-9B6E-4FCA-9AF3-331AD51F76D1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F59F9DEE-9B6E-4FCA-9AF3-331AD51F76D1}.Debug|Win32.Build.0 = Debug|Win32
+		{F59F9DEE-9B6E-4FCA-9AF3-331AD51F76D1}.Release|Win32.ActiveCfg = Release|Win32
+		{F59F9DEE-9B6E-4FCA-9AF3-331AD51F76D1}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
