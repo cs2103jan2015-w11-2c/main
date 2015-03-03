@@ -65,10 +65,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="LogicVector.h" />
+    <ClInclude Include="Controller.h" />
+    <ClInclude Include="Parser.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LogicVector.cpp" />
+    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="Parser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FileStorage\FileStorage.vcxproj">

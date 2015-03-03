@@ -6,8 +6,7 @@
 #include <Windows.h>
 using namespace std;
 
-class FileStorage
-{
+class FileStorage {
 private:
 	string fileName;
 	string filePath;

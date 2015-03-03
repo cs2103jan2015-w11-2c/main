@@ -3,7 +3,7 @@
 #include<algorithm>
 #include<string>
 #include<sstream>
-#include"LogicVector.h"
+#include "Controller.h"
 #include "msclr\marshal_cppstd.h"
 using namespace std;
 
@@ -21,11 +21,11 @@ namespace UI {
 	/// </summary>
 	public ref class MagicMemoGUI : public System::Windows::Forms::Form {
 	private:
-		LogicVector* magicMemo;
+		Controller* magicMemo;
 	public:
 		MagicMemoGUI(void) {
 			InitializeComponent();
-			magicMemo = new LogicVector();
+			magicMemo = new Controller();
 		}
 
 	protected:

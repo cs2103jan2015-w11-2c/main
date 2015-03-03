@@ -1,8 +1,7 @@
 #include "FileStorage.h"
 
 
-FileStorage::FileStorage(void)
-{
+FileStorage::FileStorage(void) {
 	setFilePath("");
 	setFileName("MagicMemo.txt");
 	fullFileName = getFullFileName();
@@ -95,6 +94,5 @@ bool FileStorage::directoryExists(const string& dirName) {
 	return false;    // this is not a directory!
 }
 
-FileStorage::~FileStorage(void)
-{
+FileStorage::~FileStorage(void) {
 }
