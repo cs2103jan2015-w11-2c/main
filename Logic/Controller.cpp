@@ -196,7 +196,7 @@ string Controller::rename(string newFileName) {
 			newFileName = newFileName + ".txt";
 		}
 		if(outputFile.changeFileName(newFileName)) {
-			sprintf_s(buffer, SUCCESS_FILE_LOCATION_CHANGED.c_str(), outputFile.getFileName().c_str());
+			sprintf_s(buffer, SUCCESS_FILENAME_CHANGED.c_str(), outputFile.getFileName().c_str());
 			return buffer;
 		} else {
 			return ERROR_FILE_ALREADY_EXISTS;
