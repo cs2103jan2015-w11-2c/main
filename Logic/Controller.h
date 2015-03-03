@@ -15,6 +15,8 @@ private:
 	static const string SUCCESS_DELETED;
 	static const string SUCCESS_CLEARED;
 	static const string SUCCESS_SORTED;
+	static const string SUCCESS_COPIED;
+	static const string SUCCESS_EDITED;
 	static const string SUCCESS_FILENAME_CHANGED;
 	static const string SUCCESS_FILE_LOCATION_CHANGED;
 	static const string ERROR_INVALID_COMMAND;
@@ -52,7 +54,6 @@ public:
 	//returns the data deleted or *#*#*#*#* if not found
 	string deleteData();
 
-
 	string displayAll();
 
 	string clearAll();
@@ -66,6 +67,10 @@ public:
 	void swap(string& string1, string& string2);
 
 	string search(string);
+
+	string copy();
+
+	string edit();
 
 	//NEED TO IMPLEMENT A textfile to reflect the change
 	//in name so that the next time the program is run

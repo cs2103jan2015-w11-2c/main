@@ -5,6 +5,8 @@ const string Controller::SUCCESS_ADDED = "Added line: \"%s\"\n";
 const string Controller::SUCCESS_DELETED = "Deleted line: \"%s\"\n";
 const string Controller::SUCCESS_CLEARED = "All content deleted\n";
 const string Controller::SUCCESS_SORTED = "All content sorted alphabetically\n";
+const string Controller::SUCCESS_COPIED = "%s copied successfully!\n";
+const string Controller::SUCCESS_EDITED = "%s edited successfully!\n";
 const string Controller::SUCCESS_FILENAME_CHANGED = "Filename changed to %s\n";
 const string Controller::SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s\n";
 const string Controller::ERROR_INVALID_COMMAND = "Invalid command specified! please try again\n";
@@ -54,6 +56,10 @@ string Controller::executeCommand(string inputText) {
 		successMessage = sortAlphabetical();
 	} else if (userCommand == "search") {
 		successMessage = search(commandData);
+	} else if (userCommand == "copy") {
+		successMessage = copy();
+	} else if (userCommand == "edit") {
+		successMessage = edit();
 	} else if (userCommand == "rename") {
 		successMessage = rename(commandData);
 	} else if (userCommand == "move") {
@@ -185,6 +191,16 @@ string Controller::search(string searchText) {
 		return buffer;
 	}
 	return oss.str();
+}
+
+string Controller::copy() {
+	sprintf_s(buffer, SUCCESS_COPIED.c_str());
+	return buffer;
+}
+
+string Controller::edit() {
+	sprintf_s(buffer, SUCCESS_EDITED.c_str());
+	return buffer;
 }
 
 string Controller::rename(string newFileName) {
