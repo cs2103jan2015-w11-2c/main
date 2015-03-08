@@ -44,6 +44,15 @@ void Parser::extractUserCommand() {
 	}
 }
 
+
+void extractDateAndTime(){
+
+
+
+
+
+
+}
 string Parser::removeSpacePadding(string line) {
 	size_t end = line.find_last_not_of(" ");
 	size_t start = line.find_first_not_of(" ");
