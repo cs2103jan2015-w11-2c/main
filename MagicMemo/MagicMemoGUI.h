@@ -194,7 +194,6 @@ namespace UI {
 		//Get value while typing
 		System::Void commandInputBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 
-			//allTaskBox->Text = "Hello World";
 		}
 	private:
 		System::Void commandInputBox_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
@@ -205,8 +204,9 @@ namespace UI {
 
 
 				allTaskBox->Text = convertToSystemString(magicMemo->displayAll());
+				commandInputBox->Text = convertToSystemString(magicMemo->getInputBoxMessage());
+				commandInputBox->SelectionStart = 100;
 
-				commandInputBox->Text = "";
 				if (successMessage == "exit") {
 					MessageBox::Show("Good bye!");
 					Application::Exit();
@@ -225,7 +225,7 @@ namespace UI {
 		}
 
 	private: System::Void MagicMemoGUI_Load(System::Object^  sender, System::EventArgs^  e) {
-	}
+		    }
 	};
 
 }
