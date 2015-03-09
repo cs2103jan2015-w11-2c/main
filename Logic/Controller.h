@@ -29,7 +29,7 @@ private:
 	static const string ERROR_FILEPATH_NOT_FOUND;
 
 	static string MENU;
-	static char buffer[250];
+	static char buffer[1000];
 
 	FileStorage outputFile;
 	Parser *parser;
@@ -38,27 +38,47 @@ private:
 	//TO BE CHANGED
 	string fileName;
 
+	//To be passed to the GUI
+	string inputBoxMessage;
+	string successMessage;
+
+	//for edit function, to check if it is the initial edit call
+	bool isFirstCommandCall;
+	int lineNumberOperation;
+	
+
 public:
 	Controller(void);
 
+	string getInputBoxMessage();
+
+	string getSuccessMessage();
+
+	void setInputBoxMessage(string);
+
+	void setSuccessMessage(string);
+
 	void initializeVector();
 
-	bool Controller::rewriteFile();
+	bool rewriteFile();
 
 	string executeCommand(string);
 
 	void commandOptions(string);
-	
-	string addData(string sentence);
-	
+
+	void addData(string sentence);
+
 	//returns the data deleted or *#*#*#*#* if not found
-	string deleteData();
+	void deleteData();
+
+	//returns line number for operation or 0 if line number is invalid
+	int getLineNumberForOperation();
 
 	string displayAll();
 
-	string clearAll();
+	void clearAll();
 
-	string sortAlphabetical();
+	void sortAlphabetical();
 
 	void selectionSortIgnoreCase();
 
@@ -66,11 +86,11 @@ public:
 
 	void swap(string& string1, string& string2);
 
-	string search(string);
+	void search(string);
 
-	string copy();
+	void copy();
 
-	string edit();
+	void edit();
 
 	//NEED TO IMPLEMENT A textfile to reflect the change
 	//in name so that the next time the program is run

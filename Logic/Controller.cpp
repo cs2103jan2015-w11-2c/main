@@ -6,8 +6,8 @@ const string Controller::SUCCESS_DELETED = "Deleted line: \"%s\"\n";
 const string Controller::SUCCESS_CLEARED = "All content deleted\n";
 const string Controller::SUCCESS_SORTED = "All content sorted alphabetically\n";
 const string Controller::SUCCESS_COPIED = "%s copied successfully!\n";
-const string Controller::SUCCESS_EDITED = "%s edited successfully!\n";
-const string Controller::SUCCESS_FILENAME_CHANGED = "Filename changed to %s\n";
+const string Controller::SUCCESS_EDITED = "\"%s\" changed to \"%s\"!\n";
+const string Controller::SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"\n";
 const string Controller::SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s\n";
 const string Controller::ERROR_INVALID_COMMAND = "Invalid command specified! please try again\n";
 const string Controller::ERROR_FILE_EMPTY = "File is empty\n";
@@ -19,11 +19,28 @@ const string Controller::ERROR_FILE_ALREADY_EXISTS = "A file with the same name 
 const string Controller::ERROR_FILEPATH_NOT_FOUND = "The specified filepath was not found or the file already exists there";
 
 
-char Controller::buffer[250];
+char Controller::buffer[1000];
 
 
 Controller::Controller(void) {
 	initializeVector();
+	isFirstCommandCall = true;
+}
+
+string Controller::getInputBoxMessage() {
+	return inputBoxMessage;
+}
+
+string Controller::getSuccessMessage() {
+	return successMessage;
+}
+
+void Controller::setInputBoxMessage(string message) {
+	inputBoxMessage = message;
+}
+
+void Controller::setSuccessMessage(string message) {
+	successMessage = message;
 }
 
 void Controller::initializeVector() {
@@ -43,67 +60,77 @@ string Controller::executeCommand(string inputText) {
 	parser = new Parser(inputText);
 	string userCommand = parser->getUserCommand();
 	string commandData = parser->getCommandData();
-	string successMessage;
 	if (userCommand == "display") {
-		successMessage = "display";
+		setSuccessMessage("display");
 	} else if (userCommand == "add") {
-		successMessage = addData(commandData);
+		addData(commandData);
 	} else if (userCommand == "delete") {
-		successMessage = deleteData();
+		deleteData();
 	} else if (userCommand == "clear") {
-		successMessage = clearAll();
+		clearAll();
 	} else if (userCommand == "sort") {
-		successMessage = sortAlphabetical();
+		sortAlphabetical();
 	} else if (userCommand == "search") {
-		successMessage = search(commandData);
+		search(commandData);
 	} else if (userCommand == "copy") {
-		successMessage = copy();
+		copy();
 	} else if (userCommand == "edit") {
-		successMessage = edit();
+		edit();
 	} else if (userCommand == "rename") {
-		successMessage = rename(commandData);
+		rename(commandData);
 	} else if (userCommand == "move") {
-		successMessage = move(commandData);
+		move(commandData);
 	} else if (userCommand == "exit") {
-		successMessage = "exit";
+		setSuccessMessage("exit");
 	}
-	return successMessage;
+	return getSuccessMessage();
 }
 
 void Controller::commandOptions(string command) {
 
 }
 
-string Controller::addData(string sentence) {
+void Controller::addData(string sentence) {
 	vectorStore.push_back(sentence);
 	outputFile.addLine(sentence);
 
 	sprintf_s(buffer, SUCCESS_ADDED.c_str(), sentence.c_str());
-	return buffer;
+
+	setInputBoxMessage("");
+	setSuccessMessage(buffer);
+
 }
 
-string Controller::deleteData() {
-	bool validLineNumber = parser->getIntegerLineNumber();
-	unsigned int lineNumber;
-	if(validLineNumber) {
-		lineNumber = parser->getLineOpNumber();
-		if (lineNumber <= 0 || lineNumber > vectorStore.size()) {
-			validLineNumber = false;
-		}
-	}
-
-	if(!validLineNumber) {
-		return ERROR_INVALID_LINE_NUMBER;
+void Controller::deleteData() {
+	string successMessage;
+	int lineNumber = getLineNumberForOperation();
+	if(lineNumber == 0) {
+		successMessage = ERROR_INVALID_LINE_NUMBER;
 	} else {
 		string dataToBeDeleted = (vectorStore[lineNumber - 1]);
 		vectorStore.erase(vectorStore.begin() + (lineNumber - 1));
 		if(rewriteFile()) {
 			sprintf_s(buffer, SUCCESS_DELETED.c_str(), dataToBeDeleted.c_str());
-			return buffer;
+			successMessage = buffer;
 		} else {
-			return ERROR_FILE_OPERATION_FAILED;
+			successMessage = ERROR_FILE_OPERATION_FAILED;
 		}
 	}
+
+	setInputBoxMessage("");
+	setSuccessMessage(successMessage);
+}
+
+int Controller::getLineNumberForOperation() {
+	bool validLineNumber = parser->getIntegerLineNumber();
+	unsigned int lineNumber;
+	if(validLineNumber) {
+		lineNumber = parser->getLineOpNumber();
+		if (lineNumber <= 0 || lineNumber > vectorStore.size()) {
+			return 0;
+		}
+	}
+	return lineNumber;
 }
 
 string Controller::displayAll() {
@@ -119,26 +146,29 @@ string Controller::displayAll() {
 	return oss.str();
 }
 
-string Controller::clearAll() {
+void Controller::clearAll() {
 	vectorStore.clear();
 	if(outputFile.clearFile()) {
-		return SUCCESS_CLEARED;
+		setSuccessMessage(SUCCESS_CLEARED);
 	} else {
-		return ERROR_FILE_OPERATION_FAILED;
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
+
+
 }
 
-string Controller::sortAlphabetical() {
+void Controller::sortAlphabetical() {
 	if (vectorStore.empty()) {
-		return ERROR_FILE_EMPTY;
+		setSuccessMessage(ERROR_FILE_EMPTY);
 	} else {
 		selectionSortIgnoreCase();
 		if(rewriteFile()) {
-			return SUCCESS_SORTED;
+			setSuccessMessage(SUCCESS_SORTED);
 		} else {
-			return ERROR_FILE_OPERATION_FAILED;
+			setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 		}
 	}
+	setInputBoxMessage("");
 }
 
 void Controller::selectionSortIgnoreCase() {
@@ -174,7 +204,7 @@ void Controller::swap(string& string1, string& string2) {
 	string2 = tempString;
 }
 
-string Controller::search(string searchText) {
+void Controller::search(string searchText) {
 	ostringstream oss;
 	transform(searchText.begin(), searchText.end(), searchText.begin(), ::tolower);
 	for (unsigned int i = 0; i < vectorStore.size(); i++) {
@@ -188,19 +218,46 @@ string Controller::search(string searchText) {
 
 	if (oss.str() == "") {
 		sprintf_s(buffer, ERROR_SEARCH_ITEM_NOT_FOUND.c_str(), searchText.c_str());
-		return buffer;
+		setSuccessMessage(buffer);
 	}
-	return oss.str();
+	//to be changed to be shown in main outputbox
+	setSuccessMessage(oss.str());
+	setInputBoxMessage("");
 }
 
-string Controller::copy() {
-	sprintf_s(buffer, SUCCESS_COPIED.c_str());
-	return buffer;
+void Controller::copy() {
+	int lineNumber = getLineNumberForOperation();
+	if(lineNumber == 0) {
+		setSuccessMessage(ERROR_INVALID_LINE_NUMBER);
+		setInputBoxMessage("");
+	} else {
+		string lineToCopy = "add " + vectorStore[lineNumber - 1];
+		setSuccessMessage("");
+		setInputBoxMessage(lineToCopy);
+	}
 }
 
-string Controller::edit() {
-	sprintf_s(buffer, SUCCESS_EDITED.c_str());
-	return buffer;
+void Controller::edit() {
+	if(isFirstCommandCall) {
+		int lineNumber = getLineNumberForOperation();
+		if(lineNumber == 0) {
+			setSuccessMessage(ERROR_INVALID_LINE_NUMBER);
+			setInputBoxMessage("");
+		} else {
+			string lineToCopy = "edit " + vectorStore[lineNumber - 1];
+			setSuccessMessage("");
+			setInputBoxMessage(lineToCopy);
+		}
+		isFirstCommandCall = false;
+		lineNumberOperation = lineNumber;
+	} else {
+		sprintf_s(buffer, SUCCESS_EDITED.c_str(), vectorStore[lineNumberOperation - 1].c_str(), parser->getCommandData().c_str());
+		vectorStore[lineNumberOperation - 1] = parser->getCommandData();
+		rewriteFile();
+		isFirstCommandCall = true;
+		setSuccessMessage(buffer);
+		setInputBoxMessage("");
+	}
 }
 
 string Controller::rename(string newFileName) {
