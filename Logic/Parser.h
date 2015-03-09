@@ -17,13 +17,29 @@ public:
 
 	void setCommandData(string);
 
+	void setDay(string);
+
+	void setMonth(string);
+
+	void setTime(string);
+
 	void setlineOpNumber(int);
+
+	void setEvent(string);
 
 	string getUserCommand();
 
 	string getCommandData();
 
 	int getLineOpNumber();
+
+	string getEvent();
+
+	string getDay();
+
+	string getMonth();
+
+	string getTime();
 
 	//extracts userCommand and commandData
 	void extractUserCommand();
