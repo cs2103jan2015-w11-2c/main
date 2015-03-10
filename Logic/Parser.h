@@ -10,6 +10,12 @@ private:
 	string commandData;
 	int lineOpNumber;
 
+	string eventToBeDone;
+	string day;
+	string month;
+	string year;
+	string time;
+
 public:
 	Parser(string);
 
@@ -17,21 +23,21 @@ public:
 
 	void setCommandData(string);
 
+	void setEvent(string);
+
 	void setDay(string);
 
 	void setMonth(string);
 
 	void setTime(string);
 
-	void setlineOpNumber(int);
+	void setLineOpNumber(int);
 
-	void setEvent(string);
+	//void extractAllData();
 
 	string getUserCommand();
 
 	string getCommandData();
-
-	int getLineOpNumber();
 
 	string getEvent();
 
@@ -41,6 +47,8 @@ public:
 
 	string getTime();
 
+	int getLineOpNumber();
+
 	//extracts userCommand and commandData
 	void extractUserCommand();
 
@@ -48,6 +56,9 @@ public:
 	//if only whitespaces are input, then it returns
 	//the whitespaces with one less whitespace
 	string removeSpacePadding(string);
+
+	//format of user input is [day month time]
+	void extractDateAndTime(string eventTime);
 
 	//Converts a number in string format to integer format
 	//returns true if successful
