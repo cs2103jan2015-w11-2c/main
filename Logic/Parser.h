@@ -10,10 +10,8 @@ private:
 	string commandData;
 	int lineOpNumber;
 
-	string eventToBeDone;
 	string day;
 	string month;
-	string year;
 	string time;
 
 public:
@@ -51,6 +49,12 @@ public:
 
 	//extracts userCommand and commandData
 	void extractUserCommand();
+
+	size_t findFrontBracket(string);
+
+	size_t findSymbol(string);
+
+	void extractDateAndTime();
 
 	//remove leading and ending whitespace of string, if any
 	//if only whitespaces are input, then it returns
