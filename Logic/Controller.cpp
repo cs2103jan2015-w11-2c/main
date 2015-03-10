@@ -260,29 +260,30 @@ void Controller::edit() {
 	}
 }
 
-string Controller::rename(string newFileName) {
+void Controller::rename(string newFileName) {
 	if(newFileName == "") {
-		return ERROR_NO_FILENAME;
+		setSuccessMessage(ERROR_NO_FILENAME);
 	} else {
 		int dotPos = newFileName.length() - 4;
-		if(newFileName[dotPos] != '.') { //ensure that the file is a .txt file
+		//ensure that the file is a .txt file
+		if((newFileName.length() <= 4) || (newFileName[dotPos] != '.')) {
 			newFileName = newFileName + ".txt";
 		}
 		if(outputFile.changeFileName(newFileName)) {
-			sprintf_s(buffer, SUCCESS_FILENAME_CHANGED.c_str(), outputFile.getFileName().c_str());
-			return buffer;
+			sprintf_s(buffer, SUCCESS_FILENAME_CHANGED.c_str(), (outputFile.getFileName()).c_str());
+			setSuccessMessage(buffer);
 		} else {
-			return ERROR_FILE_ALREADY_EXISTS;
+			setSuccessMessage(ERROR_FILE_ALREADY_EXISTS);
 		}
 	}
 }
 
-string Controller::move(string newFileLocation) {
+void Controller::move(string newFileLocation) {
 	if(outputFile.changeFileLocation(newFileLocation)) {
 		sprintf_s(buffer, SUCCESS_FILE_LOCATION_CHANGED.c_str(), outputFile.getFullFileName().c_str());
-		return buffer;
+		setSuccessMessage(buffer);
 	} else {
-		return ERROR_FILEPATH_NOT_FOUND;
+		setSuccessMessage(ERROR_FILEPATH_NOT_FOUND);
 	}
 }
 

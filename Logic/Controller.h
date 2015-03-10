@@ -95,11 +95,11 @@ public:
 	//NEED TO IMPLEMENT A textfile to reflect the change
 	//in name so that the next time the program is run
 	//it will not revert to old file name
-	string rename(string newFileName);
+	void rename(string newFileName);
 
 	//Example of new file path:
 	//C:\Users\Username\My Documents
-	string move(string newFileLocation);
+	void move(string newFileLocation);
 
 	string getSuccessMessage(string successType, string description = "");
 

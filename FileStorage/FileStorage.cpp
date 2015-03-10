@@ -1,12 +1,16 @@
 #include "FileStorage.h"
 
-
 FileStorage::FileStorage(void) {
-	setFilePath("");
-	setFileName("MagicMemo.txt");
+	fileConfigFileName = "fileConfigurations.txt";
+	defaultFileName = "MagicMemo.txt";
+
+	if(isFileEmpty(fileConfigFileName)) {  //if not initialized
+		initializeFileConfig();
+	}
+
+	getFileConfigInfo();
 	fullFileName = getFullFileName();
 }
-
 
 void FileStorage::setFileName(string newFileName) {
 	fileName = newFileName;
@@ -60,6 +64,7 @@ bool FileStorage::changeFileName(string newFileName) {
 	string oldFileName = getFullFileName();
 	setFileName(newFileName);
 	rename(oldFileName.c_str(), getFullFileName().c_str());
+	updateFileConfigInfo();
 	return true;
 }
 
@@ -80,18 +85,57 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 
 	rename(getFullFileName().c_str(), newFullFileName.c_str());
 	setFilePath(newFilePath);
+	updateFileConfigInfo();
 	return true;
 }
 
 bool FileStorage::directoryExists(const string& dirName) {
 	DWORD ftyp = GetFileAttributesA(dirName.c_str());
 	if (ftyp == INVALID_FILE_ATTRIBUTES)
-		return false;  //something is wrong with your path!
+		return false;  //something is wrong with path!
 
 	if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
 		return true;   // this is a directory!
 
 	return false;    // this is not a directory!
+}
+
+bool FileStorage::isFileEmpty(string file) {
+	string x;
+	ifstream inFile(file.c_str());
+	inFile >> x;
+	if(x == "") {
+		return true;
+	}
+	return false;
+}
+
+void FileStorage::getFileConfigInfo() {
+	ifstream inFile(fileConfigFileName.c_str());
+	getline(inFile, fileName);
+	getline(inFile, filePath);
+	inFile.close();
+
+}
+
+void FileStorage::initializeFileConfig() {
+	setFileName(defaultFileName);
+	setFilePath(programFilePath());
+	updateFileConfigInfo();
+}
+
+void FileStorage::updateFileConfigInfo() {
+	ofstream outFile(fileConfigFileName.c_str());
+	outFile << fileName << endl;
+	outFile << filePath << endl;
+	outFile.close();
+}
+
+string FileStorage::programFilePath() {
+	char buffer[MAX_PATH];
+	GetModuleFileName( NULL, buffer, MAX_PATH );
+	string::size_type pos = string( buffer ).find_last_of( "\\/" );
+	return string( buffer ).substr( 0, pos);
 }
 
 FileStorage::~FileStorage(void) {

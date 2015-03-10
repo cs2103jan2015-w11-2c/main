@@ -10,6 +10,7 @@ private:
 	string commandData;
 	int lineOpNumber;
 
+	string eventDetails;
 	string eventToBeDone;
 	string day;
 	string month;

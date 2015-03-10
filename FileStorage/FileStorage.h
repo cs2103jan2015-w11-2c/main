@@ -8,6 +8,8 @@ using namespace std;
 
 class FileStorage {
 private:
+	string fileConfigFileName;
+	string defaultFileName;
 	string fileName;
 	string filePath;
 	string fullFileName;
@@ -40,7 +42,20 @@ public:
 
 	bool directoryExists(const string& dirName);
 
+	//returns true if file is empty
+	bool isFileEmpty(string);
 
+	//get pre-set filepath and filename from config file
+	void getFileConfigInfo();
+
+	//initializes the filename and filepath if not previously set
+	void initializeFileConfig();
+
+	//update any filepath or filename changes into config file
+	void updateFileConfigInfo();
+
+	//returns the directory of the program
+	string programFilePath();
 
 	~FileStorage(void);
 };
