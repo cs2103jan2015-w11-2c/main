@@ -59,15 +59,20 @@ public:
 
 	size_t findDateDelimiters(string);
 
-	void extractDateAndTime();
+	//reset date and time to 0 and duration to 1
+	void clearDateTime();
+
+	//input format is [day/month time at the end of the input
+	void extractDateAndTime(string eventTime);
+
+	void separateDayMonth(string dayMonth);
+
+	void separateHourMinute(string dayMonth);
 
 	//remove leading and ending whitespace of string, if any
 	//if only whitespaces are input, then it returns
 	//the whitespaces with one less whitespace
 	string removeSpacePadding(string);
-
-	//input format is [day/month time at the end of the input
-	void extractDateAndTime(string eventTime);
 
 	//Converts a number in string format to integer format
 	//returns true if successful
