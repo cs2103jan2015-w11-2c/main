@@ -17,23 +17,23 @@ void Parser::setCommandData(string data) {
 }
 
 
-void Parser::setEvent(string eventData) {
-	eventToBeDone = eventData;
+
+void Parser::setDay(int dayData) {
+	day = dayData;
 }
 
 
-void Parser::setDay(string dayData) {
-	 day = dayData;
+void Parser::setMonth(int monthData) {
+	month = monthData;
 }
 
 
-void Parser::setMonth(string monthData){
-	 month = monthData;
+void Parser::setHour(int hourData) {
+	hour = hourData;
 }
 
-
-void Parser::setTime(string timeData){
-     time = timeData;
+void Parser::setMinute(int minuteData) {
+	minute = minuteData;
 }
 
 
@@ -52,52 +52,28 @@ string Parser::getCommandData() {
 }
 
 
-string Parser::getEvent() {
-	return eventToBeDone;
-}
-
-
-string Parser::getDay() {
+int Parser::getDay() {
 	return day;
 }
 
 
-string Parser::getMonth() {
+int Parser::getMonth() {
 	return month;
 }
 
 
-string Parser::getTime() {
-	return time;
+int Parser::getHour() {
+	return hour;
+}
+
+int Parser::getMinute() {
+	return minute;
 }
 
 
 int Parser::getLineOpNumber() {
 	return lineOpNumber;
 }
-
-/*
-void Parser::extractAllData() {
-	commandData = removeSpacePadding(fullUserInput);
-	size_t spacePos = commandData.find_first_of(" ");
-	if (spacePos == string::npos) {
-		userCommand = commandData
-		eventToBeDone = "";
-	} else {
-		userCommand = commandData.substr(0, spacePos);
-		commandData = commandData.substr(spacePos);
-		spacePos = commandData.find_first_not_of(" ");
-		commandData = commandData.substr(spacePos);
-		
-		spacePos = commandData.find_first_of(" ");
-		eventToBeDone=commandData.substr(0,spacePos);
-		eventToBeDone=eventTobeDone.substr(spacePos);
-		spacePos = eventTobeDone.find_first_not_of(" ");
-		timeOfEvent=eventTobeDone.substr(spacePos);
-		extractDateAndTime(timeOfEvent);
-	}
-}
-*/
 
 void Parser::extractUserCommand() {
 	commandData = removeSpacePadding(fullUserInput);
@@ -112,22 +88,99 @@ void Parser::extractUserCommand() {
 		commandData = commandData.substr(spacePos);
 	}
 }
-/*
-void extractDateAndTime(string eventTime){
-        size_t spacePos = timeOfEvent.find_first_of(" ");
-	    
-		day = timeOfEvent.substr(0,spacePos);
-		timeOfEvent = timeOfEvent.substr(spacePos);
-		spacePos = eventTime.find_first_not_of(" ");
-		timeOfEvent = timeOfEvent.substr(spacePos)
-        
-		spacePos = timeOfEvent.find_first_of(" ");
-		month = timeOfEvent.substr(0,spacePos);
-		timeOfEvent = timeOfEvent.substr(spacePos);
-		spacePos = timeOfEvent.find_first_not_of(" ");
-		time = timeOfEvent.substr(spacePos);
+
+size_t Parser::findFrontBracket(string commandData){
+	return (commandData.find_first_of("["));
 }
-*/
+
+size_t Parser::findDateDelimiters(string commandData){
+	return (commandData.find_first_of("/._"));
+}
+
+void Parser::clearDateTime() {
+	month = 0;
+	day = 0;
+	hour = 0;
+	minute = 0;
+	duration = 1;
+}
+
+void Parser::extractDateAndTime() {
+	clearDateTime();
+	size_t frontBracketPos = findFrontBracket(commandData);
+
+	if(frontBracketPos != string::npos) {
+		string rawDateTimeChunk = commandData.substr(frontBracketPos + 1);
+		//remove date and time data from commandData
+		commandData = commandData.substr(0, frontBracketPos);
+		istringstream iss (rawDateTimeChunk);
+		string demarcateDateTime[3];
+		int i = 0;
+		while(iss >> demarcateDateTime[i]) {
+			i++;
+		}
+
+		switch (i) {
+		// no date or time
+		case 0: {
+			//date = today
+			break;
+			   }
+
+		// only date or only time
+		case 1: {
+			size_t dateDelimiterPos= findDateDelimiters(demarcateDateTime[0]);
+			if(dateDelimiterPos != string::npos) {
+				separateDayMonth(demarcateDateTime[0]);
+			} else {
+				separateHourMinute(demarcateDateTime[0]);
+				//must set date to be today
+			}
+
+			break;
+			   }
+
+		// both date and time, 24hrs
+		case 2: {
+			size_t dateDelimiterPos= findDateDelimiters(demarcateDateTime[0]);
+			if(dateDelimiterPos != string::npos) {
+				separateDayMonth(demarcateDateTime[0]);
+				
+				if(day == 0 || month == 0) {
+					//error message, wrong format
+				}
+			}
+
+			separateHourMinute(demarcateDateTime[1]);
+
+			break;
+			   }
+		// both date and time, 12hrs
+		case 3: {
+
+			break;
+			   }
+
+		default: {
+			break;
+			    }
+		}
+	}
+}
+
+void Parser::separateDayMonth(string dayMonth) {
+	char *intEnd;
+	day = (int)strtol(dayMonth.c_str(), &intEnd, 10);
+	month = (int)strtol(intEnd + 1, &intEnd, 10);
+}
+
+void Parser::separateHourMinute(string hourMinute) {
+	char *intEnd;
+	hour = (int)strtol(hourMinute.c_str(), &intEnd, 10);
+	minute = (int)strtol(intEnd + 1, &intEnd, 10);
+}
+
+
 
 string Parser::removeSpacePadding(string line) {
 	size_t end = line.find_last_not_of(" ");
@@ -148,6 +201,11 @@ bool Parser::getIntegerLineNumber() {
 	char *end;
 	lineOpNumber = (int)strtol(commandData.c_str(), &end, 10);
 	return (*end == 0);
+}
+
+int Parser::convertStringToInteger(string numberString) {
+	char *end;
+	return (int)strtol(numberString.c_str(), &end, 10);
 }
 
 Parser::~Parser(void) {
