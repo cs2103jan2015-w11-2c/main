@@ -18,11 +18,11 @@ void Parser::setCommandData(string data) {
 
 
 void Parser::setEvent(string eventData) {
-	eventTobeDone = eventData;
+	eventToBeDone = eventData;
 }
 
 
-void Parser::setday(string dayData) {
+void Parser::setDay(string dayData) {
 	 day = dayData;
 }
 
@@ -32,12 +32,12 @@ void Parser::setMonth(string monthData){
 }
 
 
-voud Parser::setTime(string timeData){
+void Parser::setTime(string timeData){
      time = timeData;
 }
 
 
-void Parser::setlineOpNumber(int lineNumber) {
+void Parser::setLineOpNumber(int lineNumber) {
 	lineOpNumber = lineNumber;
 }
 
@@ -47,17 +47,17 @@ string Parser::getUserCommand() {
 }
 
 
-string Parser::getcommandData() {
+string Parser::getCommandData() {
 	return commandData;
 }
 
 
 string Parser::getEvent() {
-	return eventTObeDone;
+	return eventToBeDone;
 }
 
 
-string Parser::getday() {
+string Parser::getDay() {
 	return day;
 }
 
@@ -76,13 +76,13 @@ int Parser::getLineOpNumber() {
 	return lineOpNumber;
 }
 
-
+/*
 void Parser::extractAllData() {
 	commandData = removeSpacePadding(fullUserInput);
 	size_t spacePos = commandData.find_first_of(" ");
 	if (spacePos == string::npos) {
 		userCommand = commandData
-		eventTobeDone = "";
+		eventToBeDone = "";
 	} else {
 		userCommand = commandData.substr(0, spacePos);
 		commandData = commandData.substr(spacePos);
@@ -90,17 +90,30 @@ void Parser::extractAllData() {
 		commandData = commandData.substr(spacePos);
 		
 		spacePos = commandData.find_first_of(" ");
-		eventTobeDone=commandData.substr(0,spacePos);
-		eventTobeDone=eventTobeDone.substr(spacePos);
+		eventToBeDone=commandData.substr(0,spacePos);
+		eventToBeDone=eventTobeDone.substr(spacePos);
 		spacePos = eventTobeDone.find_first_not_of(" ");
 		timeOfEvent=eventTobeDone.substr(spacePos);
-		extractDateandTime(timeOfEvent);
+		extractDateAndTime(timeOfEvent);
 	}
 }
+*/
 
-
-//format of user input is [day month time]
-void extractDateAndTime(eventTime){
+void Parser::extractUserCommand() {
+	commandData = removeSpacePadding(fullUserInput);
+	size_t spacePos = commandData.find_first_of(" ");
+	if (spacePos == string::npos) {
+		userCommand = commandData;
+		commandData = "";
+	} else {
+		userCommand = commandData.substr(0, spacePos);
+		commandData = commandData.substr(spacePos);
+		spacePos = commandData.find_first_not_of(" ");
+		commandData = commandData.substr(spacePos);
+	}
+}
+/*
+void extractDateAndTime(string eventTime){
         size_t spacePos = timeOfEvent.find_first_of(" ");
 	    
 		day = timeOfEvent.substr(0,spacePos);
@@ -113,9 +126,9 @@ void extractDateAndTime(eventTime){
 		timeOfEvent = timeOfEvent.substr(spacePos);
 		spacePos = timeOfEvent.find_first_not_of(" ");
 		time = timeOfEvent.substr(spacePos);
-
-
 }
+*/
+
 string Parser::removeSpacePadding(string line) {
 	size_t end = line.find_last_not_of(" ");
 	size_t start = line.find_first_not_of(" ");
