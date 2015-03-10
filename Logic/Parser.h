@@ -10,9 +10,12 @@ private:
 	string commandData;
 	int lineOpNumber;
 
-	string day;
-	string month;
-	string time;
+	int day;
+	int month;
+	//time saved in 24 hours format
+	int hour;
+	int minute;
+	int duration;
 
 public:
 	Parser(string);
@@ -23,15 +26,15 @@ public:
 
 	void setEvent(string);
 
-	void setDay(string);
+	void setDay(int);
 
-	void setMonth(string);
+	void setMonth(int);
 
-	void setTime(string);
+	void setHour(int);
+
+	void setMinute(int);
 
 	void setLineOpNumber(int);
-
-	//void extractAllData();
 
 	string getUserCommand();
 
@@ -39,11 +42,13 @@ public:
 
 	string getEvent();
 
-	string getDay();
+	int getDay();
 
-	string getMonth();
+	int getMonth();
 
-	string getTime();
+	int getHour();
+
+	int getMinute();
 
 	int getLineOpNumber();
 
@@ -52,7 +57,7 @@ public:
 
 	size_t findFrontBracket(string);
 
-	size_t findSymbol(string);
+	size_t findDateDelimiters(string);
 
 	void extractDateAndTime();
 
@@ -61,12 +66,14 @@ public:
 	//the whitespaces with one less whitespace
 	string removeSpacePadding(string);
 
-	//format of user input is [day month time]
+	//input format is [day/month time at the end of the input
 	void extractDateAndTime(string eventTime);
 
 	//Converts a number in string format to integer format
 	//returns true if successful
 	bool getIntegerLineNumber();
+
+	int convertStringToInteger(string numberString);
 
 	~Parser(void);
 };
