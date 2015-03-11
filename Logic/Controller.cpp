@@ -56,10 +56,17 @@ string Controller::executeCommand(string inputText) {
 	parser = new Parser(inputText);
 	string userCommand = parser->getUserCommand();
 	string commandData = parser->getCommandData();
+	parser->setCommandData(inputText);
+	parser->extractDateAndTime();
+	int month = parser->getMonth();
+	int day = parser->getDay();
+	int hour = parser->getHour();
+	int mins = parser->getMinute();
+
 	if (userCommand == "display") {
 		setSuccessMessage("display");
 	} else if (userCommand == "add") {
-		addData(commandData);
+		addData(commandData, month, day, hour, mins);
 	} else if (userCommand == "delete") {
 		deleteData();
 	} else if (userCommand == "clear") {
@@ -86,12 +93,15 @@ void Controller::commandOptions(string command) {
 
 }
 
-void Controller::addData(string sentence) {
+void Controller::addData(string sentence, int month, int day, int hour, int mins) {
+	ostringstream oss;
 
-	AddItem *addItemCommand = new AddItem(vectorStore, sentence);
+	oss << sentence << "[" << day << "/" << month << ", " << hour << "]";
+
+	AddItem *addItemCommand = new AddItem(vectorStore, oss.str());
 	vectorStore = addItemCommand->executeAction();
-	
-	outputFile.addLine(sentence);
+
+	outputFile.addLine(oss.str());
 
 	setInputBoxMessage("");
 	setSuccessMessage(addItemCommand->getMessage());

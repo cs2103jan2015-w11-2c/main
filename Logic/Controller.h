@@ -69,7 +69,7 @@ public:
 
 	void commandOptions(string);
 
-	void addData(string sentence);
+	void addData(string sentence, int, int , int, int);
 
 	//returns the data deleted or *#*#*#*#* if not found
 	void deleteData();
