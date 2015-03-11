@@ -114,7 +114,7 @@ void Controller::deleteData() {
 	vectorStore=deleteItemCommand->executeAction();
 
 	if(rewriteFile()) {
-		setSuccessMessage(deleteItemCommand->getMessage());;
+		setSuccessMessage(deleteItemCommand->getMessage());
 	} else {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
