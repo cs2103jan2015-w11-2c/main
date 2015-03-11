@@ -2,90 +2,90 @@
 
 
 Parser::Parser(string userInput) {
-	fullUserInput = userInput;
+	_fullUserInput = userInput;
 	extractUserCommand();
 }
 
 
 void Parser::setCommand(string command) {
-	userCommand = command;
+	_userCommand = command;
 }
 
 
 void Parser::setCommandData(string data) {
-	commandData = data;
+	_commandData = data;
 }
 
 
 
 void Parser::setDay(int dayData) {
-	day = dayData;
+	_day = dayData;
 }
 
 
 void Parser::setMonth(int monthData) {
-	month = monthData;
+	_month = monthData;
 }
 
 
 void Parser::setHour(int hourData) {
-	hour = hourData;
+	_hour = hourData;
 }
 
 void Parser::setMinute(int minuteData) {
-	minute = minuteData;
+	_minute = minuteData;
 }
 
 
 void Parser::setLineOpNumber(int lineNumber) {
-	lineOpNumber = lineNumber;
+	_lineOpNumber = lineNumber;
 }
 
 
 string Parser::getUserCommand() {
-	return userCommand;
+	return _userCommand;
 }
 
 
 string Parser::getCommandData() {
-	return commandData;
+	return _commandData;
 }
 
 
 int Parser::getDay() {
-	return day;
+	return _day;
 }
 
 
 int Parser::getMonth() {
-	return month;
+	return _month;
 }
 
 
 int Parser::getHour() {
-	return hour;
+	return _hour;
 }
 
 int Parser::getMinute() {
-	return minute;
+	return _minute;
 }
 
 
 int Parser::getLineOpNumber() {
-	return lineOpNumber;
+	return _lineOpNumber;
 }
 
 void Parser::extractUserCommand() {
-	commandData = removeSpacePadding(fullUserInput);
-	size_t spacePos = commandData.find_first_of(" ");
+	_commandData = removeSpacePadding(_fullUserInput);
+	size_t spacePos = _commandData.find_first_of(" ");
 	if (spacePos == string::npos) {
-		userCommand = commandData;
-		commandData = "";
+		_userCommand = _commandData;
+		_commandData = "";
 	} else {
-		userCommand = commandData.substr(0, spacePos);
-		commandData = commandData.substr(spacePos);
-		spacePos = commandData.find_first_not_of(" ");
-		commandData = commandData.substr(spacePos);
+		_userCommand = _commandData.substr(0, spacePos);
+		_commandData = _commandData.substr(spacePos);
+		spacePos = _commandData.find_first_not_of(" ");
+		_commandData = _commandData.substr(spacePos);
 	}
 }
 
@@ -98,21 +98,21 @@ size_t Parser::findDateDelimiters(string commandData){
 }
 
 void Parser::clearDateTime() {
-	month = 0;
-	day = 0;
-	hour = 0;
-	minute = 0;
-	duration = 1;
+	_month = 0;
+	_day = 0;
+	_hour = 0;
+	_minute = 0;
+	_duration = 1;
 }
 
 void Parser::extractDateAndTime() {
 	clearDateTime();
-	size_t frontBracketPos = findFrontBracket(commandData);
+	size_t frontBracketPos = findFrontBracket(_commandData);
 
 	if(frontBracketPos != string::npos) {
-		string rawDateTimeChunk = commandData.substr(frontBracketPos + 1);
+		string rawDateTimeChunk = _commandData.substr(frontBracketPos + 1);
 		//remove date and time data from commandData
-		commandData = commandData.substr(0, frontBracketPos);
+		_commandData = _commandData.substr(0, frontBracketPos);
 		istringstream iss (rawDateTimeChunk);
 		string demarcateDateTime[3];
 		int i = 0;
@@ -146,7 +146,7 @@ void Parser::extractDateAndTime() {
 			if(dateDelimiterPos != string::npos) {
 				separateDayMonth(demarcateDateTime[0]);
 				
-				if(day == 0 || month == 0) {
+				if(_day == 0 || _month == 0) {
 					//error message, wrong format
 				}
 			}
@@ -170,14 +170,14 @@ void Parser::extractDateAndTime() {
 
 void Parser::separateDayMonth(string dayMonth) {
 	char *intEnd;
-	day = (int)strtol(dayMonth.c_str(), &intEnd, 10);
-	month = (int)strtol(intEnd + 1, &intEnd, 10);
+	_day = (int)strtol(dayMonth.c_str(), &intEnd, 10);
+	_month = (int)strtol(intEnd + 1, &intEnd, 10);
 }
 
 void Parser::separateHourMinute(string hourMinute) {
 	char *intEnd;
-	hour = (int)strtol(hourMinute.c_str(), &intEnd, 10);
-	minute = (int)strtol(intEnd + 1, &intEnd, 10);
+	_hour = (int)strtol(hourMinute.c_str(), &intEnd, 10);
+	_minute = (int)strtol(intEnd + 1, &intEnd, 10);
 }
 
 
@@ -195,11 +195,11 @@ string Parser::removeSpacePadding(string line) {
 }
 
 bool Parser::getIntegerLineNumber() {
-	if(commandData == "") {
+	if(_commandData == "") {
 		return false;
 	}
 	char *end;
-	lineOpNumber = (int)strtol(commandData.c_str(), &end, 10);
+	_lineOpNumber = (int)strtol(_commandData.c_str(), &end, 10);
 	return (*end == 0);
 }
 

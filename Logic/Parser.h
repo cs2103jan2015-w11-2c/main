@@ -5,17 +5,17 @@ using namespace std;
 
 class Parser {
 private:
-	string fullUserInput;
-	string userCommand;
-	string commandData;
-	int lineOpNumber;
+	string _fullUserInput;
+	string _userCommand;
+	string _commandData;
+	int _lineOpNumber;
 
-	int day;
-	int month;
-	//time saved in 24 hours format
-	int hour;
-	int minute;
-	int duration;
+	int _day;
+	int _month;
+	//time saved in 24 _hours format
+	int _hour;
+	int _minute;
+	int _duration;
 
 public:
 	Parser(string);
@@ -52,22 +52,22 @@ public:
 
 	int getLineOpNumber();
 
-	//extracts userCommand and commandData
+	//extracts _userCommand and _commandData
 	void extractUserCommand();
 
 	size_t findFrontBracket(string);
 
 	size_t findDateDelimiters(string);
 
-	//reset date and time to 0 and duration to 1
+	//reset date and time to 0 and _duration to 1
 	void clearDateTime();
 
-	//input format is [day/month time at the end of the input
+	//input format is [_day/_month time at the end of the input
 	void extractDateAndTime();
 
-	void separateDayMonth(string dayMonth);
+	void separateDayMonth(string _day_month);
 
-	void separateHourMinute(string dayMonth);
+	void separateHourMinute(string _day_month);
 
 	//remove leading and ending whitespace of string, if any
 	//if only whitespaces are input, then it returns
