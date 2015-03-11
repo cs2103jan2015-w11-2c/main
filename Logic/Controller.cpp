@@ -55,6 +55,7 @@ bool Controller::rewriteFile() {
 string Controller::executeCommand(string inputText) {
 	parser = new Parser(inputText);
 	string userCommand = parser->getUserCommand();
+	parser->extractDateAndTime();
 	string commandData = parser->getCommandData();
 	//parser->setCommandData(inputText);
 	parser->extractDateAndTime();
