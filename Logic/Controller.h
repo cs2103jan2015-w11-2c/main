@@ -53,8 +53,12 @@ private:
 public:
 	Controller(void);
 
+	string executeCommand(string);
+
+	//API for UI (Main Text Box)
 	string getInputBoxMessage();
 
+	//API for UI (Message Box)
 	string getSuccessMessage();
 
 	void setInputBoxMessage(string);
@@ -64,8 +68,6 @@ public:
 	void initializeVector();
 
 	bool rewriteFile();
-
-	string executeCommand(string);
 
 	void commandOptions(string);
 
