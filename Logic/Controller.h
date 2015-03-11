@@ -7,7 +7,6 @@
 #include <sstream>
 #include "Parser.h"
 #include "FileStorage.h"
-#include "Command.cpp"
 #include "AddItem.cpp"
 #include "DeleteItem.cpp"
 #include "ClearItems.cpp"
@@ -36,7 +35,7 @@ private:
 
 	FileStorage outputFile;
 	Parser *parser;
-	vector<string> vectorStore;
+	vector<ITEM> vectorStore;
 
 	//TO BE CHANGED
 	string fileName;
@@ -65,11 +64,13 @@ public:
 
 	bool rewriteFile();
 
+	ITEM initializeItem(string, int, int, int, int, int);
+
 	string executeCommand(string);
 
 	void commandOptions(string);
 
-	void addData(string sentence, int, int , int, int);
+	void addData(ITEM);
 
 	//returns the data deleted or *#*#*#*#* if not found
 	void deleteData();
@@ -108,7 +109,7 @@ public:
 
 	string getHelp();
 
-	vector<string> getVectorStore();
+	vector<ITEM> getVectorStore();
 
 	~Controller(void);
 };

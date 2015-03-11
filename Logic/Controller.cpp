@@ -41,33 +41,49 @@ void Controller::setSuccessMessage(string message) {
 }
 
 void Controller::initializeVector() {
-	vectorStore = outputFile.getAllFileData();
+	//vectorStore = outputFile.getAllFileData();
 }
 
 bool Controller::rewriteFile() {
 	outputFile.clearFile();
 	for (unsigned int i = 0; i < vectorStore.size(); i++) {
-		outputFile.addLine(vectorStore[i]);
+		outputFile.addLine(vectorStore[i].event);
 	}
 	return true;
 }
 
+ITEM Controller::initializeItem(string event, int mon, int day, int hour, int min, int col) {
+	ITEM temp;
+
+	temp.event=event;
+	temp.eventDate[0]=day;
+	temp.eventDate[1]=mon;
+	temp.eventTime[0]=hour;
+	temp.eventTime[1]=min;
+	temp.colour = col;
+
+	return temp;
+}
+
 string Controller::executeCommand(string inputText) {
 	parser = new Parser(inputText);
-	string userCommand = parser->getUserCommand();
-	parser->extractDateAndTime();
-	string commandData = parser->getCommandData();
-	parser->setCommandData(inputText);
+	
 	parser->extractDateAndTime();
 	int month = parser->getMonth();
 	int day = parser->getDay();
 	int hour = parser->getHour();
 	int mins = parser->getMinute();
+	int colour = 7; //temp, until parser can set colours
+
+	string userCommand = parser->getUserCommand();
+	string commandData = parser->getCommandData();
+	
+	ITEM data = initializeItem(commandData, month, day, hour, mins, colour);
 
 	if (userCommand == "display") {
 		setSuccessMessage("display");
 	} else if (userCommand == "add") {
-		addData(commandData, month, day, hour, mins);
+		addData(data);
 	} else if (userCommand == "delete") {
 		deleteData();
 	} else if (userCommand == "clear") {
@@ -94,15 +110,15 @@ void Controller::commandOptions(string command) {
 
 }
 
-void Controller::addData(string sentence, int month, int day, int hour, int mins) {
-	ostringstream oss;
+void Controller::addData(ITEM item) {
+	//ostringstream oss;
 
-	oss << sentence << "[" << day << "/" << month << ", " << hour << ":" << mins << "]";
+	//oss << sentence << "[" << day << "/" << month << ", " << hour << ":" << mins << "]";
 
-	AddItem *addItemCommand = new AddItem(vectorStore, oss.str());
+	AddItem *addItemCommand = new AddItem(vectorStore, item);
 	vectorStore = addItemCommand->executeAction();
 
-	outputFile.addLine(oss.str());
+	outputFile.addLine(item.event);
 
 	setInputBoxMessage("");
 	setSuccessMessage(addItemCommand->getMessage());
@@ -143,7 +159,10 @@ string Controller::displayAll() {
 	}
 
 	for (unsigned int i = 0; i < vectorStore.size(); i++) {
-		oss << (i + 1) << ". " << vectorStore[i] << endl << endl;
+		oss << (i + 1) << ". " << vectorStore[i].event;
+		oss << " [" << vectorStore[i].eventDate[0] << "/" << vectorStore[i].eventDate[1];
+		oss << ", " << vectorStore[i].eventTime[0] << ":" << vectorStore[i].eventTime[1] << "]";
+		oss << endl << endl;
 	}
 
 	return oss.str();
@@ -174,11 +193,11 @@ void Controller::search(string searchText) {
 	ostringstream oss;
 	transform(searchText.begin(), searchText.end(), searchText.begin(), ::tolower);
 	for (unsigned int i = 0; i < vectorStore.size(); i++) {
-		string currentString = vectorStore[i];
+		string currentString = vectorStore[i].event;
 		transform(currentString.begin(), currentString.end(), currentString.begin(), ::tolower);
 		size_t position = currentString.find(searchText);
 		if (position != string::npos) {
-			oss << (i + 1) << ". " << vectorStore[i] << endl << endl;
+			oss << (i + 1) << ". " << vectorStore[i].event << endl << endl;
 		}
 	}
 
@@ -211,7 +230,7 @@ void Controller::edit() {
 			setSuccessMessage(ERROR_INVALID_LINE_NUMBER);
 			setInputBoxMessage("");
 		} else {
-			string lineToCopy = "edit " + vectorStore[lineNumber - 1];
+			string lineToCopy = "edit " + vectorStore[lineNumber - 1].event;
 			setSuccessMessage("");
 			setInputBoxMessage(lineToCopy);
 		}
@@ -219,9 +238,9 @@ void Controller::edit() {
 		lineNumberOperation = lineNumber;
 	} else {
 		sprintf_s(buffer, SUCCESS_EDITED.c_str(), 
-			vectorStore[lineNumberOperation - 1].c_str(), 
+			vectorStore[lineNumberOperation - 1].event.c_str(), 
 			parser->getCommandData().c_str());
-		vectorStore[lineNumberOperation - 1] = parser->getCommandData();
+		vectorStore[lineNumberOperation - 1].event = parser->getCommandData();
 		rewriteFile();
 		isFirstCommandCall = true;
 		setSuccessMessage(buffer);
@@ -273,7 +292,7 @@ string Controller::getHelp() {
 	return oss.str();
 }
 
-vector<string> Controller::getVectorStore() {
+vector<ITEM> Controller::getVectorStore() {
 	return vectorStore;
 }
 

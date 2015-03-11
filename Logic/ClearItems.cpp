@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "Command.cpp"
+#include "Controller.h"
 
 using namespace std;
 
@@ -10,7 +10,7 @@ using namespace std;
 
 class ClearItems {
 private:
-	vector<string> _vectorStore;
+	vector<ITEM> _vectorStore;
 
 public:
 	ClearItems() {
@@ -19,7 +19,7 @@ public:
 	~ClearItems() {
 	}
 
-	vector<string> executeAction() {
+	vector<ITEM> executeAction() {
 		_vectorStore.clear();
 
 		return _vectorStore;

@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <vector>
-#include "Command.cpp"
 
 using namespace std;
 
@@ -13,7 +12,7 @@ const string ERROR_DELETE_INVALID_LINE_NUMBER = "Invalid line number specified!\
 class DeleteItem {
 private:
 	int _lineNumber;
-	vector<string> _vectorStore;
+	vector<ITEM> _vectorStore;
 	string _message;
 	string _deletedData;
 
@@ -24,7 +23,7 @@ public:
 		_deletedData="";
 	}
 
-	DeleteItem(vector<string> vectorStore, const int input) {
+	DeleteItem(vector<ITEM> vectorStore, const int input) {
 		_lineNumber=input;
 		_vectorStore=vectorStore;
 		_message="";
@@ -34,12 +33,12 @@ public:
 	~DeleteItem() {
 	}
 
-	vector<string> executeAction() {
+	vector<ITEM> executeAction() {
 	
 		if(_lineNumber == 0) {
 			_message = ERROR_DELETE_INVALID_LINE_NUMBER;
 		} else {
-			_deletedData = (_vectorStore[_lineNumber - 1]);
+			_deletedData = (_vectorStore[_lineNumber - 1].event);
 			_vectorStore.erase(_vectorStore.begin() + (_lineNumber - 1));
 
 			char buffer[1000];

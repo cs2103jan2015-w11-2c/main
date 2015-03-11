@@ -3,7 +3,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "Command.cpp"
 
 using namespace std;
 
@@ -14,7 +13,7 @@ const string SUCCESS_COPIED = "copied line: \"%s\" \n";
 class CopyItem {
 private:
 	int _input;
-	vector<string> _vectorStore;
+	vector<ITEM> _vectorStore;
 	string _message;
 	string _copiedData;
 
@@ -25,7 +24,7 @@ public:
 		_copiedData="";
 	}
 
-	CopyItem(vector<string> vectorStore, const int input) {
+	CopyItem(vector<ITEM> vectorStore, const int input) {
 		_input=input;
 		_vectorStore=vectorStore;
 		_message="";
@@ -35,14 +34,14 @@ public:
 	~CopyItem() {
 	}
 
-	vector<string> executeAction() {
+	vector<ITEM> executeAction() {
 
 		if(_input==0) {
 			_message=ERROR_COPY_INVALID_LINE_NUMBER;
 		}
 		else {
 			_message="";
-			_copiedData = _vectorStore[_input-1];
+			_copiedData = _vectorStore[_input-1].event;
 			_vectorStore.push_back(_vectorStore[_input-1]);
 			
 			char buffer[1000];
