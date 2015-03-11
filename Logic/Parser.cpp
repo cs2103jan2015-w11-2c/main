@@ -2,10 +2,18 @@
 
 
 Parser::Parser(string userInput) {
+	resetDateTime();
 	_fullUserInput = userInput;
 	extractUserCommand();
 }
 
+void Parser::resetDateTime() {
+	_month = 0;
+	_day = 0;
+	_hour = -1;
+	_minute = 0;
+	_duration = 1;
+}
 
 void Parser::setCommand(string command) {
 	_userCommand = command;
@@ -97,16 +105,8 @@ size_t Parser::findDateDelimiters(string commandData){
 	return (commandData.find_first_of("/._"));
 }
 
-void Parser::clearDateTime() {
-	_month = 0;
-	_day = 0;
-	_hour = 0;
-	_minute = 0;
-	_duration = 1;
-}
-
 void Parser::extractDateAndTime() {
-	clearDateTime();
+	resetDateTime();
 	size_t frontBracketPos = findFrontBracket(_commandData);
 
 	if(frontBracketPos != string::npos) {
@@ -121,43 +121,96 @@ void Parser::extractDateAndTime() {
 		}
 
 		switch (i) {
-		// no date or time
+			// no date or time
 		case 0: {
 			//date = today
 			break;
 			   }
 
-		// only date or only time
+			   // only date or only time
 		case 1: {
 			size_t dateDelimiterPos= findDateDelimiters(demarcateDateTime[0]);
 			if(dateDelimiterPos != string::npos) {
 				separateDayMonth(demarcateDateTime[0]);
+				if(!isValidDate()) {
+					_month = 0;
+					_day = 0;
+					//error message, wrong format
+				}
 			} else {
 				separateHourMinute(demarcateDateTime[0]);
 				//must set date to be today
+				if(!isValidTime()) {
+					_hour = -1;
+					_minute = 0;
+					//error message, wrong format
+				}
 			}
 
 			break;
 			   }
 
-		// both date and time, 24hrs
+			   // both date and time, 24hrs
 		case 2: {
+			size_t dateDelimiterPos= findDateDelimiters(demarcateDateTime[0]);
+			int count = 0;
+			if(dateDelimiterPos != string::npos) {
+				separateDayMonth(demarcateDateTime[count]);
+				count++;
+				if(!isValidDate()) {
+					_month = 0;
+					_day = 0;
+					//error message, wrong format
+				}
+			}
+
+			separateHourMinute(demarcateDateTime[count]);
+			if(!isValidTime()) {
+				_hour = -1;
+				_minute = 0;
+				//error message, wrong format
+			} 
+			if(count < 1) {
+				if(demarcateDateTime[2] == "m") {
+					if(_hour == 12) {
+						_hour = 0;
+					}
+				} else if(demarcateDateTime[2] == "p") {
+					_hour += 12;
+					if(!isValidTime()) {
+						_hour -= 12;
+					}
+				}
+			}
+
+			break;
+			   }
+			   // both date and time, 12hrs
+		case 3: {
 			size_t dateDelimiterPos= findDateDelimiters(demarcateDateTime[0]);
 			if(dateDelimiterPos != string::npos) {
 				separateDayMonth(demarcateDateTime[0]);
-				
-				if(_day == 0 || _month == 0) {
+
+				if(!isValidDate()) {
 					//error message, wrong format
 				}
 			}
 
 			separateHourMinute(demarcateDateTime[1]);
-
-			break;
-			   }
-		// both date and time, 12hrs
-		case 3: {
-
+			if(!isValidTime()) {
+				//error message, wrong format
+			} else {
+				if(demarcateDateTime[2] == "m") {
+					if(_hour == 12) {
+						_hour = 0;
+					}
+				} else if(demarcateDateTime[2] == "p") {
+					_hour += 12;
+					if(!isValidTime()) {
+						_hour -= 12;
+					}
+				}
+			}
 			break;
 			   }
 
@@ -166,6 +219,38 @@ void Parser::extractDateAndTime() {
 			    }
 		}
 	}
+}
+
+bool Parser::isValidDate() {
+	if(_day <= 0 || _month <= 0 || _day > 31 || _month > 12) {
+		return false;
+	}
+
+	switch (_month) {
+	case 2: {
+		if(_day > 29) {
+			return false;
+		}
+		break;
+		   }
+	case 4:
+	case 6:
+	case 9:
+	case 11: {
+		if(_day > 30) {
+			return false;
+		}
+		break;
+		    }
+	default: {
+		return true;
+		    }
+	}
+	return true;
+}
+
+bool Parser::isValidTime() {
+	return (_hour >= 0 && _hour < 24 && _minute >= 0 && _minute < 60);
 }
 
 void Parser::separateDayMonth(string dayMonth) {

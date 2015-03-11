@@ -20,6 +20,9 @@ private:
 public:
 	Parser(string);
 
+	//reset date, time and duration
+	void resetDateTime();
+
 	void setCommand(string);
 
 	void setCommandData(string);
@@ -59,11 +62,14 @@ public:
 
 	size_t findDateDelimiters(string);
 
-	//reset date and time to 0 and _duration to 1
-	void clearDateTime();
-
-	//input format is [_day/_month time at the end of the input
+	//input format is [_day/_month time(24hrs) at the end of the input
+	//if time is input as 12 hr, input p to specify pm
+	//12 is taken as 12 noon. if 12 am, then input m
 	void extractDateAndTime();
+
+	bool isValidDate();
+
+	bool isValidTime();
 
 	void separateDayMonth(string _day_month);
 
