@@ -63,7 +63,7 @@ public:
 	void clearDateTime();
 
 	//input format is [day/month time at the end of the input
-	void extractDateAndTime(string eventTime);
+	void extractDateAndTime();
 
 	void separateDayMonth(string dayMonth);
 
