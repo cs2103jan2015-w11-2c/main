@@ -9,7 +9,7 @@ using namespace std;
 
 //CONSTANTS
 const string ERROR_COPY_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
-const string SUCCESS_COPIED = "%s copied successfully!\n";
+const string SUCCESS_COPIED = "copied line: \"%s\" \n";
 
 class CopyItem {
 private:

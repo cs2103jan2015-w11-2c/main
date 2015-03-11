@@ -52,7 +52,6 @@ bool Controller::rewriteFile() {
 	return true;
 }
 
-
 string Controller::executeCommand(string inputText) {
 	parser = new Parser(inputText);
 	string userCommand = parser->getUserCommand();
@@ -182,17 +181,16 @@ void Controller::search(string searchText) {
 }
 
 void Controller::copy() {
-	//CopyItem *copyItemCommand = new CopyItem(vectorStore, getLineNumberForOperation());
-	//vectorStore=copyItemCommand->executeAction();
+	CopyItem *copyItemCommand = new CopyItem(vectorStore, getLineNumberForOperation());
+	vectorStore=copyItemCommand->executeAction();
 
-
-	//string copiedData = copyItemCommand->getCopiedData();
-	//if(copiedData!="") {
-	//	outputFile.addLine(copiedData);
-	//}
-
-	//setSuccessMessage("");
-	//setInputBoxMessage(copiedData);
+	string copiedData = copyItemCommand->getCopiedData();
+	if(copiedData!="") {
+		outputFile.addLine(copiedData);
+		setSuccessMessage(copyItemCommand->getMessage());
+	}
+	setInputBoxMessage("");
+	
 }
 
 void Controller::edit() {
