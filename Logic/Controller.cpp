@@ -54,15 +54,15 @@ bool Controller::rewriteFile() {
 
 string Controller::executeCommand(string inputText) {
 	parser = new Parser(inputText);
-	string userCommand = parser->getUserCommand();
-	parser->extractDateAndTime();
-	string commandData = parser->getCommandData();
-	parser->setCommandData(inputText);
+	
 	parser->extractDateAndTime();
 	int month = parser->getMonth();
 	int day = parser->getDay();
 	int hour = parser->getHour();
 	int mins = parser->getMinute();
+
+	string userCommand = parser->getUserCommand();
+	string commandData = parser->getCommandData();
 
 	if (userCommand == "display") {
 		setSuccessMessage("display");
