@@ -57,7 +57,7 @@ string Controller::executeCommand(string inputText) {
 	string userCommand = parser->getUserCommand();
 	parser->extractDateAndTime();
 	string commandData = parser->getCommandData();
-	//parser->setCommandData(inputText);
+	parser->setCommandData(inputText);
 	parser->extractDateAndTime();
 	int month = parser->getMonth();
 	int day = parser->getDay();
@@ -97,7 +97,7 @@ void Controller::commandOptions(string command) {
 void Controller::addData(string sentence, int month, int day, int hour, int mins) {
 	ostringstream oss;
 
-	oss << sentence << "[" << day << "/" << month << ", " << hour << "]";
+	oss << sentence << "[" << day << "/" << month << ", " << hour << ":" << mins << "]";
 
 	AddItem *addItemCommand = new AddItem(vectorStore, oss.str());
 	vectorStore = addItemCommand->executeAction();
