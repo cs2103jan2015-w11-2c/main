@@ -7,12 +7,17 @@
 #include <sstream>
 #include "Parser.h"
 #include "FileStorage.h"
+#include "Command.cpp"
+#include "AddItem.cpp"
+#include "DeleteItem.cpp"
+#include "ClearItems.cpp"
+#include "SortAlphabetical.cpp"
+#include "CopyItem.cpp"
+
 using namespace std;
 
 class Controller {
 private:
-	static const string SUCCESS_ADDED;
-	static const string SUCCESS_DELETED;
 	static const string SUCCESS_CLEARED;
 	static const string SUCCESS_SORTED;
 	static const string SUCCESS_COPIED;
@@ -20,8 +25,8 @@ private:
 	static const string SUCCESS_FILENAME_CHANGED;
 	static const string SUCCESS_FILE_LOCATION_CHANGED;
 	static const string ERROR_INVALID_COMMAND;
-	static const string ERROR_FILE_EMPTY;
 	static const string ERROR_INVALID_LINE_NUMBER;
+	static const string ERROR_FILE_EMPTY;
 	static const string ERROR_SEARCH_ITEM_NOT_FOUND;
 	static const string ERROR_FILE_OPERATION_FAILED;
 	static const string ERROR_NO_FILENAME;
@@ -95,11 +100,11 @@ public:
 	//NEED TO IMPLEMENT A textfile to reflect the change
 	//in name so that the next time the program is run
 	//it will not revert to old file name
-	void rename(string newFileName);
+	string rename(string newFileName);
 
 	//Example of new file path:
 	//C:\Users\Username\My Documents
-	void move(string newFileLocation);
+	string move(string newFileLocation);
 
 	string getSuccessMessage(string successType, string description = "");
 
@@ -109,4 +114,3 @@ public:
 
 	~Controller(void);
 };
-
