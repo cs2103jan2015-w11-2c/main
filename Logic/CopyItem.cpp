@@ -11,7 +11,7 @@ using namespace std;
 const string ERROR_COPY_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
 const string SUCCESS_COPIED = "copied line: \"%s\" \n";
 
-class CopyItem : public Command {
+class CopyItem {
 private:
 	int _input;
 	vector<string> _vectorStore;

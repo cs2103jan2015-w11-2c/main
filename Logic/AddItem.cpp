@@ -9,7 +9,7 @@ using namespace std;
 //CONSTANTS
 const string SUCCESS_ADDED = "Added line: \"%s\"\n";
 
-class AddItem : public Command {
+class AddItem {
 private:
 	string _input;
 	vector<string> _vectorStore;

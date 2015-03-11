@@ -1,7 +1,6 @@
 #include "Controller.h"
 
 //TO BE CHANGED!
-const string Controller::SUCCESS_CLEARED = "All content deleted\n";
 const string Controller::SUCCESS_EDITED = "\"%s\" changed to \"%s\"!\n";
 const string Controller::SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"\n";
 const string Controller::SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s\n";
@@ -155,7 +154,7 @@ void Controller::clearAll() {
 	vectorStore = clearItemsCommand->executeAction();
 
 	if(outputFile.clearFile()) {
-		setSuccessMessage(SUCCESS_CLEARED);
+		setSuccessMessage(clearItemsCommand->getMessage());
 	} else {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}

@@ -18,7 +18,6 @@ using namespace std;
 
 class Controller {
 private:
-	static const string SUCCESS_CLEARED;
 	static const string SUCCESS_EDITED;
 	static const string SUCCESS_FILENAME_CHANGED;
 	static const string SUCCESS_FILE_LOCATION_CHANGED;
