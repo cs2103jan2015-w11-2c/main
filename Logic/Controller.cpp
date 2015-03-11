@@ -21,36 +21,6 @@ Controller::Controller(void) {
 	isFirstCommandCall = true;
 }
 
-//API for UI (Main Text Box)
-string Controller::getInputBoxMessage() {
-	return inputBoxMessage;
-}
-
-//API for UI (Message Box)
-string Controller::getSuccessMessage() {
-	return successMessage;
-}
-
-void Controller::setInputBoxMessage(string message) {
-	inputBoxMessage = message;
-}
-
-void Controller::setSuccessMessage(string message) {
-	successMessage = message;
-}
-
-void Controller::initializeVector() {
-	vectorStore = outputFile.getAllFileData();
-}
-
-bool Controller::rewriteFile() {
-	outputFile.clearFile();
-	for (unsigned int i = 0; i < vectorStore.size(); i++) {
-		outputFile.addLine(vectorStore[i]);
-	}
-	return true;
-}
-
 string Controller::executeCommand(string inputText) {
 	parser = new Parser(inputText);
 	string userCommand = parser->getUserCommand();
@@ -87,6 +57,34 @@ string Controller::executeCommand(string inputText) {
 		setSuccessMessage("exit");
 	}
 	return getSuccessMessage();
+}
+
+string Controller::getInputBoxMessage() {
+	return inputBoxMessage;
+}
+
+string Controller::getSuccessMessage() {
+	return successMessage;
+}
+
+void Controller::setInputBoxMessage(string message) {
+	inputBoxMessage = message;
+}
+
+void Controller::setSuccessMessage(string message) {
+	successMessage = message;
+}
+
+void Controller::initializeVector() {
+	vectorStore = outputFile.getAllFileData();
+}
+
+bool Controller::rewriteFile() {
+	outputFile.clearFile();
+	for (unsigned int i = 0; i < vectorStore.size(); i++) {
+		outputFile.addLine(vectorStore[i]);
+	}
+	return true;
 }
 
 void Controller::commandOptions(string command) {
