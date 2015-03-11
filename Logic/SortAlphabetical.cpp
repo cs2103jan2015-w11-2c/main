@@ -11,7 +11,7 @@ using namespace std;
 const string SUCCESS_SORTED = "All content sorted alphabetically\n";
 const string ERROR_FILE_EMPTY = "File is empty\n";
 
-class SortAlphabetical {
+class SortAlphabetical : public Command {
 private:
 	vector<string> _vectorStore;
 	string _message;
