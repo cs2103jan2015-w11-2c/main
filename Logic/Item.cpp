@@ -4,7 +4,7 @@
 
 using namespace std;
 
-class ITEM {
+struct ITEM {
 public:
 	string event;
 	int eventDate[2];
