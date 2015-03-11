@@ -52,7 +52,7 @@ bool Controller::rewriteFile() {
 	return true;
 }
 
-ITEM Controller::initializeItem(string event, int mon, int day, int hour, int min, int col) {
+ITEM Controller::initializeItem(string event, int day, int mon, int hour, int min, int col) {
 	ITEM temp;
 
 	temp.event=event;
@@ -78,7 +78,7 @@ string Controller::executeCommand(string inputText) {
 	string userCommand = parser->getUserCommand();
 	string commandData = parser->getCommandData();
 	
-	ITEM data = initializeItem(commandData, month, day, hour, mins, colour);
+	ITEM data = initializeItem(commandData, day, month, hour, mins, colour);
 
 	if (userCommand == "display") {
 		setSuccessMessage("display");
@@ -142,7 +142,7 @@ void Controller::deleteData() {
 
 int Controller::getLineNumberForOperation() {
 	bool validLineNumber = parser->getIntegerLineNumber();
-	unsigned int lineNumber;
+	unsigned int lineNumber=0;
 	if(validLineNumber) {
 		lineNumber = parser->getLineOpNumber();
 		if (lineNumber <= 0 || lineNumber > vectorStore.size()) {
@@ -230,7 +230,15 @@ void Controller::edit() {
 			setSuccessMessage(ERROR_INVALID_LINE_NUMBER);
 			setInputBoxMessage("");
 		} else {
-			string lineToCopy = "edit " + vectorStore[lineNumber - 1].event;
+			ostringstream oss;
+
+			oss << vectorStore[lineNumber - 1].event;
+			oss << "[" << vectorStore[lineNumber-1].eventDate[0];
+			oss << "/" << vectorStore[lineNumber-1].eventDate[1];
+			oss << ", " << vectorStore[lineNumber-1].eventTime[0];
+			oss << ":" << vectorStore[lineNumber-1].eventTime[1] << "]";
+			
+			string lineToCopy = "edit " + oss.str();
 			setSuccessMessage("");
 			setInputBoxMessage(lineToCopy);
 		}
@@ -240,7 +248,15 @@ void Controller::edit() {
 		sprintf_s(buffer, SUCCESS_EDITED.c_str(), 
 			vectorStore[lineNumberOperation - 1].event.c_str(), 
 			parser->getCommandData().c_str());
-		vectorStore[lineNumberOperation - 1].event = parser->getCommandData();
+		
+		ITEM temp = initializeItem(parser->getCommandData(),
+			parser->getDay(),
+			parser->getMonth(),
+			parser->getHour(),
+			parser->getMinute(),
+			7);
+
+		vectorStore[lineNumberOperation - 1] = temp;
 		rewriteFile();
 		isFirstCommandCall = true;
 		setSuccessMessage(buffer);
