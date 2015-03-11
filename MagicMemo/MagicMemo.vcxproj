@@ -94,7 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FileStorage\FileStorage.vcxproj">
-      <Project>{f59f9dee-9b6e-4fca-9af3-331ad51f76d1}</Project>
+      <Project>{61e6adec-2eeb-489e-a7b4-989f0e1e858d}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Logic\Logic.vcxproj">
       <Project>{141d2353-8c44-4e8d-8768-2079ff565093}</Project>

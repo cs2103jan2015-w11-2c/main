@@ -44,7 +44,6 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalUsingDirectories>C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage;%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <AdditionalIncludeDirectories>C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -72,6 +71,11 @@
   <ItemGroup>
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Parser.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FileStorage\FileStorage.vcxproj">
+      <Project>{61e6adec-2eeb-489e-a7b4-989f0e1e858d}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
