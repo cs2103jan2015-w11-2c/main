@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "Command.cpp"
+#include "Item.cpp"
 
 using namespace std;
 
@@ -11,7 +11,7 @@ const string SUCCESS_CLEARED = "All content deleted!\n";
 
 class ClearItems {
 private:
-	vector<string> _vectorStore;
+	vector<ITEM> _vectorStore;
 
 public:
 	ClearItems() {
@@ -20,7 +20,7 @@ public:
 	~ClearItems() {
 	}
 
-	vector<string> executeAction() {
+	vector<ITEM> executeAction() {
 		_vectorStore.clear();
 
 		return _vectorStore;

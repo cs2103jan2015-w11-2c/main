@@ -3,20 +3,20 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "Command.cpp"
+#include "Item.cpp"
 
 using namespace std;
 
 //CONSTANTS
-const string ERROR_COPY_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
-const string SUCCESS_COPIED = "copied line: \"%s\" \n";
+const std::string ERROR_COPY_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
+const std::string SUCCESS_COPIED = "copied line: \"%s\" \n";
 
 class CopyItem {
 private:
 	int _input;
-	vector<string> _vectorStore;
-	string _message;
-	string _copiedData;
+	vector<ITEM> _vectorStore;
+	std::string _message;
+	std::string _copiedData;
 
 public:
 	CopyItem() {
@@ -25,24 +25,24 @@ public:
 		_copiedData = "";
 	}
 
-	CopyItem(vector<string> vectorStore, const int input) {
-		_input = input;
-		_vectorStore = vectorStore;
-		_message = "";
-		_copiedData = "";
+	CopyItem(vector<ITEM> vectorStore, const int input) {
+		_input=input;
+		_vectorStore=vectorStore;
+		_message="";
+		_copiedData="";
 	}
 
 	~CopyItem() {
 	}
 
-	vector<string> executeAction() {
+	vector<ITEM> executeAction() {
 
 		if(_input == 0) {
 			_message = ERROR_COPY_INVALID_LINE_NUMBER;
 		}
 		else {
-			_message = "";
-			_copiedData = _vectorStore[_input-1];
+			_message="";
+			_copiedData = _vectorStore[_input-1].event;
 			_vectorStore.push_back(_vectorStore[_input-1]);
 			
 			char buffer[1000];
@@ -53,11 +53,11 @@ public:
 		return _vectorStore;
 	}
 
-	string getMessage() {
+	std::string getMessage() {
 		return _message;
 	}
 
-	string getCopiedData() {
+	std::string getCopiedData() {
 		return _copiedData;
 	}
 };
