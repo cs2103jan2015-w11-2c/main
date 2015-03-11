@@ -68,7 +68,6 @@ ITEM Controller::initializeItem(string event, int day, int mon, int hour, int mi
 string Controller::executeCommand(string inputText) {
 	parser = new Parser(inputText);
 	
-	parser->extractDateAndTime();
 	int month = parser->getMonth();
 	int day = parser->getDay();
 	int hour = parser->getHour();
@@ -141,9 +140,8 @@ void Controller::deleteData() {
 }
 
 int Controller::getLineNumberForOperation() {
-	bool validLineNumber = parser->getIntegerLineNumber();
 	unsigned int lineNumber=0;
-	if(validLineNumber) {
+	if(parser->haveValidLineNumber()) {
 		lineNumber = parser->getLineOpNumber();
 		if (lineNumber <= 0 || lineNumber > vectorStore.size()) {
 			return 0;

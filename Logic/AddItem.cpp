@@ -16,16 +16,16 @@ private:
 
 public:
 	AddItem() {
-		_input.event="";
-		_input.eventDate[0]=0;
-		_input.eventDate[1]=0;
-		_input.eventTime[0]=0;
-		_input.eventTime[1]=0;
+		_input.event = "";
+		_input.eventDate[0] = 0;
+		_input.eventDate[1] = 0;
+		_input.eventTime[0] = 0;
+		_input.eventTime[1] = 0;
 		_input.colour=7; 
 	}
 
 	AddItem(vector<ITEM> vectorStore, const ITEM input) {
-		_input=input;
+		_input = input;
 		_vectorStore=vectorStore;
 	}
 

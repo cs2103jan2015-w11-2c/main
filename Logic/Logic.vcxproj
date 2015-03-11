@@ -71,6 +71,7 @@
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="CopyItem.cpp" />
     <ClCompile Include="DeleteItem.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="SortAlphabetical.cpp" />
   </ItemGroup>

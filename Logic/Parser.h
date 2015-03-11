@@ -18,28 +18,16 @@ private:
 	int _duration;
 
 public:
+	Parser();
+
 	Parser(string);
 
 	//reset date, time and duration
 	void resetDateTime();
 
-	void setCommand(string);
-
-	void setCommandData(string);
-
-	void setEvent(string);
-
-	void setDay(int);
-
-	void setMonth(int);
-
-	void setHour(int);
-
-	void setMinute(int);
-
-	void setLineOpNumber(int);
-
 	string getUserCommand();
+
+	void setCommandData(string commandData);
 
 	string getCommandData();
 
@@ -53,10 +41,11 @@ public:
 
 	int getMinute();
 
+	//returns the line number for operations such as delete
 	int getLineOpNumber();
 
-	//extracts _userCommand and _commandData
-	void extractUserCommand();
+	//extracts _userCommand and stores the rest of the input in _commandData
+	void extractUserCommand(string);
 
 	size_t findFrontBracket(string);
 
@@ -65,7 +54,7 @@ public:
 	//input format is [_day/_month time(24hrs) at the end of the input
 	//if time is input as 12 hr, input p to specify pm
 	//12 is taken as 12 noon. if 12 am, then input m
-	void extractDateAndTime();
+	void extractDateAndTime(string);
 
 	bool isValidDate();
 
@@ -77,12 +66,12 @@ public:
 
 	//remove leading and ending whitespace of string, if any
 	//if only whitespaces are input, then it returns
-	//the whitespaces with one less whitespace
+	//an empty string
 	string removeSpacePadding(string);
 
-	//Converts a number in string format to integer format
-	//returns true if successful
-	bool getIntegerLineNumber();
+	//Converts the first number in the input string into an integer
+	//Sets _lineOpNumber and returns true if successful
+	bool haveValidLineNumber();
 
 	int convertStringToInteger(string numberString);
 
