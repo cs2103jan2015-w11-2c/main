@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{141D2353-8C44-4E8D-8768-2079FF565093}</ProjectGuid>
+    <ProjectGuid>{EE9CE566-7AC2-4FDD-94C6-77748CD42FFF}</ProjectGuid>
     <RootNamespace>Logic</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -65,8 +65,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AddItem.cpp" />
+    <ClCompile Include="ClearItems.cpp" />
+    <ClCompile Include="Command.cpp" />
     <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="CopyItem.cpp" />
+    <ClCompile Include="DeleteItem.cpp" />
     <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="SortAlphabetical.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controller.h" />

@@ -20,16 +20,16 @@ private:
 
 public:
 	CopyItem() {
-		_input=0;
-		_message="";
-		_copiedData="";
+		_input = 0;
+		_message = "";
+		_copiedData = "";
 	}
 
 	CopyItem(vector<string> vectorStore, const int input) {
-		_input=input;
-		_vectorStore=vectorStore;
-		_message="";
-		_copiedData="";
+		_input = input;
+		_vectorStore = vectorStore;
+		_message = "";
+		_copiedData = "";
 	}
 
 	~CopyItem() {
@@ -37,17 +37,17 @@ public:
 
 	vector<string> executeAction() {
 
-		if(_input==0) {
-			_message=ERROR_COPY_INVALID_LINE_NUMBER;
+		if(_input == 0) {
+			_message = ERROR_COPY_INVALID_LINE_NUMBER;
 		}
 		else {
-			_message="";
+			_message = "";
 			_copiedData = _vectorStore[_input-1];
 			_vectorStore.push_back(_vectorStore[_input-1]);
 			
 			char buffer[1000];
 			sprintf_s(buffer, SUCCESS_COPIED.c_str(), _copiedData.c_str());
-			_message=buffer;
+			_message = buffer;
 		}
 		
 		return _vectorStore;
