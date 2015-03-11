@@ -2,12 +2,10 @@
 
 //TO BE CHANGED!
 const string Controller::SUCCESS_CLEARED = "All content deleted\n";
-const string Controller::SUCCESS_SORTED = "All content sorted alphabetically\n";
-const string Controller::SUCCESS_COPIED = "%s copied successfully!\n";
 const string Controller::SUCCESS_EDITED = "\"%s\" changed to \"%s\"!\n";
 const string Controller::SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"\n";
 const string Controller::SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s\n";
-const string Controller::ERROR_INVALID_COMMAND = "Invalid command specified! please try again\n";
+const string Controller::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
 const string Controller::ERROR_FILE_EMPTY = "File is empty\n";
 const string Controller::ERROR_SEARCH_ITEM_NOT_FOUND = "\"%s\" Not found!\n";
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
@@ -90,11 +88,12 @@ void Controller::commandOptions(string command) {
 }
 
 void Controller::addData(string sentence) {
-	outputFile.addLine(sentence);
 
 	AddItem *addItemCommand = new AddItem(vectorStore, sentence);
 	vectorStore = addItemCommand->executeAction();
 	
+	outputFile.addLine(sentence);
+
 	setInputBoxMessage("");
 	setSuccessMessage(addItemCommand->getMessage());
 }
@@ -105,10 +104,14 @@ void Controller::deleteData() {
 	DeleteItem *deleteItemCommand = new DeleteItem(vectorStore, getLineNumberForOperation());
 	vectorStore=deleteItemCommand->executeAction();
 
-	rewriteFile();
+	if(rewriteFile()) {
+		setSuccessMessage(deleteItemCommand->getMessage());;
+	} else {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
 
 	setInputBoxMessage("");
-	setSuccessMessage(deleteItemCommand->getMessage());
+	
 }
 
 int Controller::getLineNumberForOperation() {
@@ -137,61 +140,24 @@ string Controller::displayAll() {
 }
 
 void Controller::clearAll() {
-	vectorStore.clear();
+	ClearItems *clearItemsCommand = new ClearItems;
+	
+	vectorStore = clearItemsCommand->executeAction();
+
 	if(outputFile.clearFile()) {
 		setSuccessMessage(SUCCESS_CLEARED);
 	} else {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
-
-
 }
 
 void Controller::sortAlphabetical() {
-	if (vectorStore.empty()) {
-		setSuccessMessage(ERROR_FILE_EMPTY);
-	} else {
-		selectionSortIgnoreCase();
-		if(rewriteFile()) {
-			setSuccessMessage(SUCCESS_SORTED);
-		} else {
-			setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
-		}
-	}
+	
+	SortAlphabetical *sortAlphabeticalCommand = new SortAlphabetical(vectorStore);
+	vectorStore=sortAlphabeticalCommand->executeAction();
+
 	setInputBoxMessage("");
-}
-
-void Controller::selectionSortIgnoreCase() {
-	for (unsigned int i = 0; i < (vectorStore.size() - 1); i++) {
-		int minIndex = i;
-		string minString = getLowerCaseString(vectorStore[minIndex]);
-		string minValue = vectorStore[minIndex];
-		for (unsigned int j = i + 1; j < vectorStore.size(); j++) {
-			string currString = getLowerCaseString(vectorStore[j]);
-			if (currString == minString && vectorStore[j] < vectorStore[minIndex]) {
-				swap(vectorStore[minIndex], vectorStore[j]);
-				minValue = vectorStore[minIndex];
-			}
-			if (currString < minString) {
-				minString = getLowerCaseString(vectorStore[j]);
-				minValue = vectorStore[j];
-				minIndex = j;
-			}
-		}
-		vectorStore[minIndex] = vectorStore[i];
-		vectorStore[i] = minValue;
-	}
-}
-
-string Controller::getLowerCaseString(string currentString) {
-	transform(currentString.begin(), currentString.end(), currentString.begin(), ::tolower);
-	return currentString;
-}
-
-void Controller::swap(string& string1, string& string2) {
-	string tempString = string1;
-	string1 = string2;
-	string2 = tempString;
+	setSuccessMessage(sortAlphabeticalCommand->getMessage());
 }
 
 void Controller::search(string searchText) {
@@ -216,15 +182,17 @@ void Controller::search(string searchText) {
 }
 
 void Controller::copy() {
-	int lineNumber = getLineNumberForOperation();
-	if(lineNumber == 0) {
-		setSuccessMessage(ERROR_INVALID_LINE_NUMBER);
-		setInputBoxMessage("");
-	} else {
-		string lineToCopy = "add " + vectorStore[lineNumber - 1];
-		setSuccessMessage("");
-		setInputBoxMessage(lineToCopy);
-	}
+	//CopyItem *copyItemCommand = new CopyItem(vectorStore, getLineNumberForOperation());
+	//vectorStore=copyItemCommand->executeAction();
+
+
+	//string copiedData = copyItemCommand->getCopiedData();
+	//if(copiedData!="") {
+	//	outputFile.addLine(copiedData);
+	//}
+
+	//setSuccessMessage("");
+	//setInputBoxMessage(copiedData);
 }
 
 void Controller::edit() {
@@ -280,17 +248,7 @@ string Controller::move(string newFileLocation) {
 
 
 string Controller::getSuccessMessage(string successType, string description) {
-	if (successType == "added") {
-		sprintf_s(buffer, SUCCESS_ADDED.c_str(), description.c_str());
-	} else if (successType == "deleted") {
-		sprintf_s(buffer, SUCCESS_DELETED.c_str(), description.c_str());
-	} else if (successType == "cleared") {
-		sprintf_s(buffer, SUCCESS_CLEARED.c_str());
-	} else if (successType == "sorted") {
-		sprintf_s(buffer, SUCCESS_SORTED.c_str());
-	}
-
-	return buffer;
+	return successMessage;
 }
 
 string Controller::getHelp() {

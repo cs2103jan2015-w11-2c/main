@@ -8,7 +8,7 @@ using namespace std;
 
 //CONSTANTS
 const string SUCCESS_DELETED = "Deleted line: \"%s\"\n";
-const string ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
+const string ERROR_DELETE_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
 
 class DeleteItem {
 private:
@@ -37,7 +37,7 @@ public:
 	vector<string> executeAction() {
 	
 		if(_lineNumber == 0) {
-			_message = ERROR_INVALID_LINE_NUMBER;
+			_message = ERROR_DELETE_INVALID_LINE_NUMBER;
 		} else {
 			_deletedData = (_vectorStore[_lineNumber - 1]);
 			_vectorStore.erase(_vectorStore.begin() + (_lineNumber - 1));
