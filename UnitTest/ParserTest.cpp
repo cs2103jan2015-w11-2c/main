@@ -16,13 +16,13 @@ namespace UnitTest
 
 			string expected = "Testing1";		
 			Assert::AreEqual(expected, parse.removeSpacePadding("   Testing1   ")); 
-			
+
 			expected = "Testing2";
 			Assert::AreEqual(expected, parse.removeSpacePadding("  Testing2"));
 
 			expected = "Testing3";
 			Assert::AreEqual(expected, parse.removeSpacePadding("Testing3")); 
-			
+
 			expected = "";
 			Assert::AreEqual(expected, parse.removeSpacePadding("  ")); 
 		}
@@ -31,14 +31,14 @@ namespace UnitTest
 		{
 			Parser parse;
 			string expected = "Add";
-			
+
 			parse.extractUserCommand("Add testing");
 			Assert::AreEqual(expected, parse.getUserCommand()); 
 			parse.extractUserCommand("Add   testing");
 			Assert::AreEqual(expected, parse.getUserCommand()); 
 			parse.extractUserCommand("Add");
 			Assert::AreEqual(expected, parse.getUserCommand()); 
-			
+
 			parse.extractUserCommand("  ");
 			expected = "";
 			Assert::AreEqual(expected, parse.getUserCommand()); 
