@@ -20,8 +20,8 @@ public:
 	}
 
 	AddItem(vector<string> vectorStore, const string input) {
-		_input=input;
-		_vectorStore=vectorStore;
+		_input = input;
+		_vectorStore = vectorStore;
 	}
 
 	~AddItem() {

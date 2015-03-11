@@ -7,6 +7,7 @@
 using namespace std;
 
 //CONSTANTS
+const string SUCCESS_CLEARED = "All content deleted!\n";
 
 class ClearItems {
 private:
@@ -23,5 +24,9 @@ public:
 		_vectorStore.clear();
 
 		return _vectorStore;
+	}
+
+	string getMessage() {
+		return SUCCESS_CLEARED;
 	}
 };

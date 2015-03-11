@@ -53,7 +53,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage;C:\Users\CXY\Desktop\GitHub\W11-2C\Logic;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\CXY\Desktop\GitHub\W11-2C\Logic;C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -97,7 +97,7 @@
       <Project>{b727fbf5-1867-44d6-af65-15146846c590}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Logic\Logic.vcxproj">
-      <Project>{141d2353-8c44-4e8d-8768-2079ff565093}</Project>
+      <Project>{ee9ce566-7ac2-4fdd-94c6-77748cd42fff}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

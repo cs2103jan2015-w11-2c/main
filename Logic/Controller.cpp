@@ -1,7 +1,6 @@
 #include "Controller.h"
 
 //TO BE CHANGED!
-const string Controller::SUCCESS_CLEARED = "All content deleted\n";
 const string Controller::SUCCESS_EDITED = "\"%s\" changed to \"%s\"!\n";
 const string Controller::SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"\n";
 const string Controller::SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s\n";
@@ -20,36 +19,6 @@ char Controller::buffer[1000];
 Controller::Controller(void) {
 	initializeVector();
 	isFirstCommandCall = true;
-}
-
-//API for UI (Main Text Box)
-string Controller::getInputBoxMessage() {
-	return inputBoxMessage;
-}
-
-//API for UI (Message Box)
-string Controller::getSuccessMessage() {
-	return successMessage;
-}
-
-void Controller::setInputBoxMessage(string message) {
-	inputBoxMessage = message;
-}
-
-void Controller::setSuccessMessage(string message) {
-	successMessage = message;
-}
-
-void Controller::initializeVector() {
-	vectorStore = outputFile.getAllFileData();
-}
-
-bool Controller::rewriteFile() {
-	outputFile.clearFile();
-	for (unsigned int i = 0; i < vectorStore.size(); i++) {
-		outputFile.addLine(vectorStore[i]);
-	}
-	return true;
 }
 
 string Controller::executeCommand(string inputText) {
@@ -88,6 +57,34 @@ string Controller::executeCommand(string inputText) {
 		setSuccessMessage("exit");
 	}
 	return getSuccessMessage();
+}
+
+string Controller::getInputBoxMessage() {
+	return inputBoxMessage;
+}
+
+string Controller::getSuccessMessage() {
+	return successMessage;
+}
+
+void Controller::setInputBoxMessage(string message) {
+	inputBoxMessage = message;
+}
+
+void Controller::setSuccessMessage(string message) {
+	successMessage = message;
+}
+
+void Controller::initializeVector() {
+	vectorStore = outputFile.getAllFileData();
+}
+
+bool Controller::rewriteFile() {
+	outputFile.clearFile();
+	for (unsigned int i = 0; i < vectorStore.size(); i++) {
+		outputFile.addLine(vectorStore[i]);
+	}
+	return true;
 }
 
 void Controller::commandOptions(string command) {
@@ -155,7 +152,7 @@ void Controller::clearAll() {
 	vectorStore = clearItemsCommand->executeAction();
 
 	if(outputFile.clearFile()) {
-		setSuccessMessage(SUCCESS_CLEARED);
+		setSuccessMessage(clearItemsCommand->getMessage());
 	} else {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}

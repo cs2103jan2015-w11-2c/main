@@ -15,9 +15,10 @@ class SortAlphabetical {
 private:
 	vector<string> _vectorStore;
 	string _message;
+
 public:
 	SortAlphabetical() {
-		_message="";
+		_message = "";
 	}
 
 	SortAlphabetical(vector<string> vectorStore) {
@@ -64,11 +65,11 @@ public:
 
 	vector<string> executeAction() {
 		if (_vectorStore.empty()) {
-			_message=ERROR_FILE_EMPTY;
+			_message = ERROR_FILE_EMPTY;
 		}
 		else {
 			selectionSortIgnoreCase();
-			_message=SUCCESS_SORTED;
+			_message = SUCCESS_SORTED;
 		}
 
 		return _vectorStore;

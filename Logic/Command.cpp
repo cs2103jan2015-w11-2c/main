@@ -9,6 +9,6 @@ class Command {
 public:
 	Command();
 	~Command();
-	virtual vector<string> executeAction()=0;
-	virtual string getMessage()=0;
+	virtual vector<string> executeAction() = 0;
+	virtual string getMessage() = 0;
 };
