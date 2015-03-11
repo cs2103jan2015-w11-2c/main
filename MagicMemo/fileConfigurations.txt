@@ -1,2 +1,0 @@
-MagicMemo.txt
-C:\Users\CXY\Desktop\GitHub\W11-2C\Debug
