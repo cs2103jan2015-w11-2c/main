@@ -4,10 +4,6 @@
 *.vcxproj
 *.filters
 *.txt
-<<<<<<< HEAD
-*.resx
-=======
->>>>>>> CX
 
 # User-specific files
 *.suo
