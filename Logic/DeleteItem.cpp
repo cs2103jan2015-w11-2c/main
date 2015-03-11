@@ -10,7 +10,7 @@ using namespace std;
 const string SUCCESS_DELETED = "Deleted line: \"%s\"\n";
 const string ERROR_DELETE_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
 
-class DeleteItem : public Command {
+class DeleteItem {
 private:
 	int _lineNumber;
 	vector<string> _vectorStore;

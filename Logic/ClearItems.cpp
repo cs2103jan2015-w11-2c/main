@@ -8,7 +8,7 @@ using namespace std;
 
 //CONSTANTS
 
-class ClearItems : public Command {
+class ClearItems {
 private:
 	vector<string> _vectorStore;
 
