@@ -56,7 +56,7 @@ string Controller::executeCommand(string inputText) {
 	parser = new Parser(inputText);
 	string userCommand = parser->getUserCommand();
 	string commandData = parser->getCommandData();
-	parser->setCommandData(inputText);
+	//parser->setCommandData(inputText);
 	parser->extractDateAndTime();
 	int month = parser->getMonth();
 	int day = parser->getDay();
