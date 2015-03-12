@@ -1,10 +1,12 @@
 #pragma once
 #include <string>
 #include <sstream>
+#include "DateTime.cpp"
 using namespace std;
 
 class Parser {
 private:
+	DateTime dateTime;
 	string _fullUserInput;
 	string _userCommand;
 	string _commandData;

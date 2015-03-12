@@ -119,7 +119,7 @@ void Parser::extractDateAndTime(string input) {
 			size_t dateDelimiterPos= findDateDelimiters(demarcateDateTime[0]);
 			if(dateDelimiterPos != string::npos) {
 				separateDayMonth(demarcateDateTime[0]);
-				if(!isValidDate()) {
+				if(!dateTime.isValidDate(_day, _month, _year)) {
 					_month = 0;
 					_day = 0;
 					//error message, wrong format
@@ -144,7 +144,7 @@ void Parser::extractDateAndTime(string input) {
 			if(dateDelimiterPos != string::npos) {
 				separateDayMonth(demarcateDateTime[count]);
 				count++;
-				if(!isValidDate()) {
+				if(!dateTime.isValidDate(_day, _month, _year)) {
 					_month = 0;
 					_day = 0;
 					//error message, wrong format
@@ -178,7 +178,7 @@ void Parser::extractDateAndTime(string input) {
 			if(dateDelimiterPos != string::npos) {
 				separateDayMonth(demarcateDateTime[0]);
 
-				if(!isValidDate()) {
+				if(!dateTime.isValidDate(_day, _month, _year)) {
 					//error message, wrong format
 				}
 			}
@@ -206,34 +206,6 @@ void Parser::extractDateAndTime(string input) {
 			    }
 		}
 	}
-}
-
-bool Parser::isValidDate() {
-	if(_day <= 0 || _month <= 0 || _day > 31 || _month > 12) {
-		return false;
-	}
-
-	switch (_month) {
-	case 2: {
-		if(_day > 29) {
-			return false;
-		}
-		break;
-		   }
-	case 4:
-	case 6:
-	case 9:
-	case 11: {
-		if(_day > 30) {
-			return false;
-		}
-		break;
-		    }
-	default: {
-		return true;
-		    }
-	}
-	return true;
 }
 
 bool Parser::isValidTime() {

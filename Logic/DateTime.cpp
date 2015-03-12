@@ -1,10 +1,13 @@
+#pragma once
+
 #include <ctime>
 #include <string>
 #include <sstream>
 
 using namespace std;
 
-const string WEEKDAY[]={"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+//constants
+const string WEEKDAY[]={"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 
 class DateTime {
 
@@ -51,7 +54,27 @@ public:
 	}
 
 	bool isLeapYear (int year) {
-		return ((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0));
+		return (((year % 400) == 0) || (year % 4) == 0) && (((year % 100) != 0));
+	}
+
+	bool isValidDate(int day, int month, int year) {
+		if((day <= 0) || (month <= 0) || (day > 31) || (month > 12)) {
+			return false;
+		}
+
+		if((month == 4) || (month == 6) || (month == 9) || (month || 11)) {
+			if(day > 30) {
+				return false;
+			}
+		}
+
+		if(month == 2) {
+			if(isLeapYear(year) && day <= 29) {
+				return true;
+			} else return (day < 29);
+		}
+
+		return true;
 	}
 
 };
