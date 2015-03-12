@@ -1,15 +1,16 @@
-#pragma once
-#include <iostream>
-#include <vector>
-#include "Item.cpp"
+#include "Command.h"
 
+Command::Command() {
+}
 
-using namespace std;
+Command::~Command() {
+}
 
-class Command {
-public:
-	Command();
-	~Command();
-	virtual vector<ITEM> executeAction() = 0;
-	virtual string getMessage() = 0;
-};
+vector<ITEM> Command::executeAction() {
+	vector<ITEM> temp;
+	return temp;
+}
+
+string Command::getMessage() {
+	return "";
+}
