@@ -77,6 +77,7 @@
     <ClCompile Include="SortAlphabetical.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Command.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Parser.h" />
   </ItemGroup>
