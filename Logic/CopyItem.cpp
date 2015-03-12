@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include "Item.cpp"
-#include "Command.h"
+#include "Command.cpp"
 
 using namespace std;
 

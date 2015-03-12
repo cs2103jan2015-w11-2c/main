@@ -67,6 +67,7 @@
   <ItemGroup>
     <ClCompile Include="AddItem.cpp" />
     <ClCompile Include="ClearItems.cpp" />
+    <ClCompile Include="Command.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="CopyItem.cpp" />
     <ClCompile Include="DateTime.cpp" />
@@ -76,7 +77,6 @@
     <ClCompile Include="SortAlphabetical.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Command.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Parser.h" />
   </ItemGroup>
