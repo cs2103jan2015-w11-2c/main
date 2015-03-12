@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <string>
 #include "Item.cpp"
-#include "Command.cpp"
+#include "Command.h"
 
 using namespace std;
 
