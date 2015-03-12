@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UI", "MagicMemo\MagicMemo.vcxproj", "{1B808976-3C6A-4304-B822-6EF36F1296CA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileStorage", "FileStorage\FileStorage.vcxproj", "{B727FBF5-1867-44D6-AF65-15146846C590}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logic", "Logic\Logic.vcxproj", "{EE9CE566-7AC2-4FDD-94C6-77748CD42FFF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest", "UnitTest\UnitTest.vcxproj", "{BA3A18D7-BADF-4C8C-99FA-F383ED86706D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileStorage", "FileStorage\FileStorage.vcxproj", "{01945A6F-D668-4A2E-B73B-22B37E25C9A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,18 +17,14 @@ Global
 		{1B808976-3C6A-4304-B822-6EF36F1296CA}.Debug|Win32.Build.0 = Debug|Win32
 		{1B808976-3C6A-4304-B822-6EF36F1296CA}.Release|Win32.ActiveCfg = Release|Win32
 		{1B808976-3C6A-4304-B822-6EF36F1296CA}.Release|Win32.Build.0 = Release|Win32
-		{B727FBF5-1867-44D6-AF65-15146846C590}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B727FBF5-1867-44D6-AF65-15146846C590}.Debug|Win32.Build.0 = Debug|Win32
-		{B727FBF5-1867-44D6-AF65-15146846C590}.Release|Win32.ActiveCfg = Release|Win32
-		{B727FBF5-1867-44D6-AF65-15146846C590}.Release|Win32.Build.0 = Release|Win32
 		{EE9CE566-7AC2-4FDD-94C6-77748CD42FFF}.Debug|Win32.ActiveCfg = Debug|Win32
 		{EE9CE566-7AC2-4FDD-94C6-77748CD42FFF}.Debug|Win32.Build.0 = Debug|Win32
 		{EE9CE566-7AC2-4FDD-94C6-77748CD42FFF}.Release|Win32.ActiveCfg = Release|Win32
 		{EE9CE566-7AC2-4FDD-94C6-77748CD42FFF}.Release|Win32.Build.0 = Release|Win32
-		{BA3A18D7-BADF-4C8C-99FA-F383ED86706D}.Debug|Win32.ActiveCfg = Debug|Win32
-		{BA3A18D7-BADF-4C8C-99FA-F383ED86706D}.Debug|Win32.Build.0 = Debug|Win32
-		{BA3A18D7-BADF-4C8C-99FA-F383ED86706D}.Release|Win32.ActiveCfg = Release|Win32
-		{BA3A18D7-BADF-4C8C-99FA-F383ED86706D}.Release|Win32.Build.0 = Release|Win32
+		{01945A6F-D668-4A2E-B73B-22B37E25C9A8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{01945A6F-D668-4A2E-B73B-22B37E25C9A8}.Debug|Win32.Build.0 = Debug|Win32
+		{01945A6F-D668-4A2E-B73B-22B37E25C9A8}.Release|Win32.ActiveCfg = Release|Win32
+		{01945A6F-D668-4A2E-B73B-22B37E25C9A8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
