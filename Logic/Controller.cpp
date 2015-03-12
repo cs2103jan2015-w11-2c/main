@@ -21,6 +21,46 @@ Controller::Controller(void) {
 	_isFirstCommandCall = true;
 }
 
+string Controller::executeCommand(string inputText) {
+	parser = new Parser(inputText);
+	
+	int month = parser->getMonth();
+	int day = parser->getDay();
+	int hour = parser->getHour();
+	int mins = parser->getMinute();
+	int colour = 7; //temp, until parser can set colours
+
+	string userCommand = parser->getUserCommand();
+	string commandData = parser->getCommandData();
+	
+	ITEM data = initializeItem(commandData, day, month, hour, mins, colour);
+
+	if (userCommand == "display") {
+		setSuccessMessage("display");
+	} else if (userCommand == "add") {
+		addData(data);
+	} else if (userCommand == "delete") {
+		deleteData();
+	} else if (userCommand == "clear") {
+		clearAll();
+	} else if (userCommand == "sort") {
+		sortAlphabetical();
+	} else if (userCommand == "search") {
+		search(commandData);
+	} else if (userCommand == "copy") {
+		copy();
+	} else if (userCommand == "edit") {
+		edit();
+	} else if (userCommand == "rename") {
+		rename(commandData);
+	} else if (userCommand == "move") {
+		move(commandData);
+	} else if (userCommand == "exit") {
+		setSuccessMessage("exit");
+	}
+	return getSuccessMessage();
+}
+
 //API for UI (Main Text Box)
 string Controller::getInputBoxMessage() {
 	return _inputBoxMessage;
@@ -64,46 +104,6 @@ ITEM Controller::initializeItem(string event, int day, int month, int hour, int 
 	temp.bold = bold;
 
 	return temp;
-}
-
-string Controller::executeCommand(string inputText) {
-	parser = new Parser(inputText);
-	
-	int month = parser->getMonth();
-	int day = parser->getDay();
-	int hour = parser->getHour();
-	int mins = parser->getMinute();
-	int colour = 7; //temp, until parser can set colours
-
-	string userCommand = parser->getUserCommand();
-	string commandData = parser->getCommandData();
-	
-	ITEM data = initializeItem(commandData, day, month, hour, mins, colour);
-
-	if (userCommand == "display") {
-		setSuccessMessage("display");
-	} else if (userCommand == "add") {
-		addData(data);
-	} else if (userCommand == "delete") {
-		deleteData();
-	} else if (userCommand == "clear") {
-		clearAll();
-	} else if (userCommand == "sort") {
-		sortAlphabetical();
-	} else if (userCommand == "search") {
-		search(commandData);
-	} else if (userCommand == "copy") {
-		copy();
-	} else if (userCommand == "edit") {
-		edit();
-	} else if (userCommand == "rename") {
-		rename(commandData);
-	} else if (userCommand == "move") {
-		move(commandData);
-	} else if (userCommand == "exit") {
-		setSuccessMessage("exit");
-	}
-	return getSuccessMessage();
 }
 
 void Controller::commandOptions(string command) {

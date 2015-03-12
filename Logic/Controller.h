@@ -48,6 +48,8 @@ private:
 public:
 	Controller(void);
 
+	string executeCommand(string);
+
 	//API for UI (Main Text Box)
 	string getInputBoxMessage();
 
@@ -63,8 +65,6 @@ public:
 	bool rewriteFile();
 
 	ITEM initializeItem(string, int, int, int, int, int color = 7, bool bold = false);
-
-	string executeCommand(string);
 
 	void commandOptions(string);
 
