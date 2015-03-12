@@ -1,59 +1,38 @@
 #include "Parser.h"
 
 
+Parser::Parser() {
+	resetDateTime();
+	_fullUserInput = "";
+	_userCommand = "";
+	_commandData = "";
+	_lineOpNumber = 0;
+}
+
 Parser::Parser(string userInput) {
 	resetDateTime();
+	_lineOpNumber = 0;
 	_fullUserInput = userInput;
-	extractUserCommand();
+	extractUserCommand(_fullUserInput);
+	extractDateAndTime(_commandData);
 }
 
 void Parser::resetDateTime() {
-	_month = 0;
 	_day = 0;
+	_month = 0;
+	_year = 2015;
 	_hour = -1;
 	_minute = 0;
 	_duration = 1;
 }
 
-void Parser::setCommand(string command) {
-	_userCommand = command;
-}
-
-
-void Parser::setCommandData(string data) {
-	_commandData = data;
-}
-
-
-
-void Parser::setDay(int dayData) {
-	_day = dayData;
-}
-
-
-void Parser::setMonth(int monthData) {
-	_month = monthData;
-}
-
-
-void Parser::setHour(int hourData) {
-	_hour = hourData;
-}
-
-void Parser::setMinute(int minuteData) {
-	_minute = minuteData;
-}
-
-
-void Parser::setLineOpNumber(int lineNumber) {
-	_lineOpNumber = lineNumber;
-}
-
-
 string Parser::getUserCommand() {
 	return _userCommand;
 }
 
+void Parser::setCommandData(string commandData) {
+	_commandData = commandData;
+}
 
 string Parser::getCommandData() {
 	return _commandData;
@@ -67,6 +46,10 @@ int Parser::getDay() {
 
 int Parser::getMonth() {
 	return _month;
+}
+
+int Parser::getYear() {
+	return _year;
 }
 
 
@@ -83,8 +66,12 @@ int Parser::getLineOpNumber() {
 	return _lineOpNumber;
 }
 
-void Parser::extractUserCommand() {
-	_commandData = removeSpacePadding(_fullUserInput);
+void Parser::extractUserCommand(string fullString) {
+	_commandData = removeSpacePadding(fullString);
+	if(_commandData == "") {
+		_userCommand = "";
+		return;
+	}
 	size_t spacePos = _commandData.find_first_of(" ");
 	if (spacePos == string::npos) {
 		_userCommand = _commandData;
@@ -105,7 +92,7 @@ size_t Parser::findDateDelimiters(string commandData){
 	return (commandData.find_first_of("/._"));
 }
 
-void Parser::extractDateAndTime() {
+void Parser::extractDateAndTime(string input) {
 	resetDateTime();
 	size_t frontBracketPos = findFrontBracket(_commandData);
 
@@ -132,7 +119,7 @@ void Parser::extractDateAndTime() {
 			size_t dateDelimiterPos= findDateDelimiters(demarcateDateTime[0]);
 			if(dateDelimiterPos != string::npos) {
 				separateDayMonth(demarcateDateTime[0]);
-				if(!isValidDate()) {
+				if(!dateTime.isValidDate(_day, _month, _year)) {
 					_month = 0;
 					_day = 0;
 					//error message, wrong format
@@ -157,7 +144,7 @@ void Parser::extractDateAndTime() {
 			if(dateDelimiterPos != string::npos) {
 				separateDayMonth(demarcateDateTime[count]);
 				count++;
-				if(!isValidDate()) {
+				if(!dateTime.isValidDate(_day, _month, _year)) {
 					_month = 0;
 					_day = 0;
 					//error message, wrong format
@@ -191,7 +178,7 @@ void Parser::extractDateAndTime() {
 			if(dateDelimiterPos != string::npos) {
 				separateDayMonth(demarcateDateTime[0]);
 
-				if(!isValidDate()) {
+				if(!dateTime.isValidDate(_day, _month, _year)) {
 					//error message, wrong format
 				}
 			}
@@ -221,34 +208,6 @@ void Parser::extractDateAndTime() {
 	}
 }
 
-bool Parser::isValidDate() {
-	if(_day <= 0 || _month <= 0 || _day > 31 || _month > 12) {
-		return false;
-	}
-
-	switch (_month) {
-	case 2: {
-		if(_day > 29) {
-			return false;
-		}
-		break;
-		   }
-	case 4:
-	case 6:
-	case 9:
-	case 11: {
-		if(_day > 30) {
-			return false;
-		}
-		break;
-		    }
-	default: {
-		return true;
-		    }
-	}
-	return true;
-}
-
 bool Parser::isValidTime() {
 	return (_hour >= 0 && _hour < 24 && _minute >= 0 && _minute < 60);
 }
@@ -275,17 +234,18 @@ string Parser::removeSpacePadding(string line) {
 	} else if (line == "") {
 		return "";
 	} else {
-		return line.substr(1);
+		return "";
 	}
 }
 
-bool Parser::getIntegerLineNumber() {
+bool Parser::haveValidLineNumber() {
 	if(_commandData == "") {
 		return false;
 	}
 	char *end;
 	_lineOpNumber = (int)strtol(_commandData.c_str(), &end, 10);
-	return (*end == 0);
+	return (*end == 0 || _lineOpNumber > 0);
+
 }
 
 int Parser::convertStringToInteger(string numberString) {

@@ -1,6 +1,5 @@
 #include "Controller.h"
 
-//TO BE CHANGED!
 const string Controller::SUCCESS_EDITED = "\"%s\" changed to \"%s\"!\n";
 const string Controller::SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"\n";
 const string Controller::SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s\n";
@@ -18,57 +17,12 @@ char Controller::buffer[1000];
 
 Controller::Controller(void) {
 	initializeVector();
-	isFirstCommandCall = true;
-}
-
-//API for UI (Main Text Box)
-string Controller::getInputBoxMessage() {
-	return inputBoxMessage;
-}
-
-//API for UI (Message Box)
-string Controller::getSuccessMessage() {
-	return successMessage;
-}
-
-void Controller::setInputBoxMessage(string message) {
-	inputBoxMessage = message;
-}
-
-void Controller::setSuccessMessage(string message) {
-	successMessage = message;
-}
-
-void Controller::initializeVector() {
-	//outputFile needs to be able to work with ITEM structure
-	//vectorStore = outputFile.getAllFileData();
-}
-
-bool Controller::rewriteFile() {
-	outputFile.clearFile();
-	for (unsigned int i = 0; i < vectorStore.size(); i++) {
-		outputFile.addLine(vectorStore[i].event);
-	}
-	return true;
-}
-
-ITEM Controller::initializeItem(string event, int day, int mon, int hour, int min, int col) {
-	ITEM temp;
-
-	temp.event=event;
-	temp.eventDate[0]=day;
-	temp.eventDate[1]=mon;
-	temp.eventTime[0]=hour;
-	temp.eventTime[1]=min;
-	temp.colour = col;
-
-	return temp;
+	_isFirstCommandCall = true;
 }
 
 string Controller::executeCommand(string inputText) {
 	parser = new Parser(inputText);
 	
-	parser->extractDateAndTime();
 	int month = parser->getMonth();
 	int day = parser->getDay();
 	int hour = parser->getHour();
@@ -106,6 +60,51 @@ string Controller::executeCommand(string inputText) {
 	return getSuccessMessage();
 }
 
+//API for UI (Main Text Box)
+string Controller::getInputBoxMessage() {
+	return _inputBoxMessage;
+}
+
+//API for UI (Message Box)
+string Controller::getSuccessMessage() {
+	return _successMessage;
+}
+
+void Controller::setInputBoxMessage(string message) {
+	_inputBoxMessage = message;
+}
+
+void Controller::setSuccessMessage(string message) {
+	_successMessage = message;
+}
+
+void Controller::initializeVector() {
+	//outputFile needs to be able to work with ITEM structure
+	//vectorStore = outputFile.getAllFileData();
+}
+
+bool Controller::rewriteFile() {
+	outputFile.clearFile();
+	for (unsigned int i = 0; i < vectorStore.size(); i++) {
+		outputFile.addLine(vectorStore[i].event);
+	}
+	return true;
+}
+
+ITEM Controller::initializeItem(string event, int day, int month, int hour, int min, int col, bool bold) {
+	ITEM temp;
+
+	temp.event=event;
+	temp.eventDate[0] = day;
+	temp.eventDate[1] = month;
+	temp.eventStartTime[0] = hour;
+	temp.eventStartTime[1] = min;
+	temp.colour = col;
+	temp.bold = bold;
+
+	return temp;
+}
+
 void Controller::commandOptions(string command) {
 
 }
@@ -141,9 +140,8 @@ void Controller::deleteData() {
 }
 
 int Controller::getLineNumberForOperation() {
-	bool validLineNumber = parser->getIntegerLineNumber();
 	unsigned int lineNumber=0;
-	if(validLineNumber) {
+	if(parser->haveValidLineNumber()) {
 		lineNumber = parser->getLineOpNumber();
 		if (lineNumber <= 0 || lineNumber > vectorStore.size()) {
 			return 0;
@@ -161,7 +159,7 @@ string Controller::displayAll() {
 	for (unsigned int i = 0; i < vectorStore.size(); i++) {
 		oss << (i + 1) << ". " << vectorStore[i].event;
 		oss << " [" << vectorStore[i].eventDate[0] << "/" << vectorStore[i].eventDate[1];
-		oss << ", " << vectorStore[i].eventTime[0] << ":" << vectorStore[i].eventTime[1] << "]";
+		oss << ", " << vectorStore[i].eventStartTime[0] << ":" << vectorStore[i].eventStartTime[1] << "]";
 		oss << endl << endl;
 	}
 
@@ -224,7 +222,7 @@ void Controller::copy() {
 }
 
 void Controller::edit() {
-	if(isFirstCommandCall) {
+	if(_isFirstCommandCall) {
 		int lineNumber = getLineNumberForOperation();
 		if(lineNumber == 0) {
 			setSuccessMessage(ERROR_INVALID_LINE_NUMBER);
@@ -235,18 +233,18 @@ void Controller::edit() {
 			oss << vectorStore[lineNumber - 1].event;
 			oss << "[" << vectorStore[lineNumber-1].eventDate[0];
 			oss << "/" << vectorStore[lineNumber-1].eventDate[1];
-			oss << ", " << vectorStore[lineNumber-1].eventTime[0];
-			oss << ":" << vectorStore[lineNumber-1].eventTime[1] << "]";
+			oss << ", " << vectorStore[lineNumber-1].eventStartTime[0];
+			oss << ":" << vectorStore[lineNumber-1].eventStartTime[1] << "]";
 			
 			string lineToCopy = "edit " + oss.str();
 			setSuccessMessage("");
 			setInputBoxMessage(lineToCopy);
 		}
-		isFirstCommandCall = false;
-		lineNumberOperation = lineNumber;
+		_isFirstCommandCall = false;
+		_lineNumberOperation = lineNumber;
 	} else {
 		sprintf_s(buffer, SUCCESS_EDITED.c_str(), 
-			vectorStore[lineNumberOperation - 1].event.c_str(), 
+			vectorStore[_lineNumberOperation - 1].event.c_str(), 
 			parser->getCommandData().c_str());
 		
 		ITEM temp = initializeItem(parser->getCommandData(),
@@ -256,9 +254,9 @@ void Controller::edit() {
 			parser->getMinute(),
 			7);
 
-		vectorStore[lineNumberOperation - 1] = temp;
+		vectorStore[_lineNumberOperation - 1] = temp;
 		rewriteFile();
-		isFirstCommandCall = true;
+		_isFirstCommandCall = true;
 		setSuccessMessage(buffer);
 		setInputBoxMessage("");
 	}

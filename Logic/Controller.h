@@ -36,20 +36,19 @@ private:
 	Parser *parser;
 	vector<ITEM> vectorStore;
 
-	//TO BE CHANGED
-	string fileName;
-
 	//To be passed to the GUI
-	string inputBoxMessage;
-	string successMessage;
+	string _inputBoxMessage;
+	string _successMessage;
 
 	//for edit function, to check if it is the initial edit call
-	bool isFirstCommandCall;
-	int lineNumberOperation;
+	bool _isFirstCommandCall;
+	int _lineNumberOperation;
 	
 
 public:
 	Controller(void);
+
+	string executeCommand(string);
 
 	//API for UI (Main Text Box)
 	string getInputBoxMessage();
@@ -65,9 +64,7 @@ public:
 
 	bool rewriteFile();
 
-	ITEM initializeItem(string, int, int, int, int, int);
-
-	string executeCommand(string);
+	ITEM initializeItem(string, int, int, int, int, int color = 7, bool bold = false);
 
 	void commandOptions(string);
 

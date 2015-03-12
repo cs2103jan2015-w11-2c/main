@@ -23,7 +23,7 @@ public:
 
 	SortAlphabetical(vector<ITEM> vectorStore) {
 		_vectorStore=vectorStore;
-		_message="";
+		_message = "";
 	}
 
 	~SortAlphabetical() {
