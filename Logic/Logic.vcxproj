@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\User\Desktop\MagicMemo\main\FileStorage;C:\Users\User\Desktop\MagicMemo\main\Logic;C:\Users\CXY\Desktop\GitHub\W11-2C\Logic;C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\CXY\Desktop\GitHub\W11-2C\Logic;C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -82,7 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FileStorage\FileStorage.vcxproj">
-      <Project>{eff52fce-68fe-45e1-81b5-9a405fe664a3}</Project>
+      <Project>{b727fbf5-1867-44d6-af65-15146846c590}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
