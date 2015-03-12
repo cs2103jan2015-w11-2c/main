@@ -12,6 +12,7 @@ private:
 
 	int _day;
 	int _month;
+	int _year;
 	//time saved in 24 _hours format
 	int _hour;
 	int _minute;
@@ -36,6 +37,8 @@ public:
 	int getDay();
 
 	int getMonth();
+
+	int getYear();
 
 	int getHour();
 

@@ -18,8 +18,9 @@ Parser::Parser(string userInput) {
 }
 
 void Parser::resetDateTime() {
-	_month = 0;
 	_day = 0;
+	_month = 0;
+	_year = 2015;
 	_hour = -1;
 	_minute = 0;
 	_duration = 1;
@@ -45,6 +46,10 @@ int Parser::getDay() {
 
 int Parser::getMonth() {
 	return _month;
+}
+
+int Parser::getYear() {
+	return _year;
 }
 
 

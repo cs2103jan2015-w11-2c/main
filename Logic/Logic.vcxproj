@@ -70,6 +70,7 @@
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="CopyItem.cpp" />
+    <ClCompile Include="DateTime.cpp" />
     <ClCompile Include="DeleteItem.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Parser.cpp" />

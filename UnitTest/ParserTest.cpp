@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Parser.h"
+#include "DateTime.cpp"
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -58,6 +59,33 @@ public:
 		parse.setCommandData("a 4");
 		Assert::AreEqual(false, parse.haveValidLineNumber());
 		Assert::AreEqual(0, parse.getLineOpNumber());
+	}
+
+	};
+
+
+	TEST_CLASS(DateTimeTest) {
+public:
+
+	TEST_METHOD(getWeekDayTest) {
+		DateTime dateTest;
+
+		string expected = "Thu";
+		Assert::AreEqual(expected, dateTest.getWeekDay(19, 3, 2015));
+
+		expected = "Mon";
+		Assert::AreEqual(expected, dateTest.getWeekDay(29, 2, 2016));
+
+	}
+
+		TEST_METHOD(isLeapYearTest) {
+		DateTime dateTest;
+
+		bool expected = true;
+		Assert::AreEqual(expected, dateTest.isLeapYear(2016));
+
+		expected = false;
+		Assert::AreEqual(expected, dateTest.isLeapYear(2019));
 	}
 
 	};
