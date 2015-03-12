@@ -1,6 +1,5 @@
 #include "Controller.h"
 
-//TO BE CHANGED!
 const string Controller::SUCCESS_EDITED = "\"%s\" changed to \"%s\"!\n";
 const string Controller::SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"\n";
 const string Controller::SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s\n";
@@ -98,8 +97,8 @@ ITEM Controller::initializeItem(string event, int day, int month, int hour, int 
 	temp.event=event;
 	temp.eventDate[0] = day;
 	temp.eventDate[1] = month;
-	temp.eventTime[0] = hour;
-	temp.eventTime[1] = min;
+	temp.eventStartTime[0] = hour;
+	temp.eventStartTime[1] = min;
 	temp.colour = col;
 	temp.bold = bold;
 
@@ -160,7 +159,7 @@ string Controller::displayAll() {
 	for (unsigned int i = 0; i < vectorStore.size(); i++) {
 		oss << (i + 1) << ". " << vectorStore[i].event;
 		oss << " [" << vectorStore[i].eventDate[0] << "/" << vectorStore[i].eventDate[1];
-		oss << ", " << vectorStore[i].eventTime[0] << ":" << vectorStore[i].eventTime[1] << "]";
+		oss << ", " << vectorStore[i].eventStartTime[0] << ":" << vectorStore[i].eventStartTime[1] << "]";
 		oss << endl << endl;
 	}
 
@@ -234,8 +233,8 @@ void Controller::edit() {
 			oss << vectorStore[lineNumber - 1].event;
 			oss << "[" << vectorStore[lineNumber-1].eventDate[0];
 			oss << "/" << vectorStore[lineNumber-1].eventDate[1];
-			oss << ", " << vectorStore[lineNumber-1].eventTime[0];
-			oss << ":" << vectorStore[lineNumber-1].eventTime[1] << "]";
+			oss << ", " << vectorStore[lineNumber-1].eventStartTime[0];
+			oss << ":" << vectorStore[lineNumber-1].eventStartTime[1] << "]";
 			
 			string lineToCopy = "edit " + oss.str();
 			setSuccessMessage("");
