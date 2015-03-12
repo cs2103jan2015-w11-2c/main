@@ -18,25 +18,25 @@ char Controller::buffer[1000];
 
 Controller::Controller(void) {
 	initializeVector();
-	isFirstCommandCall = true;
+	_isFirstCommandCall = true;
 }
 
 //API for UI (Main Text Box)
 string Controller::getInputBoxMessage() {
-	return inputBoxMessage;
+	return _inputBoxMessage;
 }
 
 //API for UI (Message Box)
 string Controller::getSuccessMessage() {
-	return successMessage;
+	return _successMessage;
 }
 
 void Controller::setInputBoxMessage(string message) {
-	inputBoxMessage = message;
+	_inputBoxMessage = message;
 }
 
 void Controller::setSuccessMessage(string message) {
-	successMessage = message;
+	_successMessage = message;
 }
 
 void Controller::initializeVector() {
@@ -52,15 +52,16 @@ bool Controller::rewriteFile() {
 	return true;
 }
 
-ITEM Controller::initializeItem(string event, int day, int mon, int hour, int min, int col) {
+ITEM Controller::initializeItem(string event, int day, int month, int hour, int min, int col, bool bold) {
 	ITEM temp;
 
 	temp.event=event;
-	temp.eventDate[0]=day;
-	temp.eventDate[1]=mon;
-	temp.eventTime[0]=hour;
-	temp.eventTime[1]=min;
+	temp.eventDate[0] = day;
+	temp.eventDate[1] = month;
+	temp.eventTime[0] = hour;
+	temp.eventTime[1] = min;
 	temp.colour = col;
+	temp.bold = bold;
 
 	return temp;
 }
@@ -222,7 +223,7 @@ void Controller::copy() {
 }
 
 void Controller::edit() {
-	if(isFirstCommandCall) {
+	if(_isFirstCommandCall) {
 		int lineNumber = getLineNumberForOperation();
 		if(lineNumber == 0) {
 			setSuccessMessage(ERROR_INVALID_LINE_NUMBER);
@@ -240,11 +241,11 @@ void Controller::edit() {
 			setSuccessMessage("");
 			setInputBoxMessage(lineToCopy);
 		}
-		isFirstCommandCall = false;
-		lineNumberOperation = lineNumber;
+		_isFirstCommandCall = false;
+		_lineNumberOperation = lineNumber;
 	} else {
 		sprintf_s(buffer, SUCCESS_EDITED.c_str(), 
-			vectorStore[lineNumberOperation - 1].event.c_str(), 
+			vectorStore[_lineNumberOperation - 1].event.c_str(), 
 			parser->getCommandData().c_str());
 		
 		ITEM temp = initializeItem(parser->getCommandData(),
@@ -254,9 +255,9 @@ void Controller::edit() {
 			parser->getMinute(),
 			7);
 
-		vectorStore[lineNumberOperation - 1] = temp;
+		vectorStore[_lineNumberOperation - 1] = temp;
 		rewriteFile();
-		isFirstCommandCall = true;
+		_isFirstCommandCall = true;
 		setSuccessMessage(buffer);
 		setInputBoxMessage("");
 	}

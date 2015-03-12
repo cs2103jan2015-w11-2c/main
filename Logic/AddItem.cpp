@@ -21,12 +21,13 @@ public:
 		_input.eventDate[1] = 0;
 		_input.eventTime[0] = 0;
 		_input.eventTime[1] = 0;
-		_input.colour=7; 
+		_input.colour = 7; 
+		_input.bold = false;
 	}
 
 	AddItem(vector<ITEM> vectorStore, const ITEM input) {
 		_input = input;
-		_vectorStore=vectorStore;
+		_vectorStore = vectorStore;
 	}
 
 	~AddItem() {

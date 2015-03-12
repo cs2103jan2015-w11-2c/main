@@ -25,10 +25,10 @@ public:
 	}
 
 	DeleteItem(vector<ITEM> vectorStore, const int input) {
-		_lineNumber=input;
-		_vectorStore=vectorStore;
-		_message="";
-		_deletedData="";
+		_lineNumber = input;
+		_vectorStore = vectorStore;
+		_message = "";
+		_deletedData = "";
 	}
 
 	~DeleteItem() {

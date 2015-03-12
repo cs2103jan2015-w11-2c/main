@@ -10,4 +10,5 @@ public:
 	int eventDate[2];
 	int eventTime[2];
 	int colour;
+	bool bold;
 };

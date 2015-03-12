@@ -26,10 +26,10 @@ public:
 	}
 
 	CopyItem(vector<ITEM> vectorStore, const int input) {
-		_input=input;
-		_vectorStore=vectorStore;
-		_message="";
-		_copiedData="";
+		_input = input;
+		_vectorStore = vectorStore;
+		_message = "";
+		_copiedData = "";
 	}
 
 	~CopyItem() {
@@ -41,7 +41,7 @@ public:
 			_message = ERROR_COPY_INVALID_LINE_NUMBER;
 		}
 		else {
-			_message="";
+			_message = "";
 			_copiedData = _vectorStore[_input-1].event;
 			_vectorStore.push_back(_vectorStore[_input-1]);
 			

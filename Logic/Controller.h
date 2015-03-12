@@ -36,16 +36,13 @@ private:
 	Parser *parser;
 	vector<ITEM> vectorStore;
 
-	//TO BE CHANGED
-	string fileName;
-
 	//To be passed to the GUI
-	string inputBoxMessage;
-	string successMessage;
+	string _inputBoxMessage;
+	string _successMessage;
 
 	//for edit function, to check if it is the initial edit call
-	bool isFirstCommandCall;
-	int lineNumberOperation;
+	bool _isFirstCommandCall;
+	int _lineNumberOperation;
 	
 
 public:
@@ -65,7 +62,7 @@ public:
 
 	bool rewriteFile();
 
-	ITEM initializeItem(string, int, int, int, int, int);
+	ITEM initializeItem(string, int, int, int, int, int color = 7, bool bold = false);
 
 	string executeCommand(string);
 
