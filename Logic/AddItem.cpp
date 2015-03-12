@@ -2,14 +2,15 @@
 
 #include <iostream>
 #include <vector>
-#include <Item.cpp>
+#include "Item.cpp"
+#include "Command.cpp"
 
 using namespace std;
 
 //CONSTANTS
 const string SUCCESS_ADDED = "Added line: \"%s\"\n";
 
-class AddItem {
+class AddItem :public Command {
 private:
 	ITEM _input;
 	vector<ITEM> _vectorStore;

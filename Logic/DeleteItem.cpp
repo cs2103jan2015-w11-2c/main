@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include "Item.cpp"
+#include "Command.cpp"
 
 using namespace std;
 
@@ -10,7 +11,7 @@ using namespace std;
 const std::string SUCCESS_DELETED = "Deleted line: \"%s\"\n";
 const std::string ERROR_DELETE_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
 
-class DeleteItem {
+class DeleteItem : public Command {
 private:
 	int _lineNumber;
 	vector<ITEM> _vectorStore;

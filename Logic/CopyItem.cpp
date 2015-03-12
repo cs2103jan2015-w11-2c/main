@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "Item.cpp"
+#include "Command.cpp"
 
 using namespace std;
 
@@ -11,7 +12,7 @@ using namespace std;
 const std::string ERROR_COPY_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
 const std::string SUCCESS_COPIED = "copied line: \"%s\" \n";
 
-class CopyItem {
+class CopyItem : public Command {
 private:
 	int _input;
 	vector<ITEM> _vectorStore;

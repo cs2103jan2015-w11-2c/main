@@ -5,13 +5,14 @@
 #include <algorithm>
 #include <string>
 #include "Item.cpp"
+#include "Command.cpp"
 
 using namespace std;
 
 const string SUCCESS_SORTED = "All content sorted alphabetically\n";
 const string ERROR_FILE_EMPTY = "File is empty\n";
 
-class SortAlphabetical {
+class SortAlphabetical : public Command {
 private:
 	vector<ITEM> _vectorStore;
 	string _message;
