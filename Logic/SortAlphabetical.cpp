@@ -14,16 +14,10 @@ const string ERROR_FILE_EMPTY = "File is empty\n";
 
 class SortAlphabetical : public Command {
 private:
-	vector<ITEM> _vectorStore;
 	string _message;
 
 public:
 	SortAlphabetical() {
-		_message = "";
-	}
-
-	SortAlphabetical(vector<ITEM> vectorStore) {
-		_vectorStore=vectorStore;
 		_message = "";
 	}
 
@@ -42,37 +36,35 @@ public:
 		return currentString;
 	}
 
-	void selectionSortIgnoreCase() {
-	for (unsigned int i = 0; i < (_vectorStore.size() - 1); i++) {
+	void selectionSortIgnoreCase(vector<ITEM>& vectorStore) {
+	for (unsigned int i = 0; i < (vectorStore.size() - 1); i++) {
 		int minIndex = i;
-		string minString = getLowerCaseString(_vectorStore[minIndex].event);
-		string minValue = _vectorStore[minIndex].event;
-		for (unsigned int j = i + 1; j < _vectorStore.size(); j++) {
-			string currString = getLowerCaseString(_vectorStore[j].event);
-			if (currString == minString && _vectorStore[j].event < _vectorStore[minIndex].event) {
-				swap(_vectorStore[minIndex], _vectorStore[j]);
-				minValue = _vectorStore[minIndex].event;
+		string minString = getLowerCaseString(vectorStore[minIndex].event);
+		string minValue = vectorStore[minIndex].event;
+		for (unsigned int j = i + 1; j < vectorStore.size(); j++) {
+			string currString = getLowerCaseString(vectorStore[j].event);
+			if (currString == minString && vectorStore[j].event < vectorStore[minIndex].event) {
+				swap(vectorStore[minIndex], vectorStore[j]);
+				minValue = vectorStore[minIndex].event;
 			}
 			if (currString < minString) {
-				minString = getLowerCaseString(_vectorStore[j].event);
-				minValue = _vectorStore[j].event;
+				minString = getLowerCaseString(vectorStore[j].event);
+				minValue = vectorStore[j].event;
 				minIndex = j;
 			}
 		}
-		swap(_vectorStore[minIndex],_vectorStore[i]);
+		swap(vectorStore[minIndex],vectorStore[i]);
 	}
 }
 
-	vector<ITEM> executeAction() {
-		if (_vectorStore.empty()) {
+	void executeAction(vector<ITEM>& vectorStore) {
+		if (vectorStore.empty()) {
 			_message = ERROR_FILE_EMPTY;
 		}
 		else {
-			selectionSortIgnoreCase();
+			selectionSortIgnoreCase(vectorStore);
 			_message = SUCCESS_SORTED;
 		}
-
-		return _vectorStore;
 	}
 
 	string getMessage() {

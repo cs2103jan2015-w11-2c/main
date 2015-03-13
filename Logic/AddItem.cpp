@@ -13,7 +13,6 @@ const string SUCCESS_ADDED = "Added line: \"%s\"\n";
 class AddItem :public Command {
 private:
 	ITEM _input;
-	vector<ITEM> _vectorStore;
 
 public:
 	AddItem() {
@@ -29,18 +28,15 @@ public:
 		_input.bold = false;
 	}
 
-	AddItem(vector<ITEM> vectorStore, const ITEM input) {
+	AddItem(const ITEM input) {
 		_input = input;
-		_vectorStore = vectorStore;
 	}
 
 	~AddItem() {
 	}
 
-	vector<ITEM> executeAction() {
-		_vectorStore.push_back(_input);
-		
-		return _vectorStore;
+	void executeAction(vector<ITEM> &vectorStore) {
+		vectorStore.push_back(_input);
 	}
 
 	string getMessage() {

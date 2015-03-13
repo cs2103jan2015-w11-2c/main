@@ -11,9 +11,6 @@ using namespace std;
 const string SUCCESS_CLEARED = "All content deleted!\n";
 
 class ClearItems : public Command {
-private:
-	vector<ITEM> _vectorStore;
-
 public:
 	ClearItems() {
 	}
@@ -21,10 +18,8 @@ public:
 	~ClearItems() {
 	}
 
-	vector<ITEM> executeAction() {
-		_vectorStore.clear();
-
-		return _vectorStore;
+	void executeAction(vector<ITEM>& vectorStore) {
+		vectorStore.clear();
 	}
 
 	string getMessage() {
