@@ -10,6 +10,6 @@ class Command {
 public:
 	Command();
 	~Command();
-	virtual vector<ITEM> executeAction();
+	virtual void executeAction();
 	virtual string getMessage();
 };
