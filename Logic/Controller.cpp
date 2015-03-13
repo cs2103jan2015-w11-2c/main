@@ -110,11 +110,8 @@ void Controller::commandOptions(string command) {
 }
 
 void Controller::addData(ITEM item) {
-	//ostringstream oss;
-
-	//oss << sentence << "[" << day << "/" << month << ", " << hour << ":" << mins << "]";
-
 	AddItem *addItemCommand = new AddItem(item);
+
 	addItemCommand->executeAction(vectorStore);
 
 	outputFile.addLine(item.event);
@@ -157,9 +154,25 @@ string Controller::displayAll() {
 	}
 
 	for (unsigned int i = 0; i < vectorStore.size(); i++) {
+		DateTime *myDateTime = new DateTime;
+
+		int day = vectorStore[i].eventDate[0];
+		int mon = vectorStore[i].eventDate[1];
+		int hour = vectorStore[i].eventStartTime[0];
+		int min = vectorStore[i].eventStartTime[1];
+		int year = myDateTime->getCurrentYear();
+		
+		//NUMERICAL FORMAT
+		//oss << (i + 1) << ". " << vectorStore[i].event;
+		//oss << " [" << vectorStore[i].eventDate[0] << "/" << vectorStore[i].eventDate[1];
+		//oss << ", " << vectorStore[i].eventStartTime[0] << ":" << vectorStore[i].eventStartTime[1] << "]";
+		//oss << endl << endl;
+
+		//WRITTEN FORMAT
 		oss << (i + 1) << ". " << vectorStore[i].event;
-		oss << " [" << vectorStore[i].eventDate[0] << "/" << vectorStore[i].eventDate[1];
-		oss << ", " << vectorStore[i].eventStartTime[0] << ":" << vectorStore[i].eventStartTime[1] << "]";
+		oss << " on " << myDateTime->getWeekDay(day, mon, year);
+		oss << ", " << day << " " << myDateTime->getMonth(mon);
+		oss << " at " << hour << ":" << min;
 		oss << endl << endl;
 	}
 
