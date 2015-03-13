@@ -2,6 +2,7 @@
 
 
 MessageManager::MessageManager(void) {
+	magicMemo = new Controller();
 	_userInput = "";
 	_successMessage = "";
 	_mainOutputBoxMessage = "";
@@ -9,6 +10,7 @@ MessageManager::MessageManager(void) {
 }
 
 MessageManager::MessageManager(String^ textFromUser) {
+	magicMemo = new Controller();
 	_userInput = textFromUser;
 	generateMessageOutputs();
 }

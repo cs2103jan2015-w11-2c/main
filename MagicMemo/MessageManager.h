@@ -12,6 +12,7 @@ using namespace System;
 
 ref class MessageManager {
 private:
+	Controller* magicMemo;
 	String^ _userInput;
 	String^ _successMessage;
 	String^ _mainOutputBoxMessage;
