@@ -210,16 +210,6 @@ namespace UI {
 			}
 		}
 
-		//convert from System::String^ to std::string
-		string convertToStdString(String^ inputString) {
-			return msclr::interop::marshal_as< std::string >(inputString);
-		}
-
-		//convert from std::string to System::String^
-		String^ convertToSystemString(string inputString) {
-			return gcnew String(inputString.c_str());
-		}
-
 	private: System::Void MagicMemoGUI_Load(System::Object^  sender, System::EventArgs^  e) {
 		    }
 	};
