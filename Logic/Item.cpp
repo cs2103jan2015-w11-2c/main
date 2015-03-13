@@ -4,7 +4,7 @@
 
 using namespace std;
 
-struct ITEM {
+class ITEM {
 public:
 	DateTime itemDate;
 	string event;
@@ -15,6 +15,23 @@ public:
 	bool bold;
 
 public:
+	ITEM() {
+		event = "";
+		eventDate[0] = 0;
+		eventDate[1] = 0;
+		eventDate[2] = 0;
+		eventStartTime[0] = -1;
+		eventStartTime[1] = 0;
+		eventEndTime[0] = -1;
+		eventEndTime[1] = 0;
+		colour = 0;
+		bold = false;
+
+	}
+
+	~ITEM() {
+	}
+
 	string getMinute(int minute) {
 		if(minute == 0) {
 			return "00";
