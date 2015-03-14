@@ -1,5 +1,5 @@
 #include "Parser.h"
-
+#include "assert.h"
 
 Parser::Parser() {
 	resetDateTime();
@@ -150,7 +150,8 @@ void Parser::extractDateAndTime(string input) {
 					//error message, wrong format
 				}
 			}
-
+		    //assert(!dateTime.isValidDate(_day, _month, _year));
+			//if assert fails, system crashes.
 			separateHourMinute(demarcateDateTime[count]);
 			if(!isValidTime()) {
 				_hour = -1;
@@ -181,12 +182,14 @@ void Parser::extractDateAndTime(string input) {
 				if(!dateTime.isValidDate(_day, _month, _year)) {
 					//error message, wrong format
 				}
-			}
-
+			}   
+			  //assert(!dateTime.isValidDate(_day, _month, _year));
+			//if assert fails, system crashes.
 			separateHourMinute(demarcateDateTime[1]);
 			if(!isValidTime()) {
 				//error message, wrong format
 			} else {
+				//assert(!dateTime.isValidTime)
 				if(demarcateDateTime[2] == "m") {
 					if(_hour == 12) {
 						_hour = 0;
@@ -210,6 +213,10 @@ void Parser::extractDateAndTime(string input) {
 
 bool Parser::isValidTime() {
 	return (_hour >= 0 && _hour < 24 && _minute >= 0 && _minute < 60);
+	//assert(hour>=0);
+	//assert(hour<24);
+	//assert(minute>=0);
+	//assert(minute<60)
 }
 
 void Parser::separateDayMonth(string dayMonth) {
