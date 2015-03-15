@@ -224,11 +224,13 @@ namespace UI {
 		}
 
 	private: 
+		// return focus to the intput textbox on keypress
 		System::Void allTaskBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
 			commandInputBox->Focus(); 
 		}
 
 	private: 
+		// return focus to the intput textbox on keypress
 		System::Void lastActionBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
 			commandInputBox->Focus();    
 		}

@@ -30,10 +30,6 @@ string Parser::getUserCommand() {
 	return _userCommand;
 }
 
-void Parser::setCommandData(string commandData) {
-	_commandData = commandData;
-}
-
 string Parser::getCommandData() {
 	return _commandData;
 }

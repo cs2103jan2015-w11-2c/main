@@ -30,8 +30,6 @@ public:
 
 	string getUserCommand();
 
-	void setCommandData(string commandData);
-
 	string getCommandData();
 
 	string getEvent();
