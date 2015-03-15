@@ -8,13 +8,15 @@ class Parser {
 private:
 	DateTime dateTime;
 	string _fullUserInput;
+
 	string _userCommand;
-	string _commandData;
+	string _event;
 	int _lineOpNumber;
 
 	int _day;
 	int _month;
 	int _year;
+
 	//time saved in 24 _hours format
 	int _hour;
 	int _minute;
@@ -29,8 +31,6 @@ public:
 	void resetDateTime();
 
 	string getUserCommand();
-
-	string getCommandData();
 
 	string getEvent();
 
@@ -47,7 +47,7 @@ public:
 	//returns the line number for operations such as delete
 	int getLineOpNumber();
 
-	//extracts _userCommand and stores the rest of the input in _commandData
+	//extracts _userCommand and stores the rest of the input in _event
 	void extractUserCommand(string);
 
 	size_t findFrontBracket(string);
