@@ -106,7 +106,7 @@ void Parser::extractDateAndTime(string input) {
 		switch (i) {
 			// no date or time
 		case 0: {
-			//date = today
+			//date = _today
 			break;
 			   }
 
@@ -122,7 +122,7 @@ void Parser::extractDateAndTime(string input) {
 				}
 			} else {
 				separateHourMinute(demarcateDateTime[0]);
-				//must set date to be today
+				//must set date to be _today
 				if(!isValidTime()) {
 					_hour = -1;
 					_minute = 0;

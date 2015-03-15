@@ -90,7 +90,7 @@ namespace UI {
 			// 
 			// commandInputBox
 			// 
-			this->commandInputBox->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::Append;
+			this->commandInputBox->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::SuggestAppend;
 			this->commandInputBox->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
 			this->commandInputBox->Location = System::Drawing::Point(23, 351);
 			this->commandInputBox->Name = L"commandInputBox";
