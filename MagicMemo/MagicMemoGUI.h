@@ -1,10 +1,11 @@
 #pragma once
-#include<vector>
-#include<algorithm>
-#include<string>
-#include<sstream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
 #include "Controller.h"
-#include "msclr\marshal_cppstd.h"
+#include "MessageManager.h"
+
 using namespace std;
 
 namespace UI {
@@ -22,10 +23,12 @@ namespace UI {
 	public ref class MagicMemoGUI : public System::Windows::Forms::Form {
 	private:
 		Controller* magicMemo;
+		MessageManager^ outputMessage;
 	public:
 		MagicMemoGUI(void) {
 			InitializeComponent();
 			magicMemo = new Controller();
+			outputMessage = gcnew MessageManager();
 		}
 
 	protected:
@@ -36,6 +39,7 @@ namespace UI {
 			if (components) {
 				delete components;
 				delete magicMemo;
+				delete outputMessage;
 			}
 		}
 	private: System::Windows::Forms::Label^  mainTaskBoxLabel;
@@ -44,14 +48,6 @@ namespace UI {
 	private: System::Windows::Forms::MonthCalendar^  monthCalendar;
 
 	private: System::Windows::Forms::Label^  ResultLabel;
-
-
-
-
-
-
-
-
 
 	private: System::Windows::Forms::Label^  programHeading;
 	private: System::Windows::Forms::RichTextBox^  allTaskBox;
@@ -199,12 +195,12 @@ namespace UI {
 		System::Void commandInputBox_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
 			if (e->KeyChar == 13) { //Enter key pressed
 				String^ inputText = commandInputBox->Text;
-				string successMessage = magicMemo->executeCommand(convertToStdString(inputText));
-				lastActionBox->Text = convertToSystemString(successMessage);
+				string successMessage = magicMemo->executeCommand(outputMessage->convertToStdString(inputText));
+				lastActionBox->Text = outputMessage->convertToSystemString(successMessage);
 
 
-				allTaskBox->Text = convertToSystemString(magicMemo->displayAll());
-				commandInputBox->Text = convertToSystemString(magicMemo->getInputBoxMessage());
+				allTaskBox->Text = outputMessage->convertToSystemString(magicMemo->displayAll());
+				commandInputBox->Text = outputMessage->convertToSystemString(magicMemo->getInputBoxMessage());
 				commandInputBox->SelectionStart = 100;
 
 				if (successMessage == "exit") {
@@ -212,16 +208,6 @@ namespace UI {
 					Application::Exit();
 				}
 			}
-		}
-
-		//convert from System::String^ to std::string
-		string convertToStdString(String^ inputString) {
-			return msclr::interop::marshal_as< std::string >(inputString);
-		}
-
-		//convert from std::string to System::String^
-		String^ convertToSystemString(string inputString) {
-			return gcnew String(inputString.c_str());
 		}
 
 	private: System::Void MagicMemoGUI_Load(System::Object^  sender, System::EventArgs^  e) {

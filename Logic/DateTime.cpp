@@ -8,6 +8,7 @@ using namespace std;
 
 //constants
 const string WEEKDAY[]={"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+const string MONTH[]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 
 class DateTime {
 
@@ -51,6 +52,10 @@ public:
 		year -= month < 3;
 		int wday = (year + year/4 - year/100 + year/400 + t[month - 1] + day) % 7;
 		return WEEKDAY[wday];
+	}
+
+	string getMonth(const int mon) {
+		return MONTH[mon-1];
 	}
 
 	bool isLeapYear (int year) {

@@ -110,12 +110,9 @@ void Controller::commandOptions(string command) {
 }
 
 void Controller::addData(ITEM item) {
-	//ostringstream oss;
+	AddItem *addItemCommand = new AddItem(item);
 
-	//oss << sentence << "[" << day << "/" << month << ", " << hour << ":" << mins << "]";
-
-	AddItem *addItemCommand = new AddItem(vectorStore, item);
-	vectorStore = addItemCommand->executeAction();
+	addItemCommand->executeAction(vectorStore);
 
 	outputFile.addLine(item.event);
 
@@ -126,8 +123,8 @@ void Controller::addData(ITEM item) {
 void Controller::deleteData() {
 	string successMessage;
 
-	DeleteItem *deleteItemCommand = new DeleteItem(vectorStore, getLineNumberForOperation());
-	vectorStore=deleteItemCommand->executeAction();
+	DeleteItem *deleteItemCommand = new DeleteItem(getLineNumberForOperation());
+	deleteItemCommand->executeAction(vectorStore);
 
 	if(rewriteFile()) {
 		setSuccessMessage(deleteItemCommand->getMessage());
@@ -157,9 +154,25 @@ string Controller::displayAll() {
 	}
 
 	for (unsigned int i = 0; i < vectorStore.size(); i++) {
+		DateTime *myDateTime = new DateTime;
+
+		int day = vectorStore[i].eventDate[0];
+		int mon = vectorStore[i].eventDate[1];
+		int hour = vectorStore[i].eventStartTime[0];
+		int min = vectorStore[i].eventStartTime[1];
+		int year = myDateTime->getCurrentYear();
+		
+		//NUMERICAL FORMAT
+		//oss << (i + 1) << ". " << vectorStore[i].event;
+		//oss << " [" << vectorStore[i].eventDate[0] << "/" << vectorStore[i].eventDate[1];
+		//oss << ", " << vectorStore[i].eventStartTime[0] << ":" << vectorStore[i].eventStartTime[1] << "]";
+		//oss << endl << endl;
+
+		//WRITTEN FORMAT
 		oss << (i + 1) << ". " << vectorStore[i].event;
-		oss << " [" << vectorStore[i].eventDate[0] << "/" << vectorStore[i].eventDate[1];
-		oss << ", " << vectorStore[i].eventStartTime[0] << ":" << vectorStore[i].eventStartTime[1] << "]";
+		oss << " on " << myDateTime->getWeekDay(day, mon, year);
+		oss << ", " << day << " " << myDateTime->getMonth(mon);
+		oss << " at " << hour << ":" << min;
 		oss << endl << endl;
 	}
 
@@ -169,7 +182,7 @@ string Controller::displayAll() {
 void Controller::clearAll() {
 	ClearItems *clearItemsCommand = new ClearItems;
 	
-	vectorStore = clearItemsCommand->executeAction();
+	clearItemsCommand->executeAction(vectorStore);
 
 	if(outputFile.clearFile()) {
 		setSuccessMessage(clearItemsCommand->getMessage());
@@ -180,8 +193,8 @@ void Controller::clearAll() {
 
 void Controller::sortAlphabetical() {
 	
-	SortAlphabetical *sortAlphabeticalCommand = new SortAlphabetical(vectorStore);
-	vectorStore=sortAlphabeticalCommand->executeAction();
+	SortAlphabetical *sortAlphabeticalCommand = new SortAlphabetical();
+	sortAlphabeticalCommand->executeAction(vectorStore);
 
 	setInputBoxMessage("");
 	setSuccessMessage(sortAlphabeticalCommand->getMessage());
@@ -209,8 +222,8 @@ void Controller::search(string searchText) {
 }
 
 void Controller::copy() {
-	CopyItem *copyItemCommand = new CopyItem(vectorStore, getLineNumberForOperation());
-	vectorStore=copyItemCommand->executeAction();
+	CopyItem *copyItemCommand = new CopyItem(getLineNumberForOperation());
+	copyItemCommand->executeAction(vectorStore);
 
 	string copiedData = copyItemCommand->getCopiedData();
 	if(copiedData!="") {

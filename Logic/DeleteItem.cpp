@@ -14,7 +14,6 @@ const std::string ERROR_DELETE_INVALID_LINE_NUMBER = "Invalid line number specif
 class DeleteItem : public Command {
 private:
 	int _lineNumber;
-	vector<ITEM> _vectorStore;
 	std::string _message;
 	std::string _deletedData;
 
@@ -25,9 +24,8 @@ public:
 		_deletedData = "";
 	}
 
-	DeleteItem(vector<ITEM> vectorStore, const int input) {
+	DeleteItem(const int input) {
 		_lineNumber = input;
-		_vectorStore = vectorStore;
 		_message = "";
 		_deletedData = "";
 	}
@@ -36,21 +34,19 @@ public:
 	}
 
 
-	vector<ITEM> executeAction() {
+	void executeAction(vector<ITEM>& vectorStore) {
 	
 		if(_lineNumber == 0) {
 			_message = ERROR_DELETE_INVALID_LINE_NUMBER;
 		} else {
-			_deletedData = (_vectorStore[_lineNumber - 1].event);
-			_vectorStore.erase(_vectorStore.begin() + (_lineNumber - 1));
+			_deletedData = (vectorStore[_lineNumber - 1].event);
+			vectorStore.erase(vectorStore.begin() + (_lineNumber - 1));
 
 			char buffer[1000];
 
 			sprintf_s(buffer, SUCCESS_DELETED.c_str(), _deletedData.c_str());
 			_message = buffer;
 		}
-
-		return _vectorStore;
 	}
 
 	std::string getMessage() {

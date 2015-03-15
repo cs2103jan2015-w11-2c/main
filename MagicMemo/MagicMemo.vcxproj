@@ -80,12 +80,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MagicMemoGUI.cpp" />
+    <ClCompile Include="MagicMemoMain.cpp" />
+    <ClCompile Include="MessageManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MagicMemoGUI.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="MessageManager.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MagicMemoGUI.resx">
