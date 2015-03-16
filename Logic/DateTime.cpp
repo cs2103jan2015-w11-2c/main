@@ -56,7 +56,6 @@ public:
 	}
 
 	// returns the weekday name for the specified day, month and year
-=======
 	// Sunday, Monday, .... Saturday
 	string getWeekDay (int day, int month, int year) {
 		int wday = getIntWeekDay(day, month, year);
