@@ -133,7 +133,7 @@ namespace UI {
 			// 
 			// allTaskBox
 			// 
-			this->allTaskBox->Font = (gcnew System::Drawing::Font(L"Script MT Bold", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->allTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->allTaskBox->Location = System::Drawing::Point(23, 73);
 			this->allTaskBox->Margin = System::Windows::Forms::Padding(5);
