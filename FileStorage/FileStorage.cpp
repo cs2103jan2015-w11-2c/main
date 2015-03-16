@@ -49,6 +49,7 @@ void FileStorage::addLine(string sentence) {
 	outFile << sentence << endl;
 	outFile.close();
 }
+ 
 
 bool FileStorage::clearFile() {
 	fstream outFile;
