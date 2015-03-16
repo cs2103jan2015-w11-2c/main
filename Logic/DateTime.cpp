@@ -46,11 +46,18 @@ public:
 		return (1 + _today.tm_hour);
 	}
 
-	// returns the weekday for the specified day, month and year
-	string getWeekDay (int day, int month, int year) {
+	// returns the integer weekday for the specified day, month and year
+	// Sunday = 0, Saturday = 6;
+	int getIntWeekDay (int day, int month, int year) {
 		static int t[] = { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 };
 		year -= month < 3;
 		int wday = (year + year/4 - year/100 + year/400 + t[month - 1] + day) % 7;
+		return wday;
+	}
+
+	// returns the weekday name for the specified day, month and year
+	string getWeekDay (int day, int month, int year) {
+		int wday = getIntWeekDay(day, month, year);
 		return WEEKDAY[wday];
 	}
 
