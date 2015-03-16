@@ -59,8 +59,6 @@ public:
 	//12 is taken as 12 noon. if 12 am, then input m
 	void extractDateAndTime(string);
 
-	bool isValidDate();
-
 	bool isValidTime();
 
 	void separateDayMonth(string _day_month);
