@@ -42,17 +42,18 @@ namespace UI {
 				delete outputMessage;
 			}
 		}
-	private: System::Windows::Forms::Label^  mainTaskBoxLabel;
+	private: System::Windows::Forms::Label^  todayTaskBoxLabel;
+	protected: 
+
 	protected:
 	private: System::Windows::Forms::TextBox^  commandInputBox;
-	private: System::Windows::Forms::MonthCalendar^  monthCalendar;
-
-	private: System::Windows::Forms::Label^  ResultLabel;
+	private: System::Windows::Forms::Label^  allTaskBoxLabel;
 
 	private: System::Windows::Forms::Label^  programHeading;
+	private: System::Windows::Forms::RichTextBox^  todayTaskBox;
 	private: System::Windows::Forms::RichTextBox^  allTaskBox;
-	private: System::Windows::Forms::Label^  textInputLabel;
-	private: System::Windows::Forms::RichTextBox^  lastActionBox;
+	private: System::Windows::Forms::Label^  successMessageLabel;
+
 
 
 	private:
@@ -67,26 +68,25 @@ namespace UI {
 		/// the contents of this method with the code editor.
 		/// </summary>
 		void InitializeComponent(void) {
-			this->mainTaskBoxLabel = (gcnew System::Windows::Forms::Label());
+			this->todayTaskBoxLabel = (gcnew System::Windows::Forms::Label());
 			this->commandInputBox = (gcnew System::Windows::Forms::TextBox());
-			this->monthCalendar = (gcnew System::Windows::Forms::MonthCalendar());
-			this->ResultLabel = (gcnew System::Windows::Forms::Label());
+			this->allTaskBoxLabel = (gcnew System::Windows::Forms::Label());
 			this->programHeading = (gcnew System::Windows::Forms::Label());
 			this->allTaskBox = (gcnew System::Windows::Forms::RichTextBox());
-			this->textInputLabel = (gcnew System::Windows::Forms::Label());
-			this->lastActionBox = (gcnew System::Windows::Forms::RichTextBox());
+			this->successMessageLabel = (gcnew System::Windows::Forms::Label());
+			this->todayTaskBox = (gcnew System::Windows::Forms::RichTextBox());
 			this->SuspendLayout();
 			// 
-			// mainTaskBoxLabel
+			// todayTaskBoxLabel
 			// 
-			this->mainTaskBoxLabel->AutoSize = true;
-			this->mainTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->todayTaskBoxLabel->AutoSize = true;
+			this->todayTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->mainTaskBoxLabel->Location = System::Drawing::Point(136, 54);
-			this->mainTaskBoxLabel->Name = L"mainTaskBoxLabel";
-			this->mainTaskBoxLabel->Size = System::Drawing::Size(73, 16);
-			this->mainTaskBoxLabel->TabIndex = 0;
-			this->mainTaskBoxLabel->Text = L"All Tasks";
+			this->todayTaskBoxLabel->Location = System::Drawing::Point(87, 50);
+			this->todayTaskBoxLabel->Name = L"todayTaskBoxLabel";
+			this->todayTaskBoxLabel->Size = System::Drawing::Size(121, 18);
+			this->todayTaskBoxLabel->TabIndex = 0;
+			this->todayTaskBoxLabel->Text = L"Today\'s Tasks";
 			// 
 			// commandInputBox
 			// 
@@ -96,28 +96,21 @@ namespace UI {
 			this->commandInputBox->Name = L"commandInputBox";
 			this->commandInputBox->Size = System::Drawing::Size(536, 20);
 			this->commandInputBox->TabIndex = 1;
+			this->commandInputBox->Text = L"Enter text here:";
 			this->commandInputBox->UseWaitCursor = true;
 			this->commandInputBox->TextChanged += gcnew System::EventHandler(this, &MagicMemoGUI::commandInputBox_TextChanged);
 			this->commandInputBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::commandInputBox_KeyDown);
 			// 
-			// monthCalendar
+			// allTaskBoxLabel
 			// 
-			this->monthCalendar->Enabled = false;
-			this->monthCalendar->Location = System::Drawing::Point(333, 73);
-			this->monthCalendar->Name = L"monthCalendar";
-			this->monthCalendar->TabIndex = 2;
-			this->monthCalendar->TitleBackColor = System::Drawing::SystemColors::MenuHighlight;
-			// 
-			// ResultLabel
-			// 
-			this->ResultLabel->AutoSize = true;
-			this->ResultLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->ResultLabel->Location = System::Drawing::Point(418, 244);
-			this->ResultLabel->Name = L"ResultLabel";
-			this->ResultLabel->Size = System::Drawing::Size(52, 16);
-			this->ResultLabel->TabIndex = 5;
-			this->ResultLabel->Text = L"Result";
+			this->allTaskBoxLabel->AutoSize = true;
+			this->allTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 11.25F, System::Drawing::FontStyle::Regular, 
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			this->allTaskBoxLabel->Location = System::Drawing::Point(371, 54);
+			this->allTaskBoxLabel->Name = L"allTaskBoxLabel";
+			this->allTaskBoxLabel->Size = System::Drawing::Size(128, 17);
+			this->allTaskBoxLabel->TabIndex = 5;
+			this->allTaskBoxLabel->Text = L"Upcoming Tasks";
 			// 
 			// programHeading
 			// 
@@ -133,52 +126,53 @@ namespace UI {
 			// 
 			// allTaskBox
 			// 
-			this->allTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			this->allTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->allTaskBox->Location = System::Drawing::Point(23, 73);
+			this->allTaskBox->Location = System::Drawing::Point(304, 76);
 			this->allTaskBox->Margin = System::Windows::Forms::Padding(5);
 			this->allTaskBox->Name = L"allTaskBox";
 			this->allTaskBox->ReadOnly = true;
-			this->allTaskBox->Size = System::Drawing::Size(295, 244);
+			this->allTaskBox->Size = System::Drawing::Size(255, 245);
 			this->allTaskBox->TabIndex = 7;
 			this->allTaskBox->Text = L"";
 			this->allTaskBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::allTaskBox_KeyDown);
 			// 
-			// textInputLabel
+			// successMessageLabel
 			// 
-			this->textInputLabel->AutoSize = true;
-			this->textInputLabel->Location = System::Drawing::Point(23, 332);
-			this->textInputLabel->Name = L"textInputLabel";
-			this->textInputLabel->Size = System::Drawing::Size(79, 13);
-			this->textInputLabel->TabIndex = 8;
-			this->textInputLabel->Text = L"Enter text here:";
-			// 
-			// lastActionBox
-			// 
-			this->lastActionBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			this->successMessageLabel->AutoSize = true;
+			this->successMessageLabel->Font = (gcnew System::Drawing::Font(L"Comic Sans MS", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->lastActionBox->Location = System::Drawing::Point(333, 262);
-			this->lastActionBox->Margin = System::Windows::Forms::Padding(4);
-			this->lastActionBox->Name = L"lastActionBox";
-			this->lastActionBox->ReadOnly = true;
-			this->lastActionBox->Size = System::Drawing::Size(226, 55);
-			this->lastActionBox->TabIndex = 9;
-			this->lastActionBox->Text = L"";
-			this->lastActionBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::lastActionBox_KeyDown);
+			this->successMessageLabel->Location = System::Drawing::Point(28, 329);
+			this->successMessageLabel->Name = L"successMessageLabel";
+			this->successMessageLabel->Size = System::Drawing::Size(115, 19);
+			this->successMessageLabel->TabIndex = 8;
+			this->successMessageLabel->Text = L"Success Message";
+			// 
+			// todayTaskBox
+			// 
+			this->todayTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->todayTaskBox->Location = System::Drawing::Point(23, 76);
+			this->todayTaskBox->Margin = System::Windows::Forms::Padding(4);
+			this->todayTaskBox->Name = L"todayTaskBox";
+			this->todayTaskBox->ReadOnly = true;
+			this->todayTaskBox->Size = System::Drawing::Size(255, 245);
+			this->todayTaskBox->TabIndex = 9;
+			this->todayTaskBox->Text = L"";
+			this->todayTaskBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::lastActionBox_KeyDown);
 			// 
 			// MagicMemoGUI
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(586, 383);
-			this->Controls->Add(this->lastActionBox);
-			this->Controls->Add(this->textInputLabel);
+			this->Controls->Add(this->todayTaskBox);
+			this->Controls->Add(this->successMessageLabel);
 			this->Controls->Add(this->allTaskBox);
 			this->Controls->Add(this->programHeading);
-			this->Controls->Add(this->ResultLabel);
-			this->Controls->Add(this->monthCalendar);
+			this->Controls->Add(this->allTaskBoxLabel);
 			this->Controls->Add(this->commandInputBox);
-			this->Controls->Add(this->mainTaskBoxLabel);
+			this->Controls->Add(this->todayTaskBoxLabel);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Name = L"MagicMemoGUI";
 			this->Text = L"MagicMemoGUI";
@@ -200,7 +194,7 @@ namespace UI {
 			if(e->KeyCode == Keys::Enter) {
 				String^ inputText = commandInputBox->Text;
 				string successMessage = magicMemo->executeCommand(outputMessage->convertToStdString(inputText));
-				lastActionBox->Text = outputMessage->convertToSystemString(successMessage);
+				successMessageLabel->Text = outputMessage->convertToSystemString(successMessage);
 
 
 				allTaskBox->Text = outputMessage->convertToSystemString(magicMemo->displayAll());
