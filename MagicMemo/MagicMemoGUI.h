@@ -136,6 +136,7 @@ namespace UI {
 			this->allTaskBox->TabIndex = 7;
 			this->allTaskBox->Text = L"";
 			this->allTaskBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::allTaskBox_KeyDown);
+			this->allTaskBox->BackColor = System::Drawing::Color::White;
 			// 
 			// successMessageLabel
 			// 
@@ -160,6 +161,7 @@ namespace UI {
 			this->todayTaskBox->TabIndex = 9;
 			this->todayTaskBox->Text = L"";
 			this->todayTaskBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::lastActionBox_KeyDown);
+			this->todayTaskBox->BackColor = System::Drawing::Color::White;
 			// 
 			// MagicMemoGUI
 			// 
@@ -191,6 +193,7 @@ namespace UI {
 		}
 	private:
 		System::Void commandInputBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+			
 			if(e->KeyCode == Keys::Enter) {
 				String^ inputText = commandInputBox->Text;
 				string successMessage = magicMemo->executeCommand(outputMessage->convertToStdString(inputText));
