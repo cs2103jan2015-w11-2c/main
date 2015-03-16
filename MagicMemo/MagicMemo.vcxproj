@@ -53,7 +53,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\User\Desktop\MagicMemo\main\Logic;C:\Users\User\Desktop\MagicMemo\main\FileStorage;C:\Users\CXY\Desktop\GitHub\W11-2C\Logic;C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\user\Desktop\YIWEI\main\Logic;C:\Users\user\Desktop\YIWEI\main\FileStorage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

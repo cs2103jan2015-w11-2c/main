@@ -44,7 +44,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\User\Desktop\MagicMemo\main\FileStorage;C:\Users\User\Desktop\MagicMemo\main\Logic;C:\Users\CXY\Desktop\GitHub\W11-2C\Logic;C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\user\Desktop\YIWEI\main\FileStorage;C:\Users\user\Desktop\YIWEI\main\Logic;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
