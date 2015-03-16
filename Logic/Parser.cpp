@@ -5,7 +5,7 @@ Parser::Parser() {
 	resetDateTime();
 	_fullUserInput = "";
 	_userCommand = "";
-	_commandData = "";
+	_event = "";
 	_lineOpNumber = 0;
 }
 
@@ -14,7 +14,7 @@ Parser::Parser(string userInput) {
 	_lineOpNumber = 0;
 	_fullUserInput = userInput;
 	extractUserCommand(_fullUserInput);
-	extractDateAndTime(_commandData);
+	extractDateAndTime(_event);
 }
 
 void Parser::resetDateTime() {
@@ -30,12 +30,8 @@ string Parser::getUserCommand() {
 	return _userCommand;
 }
 
-void Parser::setCommandData(string commandData) {
-	_commandData = commandData;
-}
-
-string Parser::getCommandData() {
-	return _commandData;
+string Parser::getEvent() {
+	return _event;
 }
 
 
@@ -67,39 +63,39 @@ int Parser::getLineOpNumber() {
 }
 
 void Parser::extractUserCommand(string fullString) {
-	_commandData = removeSpacePadding(fullString);
-	if(_commandData == "") {
+	_event = removeSpacePadding(fullString);
+	if(_event == "") {
 		_userCommand = "";
 		return;
 	}
-	size_t spacePos = _commandData.find_first_of(" ");
+	size_t spacePos = _event.find_first_of(" ");
 	if (spacePos == string::npos) {
-		_userCommand = _commandData;
-		_commandData = "";
+		_userCommand = _event;
+		_event = "";
 	} else {
-		_userCommand = _commandData.substr(0, spacePos);
-		_commandData = _commandData.substr(spacePos);
-		spacePos = _commandData.find_first_not_of(" ");
-		_commandData = _commandData.substr(spacePos);
+		_userCommand = _event.substr(0, spacePos);
+		_event = _event.substr(spacePos);
+		spacePos = _event.find_first_not_of(" ");
+		_event = _event.substr(spacePos);
 	}
 }
 
-size_t Parser::findFrontBracket(string commandData){
-	return (commandData.find_first_of("["));
+size_t Parser::findFrontBracket(string inputLine){
+	return (inputLine.find_first_of("["));
 }
 
-size_t Parser::findDateDelimiters(string commandData){
-	return (commandData.find_first_of("/._"));
+size_t Parser::findDateDelimiters(string inputLine){
+	return (inputLine.find_first_of("/._"));
 }
 
 void Parser::extractDateAndTime(string input) {
 	resetDateTime();
-	size_t frontBracketPos = findFrontBracket(_commandData);
+	size_t frontBracketPos = findFrontBracket(_event);
 
 	if(frontBracketPos != string::npos) {
-		string rawDateTimeChunk = _commandData.substr(frontBracketPos + 1);
+		string rawDateTimeChunk = _event.substr(frontBracketPos + 1);
 		//remove date and time data from commandData
-		_commandData = _commandData.substr(0, frontBracketPos);
+		_event = _event.substr(0, frontBracketPos);
 		istringstream iss (rawDateTimeChunk);
 		string demarcateDateTime[3];
 		int i = 0;
@@ -110,7 +106,7 @@ void Parser::extractDateAndTime(string input) {
 		switch (i) {
 			// no date or time
 		case 0: {
-			//date = today
+			//date = _today
 			break;
 			   }
 
@@ -126,7 +122,7 @@ void Parser::extractDateAndTime(string input) {
 				}
 			} else {
 				separateHourMinute(demarcateDateTime[0]);
-				//must set date to be today
+				//must set date to be _today
 				if(!isValidTime()) {
 					_hour = -1;
 					_minute = 0;
@@ -246,11 +242,11 @@ string Parser::removeSpacePadding(string line) {
 }
 
 bool Parser::haveValidLineNumber() {
-	if(_commandData == "") {
+	if(_event == "") {
 		return false;
 	}
 	char *end;
-	_lineOpNumber = (int)strtol(_commandData.c_str(), &end, 10);
+	_lineOpNumber = (int)strtol(_event.c_str(), &end, 10);
 	return (*end == 0 || _lineOpNumber > 0);
 
 }

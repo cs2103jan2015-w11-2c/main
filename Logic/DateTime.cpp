@@ -13,37 +13,37 @@ const string MONTH[]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct
 class DateTime {
 
 private:
-	time_t now;
-	tm today;
+	time_t _now;
+	tm _today;
 
 public:
 	DateTime() {
-		now = time(0);
-		localtime_s(&today, &now);
+		_now = time(0);
+		localtime_s(&_today, &_now);
 	}
 
 	int getCurrentDay() {
-		return (today.tm_mday);
+		return (_today.tm_mday);
 	}
 
 	int getCurrentMonth() {
-		return (today.tm_mon);
+		return (_today.tm_mon);
 	}
 
 	int getCurrentYear() {
-		return (1990 + today.tm_year);
+		return (1990 + _today.tm_year);
 	}
 
 	string getCurrentWeekDay() {
-		return (WEEKDAY[today.tm_wday]);
+		return (WEEKDAY[_today.tm_wday]);
 	}
 
 	int getCurrentMinute() {
-		return (today.tm_min);
+		return (_today.tm_min);
 	}
 
 	int getCurrentHour() {
-		return (1 + today.tm_hour);
+		return (1 + _today.tm_hour);
 	}
 
 	// returns the weekday for the specified day, month and year
