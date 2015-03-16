@@ -40,15 +40,27 @@ public:
 		}
 	}
 
+	// add event to string
+    string eventToString(){
+	
+	
+	}
+
+	
+	
 	string dateToString() {
-		if((eventDate[0] == 0) && (eventDate[1] == 0) && (eventDate[1] == 0)) {
+		if((eventDate[0] == 0) && (eventDate[1] == 0) && (eventDate[2] == 0)) {
 			return "";
-		} else {
+
+		} else if((eventDate[0] == 0)&&(eventDate[1] != 0) && (eventDate[2] != 0)) {
 			ostringstream oss;
-			oss << "on" << itemDate.getWeekDay(eventDate[0], eventDate[1], eventDate[2]);
 			oss << ", " << eventDate[0] << "/" << eventDate[1] << "/" << eventDate[2];
 			return oss.str();
-		}
+		}else if(){
+		ostringstream oss;
+			oss << "on" << itemDate.getWeekDay(eventDate[0], eventDate[1], eventDate[2]);
+			oss << ", " << eventDate[0] << "/" << eventDate[1] << "/" << eventDate[2];
+			return oss.str();}
 	}
 
 	string timeToString() {
