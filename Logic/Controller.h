@@ -5,23 +5,25 @@
 #include <string>
 #include <algorithm>
 #include <sstream>
+#include "DateTime.cpp"
 #include "Parser.h"
 #include "FileStorage.h"
+#include "AddItem.cpp"
+#include "DeleteItem.cpp"
+#include "ClearItems.cpp"
+#include "SortAlphabetical.cpp"
+#include "CopyItem.cpp"
+
 using namespace std;
 
 class Controller {
 private:
-	static const string SUCCESS_ADDED;
-	static const string SUCCESS_DELETED;
-	static const string SUCCESS_CLEARED;
-	static const string SUCCESS_SORTED;
-	static const string SUCCESS_COPIED;
 	static const string SUCCESS_EDITED;
 	static const string SUCCESS_FILENAME_CHANGED;
 	static const string SUCCESS_FILE_LOCATION_CHANGED;
 	static const string ERROR_INVALID_COMMAND;
-	static const string ERROR_FILE_EMPTY;
 	static const string ERROR_INVALID_LINE_NUMBER;
+	static const string ERROR_FILE_EMPTY;
 	static const string ERROR_SEARCH_ITEM_NOT_FOUND;
 	static const string ERROR_FILE_OPERATION_FAILED;
 	static const string ERROR_NO_FILENAME;
@@ -33,25 +35,26 @@ private:
 
 	FileStorage outputFile;
 	Parser *parser;
-	vector<string> vectorStore;
-
-	//TO BE CHANGED
-	string fileName;
+	vector<ITEM> vectorStore;
 
 	//To be passed to the GUI
-	string inputBoxMessage;
-	string successMessage;
+	string _inputBoxMessage;
+	string _successMessage;
 
 	//for edit function, to check if it is the initial edit call
-	bool isFirstCommandCall;
-	int lineNumberOperation;
+	bool _isFirstCommandCall;
+	int _lineNumberOperation;
 	
 
 public:
 	Controller(void);
 
+	string executeCommand(string);
+
+	//API for UI (Main Text Box)
 	string getInputBoxMessage();
 
+	//API for UI (Message Box)
 	string getSuccessMessage();
 
 	void setInputBoxMessage(string);
@@ -62,11 +65,11 @@ public:
 
 	bool rewriteFile();
 
-	string executeCommand(string);
+	ITEM initializeItem(string, int, int, int, int, int color = 7, bool bold = false);
 
 	void commandOptions(string);
 
-	void addData(string sentence);
+	void addData(ITEM);
 
 	//returns the data deleted or *#*#*#*#* if not found
 	void deleteData();
@@ -105,8 +108,7 @@ public:
 
 	string getHelp();
 
-	vector<string> getVectorStore();
+	vector<ITEM> getVectorStore();
 
 	~Controller(void);
 };
-

@@ -1,10 +1,11 @@
 #pragma once
-#include<vector>
-#include<algorithm>
-#include<string>
-#include<sstream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
 #include "Controller.h"
-#include "msclr\marshal_cppstd.h"
+#include "MessageManager.h"
+
 using namespace std;
 
 namespace UI {
@@ -22,10 +23,12 @@ namespace UI {
 	public ref class MagicMemoGUI : public System::Windows::Forms::Form {
 	private:
 		Controller* magicMemo;
+		MessageManager^ outputMessage;
 	public:
 		MagicMemoGUI(void) {
 			InitializeComponent();
 			magicMemo = new Controller();
+			outputMessage = gcnew MessageManager();
 		}
 
 	protected:
@@ -36,6 +39,7 @@ namespace UI {
 			if (components) {
 				delete components;
 				delete magicMemo;
+				delete outputMessage;
 			}
 		}
 	private: System::Windows::Forms::Label^  mainTaskBoxLabel;
@@ -44,14 +48,6 @@ namespace UI {
 	private: System::Windows::Forms::MonthCalendar^  monthCalendar;
 
 	private: System::Windows::Forms::Label^  ResultLabel;
-
-
-
-
-
-
-
-
 
 	private: System::Windows::Forms::Label^  programHeading;
 	private: System::Windows::Forms::RichTextBox^  allTaskBox;
@@ -84,7 +80,7 @@ namespace UI {
 			// mainTaskBoxLabel
 			// 
 			this->mainTaskBoxLabel->AutoSize = true;
-			this->mainTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->mainTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->mainTaskBoxLabel->Location = System::Drawing::Point(136, 54);
 			this->mainTaskBoxLabel->Name = L"mainTaskBoxLabel";
@@ -94,13 +90,15 @@ namespace UI {
 			// 
 			// commandInputBox
 			// 
+			this->commandInputBox->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::SuggestAppend;
+			this->commandInputBox->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
 			this->commandInputBox->Location = System::Drawing::Point(23, 351);
 			this->commandInputBox->Name = L"commandInputBox";
 			this->commandInputBox->Size = System::Drawing::Size(536, 20);
 			this->commandInputBox->TabIndex = 1;
 			this->commandInputBox->UseWaitCursor = true;
 			this->commandInputBox->TextChanged += gcnew System::EventHandler(this, &MagicMemoGUI::commandInputBox_TextChanged);
-			this->commandInputBox->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &MagicMemoGUI::commandInputBox_KeyPress);
+			this->commandInputBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::commandInputBox_KeyDown);
 			// 
 			// monthCalendar
 			// 
@@ -113,7 +111,7 @@ namespace UI {
 			// ResultLabel
 			// 
 			this->ResultLabel->AutoSize = true;
-			this->ResultLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->ResultLabel->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->ResultLabel->Location = System::Drawing::Point(418, 244);
 			this->ResultLabel->Name = L"ResultLabel";
@@ -124,7 +122,7 @@ namespace UI {
 			// programHeading
 			// 
 			this->programHeading->AutoSize = true;
-			this->programHeading->Font = (gcnew System::Drawing::Font(L"AR DARLING", 30, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->programHeading->Font = (gcnew System::Drawing::Font(L"AR DARLING", 30, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->programHeading->ForeColor = System::Drawing::Color::DarkBlue;
 			this->programHeading->Location = System::Drawing::Point(168, -6);
@@ -135,7 +133,7 @@ namespace UI {
 			// 
 			// allTaskBox
 			// 
-			this->allTaskBox->Font = (gcnew System::Drawing::Font(L"Script MT Bold", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->allTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->allTaskBox->Location = System::Drawing::Point(23, 73);
 			this->allTaskBox->Margin = System::Windows::Forms::Padding(5);
@@ -144,6 +142,7 @@ namespace UI {
 			this->allTaskBox->Size = System::Drawing::Size(295, 244);
 			this->allTaskBox->TabIndex = 7;
 			this->allTaskBox->Text = L"";
+			this->allTaskBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::allTaskBox_KeyDown);
 			// 
 			// textInputLabel
 			// 
@@ -156,7 +155,7 @@ namespace UI {
 			// 
 			// lastActionBox
 			// 
-			this->lastActionBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->lastActionBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->lastActionBox->Location = System::Drawing::Point(333, 262);
 			this->lastActionBox->Margin = System::Windows::Forms::Padding(4);
@@ -165,6 +164,7 @@ namespace UI {
 			this->lastActionBox->Size = System::Drawing::Size(226, 55);
 			this->lastActionBox->TabIndex = 9;
 			this->lastActionBox->Text = L"";
+			this->lastActionBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::lastActionBox_KeyDown);
 			// 
 			// MagicMemoGUI
 			// 
@@ -196,15 +196,15 @@ namespace UI {
 
 		}
 	private:
-		System::Void commandInputBox_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) {
-			if (e->KeyChar == 13) { //Enter key pressed
+		System::Void commandInputBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+			if(e->KeyCode == Keys::Enter) {
 				String^ inputText = commandInputBox->Text;
-				string successMessage = magicMemo->executeCommand(convertToStdString(inputText));
-				lastActionBox->Text = convertToSystemString(successMessage);
+				string successMessage = magicMemo->executeCommand(outputMessage->convertToStdString(inputText));
+				lastActionBox->Text = outputMessage->convertToSystemString(successMessage);
 
 
-				allTaskBox->Text = convertToSystemString(magicMemo->displayAll());
-				commandInputBox->Text = convertToSystemString(magicMemo->getInputBoxMessage());
+				allTaskBox->Text = outputMessage->convertToSystemString(magicMemo->displayAll());
+				commandInputBox->Text = outputMessage->convertToSystemString(magicMemo->getInputBoxMessage());
 				commandInputBox->SelectionStart = 100;
 
 				if (successMessage == "exit") {
@@ -212,20 +212,34 @@ namespace UI {
 					Application::Exit();
 				}
 			}
+
+			// Ctrl + Z
+			if (e->KeyData == (Keys::Control | Keys::Z)) {
+			}   
+
+			// Ctrl + R
+			if (e->KeyData == (Keys::Control | Keys::R)) {
+			}
+
 		}
 
-		//convert from System::String^ to std::string
-		string convertToStdString(String^ inputString) {
-			return msclr::interop::marshal_as< std::string >(inputString);
+	private: 
+		// return focus to the intput textbox on keypress
+		System::Void allTaskBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+			commandInputBox->Focus(); 
 		}
 
-		//convert from std::string to System::String^
-		String^ convertToSystemString(string inputString) {
-			return gcnew String(inputString.c_str());
+	private: 
+		// return focus to the intput textbox on keypress
+		System::Void lastActionBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+			commandInputBox->Focus();    
 		}
 
-	private: System::Void MagicMemoGUI_Load(System::Object^  sender, System::EventArgs^  e) {
-		    }
+	private: 
+		System::Void MagicMemoGUI_Load(System::Object^  sender, System::EventArgs^  e) {
+		}
+
+
 	};
 
 }

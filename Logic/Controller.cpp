@@ -1,17 +1,10 @@
 #include "Controller.h"
 
-//TO BE CHANGED!
-const string Controller::SUCCESS_ADDED = "Added line: \"%s\"\n";
-const string Controller::SUCCESS_DELETED = "Deleted line: \"%s\"\n";
-const string Controller::SUCCESS_CLEARED = "All content deleted\n";
-const string Controller::SUCCESS_SORTED = "All content sorted alphabetically\n";
-const string Controller::SUCCESS_COPIED = "%s copied successfully!\n";
 const string Controller::SUCCESS_EDITED = "\"%s\" changed to \"%s\"!\n";
 const string Controller::SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"\n";
 const string Controller::SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s\n";
-const string Controller::ERROR_INVALID_COMMAND = "Invalid command specified! please try again\n";
-const string Controller::ERROR_FILE_EMPTY = "File is empty\n";
 const string Controller::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
+const string Controller::ERROR_FILE_EMPTY = "File is empty\n";
 const string Controller::ERROR_SEARCH_ITEM_NOT_FOUND = "\"%s\" Not found!\n";
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
 const string Controller::ERROR_NO_FILENAME = "No filename specified!\n";
@@ -24,46 +17,27 @@ char Controller::buffer[1000];
 
 Controller::Controller(void) {
 	initializeVector();
-	isFirstCommandCall = true;
+	_isFirstCommandCall = true;
 }
-
-string Controller::getInputBoxMessage() {
-	return inputBoxMessage;
-}
-
-string Controller::getSuccessMessage() {
-	return successMessage;
-}
-
-void Controller::setInputBoxMessage(string message) {
-	inputBoxMessage = message;
-}
-
-void Controller::setSuccessMessage(string message) {
-	successMessage = message;
-}
-
-void Controller::initializeVector() {
-	vectorStore = outputFile.getAllFileData();
-}
-
-bool Controller::rewriteFile() {
-	outputFile.clearFile();
-	for (unsigned int i = 0; i < vectorStore.size(); i++) {
-		outputFile.addLine(vectorStore[i]);
-	}
-	return true;
-}
-
 
 string Controller::executeCommand(string inputText) {
 	parser = new Parser(inputText);
+	
+	int month = parser->getMonth();
+	int day = parser->getDay();
+	int hour = parser->getHour();
+	int mins = parser->getMinute();
+	int colour = 7; //temp, until parser can set colours
+
 	string userCommand = parser->getUserCommand();
-	string commandData = parser->getCommandData();
+	string commandData = parser->getEvent();
+	
+	ITEM data = initializeItem(commandData, day, month, hour, mins, colour);
+
 	if (userCommand == "display") {
 		setSuccessMessage("display");
 	} else if (userCommand == "add") {
-		addData(commandData);
+		addData(data);
 	} else if (userCommand == "delete") {
 		deleteData();
 	} else if (userCommand == "clear") {
@@ -86,45 +60,85 @@ string Controller::executeCommand(string inputText) {
 	return getSuccessMessage();
 }
 
+//API for UI (Main Text Box)
+string Controller::getInputBoxMessage() {
+	return _inputBoxMessage;
+}
+
+//API for UI (Message Box)
+string Controller::getSuccessMessage() {
+	return _successMessage;
+}
+
+void Controller::setInputBoxMessage(string message) {
+	_inputBoxMessage = message;
+}
+
+void Controller::setSuccessMessage(string message) {
+	_successMessage = message;
+}
+
+void Controller::initializeVector() {
+	//outputFile needs to be able to work with ITEM structure
+	//vectorStore = outputFile.getAllFileData();
+}
+
+bool Controller::rewriteFile() {
+	outputFile.clearFile();
+	for (unsigned int i = 0; i < vectorStore.size(); i++) {
+		outputFile.addLine(vectorStore[i].event);
+	}
+	return true;
+}
+
+ITEM Controller::initializeItem(string event, int day, int month, int hour, int min, int col, bool bold) {
+	ITEM temp;
+
+	temp.event=event;
+	temp.eventDate[0] = day;
+	temp.eventDate[1] = month;
+	temp.eventStartTime[0] = hour;
+	temp.eventStartTime[1] = min;
+	temp.colour = col;
+	temp.bold = bold;
+
+	return temp;
+}
+
 void Controller::commandOptions(string command) {
 
 }
 
-void Controller::addData(string sentence) {
-	vectorStore.push_back(sentence);
-	outputFile.addLine(sentence);
+void Controller::addData(ITEM item) {
+	AddItem *addItemCommand = new AddItem(item);
 
-	sprintf_s(buffer, SUCCESS_ADDED.c_str(), sentence.c_str());
+	addItemCommand->executeAction(vectorStore);
+
+	outputFile.addLine(item.event);
 
 	setInputBoxMessage("");
-	setSuccessMessage(buffer);
-
+	setSuccessMessage(addItemCommand->getMessage());
 }
 
 void Controller::deleteData() {
 	string successMessage;
-	int lineNumber = getLineNumberForOperation();
-	if(lineNumber == 0) {
-		successMessage = ERROR_INVALID_LINE_NUMBER;
+
+	DeleteItem *deleteItemCommand = new DeleteItem(getLineNumberForOperation());
+	deleteItemCommand->executeAction(vectorStore);
+
+	if(rewriteFile()) {
+		setSuccessMessage(deleteItemCommand->getMessage());
 	} else {
-		string dataToBeDeleted = (vectorStore[lineNumber - 1]);
-		vectorStore.erase(vectorStore.begin() + (lineNumber - 1));
-		if(rewriteFile()) {
-			sprintf_s(buffer, SUCCESS_DELETED.c_str(), dataToBeDeleted.c_str());
-			successMessage = buffer;
-		} else {
-			successMessage = ERROR_FILE_OPERATION_FAILED;
-		}
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
 
 	setInputBoxMessage("");
-	setSuccessMessage(successMessage);
+	
 }
 
 int Controller::getLineNumberForOperation() {
-	bool validLineNumber = parser->getIntegerLineNumber();
-	unsigned int lineNumber;
-	if(validLineNumber) {
+	unsigned int lineNumber=0;
+	if(parser->haveValidLineNumber()) {
 		lineNumber = parser->getLineOpNumber();
 		if (lineNumber <= 0 || lineNumber > vectorStore.size()) {
 			return 0;
@@ -140,79 +154,61 @@ string Controller::displayAll() {
 	}
 
 	for (unsigned int i = 0; i < vectorStore.size(); i++) {
-		oss << (i + 1) << ". " << vectorStore[i] << endl << endl;
+		DateTime *myDateTime = new DateTime;
+
+		int day = vectorStore[i].eventDate[0];
+		int mon = vectorStore[i].eventDate[1];
+		int hour = vectorStore[i].eventStartTime[0];
+		int min = vectorStore[i].eventStartTime[1];
+		int year = myDateTime->getCurrentYear();
+		
+		//NUMERICAL FORMAT
+		//oss << (i + 1) << ". " << vectorStore[i].event;
+		//oss << " [" << vectorStore[i].eventDate[0] << "/" << vectorStore[i].eventDate[1];
+		//oss << ", " << vectorStore[i].eventStartTime[0] << ":" << vectorStore[i].eventStartTime[1] << "]";
+		//oss << endl << endl;
+
+		//WRITTEN FORMAT
+		oss << (i + 1) << ". " << vectorStore[i].event;
+		oss << " on " << myDateTime->getWeekDay(day, mon, year);
+		oss << ", " << day << " " << myDateTime->getMonth(mon);
+		oss << " at " << hour << ":" << min;
+		oss << endl << endl;
 	}
 
 	return oss.str();
 }
 
 void Controller::clearAll() {
-	vectorStore.clear();
+	ClearItems *clearItemsCommand = new ClearItems;
+	
+	clearItemsCommand->executeAction(vectorStore);
+
 	if(outputFile.clearFile()) {
-		setSuccessMessage(SUCCESS_CLEARED);
+		setSuccessMessage(clearItemsCommand->getMessage());
 	} else {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
-
-
 }
 
 void Controller::sortAlphabetical() {
-	if (vectorStore.empty()) {
-		setSuccessMessage(ERROR_FILE_EMPTY);
-	} else {
-		selectionSortIgnoreCase();
-		if(rewriteFile()) {
-			setSuccessMessage(SUCCESS_SORTED);
-		} else {
-			setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
-		}
-	}
+	
+	SortAlphabetical *sortAlphabeticalCommand = new SortAlphabetical();
+	sortAlphabeticalCommand->executeAction(vectorStore);
+
 	setInputBoxMessage("");
-}
-
-void Controller::selectionSortIgnoreCase() {
-	for (unsigned int i = 0; i < (vectorStore.size() - 1); i++) {
-		int minIndex = i;
-		string minString = getLowerCaseString(vectorStore[minIndex]);
-		string minValue = vectorStore[minIndex];
-		for (unsigned int j = i + 1; j < vectorStore.size(); j++) {
-			string currString = getLowerCaseString(vectorStore[j]);
-			if (currString == minString && vectorStore[j] < vectorStore[minIndex]) {
-				swap(vectorStore[minIndex], vectorStore[j]);
-				minValue = vectorStore[minIndex];
-			}
-			if (currString < minString) {
-				minString = getLowerCaseString(vectorStore[j]);
-				minValue = vectorStore[j];
-				minIndex = j;
-			}
-		}
-		vectorStore[minIndex] = vectorStore[i];
-		vectorStore[i] = minValue;
-	}
-}
-
-string Controller::getLowerCaseString(string currentString) {
-	transform(currentString.begin(), currentString.end(), currentString.begin(), ::tolower);
-	return currentString;
-}
-
-void Controller::swap(string& string1, string& string2) {
-	string tempString = string1;
-	string1 = string2;
-	string2 = tempString;
+	setSuccessMessage(sortAlphabeticalCommand->getMessage());
 }
 
 void Controller::search(string searchText) {
 	ostringstream oss;
 	transform(searchText.begin(), searchText.end(), searchText.begin(), ::tolower);
 	for (unsigned int i = 0; i < vectorStore.size(); i++) {
-		string currentString = vectorStore[i];
+		string currentString = vectorStore[i].event;
 		transform(currentString.begin(), currentString.end(), currentString.begin(), ::tolower);
 		size_t position = currentString.find(searchText);
 		if (position != string::npos) {
-			oss << (i + 1) << ". " << vectorStore[i] << endl << endl;
+			oss << (i + 1) << ". " << vectorStore[i].event << endl << endl;
 		}
 	}
 
@@ -226,35 +222,54 @@ void Controller::search(string searchText) {
 }
 
 void Controller::copy() {
-	int lineNumber = getLineNumberForOperation();
-	if(lineNumber == 0) {
-		setSuccessMessage(ERROR_INVALID_LINE_NUMBER);
-		setInputBoxMessage("");
-	} else {
-		string lineToCopy = "add " + vectorStore[lineNumber - 1];
-		setSuccessMessage("");
-		setInputBoxMessage(lineToCopy);
+	CopyItem *copyItemCommand = new CopyItem(getLineNumberForOperation());
+	copyItemCommand->executeAction(vectorStore);
+
+	string copiedData = copyItemCommand->getCopiedData();
+	if(copiedData!="") {
+		outputFile.addLine(copiedData);
+		setSuccessMessage(copyItemCommand->getMessage());
 	}
+	setInputBoxMessage("");
+	
 }
 
 void Controller::edit() {
-	if(isFirstCommandCall) {
+	if(_isFirstCommandCall) {
 		int lineNumber = getLineNumberForOperation();
 		if(lineNumber == 0) {
 			setSuccessMessage(ERROR_INVALID_LINE_NUMBER);
 			setInputBoxMessage("");
 		} else {
-			string lineToCopy = "edit " + vectorStore[lineNumber - 1];
+			ostringstream oss;
+
+			oss << vectorStore[lineNumber - 1].event;
+			oss << "[" << vectorStore[lineNumber-1].eventDate[0];
+			oss << "/" << vectorStore[lineNumber-1].eventDate[1];
+			oss << ", " << vectorStore[lineNumber-1].eventStartTime[0];
+			oss << ":" << vectorStore[lineNumber-1].eventStartTime[1] << "]";
+			
+			string lineToCopy = "edit " + oss.str();
 			setSuccessMessage("");
 			setInputBoxMessage(lineToCopy);
 		}
-		isFirstCommandCall = false;
-		lineNumberOperation = lineNumber;
+		_isFirstCommandCall = false;
+		_lineNumberOperation = lineNumber;
 	} else {
-		sprintf_s(buffer, SUCCESS_EDITED.c_str(), vectorStore[lineNumberOperation - 1].c_str(), parser->getCommandData().c_str());
-		vectorStore[lineNumberOperation - 1] = parser->getCommandData();
+		sprintf_s(buffer, SUCCESS_EDITED.c_str(), 
+			vectorStore[_lineNumberOperation - 1].event.c_str(), 
+			parser->getEvent().c_str());
+		
+		ITEM temp = initializeItem(parser->getEvent(),
+			parser->getDay(),
+			parser->getMonth(),
+			parser->getHour(),
+			parser->getMinute(),
+			7);
+
+		vectorStore[_lineNumberOperation - 1] = temp;
 		rewriteFile();
-		isFirstCommandCall = true;
+		_isFirstCommandCall = true;
 		setSuccessMessage(buffer);
 		setInputBoxMessage("");
 	}
@@ -286,21 +301,6 @@ string Controller::move(string newFileLocation) {
 	}
 }
 
-
-string Controller::getSuccessMessage(string successType, string description) {
-	if (successType == "added") {
-		sprintf_s(buffer, SUCCESS_ADDED.c_str(), description.c_str());
-	} else if (successType == "deleted") {
-		sprintf_s(buffer, SUCCESS_DELETED.c_str(), description.c_str());
-	} else if (successType == "cleared") {
-		sprintf_s(buffer, SUCCESS_CLEARED.c_str());
-	} else if (successType == "sorted") {
-		sprintf_s(buffer, SUCCESS_SORTED.c_str());
-	}
-
-	return buffer;
-}
-
 string Controller::getHelp() {
 	ostringstream oss;
 	oss << "Command:		Program execution:\n";
@@ -314,7 +314,7 @@ string Controller::getHelp() {
 	return oss.str();
 }
 
-vector<string> Controller::getVectorStore() {
+vector<ITEM> Controller::getVectorStore() {
 	return vectorStore;
 }
 

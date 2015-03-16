@@ -1,57 +1,82 @@
 #pragma once
 #include <string>
 #include <sstream>
+#include "DateTime.cpp"
 using namespace std;
 
 class Parser {
 private:
-	string fullUserInput;
-	string userCommand;
-	string commandData;
-	int lineOpNumber;
+	DateTime dateTime;
+	string _fullUserInput;
+
+	string _userCommand;
+	string _event;
+	int _lineOpNumber;
+
+	int _day;
+	int _month;
+	int _year;
+
+	//time saved in 24 _hours format
+	int _hour;
+	int _minute;
+	int _duration;
 
 public:
+	Parser();
+
 	Parser(string);
 
-	void setCommand(string);
-
-	void setCommandData(string);
-
-	void setDay(string);
-
-	void setMonth(string);
-
-	void setTime(string);
-
-	void setlineOpNumber(int);
-
-	void setEvent(string);
+	//reset date, time and duration
+	void resetDateTime();
 
 	string getUserCommand();
 
-	string getCommandData();
-
-	int getLineOpNumber();
-
 	string getEvent();
 
-	string getDay();
+	int getDay();
 
-	string getMonth();
+	int getMonth();
 
-	string getTime();
+	int getYear();
 
-	//extracts userCommand and commandData
-	void extractUserCommand();
+	int getHour();
+
+	int getMinute();
+
+	//returns the line number for operations such as delete
+	int getLineOpNumber();
+
+	//extracts _userCommand and stores the rest of the input in _event
+	void extractUserCommand(string);
+
+	size_t findFrontBracket(string);
+
+	size_t findDateDelimiters(string);
+
+	//input format is [_day/_month time(24hrs) at the end of the input
+	//if time is input as 12 hr, input p to specify pm
+	//12 is taken as 12 noon. if 12 am, then input m
+	void extractDateAndTime(string);
+
+	bool isValidDate();
+
+	bool isValidTime();
+
+	void separateDayMonth(string _day_month);
+
+	void separateHourMinute(string _day_month);
 
 	//remove leading and ending whitespace of string, if any
 	//if only whitespaces are input, then it returns
-	//the whitespaces with one less whitespace
+	//an empty string
 	string removeSpacePadding(string);
 
-	//Converts a number in string format to integer format
-	//returns true if successful
-	bool getIntegerLineNumber();
+	//Converts the first number in the input string into an integer
+	//Sets _lineOpNumber and returns true if successful
+	bool haveValidLineNumber();
+
+	int convertStringToInteger(string numberString);
 
 	~Parser(void);
 };

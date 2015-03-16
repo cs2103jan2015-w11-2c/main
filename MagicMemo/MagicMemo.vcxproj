@@ -53,7 +53,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\CXY\Desktop\GitHub\W11-2C\Logic;C:\Users\CXY\Desktop\MagicMemo\MagicMemo\FileStorage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\user\Desktop\YIWEI\main\Logic;C:\Users\user\Desktop\YIWEI\main\FileStorage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -80,12 +80,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MagicMemoGUI.cpp" />
+    <ClCompile Include="MagicMemoMain.cpp" />
+    <ClCompile Include="MessageManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MagicMemoGUI.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="MessageManager.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MagicMemoGUI.resx">
@@ -93,8 +95,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FileStorage\FileStorage.vcxproj">
+      <Project>{01945a6f-d668-4a2e-b73b-22b37e25c9a8}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Logic\Logic.vcxproj">
-      <Project>{0c8663d4-0789-401f-a8cc-6674c2770dd0}</Project>
+      <Project>{ee9ce566-7ac2-4fdd-94c6-77748cd42fff}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
