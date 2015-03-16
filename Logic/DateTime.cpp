@@ -7,7 +7,7 @@
 using namespace std;
 
 //constants
-const string WEEKDAY[]={"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+const string WEEKDAY[]={"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 const string MONTH[]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 
 class DateTime {
@@ -46,7 +46,7 @@ public:
 		return (1 + _today.tm_hour);
 	}
 
-	// returns the integer weekday for the specified day, month and year
+	// returns the weekday for the specified day, month and year
 	// Sunday = 0, Saturday = 6;
 	int getIntWeekDay (int day, int month, int year) {
 		static int t[] = { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 };
@@ -56,6 +56,7 @@ public:
 	}
 
 	// returns the weekday name for the specified day, month and year
+	// Sunday, Monday, .... Saturday
 	string getWeekDay (int day, int month, int year) {
 		int wday = getIntWeekDay(day, month, year);
 		return WEEKDAY[wday];
