@@ -9,9 +9,6 @@
 
 using namespace std;
 
-const string SUCCESS_SORTED = "All content sorted alphabetically\n";
-const string ERROR_FILE_EMPTY = "File is empty\n";
-
 class SortAlphabetical : public Command {
 private:
 	string _message;

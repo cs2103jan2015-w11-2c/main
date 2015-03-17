@@ -8,10 +8,6 @@
 
 using namespace std;
 
-//CONSTANTS
-const std::string ERROR_COPY_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
-const std::string SUCCESS_COPIED = "copied line: \"%s\" \n";
-
 class CopyItem : public Command {
 private:
 	int _input;
@@ -37,7 +33,7 @@ public:
 	void executeAction(vector<ITEM>& vectorStore) {
 
 		if(_input == 0) {
-			_message = ERROR_COPY_INVALID_LINE_NUMBER;
+			_message = ERROR_INVALID_LINE_NUMBER;
 		}
 		else {
 			_message = "";

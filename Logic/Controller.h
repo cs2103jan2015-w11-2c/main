@@ -13,6 +13,7 @@
 #include "ClearItems.cpp"
 #include "SortAlphabetical.cpp"
 #include "CopyItem.cpp"
+#include "DisplayItems.cpp"
 
 using namespace std;
 

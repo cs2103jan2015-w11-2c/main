@@ -7,9 +7,6 @@
 
 using namespace std;
 
-//CONSTANTS
-const string SUCCESS_CLEARED = "All content deleted!\n";
-
 class ClearItems : public Command {
 public:
 	ClearItems() {
