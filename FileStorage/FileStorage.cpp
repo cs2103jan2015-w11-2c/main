@@ -1,4 +1,5 @@
 #include "FileStorage.h"
+#include <cassert>
 
 FileStorage::FileStorage(void) {
 	fileConfigFileName = "fileConfigurations.txt";
@@ -61,8 +62,10 @@ bool FileStorage::changeFileName(string newFileName) {
 	if(fileExists(newFileName)) {
 		return false;
 	}
+		
 	string oldFileName = getFullFileName();
 	setFileName(newFileName);
+	assert(!newFileName.empty());  
 	rename(oldFileName.c_str(), getFullFileName().c_str());
 	updateFileConfigInfo();
 	return true;
