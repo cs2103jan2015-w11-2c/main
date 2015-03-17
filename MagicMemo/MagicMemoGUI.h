@@ -92,9 +92,11 @@ namespace UI {
 			// 
 			this->commandInputBox->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::SuggestAppend;
 			this->commandInputBox->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
+			this->commandInputBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
 			this->commandInputBox->Location = System::Drawing::Point(23, 351);
 			this->commandInputBox->Name = L"commandInputBox";
-			this->commandInputBox->Size = System::Drawing::Size(536, 20);
+			this->commandInputBox->Size = System::Drawing::Size(536, 22);
 			this->commandInputBox->TabIndex = 1;
 			this->commandInputBox->Text = L"Enter text here:";
 			this->commandInputBox->UseWaitCursor = true;
@@ -126,6 +128,7 @@ namespace UI {
 			// 
 			// allTaskBox
 			// 
+			this->allTaskBox->BackColor = System::Drawing::Color::White;
 			this->allTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->allTaskBox->Location = System::Drawing::Point(304, 76);
@@ -136,21 +139,21 @@ namespace UI {
 			this->allTaskBox->TabIndex = 7;
 			this->allTaskBox->Text = L"";
 			this->allTaskBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::allTaskBox_KeyDown);
-			this->allTaskBox->BackColor = System::Drawing::Color::White;
 			// 
 			// successMessageLabel
 			// 
 			this->successMessageLabel->AutoSize = true;
 			this->successMessageLabel->Font = (gcnew System::Drawing::Font(L"Comic Sans MS", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->successMessageLabel->Location = System::Drawing::Point(28, 329);
+			this->successMessageLabel->Location = System::Drawing::Point(25, 329);
 			this->successMessageLabel->Name = L"successMessageLabel";
-			this->successMessageLabel->Size = System::Drawing::Size(115, 19);
+			this->successMessageLabel->Size = System::Drawing::Size(170, 19);
 			this->successMessageLabel->TabIndex = 8;
-			this->successMessageLabel->Text = L"Success Message";
+			this->successMessageLabel->Text = L"Welcome to Magic Memo!";
 			// 
 			// todayTaskBox
 			// 
+			this->todayTaskBox->BackColor = System::Drawing::Color::White;
 			this->todayTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->todayTaskBox->Location = System::Drawing::Point(23, 76);
@@ -161,7 +164,6 @@ namespace UI {
 			this->todayTaskBox->TabIndex = 9;
 			this->todayTaskBox->Text = L"";
 			this->todayTaskBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::lastActionBox_KeyDown);
-			this->todayTaskBox->BackColor = System::Drawing::Color::White;
 			// 
 			// MagicMemoGUI
 			// 
@@ -212,6 +214,7 @@ namespace UI {
 
 			// Ctrl + Z
 			if (e->KeyData == (Keys::Control | Keys::Z)) {
+				//magicMemo->executeCommand("undo");
 			}   
 
 			// Ctrl + R
