@@ -192,32 +192,20 @@ namespace UI {
 		}
 	private:
 		System::Void commandInputBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
-			
+
 			if(e->KeyCode == Keys::Enter) {
 				String^ inputText = commandInputBox->Text;
-				magicManager->generateMessageOutputs(inputText);
-				
-				String^ successMessage = magicManager->getSuccessMessage();
-				successMessageLabel->Text = successMessage;
-
-				allTaskBox->Text = magicManager->getAllTaskBoxMessage();
-
-				commandInputBox->Text = "";
-				commandInputBox->SelectionStart = 100;
-
-				if (successMessage == "exit") {
-					MessageBox::Show("Good bye!");
-					Application::Exit();
-				}
+				fillGUITextBoxes(inputText);
 			}
 
 			// Ctrl + Z
 			if (e->KeyData == (Keys::Control | Keys::Z)) {
-				//magicMemo->executeCommand("undo");
+				fillGUITextBoxes("undo");
 			}   
 
 			// Ctrl + R
 			if (e->KeyData == (Keys::Control | Keys::R)) {
+				fillGUITextBoxes("redo");
 			}
 
 		}
@@ -236,6 +224,25 @@ namespace UI {
 
 	private: 
 		System::Void MagicMemoGUI_Load(System::Object^  sender, System::EventArgs^  e) {
+		}
+
+	private:
+		// Sets success message and fills task boxes
+		System::Void fillGUITextBoxes(String^ userInput) {
+			magicManager->generateMessageOutputs(userInput);
+
+			String^ successMessage = magicManager->getSuccessMessage();
+			successMessageLabel->Text = successMessage;
+
+			allTaskBox->Text = magicManager->getAllTaskBoxMessage();
+
+			commandInputBox->Text = "";
+			commandInputBox->SelectionStart = 100;
+
+			if (successMessage == "exit") {
+				MessageBox::Show("Good bye!");
+				Application::Exit();
+			}
 		}
 
 
