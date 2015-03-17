@@ -7,50 +7,58 @@
 using namespace std;
 
 //constants
-const string WEEKDAY[]={"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+const string WEEKDAY[]={"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 const string MONTH[]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 
 class DateTime {
 
 private:
-	time_t now;
-	tm today;
+	time_t _now;
+	tm _today;
 
 public:
 	DateTime() {
-		now = time(0);
-		localtime_s(&today, &now);
+		_now = time(0);
+		localtime_s(&_today, &_now);
 	}
 
 	int getCurrentDay() {
-		return (today.tm_mday);
+		return (_today.tm_mday);
 	}
 
 	int getCurrentMonth() {
-		return (today.tm_mon);
+		return (_today.tm_mon);
 	}
 
 	int getCurrentYear() {
-		return (1990 + today.tm_year);
+		return (1990 + _today.tm_year);
 	}
 
 	string getCurrentWeekDay() {
-		return (WEEKDAY[today.tm_wday]);
+		return (WEEKDAY[_today.tm_wday]);
 	}
 
 	int getCurrentMinute() {
-		return (today.tm_min);
+		return (_today.tm_min);
 	}
 
 	int getCurrentHour() {
-		return (1 + today.tm_hour);
+		return (1 + _today.tm_hour);
 	}
 
 	// returns the weekday for the specified day, month and year
-	string getWeekDay (int day, int month, int year) {
+	// Sunday = 0, Saturday = 6;
+	int getIntWeekDay (int day, int month, int year) {
 		static int t[] = { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 };
 		year -= month < 3;
 		int wday = (year + year/4 - year/100 + year/400 + t[month - 1] + day) % 7;
+		return wday;
+	}
+
+	// returns the weekday name for the specified day, month and year
+	// Sunday, Monday, .... Saturday
+	string getWeekDay (int day, int month, int year) {
+		int wday = getIntWeekDay(day, month, year);
 		return WEEKDAY[wday];
 	}
 

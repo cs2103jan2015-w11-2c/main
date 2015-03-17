@@ -29,7 +29,7 @@ string Controller::executeCommand(string inputText) {
 	int colour = 7; //temp, until parser can set colours
 
 	string userCommand = parser->getUserCommand();
-	string commandData = parser->getCommandData();
+	string commandData = parser->getEvent();
 	
 	ITEM data = initializeItem(commandData, day, month, hour, mins, colour);
 
@@ -234,9 +234,9 @@ void Controller::edit() {
 	} else {
 		sprintf_s(buffer, SUCCESS_EDITED.c_str(), 
 			vectorStore[_lineNumberOperation - 1].event.c_str(), 
-			parser->getCommandData().c_str());
+			parser->getEvent().c_str());
 		
-		ITEM temp = initializeItem(parser->getCommandData(),
+		ITEM temp = initializeItem(parser->getEvent(),
 			parser->getDay(),
 			parser->getMonth(),
 			parser->getHour(),
