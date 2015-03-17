@@ -15,19 +15,20 @@ private:
 	Controller* magicMemo;
 	String^ _userInput;
 	String^ _successMessage;
-	String^ _mainOutputBoxMessage;
+	String^ _todayTaskBoxMessage;
+	String^ _allTaskBoxMessage;
 	String^ _inputBoxMessage;
 
 public:
 	MessageManager(void);
 
-	MessageManager(String^);
-
-	Void generateMessageOutputs();
+	Void generateMessageOutputs(String^);
 
 	String^ getSuccessMessage();
 
-	String^ getMainOutputBoxMessage();
+	String^ getTodayTaskBoxMessage();
+
+	String^ getAllTaskBoxMessage();
 
 	String^ getInputBoxMessage();
 

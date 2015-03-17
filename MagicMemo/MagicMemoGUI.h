@@ -22,13 +22,12 @@ namespace UI {
 	/// </summary>
 	public ref class MagicMemoGUI : public System::Windows::Forms::Form {
 	private:
-		Controller* magicMemo;
-		MessageManager^ outputMessage;
+		MessageManager^ magicManager;
+
 	public:
 		MagicMemoGUI(void) {
 			InitializeComponent();
-			magicMemo = new Controller();
-			outputMessage = gcnew MessageManager();
+			magicManager = gcnew MessageManager();
 		}
 
 	protected:
@@ -38,8 +37,7 @@ namespace UI {
 		~MagicMemoGUI() {
 			if (components) {
 				delete components;
-				delete magicMemo;
-				delete outputMessage;
+				delete magicManager;
 			}
 		}
 	private: System::Windows::Forms::Label^  todayTaskBoxLabel;
@@ -117,12 +115,12 @@ namespace UI {
 			// programHeading
 			// 
 			this->programHeading->AutoSize = true;
-			this->programHeading->Font = (gcnew System::Drawing::Font(L"AR DARLING", 30, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->programHeading->Font = (gcnew System::Drawing::Font(L"AR DELANEY", 32.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->programHeading->ForeColor = System::Drawing::Color::DarkBlue;
-			this->programHeading->Location = System::Drawing::Point(168, -6);
+			this->programHeading->Location = System::Drawing::Point(156, -2);
 			this->programHeading->Name = L"programHeading";
-			this->programHeading->Size = System::Drawing::Size(249, 49);
+			this->programHeading->Size = System::Drawing::Size(278, 52);
 			this->programHeading->TabIndex = 6;
 			this->programHeading->Text = L"Magic Memo";
 			// 
@@ -188,7 +186,6 @@ namespace UI {
 #pragma endregion
 
 	private:
-
 		//Get value while typing
 		System::Void commandInputBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 
@@ -198,12 +195,14 @@ namespace UI {
 			
 			if(e->KeyCode == Keys::Enter) {
 				String^ inputText = commandInputBox->Text;
-				string successMessage = magicMemo->executeCommand(outputMessage->convertToStdString(inputText));
-				successMessageLabel->Text = outputMessage->convertToSystemString(successMessage);
+				magicManager->generateMessageOutputs(inputText);
+				
+				String^ successMessage = magicManager->getSuccessMessage();
+				successMessageLabel->Text = successMessage;
 
+				allTaskBox->Text = magicManager->getAllTaskBoxMessage();
 
-				allTaskBox->Text = outputMessage->convertToSystemString(magicMemo->displayAll());
-				commandInputBox->Text = outputMessage->convertToSystemString(magicMemo->getInputBoxMessage());
+				commandInputBox->Text = "";
 				commandInputBox->SelectionStart = 100;
 
 				if (successMessage == "exit") {

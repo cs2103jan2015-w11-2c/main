@@ -5,25 +5,28 @@ MessageManager::MessageManager(void) {
 	magicMemo = new Controller();
 	_userInput = "";
 	_successMessage = "";
-	_mainOutputBoxMessage = "";
+	_todayTaskBoxMessage = "";
+	_allTaskBoxMessage = "";
 	_inputBoxMessage = "";
 }
 
-MessageManager::MessageManager(String^ textFromUser) {
-	magicMemo = new Controller();
-	_userInput = textFromUser;
-	generateMessageOutputs();
-}
-
-Void MessageManager::generateMessageOutputs() {
+Void MessageManager::generateMessageOutputs(String^ textFromUser) {
+	string operationSucess = magicMemo->executeCommand(convertToStdString(textFromUser));
+	_successMessage = convertToSystemString(operationSucess);
+	//_todayTaskBoxMessage = convertToSystemString(magicMemo->
+	_allTaskBoxMessage = convertToSystemString(magicMemo->displayAll());
 }
 
 String^ MessageManager::getSuccessMessage() {
 	return _successMessage;
 }
 
-String^ MessageManager::getMainOutputBoxMessage() {
-	return _mainOutputBoxMessage;
+String^ MessageManager::getTodayTaskBoxMessage() {
+	return _todayTaskBoxMessage;
+}
+
+String^ MessageManager::getAllTaskBoxMessage() {
+	return _allTaskBoxMessage;
 }
 
 String^ MessageManager::getInputBoxMessage() {
