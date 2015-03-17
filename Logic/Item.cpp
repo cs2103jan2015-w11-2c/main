@@ -49,31 +49,65 @@ public:
 	
 	
 	string dateToString() {
+		ostringstream oss;
 		if((eventDate[0] == 0) && (eventDate[1] == 0) && (eventDate[2] == 0)) {
 			return "";
 
 		} else if((eventDate[0] == 0)&&(eventDate[1] != 0) && (eventDate[2] != 0)) {
-			ostringstream oss;
-			oss << ", " << eventDate[0] << "/" << eventDate[1] << "/" << eventDate[2];
+			oss << "[  /" << eventDate[1] << "/" << eventDate[2];
 			return oss.str();
-		}else if(){
-		ostringstream oss;
-			oss << "on" << itemDate.getWeekDay(eventDate[0], eventDate[1], eventDate[2]);
-			oss << ", " << eventDate[0] << "/" << eventDate[1] << "/" << eventDate[2];
-			return oss.str();}
+		
+		}else if((eventDate[0] != 0) && (eventDate[1] == 0) && (eventDate[2] != 0)){
+			return "";
+	
+		}else if((eventDate[0] != 0) && (eventDate[1] != 0) && (eventDate[2] == 0)){    
+			oss << "[" << itemDate.getWeekDay(eventDate[0], eventDate[1], eventDate[2]);
+			oss << ", " << eventDate[0] << "/" << eventDate[1];
+		
+		}else if((eventDate[0] == 0) && (eventDate[1] != 0) && (eventDate[2] == 0)){
+			oss << "[ /" << eventDate[1] ;
+		
+		}else if((eventDate[0] != 0) && (eventDate[1] == 0) && (eventDate[2] == 0)){
+	     return "";		
+		}
 	}
 
 	string timeToString() {
 		ostringstream oss;
-		if(eventStartTime[0] == -1) {
+		int startHour;
+		int endHour;
+
+		if((eventStartTime[0] == -1) && (eventEndTime[0] == -1)) {
 			return "";
-		} else if(eventEndTime[0] != -1) {
-			oss << ", from " << eventStartTime[0] << ":" << getMinute(eventStartTime[1]);
-			oss << " - " << eventEndTime[0] << ":" << getMinute(eventEndTime[1]);
-			return oss.str();
-		} else {
-			oss << ", at " << eventStartTime[0] << ":" << getMinute(eventStartTime[1]);
+		
+		}else if((eventStartTime[0] != -1) && (eventEndTime[0] != -1)){
+			if(eventStartTime[0] == 0){
+			startHour = 12;
+	     	}else if(eventStartTime[0] > 12){
+		    startHour = eventStartTime[0] - 12;
+		    }
+		    
+		    if(eventEndTime[0] == 0){
+			endHour = 12;
+			}else if(eventEndTime[0] > 12){
+			endHour = eventEndTime[0] - 12;
+			}
+	    
+		oss << ", " << eventStartTime[0] << ":" << getMinute(eventStartTime[1]);
+		oss << " - " << eventEndTime[0] << ":" << getMinute(eventEndTime[1])<<"]";
+
+		}else if((eventStartTime[0] != -1) && (eventEndTime[0] == -1)){
+			if(eventStartTime[0] == 0){
+			startHour = 12;
+	     	}else if(eventStartTime[0] > 12){
+		    startHour = eventStartTime[0] - 12;
+			} 
+			oss << ", " << eventStartTime[0] << ":" << getMinute(eventStartTime[1])<<"]";
+
+		}else if((eventStartTime[0] == -1) && (eventEndTime[0] != -1)){
+			return "";
 		}
+
 	}
 
 	string toString() {
