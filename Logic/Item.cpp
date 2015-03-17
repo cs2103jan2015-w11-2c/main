@@ -1,5 +1,6 @@
 #pragma once
 #include <sstream>
+#include <iostream>
 #include "DateTime.cpp"
 
 using namespace std;
@@ -33,26 +34,34 @@ public:
 	}
 
 	string getMinute(int minute) {
-		if(minute == 0) {
-			return "00";
+		try{
+		  if(minute == 0) {
+		     return "00";
 		} else {
 			return to_string(minute);
 		}
-	}
+		  if(minute < 0) throw minute;
+		  if(minute == NULL)throw "allocation failure";
+		}catch(int i){
+		cout << "Exception: ";
+		cout << "The negative minute "<< minute << " is invalid"<<endl;
+		}catch(char *str){
+		cout << "Exception: ";
+		cout << str <<endl;
+		}
+}
 
-	// add event to string
-    string eventToString(){
-	
-	
-	}
-
-	
 	
 	string dateToString() {
 		ostringstream oss;
 		if((eventDate[0] == 0) && (eventDate[1] == 0) && (eventDate[2] == 0)) {
 			return "";
-
+        
+		} else if((eventDate[0] == 0)&&(eventDate[1] != 0) && (eventDate[2] != 0)) {
+			oss << "[" << itemDate.getWeekDay(eventDate[0], eventDate[1], eventDate[2]);
+			oss << ", " << eventDate[0] << "/" << eventDate[1] << "/" << eventDate[2];
+			return oss.str();
+		
 		} else if((eventDate[0] == 0)&&(eventDate[1] != 0) && (eventDate[2] != 0)) {
 			oss << "[  /" << eventDate[1] << "/" << eventDate[2];
 			return oss.str();
@@ -102,7 +111,7 @@ public:
 	     	}else if(eventStartTime[0] > 12){
 		    startHour = eventStartTime[0] - 12;
 			} 
-			oss << ", " << eventStartTime[0] << ":" << getMinute(eventStartTime[1])<<"]";
+		oss << ", " << eventStartTime[0] << ":" << getMinute(eventStartTime[1])<<"]";
 
 		}else if((eventStartTime[0] == -1) && (eventEndTime[0] != -1)){
 			return "";
