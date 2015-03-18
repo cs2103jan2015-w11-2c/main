@@ -1,4 +1,5 @@
 #include "Controller.h"
+#include "easylogging++.h"
 
 const string Controller::SUCCESS_EDITED = "\"%s\" changed to \"%s\"!\n";
 const string Controller::SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"\n";
@@ -14,6 +15,7 @@ const string Controller::ERROR_FILEPATH_NOT_FOUND = "The specified filepath was 
 
 char Controller::buffer[1000];
 
+INITIALIZE_EASYLOGGINGPP
 
 Controller::Controller(void) {
 	initializeVector();
@@ -22,7 +24,7 @@ Controller::Controller(void) {
 
 string Controller::executeCommand(string inputText) {
 	parser = new Parser(inputText);
-	
+
 	int month = parser->getMonth();
 	int day = parser->getDay();
 	int hour = parser->getHour();
@@ -31,7 +33,7 @@ string Controller::executeCommand(string inputText) {
 
 	string userCommand = parser->getUserCommand();
 	string commandData = parser->getEvent();
-	
+
 	ITEM data = initializeItem(commandData, day, month, hour, mins, colour);
 
 	if (userCommand == "display") {
@@ -133,18 +135,24 @@ void Controller::deleteData() {
 	}
 
 	setInputBoxMessage("");
-	
+
 }
 
 int Controller::getLineNumberForOperation() {
-	unsigned int lineNumber=0;
-	if(parser->haveValidLineNumber()) {
+	unsigned int lineNumber = 0;
+	try {
 		lineNumber = parser->getLineOpNumber();
 		if (lineNumber <= 0 || lineNumber > vectorStore.size()) {
 			return 0;
 		}
+	} catch (const out_of_range& e) {
+		LOG(ERROR) << "getLinenumberForOperation() throws: " << e.what();
+		clog << e.what();
+		return 0;
 	}
+
 	return lineNumber;
+
 }
 
 string Controller::displayAll() {
@@ -161,7 +169,7 @@ string Controller::displayAll() {
 		int hour = vectorStore[i].eventStartTime[0];
 		int min = vectorStore[i].eventStartTime[1];
 		int year = myDateTime->getCurrentYear();
-		
+
 		//NUMERICAL FORMAT
 		//oss << (i + 1) << ". " << vectorStore[i].event;
 		//oss << " [" << vectorStore[i].eventDate[0] << "/" << vectorStore[i].eventDate[1];
@@ -181,7 +189,7 @@ string Controller::displayAll() {
 
 void Controller::clearAll() {
 	ClearItems *clearItemsCommand = new ClearItems;
-	
+
 	clearItemsCommand->executeAction(vectorStore);
 
 	if(outputFile.clearFile()) {
@@ -192,7 +200,7 @@ void Controller::clearAll() {
 }
 
 void Controller::sortAlphabetical() {
-	
+
 	SortAlphabetical *sortAlphabeticalCommand = new SortAlphabetical();
 	sortAlphabeticalCommand->executeAction(vectorStore);
 
@@ -231,7 +239,7 @@ void Controller::copy() {
 		setSuccessMessage(copyItemCommand->getMessage());
 	}
 	setInputBoxMessage("");
-	
+
 }
 
 void Controller::edit() {
@@ -248,7 +256,7 @@ void Controller::edit() {
 			oss << "/" << vectorStore[lineNumber-1].eventDate[1];
 			oss << ", " << vectorStore[lineNumber-1].eventStartTime[0];
 			oss << ":" << vectorStore[lineNumber-1].eventStartTime[1] << "]";
-			
+
 			string lineToCopy = "edit " + oss.str();
 			setSuccessMessage("");
 			setInputBoxMessage(lineToCopy);
@@ -259,7 +267,7 @@ void Controller::edit() {
 		sprintf_s(buffer, SUCCESS_EDITED.c_str(), 
 			vectorStore[_lineNumberOperation - 1].event.c_str(), 
 			parser->getEvent().c_str());
-		
+
 		ITEM temp = initializeItem(parser->getEvent(),
 			parser->getDay(),
 			parser->getMonth(),
