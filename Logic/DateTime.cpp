@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ctime>
+#include <map>
 #include <string>
 #include <sstream>
 
@@ -53,6 +54,52 @@ public:
 		year -= month < 3;
 		int wday = (year + year/4 - year/100 + year/400 + t[month - 1] + day) % 7;
 		return wday;
+	}
+	
+	// given which day in the week is the event, return the date
+	string getDateFromWeekDay(int day, int month, int year, string weekDay){
+	map<int, string> weekDayList;
+	map<int, string> weekList;
+	string weekAndDay[1];
+    int spacePos = weekDay.find_first_of(" ");
+	
+	if(spacePos != string::npos){
+		weekAndDay[0] = weekDay.substr(0,spacePos);
+		weekAndDay[1] = weekDay.substr(spacePos);
+	}
+	else{
+		weekAndDay[1] = weekDay;
+	}
+
+	weekDayList[1] = "Monday";
+	weekDayList[2] = "Tuesday";
+	weekDayList[3] = "Wednesday";
+	weekDayList[4] = "Thursday";
+	weekDayList[5] = "Friday";
+	weekDayList[6] = "Saturday";
+	weekDayList[7] = "Sunday";
+
+	weekList[1] = "Last";
+	weekList[8] = "This";
+	weekList[15] = "Next";
+
+	map<int, string>::iterator iter;
+	iter = weekList.begin();
+	while(iter->second != weekAndDay[1]){
+		iter++;
+	}
+	int weekNo = iter->first;
+
+	iter = weekDayList.begin();
+	while(iter->second != weekAndDay[0]){
+		iter++;
+	}
+	int weekDayNo = iter->first;
+
+
+
+	string currentWeekDay = getWeekDay(day, month, year);
+	
 	}
 
 	// returns the weekday name for the specified day, month and year
