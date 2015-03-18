@@ -64,8 +64,9 @@ bool FileStorage::changeFileName(string newFileName) {
 	}
 		
 	string oldFileName = getFullFileName();
-	setFileName(newFileName);
 	assert(!newFileName.empty());  
+	assert(newFileName!= NULL); //filename cannot be empty or null
+	setFileName(newFileName);
 	rename(oldFileName.c_str(), getFullFileName().c_str());
 	updateFileConfigInfo();
 	return true;
@@ -81,10 +82,11 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 	}
 
 	string newFullFileName = newFilePath + "\\" + fileName;
-
-	if(fileExists(newFullFileName)) {
+    if(fileExists(newFullFileName)) {
 		return false;
 	}
+	
+	assert(newFilePath!=filePath);  //new filePath cannot be the same as old one
 
 	rename(getFullFileName().c_str(), newFullFileName.c_str());
 	setFilePath(newFilePath);
