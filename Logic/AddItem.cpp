@@ -7,9 +7,6 @@
 
 using namespace std;
 
-//CONSTANTS
-const string SUCCESS_ADDED = "Added line: \"%s\"\n";
-
 class AddItem :public Command {
 private:
 	ITEM _input;

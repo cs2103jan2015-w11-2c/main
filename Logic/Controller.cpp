@@ -5,7 +5,6 @@ const string Controller::SUCCESS_EDITED = "\"%s\" changed to \"%s\"!\n";
 const string Controller::SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"\n";
 const string Controller::SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s\n";
 const string Controller::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
-const string Controller::ERROR_FILE_EMPTY = "File is empty\n";
 const string Controller::ERROR_SEARCH_ITEM_NOT_FOUND = "\"%s\" Not found!\n";
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
 const string Controller::ERROR_NO_FILENAME = "No filename specified!\n";
@@ -133,9 +132,9 @@ void Controller::deleteData() {
 	} else {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
-
+	
 	setInputBoxMessage("");
-
+	
 }
 
 int Controller::getLineNumberForOperation() {
@@ -156,35 +155,13 @@ int Controller::getLineNumberForOperation() {
 }
 
 string Controller::displayAll() {
-	ostringstream oss;
-	if (vectorStore.empty()) {
-		return ERROR_FILE_EMPTY;
-	}
+	DisplayItems *displayItemsCommand = new DisplayItems();
+	
+	string output="";
+	displayItemsCommand->executeAction(vectorStore, output);
+	
+	return output;
 
-	for (unsigned int i = 0; i < vectorStore.size(); i++) {
-		DateTime *myDateTime = new DateTime;
-
-		int day = vectorStore[i].eventDate[0];
-		int mon = vectorStore[i].eventDate[1];
-		int hour = vectorStore[i].eventStartTime[0];
-		int min = vectorStore[i].eventStartTime[1];
-		int year = myDateTime->getCurrentYear();
-
-		//NUMERICAL FORMAT
-		//oss << (i + 1) << ". " << vectorStore[i].event;
-		//oss << " [" << vectorStore[i].eventDate[0] << "/" << vectorStore[i].eventDate[1];
-		//oss << ", " << vectorStore[i].eventStartTime[0] << ":" << vectorStore[i].eventStartTime[1] << "]";
-		//oss << endl << endl;
-
-		//WRITTEN FORMAT
-		oss << (i + 1) << ". " << vectorStore[i].event;
-		oss << " on " << myDateTime->getWeekDay(day, mon, year);
-		oss << ", " << day << " " << myDateTime->getMonth(mon);
-		oss << " at " << hour << ":" << min;
-		oss << endl << endl;
-	}
-
-	return oss.str();
 }
 
 void Controller::clearAll() {
