@@ -14,12 +14,10 @@ using namespace std;
 	static const string SUCCESS_SORTED = "All content sorted alphabetically\n";
 
 class Command {
-private:
-
 public:
 	Command();
 	~Command();
-	virtual void executeAction();
+	virtual void executeAction(vector<Item>&);
 	//virtual void executeAction(string&);
 	virtual string getMessage();
 };

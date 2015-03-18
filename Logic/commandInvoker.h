@@ -4,12 +4,17 @@
 #include <vector>
 #include <Command.h>
 #include <Item.h>
+#include "AddItem.cpp"
+#include "DeleteItem.cpp"
+#include "ClearItems.cpp"
+#include "SortAlphabetical.cpp"
+#include "CopyItem.cpp"
 
-class commandInvoker
+class CommandInvoker
 {
 public:
-	commandInvoker(void);
-	~commandInvoker(void);
-	//void executeCommand(vector<Item>&, Command);
+	CommandInvoker(void);
+	~CommandInvoker(void);
+	void executeCommand(vector<Item>&, Command *);
 };
 

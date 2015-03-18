@@ -1,12 +1,14 @@
 #include "commandInvoker.h"
 
 
-commandInvoker::commandInvoker(void) {
+CommandInvoker::CommandInvoker(void) {
 }
 
 
-commandInvoker::~commandInvoker(void) {
+CommandInvoker::~CommandInvoker(void) {
 }
 
-void commandInvoker::executeCommand(vector<Item>&, Command) {
+void CommandInvoker::executeCommand(vector<Item> &vectorStore, Command *command) {
+	command->executeAction(vectorStore);
+
 }

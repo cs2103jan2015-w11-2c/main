@@ -9,12 +9,12 @@
 #include "Parser.h"
 #include "FileStorage.h"
 #include "Item.h"
+#include "CommandInvoker.h"
 #include "AddItem.cpp"
 #include "DeleteItem.cpp"
 #include "ClearItems.cpp"
 #include "SortAlphabetical.cpp"
 #include "CopyItem.cpp"
-#include "DisplayItems.cpp"
 
 using namespace std;
 
@@ -32,12 +32,13 @@ private:
 	static const string ERROR_FILE_ALREADY_EXISTS;
 	static const string ERROR_FILEPATH_NOT_FOUND;
 
-	static string MENU;
-	static char buffer[1000];
+	static string _MENU;
+	static char _buffer[1000];
 
-	FileStorage outputFile;
-	Parser *parser;
-	vector<Item> vectorStore;
+	FileStorage *_outputFile;
+	Parser *_parser;
+	CommandInvoker *_invoker;
+	vector<Item> _vectorStore;
 
 	//To be passed to the GUI
 	string _inputBoxMessage;
