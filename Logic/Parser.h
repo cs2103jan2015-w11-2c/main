@@ -1,8 +1,10 @@
 #pragma once
 #include <string>
 #include <sstream>
+#include <exception>
 #include "DateTime.cpp"
 using namespace std;
+
 
 class Parser {
 private:
@@ -27,6 +29,8 @@ public:
 
 	Parser(string);
 
+	void Parser::init();
+
 	//reset date, time and duration
 	void resetDateTime();
 
@@ -45,6 +49,7 @@ public:
 	int getMinute();
 
 	//returns the line number for operations such as delete
+	//throws out_of_range exception if line number is invalid
 	int getLineOpNumber();
 
 	//extracts _userCommand and stores the rest of the input in _event
@@ -69,10 +74,6 @@ public:
 	//if only whitespaces are input, then it returns
 	//an empty string
 	string removeSpacePadding(string);
-
-	//Converts the first number in the input string into an integer
-	//Sets _lineOpNumber and returns true if successful
-	bool haveValidLineNumber();
 
 	int convertStringToInteger(string numberString);
 

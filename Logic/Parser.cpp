@@ -1,6 +1,5 @@
 #include "Parser.h"
 
-
 Parser::Parser() {
 	resetDateTime();
 	_fullUserInput = "";
@@ -59,6 +58,17 @@ int Parser::getMinute() {
 
 
 int Parser::getLineOpNumber() {
+	if(_event == "") {
+		throw std::out_of_range("No line number");
+	}
+
+	char *end;
+	_lineOpNumber = (int)strtol(_event.c_str(), &end, 10);
+
+	if(*end != 0 || _lineOpNumber <= 0) {
+		throw std::out_of_range("Invalid line number");
+	}
+
 	return _lineOpNumber;
 }
 
@@ -232,16 +242,6 @@ string Parser::removeSpacePadding(string line) {
 	} else {
 		return "";
 	}
-}
-
-bool Parser::haveValidLineNumber() {
-	if(_event == "") {
-		return false;
-	}
-	char *end;
-	_lineOpNumber = (int)strtol(_event.c_str(), &end, 10);
-	return (*end == 0 || _lineOpNumber > 0);
-
 }
 
 int Parser::convertStringToInteger(string numberString) {
