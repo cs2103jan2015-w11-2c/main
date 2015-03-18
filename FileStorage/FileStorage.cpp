@@ -3,7 +3,7 @@
 
 FileStorage::FileStorage(void) {
 	fileConfigFileName = "fileConfigurations.txt";
-	defaultFileName = "MagicMemo.txt";
+	defaultFileName = "MagicMemo Task List.txt";
 
 	if(isFileEmpty(fileConfigFileName)) {  //if not initialized
 		initializeFileConfig();
