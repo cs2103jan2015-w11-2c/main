@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "Item.cpp"
+#include "Item.h"
 #include "Command.h"
 
 using namespace std;
@@ -15,7 +15,7 @@ public:
 	~ClearItems() {
 	}
 
-	void executeAction(vector<ITEM>& vectorStore) {
+	void executeAction(vector<Item>& vectorStore) {
 		vectorStore.clear();
 	}
 

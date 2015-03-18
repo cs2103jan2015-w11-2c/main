@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include "Item.cpp"
+#include "Item.h"
 #include "Command.h"
 
 using namespace std;
@@ -16,7 +16,7 @@ public:
 	~DisplayItems() {
 	}
 
-	void executeAction(const vector<ITEM> vectorStore, string &output) {
+	void executeAction(const vector<Item> vectorStore, string &output) {
 		if (vectorStore.empty()) {
 			output = ERROR_FILE_EMPTY;
 			return;

@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include "Item.cpp"
+#include "Item.h"
 
 using namespace std;
 

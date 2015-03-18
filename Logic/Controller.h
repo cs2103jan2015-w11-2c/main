@@ -8,6 +8,7 @@
 #include "DateTime.cpp"
 #include "Parser.h"
 #include "FileStorage.h"
+#include "Item.h"
 #include "AddItem.cpp"
 #include "DeleteItem.cpp"
 #include "ClearItems.cpp"
@@ -36,7 +37,7 @@ private:
 
 	FileStorage outputFile;
 	Parser *parser;
-	vector<ITEM> vectorStore;
+	vector<Item> vectorStore;
 
 	//To be passed to the GUI
 	string _inputBoxMessage;
@@ -66,11 +67,11 @@ public:
 
 	bool rewriteFile();
 
-	ITEM initializeItem(string, int, int, int, int, int color = 7, bool bold = false);
+	Item initializeItem(string, int, int, int, int, int color = 7, bool bold = false);
 
 	void commandOptions(string);
 
-	void addData(ITEM);
+	void addData(Item);
 
 	//returns the data deleted or *#*#*#*#* if not found
 	void deleteData();
@@ -109,7 +110,7 @@ public:
 
 	string getHelp();
 
-	vector<ITEM> getVectorStore();
+	vector<Item> getVectorStore();
 
 	~Controller(void);
 };
