@@ -7,5 +7,5 @@
 // TODO: reference any additional headers you need in STDAFX.H
 // and not in this file
 #include "Parser.h"
-#include "ITEM.cpp"
+#include "ITEM.h"
 #include "DateTime.cpp"

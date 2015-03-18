@@ -1,7 +1,4 @@
 #include "stdafx.h"
-#include "Parser.h"
-#include "DateTime.cpp"
-#include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -73,8 +70,8 @@ public:
 	TEST_CLASS(ITEMTest) {
 public:
 
-	TEST_METHOD(dateToStringTest) {
-		ITEM test;
+	TEST_METHOD(tooStringTest) {
+		Item test;
 
 		test.event = "";
 		test.eventDate[0] = 18;
@@ -89,6 +86,16 @@ public:
 
 		string expected = "Wednesday, 18 Mar 2015";
 		Assert::AreEqual(expected, test.dateToString());
+
+		expected = "[10:00 am - 12:00 pm]";
+		Assert::AreEqual(expected, test.timeToString());
+
+		test.eventStartTime[0] = 16;
+		test.eventStartTime[1] = 30;
+		test.eventEndTime[0] = -1;
+		test.eventEndTime[1] = 0;
+		expected = "[4:30 pm]";
+		Assert::AreEqual(expected, test.timeToString());
 
 	}
 
