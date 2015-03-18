@@ -24,8 +24,6 @@ public:
 
 		expected = "";
 		Assert::AreEqual(expected, parse.removeSpacePadding("  "));
-		
-		Assert::AreEqual(1,1);
 	}
 	
 	TEST_METHOD(ExtractUserCommandTest) {
