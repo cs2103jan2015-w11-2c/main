@@ -1,7 +1,10 @@
 #pragma once
 
+//#define NDEBUG
+
 #include <iostream>
 #include <vector>
+#include <cassert>
 #include "Item.cpp"
 #include "Command.h"
 
@@ -31,7 +34,14 @@ public:
 
 
 	void executeAction(vector<ITEM>& vectorStore) {
-	
+		int lineToBeDeleted = _lineNumber;
+		assert(lineToBeDeleted>=0);
+
+		int sizeOfVectorStore = vectorStore.size();
+		assert(sizeOfVectorStore>0);
+
+		assert(lineToBeDeleted<=sizeOfVectorStore);
+
 		if(_lineNumber == 0) {
 			_message = ERROR_INVALID_LINE_NUMBER;
 		} else {

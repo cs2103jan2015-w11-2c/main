@@ -130,8 +130,8 @@ void Controller::deleteData() {
 	} else {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
-
-	setInputBoxMessage("");
+	
+	//setInputBoxMessage("");
 	
 }
 
