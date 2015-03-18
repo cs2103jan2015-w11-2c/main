@@ -57,7 +57,7 @@ public:
 	}
 	
 	// given which day in the week is the event, return the date
-	string getDateFromWeekDay(int day, int month, int year, string weekDay){
+	/*string getDateFromWeekDay(int day, int month, int year, string weekDay){
 	map<int, string> weekDayList;
 	map<int, string> weekList;
 	string weekAndDay[1];
@@ -100,7 +100,7 @@ public:
 
 	string currentWeekDay = getWeekDay(day, month, year);
 	
-	}
+	}*/
 
 	// returns the weekday name for the specified day, month and year
 	// Sunday, Monday, .... Saturday
