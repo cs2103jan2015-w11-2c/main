@@ -2,14 +2,14 @@
 
 #include <iostream>
 #include <vector>
-#include "Item.cpp"
+#include "Item.h"
 #include "Command.h"
 
 using namespace std;
 
 class AddItem :public Command {
 private:
-	ITEM _input;
+	Item _input;
 
 public:
 	AddItem() {
@@ -25,14 +25,14 @@ public:
 		_input.bold = false;
 	}
 
-	AddItem(const ITEM input) {
+	AddItem(const Item input) {
 		_input = input;
 	}
 
 	~AddItem() {
 	}
 
-	void executeAction(vector<ITEM> &vectorStore) {
+	void executeAction(vector<Item> &vectorStore) {
 		vectorStore.push_back(_input);
 	}
 

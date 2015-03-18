@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "Item.cpp"
+#include "Item.h"
 #include "Command.h"
 
 using namespace std;
@@ -30,7 +30,7 @@ public:
 	~CopyItem() {
 	}
 
-	void executeAction(vector<ITEM>& vectorStore) {
+	void executeAction(vector<Item>& vectorStore) {
 
 		if(_input == 0) {
 			_message = ERROR_INVALID_LINE_NUMBER;

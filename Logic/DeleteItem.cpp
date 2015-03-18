@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <cassert>
-#include "Item.cpp"
+#include "Item.h"
 #include "Command.h"
 
 using namespace std;
@@ -33,7 +33,7 @@ public:
 	}
 
 
-	void executeAction(vector<ITEM>& vectorStore) {
+	void executeAction(vector<Item>& vectorStore) {
 		int lineToBeDeleted = _lineNumber;
 		assert(lineToBeDeleted>=0);
 

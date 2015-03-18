@@ -33,7 +33,7 @@ string Controller::executeCommand(string inputText) {
 	string userCommand = parser->getUserCommand();
 	string commandData = parser->getEvent();
 
-	ITEM data = initializeItem(commandData, day, month, hour, mins, colour);
+	Item data = initializeItem(commandData, day, month, hour, mins, colour);
 
 	if (userCommand == "display") {
 		setSuccessMessage("display");
@@ -92,8 +92,8 @@ bool Controller::rewriteFile() {
 	return true;
 }
 
-ITEM Controller::initializeItem(string event, int day, int month, int hour, int min, int col, bool bold) {
-	ITEM temp;
+Item Controller::initializeItem(string event, int day, int month, int hour, int min, int col, bool bold) {
+	Item temp;
 
 	temp.event=event;
 	temp.eventDate[0] = day;
@@ -110,7 +110,7 @@ void Controller::commandOptions(string command) {
 
 }
 
-void Controller::addData(ITEM item) {
+void Controller::addData(Item item) {
 	AddItem *addItemCommand = new AddItem(item);
 
 	addItemCommand->executeAction(vectorStore);
@@ -245,7 +245,7 @@ void Controller::edit() {
 			vectorStore[_lineNumberOperation - 1].event.c_str(), 
 			parser->getEvent().c_str());
 
-		ITEM temp = initializeItem(parser->getEvent(),
+		Item temp = initializeItem(parser->getEvent(),
 			parser->getDay(),
 			parser->getMonth(),
 			parser->getHour(),
@@ -299,7 +299,7 @@ string Controller::getHelp() {
 	return oss.str();
 }
 
-vector<ITEM> Controller::getVectorStore() {
+vector<Item> Controller::getVectorStore() {
 	return vectorStore;
 }
 
