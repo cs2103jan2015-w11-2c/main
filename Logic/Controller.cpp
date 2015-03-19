@@ -170,34 +170,15 @@ void Controller::copy() {
 }
 
 void Controller::edit(Item data) {
-}/*
-	EditItem *editItemCommand = new EditItem(getLineNumberForOperation(), data);
+	
+	EditItem *editItemCommand = new EditItem (getLineNumberForOperation(), data);
 	_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
-
-			string lineToCopy = "edit " + oss.str();
-			setSuccessMessage("");
-			setInputBoxMessage(lineToCopy);
-		}
-		_isFirstCommandCall = false;
-		_lineNumberOperation = lineNumber;
-	} else {
-		sprintf_s(_buffer, SUCCESS_EDITED.c_str(), 
-			_vectorStore[_lineNumberOperation - 1].event.c_str(), 
-			_parser->getEvent().c_str());
-
-		Item temp;
-
-		_vectorStore[_lineNumberOperation - 1] = temp;
-		rewriteFile();
-		_isFirstCommandCall = true;
-		setSuccessMessage(_buffer);
-		setInputBoxMessage("");
 
 	if(!rewriteFile()) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
 }
-*/
+
 
 string Controller::rename(string newFileName) {
 	if(newFileName == "") {
