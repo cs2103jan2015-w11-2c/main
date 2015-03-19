@@ -10,13 +10,13 @@
 #include "FileStorage.h"
 #include "Item.h"
 #include "CommandInvoker.h"
-#include "AddItem.cpp"
-#include "DeleteItem.cpp"
-#include "ClearItems.cpp"
-#include "SortAlphabetical.cpp"
-#include "CopyItem.cpp"
 
 using namespace std;
+
+struct Result {
+	int lineNumber;
+	string date, event, time;
+};
 
 class Controller {
 private:
@@ -96,7 +96,7 @@ public:
 
 	void copy();
 
-	void edit();
+	void edit(Item);
 
 	//NEED TO IMPLEMENT A textfile to reflect the change
 	//in name so that the next time the program is run

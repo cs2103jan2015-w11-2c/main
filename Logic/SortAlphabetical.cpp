@@ -60,7 +60,7 @@ public:
 		}
 		else {
 			selectionSortIgnoreCase(vectorStore);
-			_message = SUCCESS_SORTED;
+			_message = SUCCESS_SORTED_ALPHA;
 		}
 	}
 
