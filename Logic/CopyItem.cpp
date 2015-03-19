@@ -12,19 +12,16 @@ class CopyItem : public Command {
 private:
 	int _input;
 	std::string _message;
-	std::string _copiedData;
 
 public:
 	CopyItem() {
 		_input = 0;
 		_message = "";
-		_copiedData = "";
 	}
 
 	CopyItem(const int input) {
 		_input = input;
 		_message = "";
-		_copiedData = "";
 	}
 
 	~CopyItem() {
@@ -37,21 +34,19 @@ public:
 		}
 		else {
 			_message = "";
-			_copiedData = vectorStore[_input-1].event;
+
+			Item copiedData;
+			copiedData = vectorStore[_input-1];
 			vectorStore.push_back(vectorStore[_input-1]);
 			
 			char buffer[1000];
 
-			sprintf_s(buffer, SUCCESS_COPIED.c_str(), _copiedData.c_str());
+			sprintf_s(buffer, SUCCESS_COPIED.c_str(), copiedData.toString().c_str());
 			_message = buffer;
 		}
 	}
 
 	std::string getMessage() {
 		return _message;
-	}
-
-	std::string getCopiedData() {
-		return _copiedData;
 	}
 };

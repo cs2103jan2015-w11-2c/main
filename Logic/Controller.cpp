@@ -1,11 +1,9 @@
 #include "Controller.h"
 #include "easylogging++.h"
 
-const string Controller::SUCCESS_EDITED = "\"%s\" changed to \"%s\"!\n";
 const string Controller::SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"\n";
 const string Controller::SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s\n";
 const string Controller::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
-const string Controller::ERROR_SEARCH_ITEM_NOT_FOUND = "\"%s\" Not found!\n";
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
 const string Controller::ERROR_NO_FILENAME = "No filename specified!\n";
 const string Controller::ERROR_FILE_ALREADY_EXISTS = "A file with the same name already exists in the location specified";
@@ -53,7 +51,7 @@ string Controller::executeCommand(string inputText) {
 	} else if (userCommand == "copy") {
 		copy();
 	} else if (userCommand == "edit") {
-		edit();
+		edit(data);
 	} else if (userCommand == "rename") {
 		rename(commandData);
 	} else if (userCommand == "move") {
@@ -115,23 +113,19 @@ void Controller::commandOptions(string command) {
 
 void Controller::addData(Item item) {
 	AddItem *addItemCommand = new AddItem(item);
-
-	_invoker->executeCommand(_vectorStore,addItemCommand);
-
-	_outputFile->addLine(item.event);
-
-	setInputBoxMessage("");
-	setSuccessMessage(addItemCommand->getMessage());
+	_invoker->executeCommand(_vectorStore,addItemCommand, _successMessage);
+	
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
 }
 
 void Controller::deleteData() {
 	DeleteItem *deleteItemCommand = new DeleteItem(getLineNumberForOperation());
 	
-	_invoker->executeCommand(_vectorStore, deleteItemCommand);
+	_invoker->executeCommand(_vectorStore, deleteItemCommand, _successMessage);
 
-	if(rewriteFile()) {
-		setSuccessMessage(deleteItemCommand->getMessage());
-	} else {
+	if(!rewriteFile()) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
 	
@@ -162,11 +156,9 @@ string Controller::displayAll() {
 void Controller::clearAll() {
 	ClearItems *clearItemsCommand = new ClearItems;
 
-	clearItemsCommand->executeAction(_vectorStore);
+	_invoker->executeCommand(_vectorStore,clearItemsCommand, _successMessage);
 
-	if(_outputFile->clearFile()) {
-		setSuccessMessage(clearItemsCommand->getMessage());
-	} else {
+	if(!_outputFile->clearFile()) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
 }
@@ -174,84 +166,34 @@ void Controller::clearAll() {
 void Controller::sortAlphabetical() {
 
 	SortAlphabetical *sortAlphabeticalCommand = new SortAlphabetical();
-	sortAlphabeticalCommand->executeAction(_vectorStore);
+	_invoker->executeCommand(_vectorStore,sortAlphabeticalCommand, _successMessage);
 
-	setInputBoxMessage("");
-	setSuccessMessage(sortAlphabeticalCommand->getMessage());
 }
 
 void Controller::search(string searchText) {
-	ostringstream oss;
-	transform(searchText.begin(), searchText.end(), searchText.begin(), ::tolower);
-	for (unsigned int i = 0; i < _vectorStore.size(); i++) {
-		string currentString = _vectorStore[i].event;
-		transform(currentString.begin(), currentString.end(), currentString.begin(), ::tolower);
-		size_t position = currentString.find(searchText);
-		if (position != string::npos) {
-			oss << (i + 1) << ". " << _vectorStore[i].event << endl << endl;
-		}
-	}
+	vector<Item> tempVector = _vectorStore;
 
-	if (oss.str() == "") {
-		sprintf_s(_buffer, ERROR_SEARCH_ITEM_NOT_FOUND.c_str(), searchText.c_str());
-		setSuccessMessage(_buffer);
-	}
-	//to be changed to be shown in main outputbox
-	setSuccessMessage(oss.str());
-	setInputBoxMessage("");
+	SearchItem *searchItemCommand = new SearchItem(searchText);
+	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
+
 }
 
 void Controller::copy() {
 	CopyItem *copyItemCommand = new CopyItem(getLineNumberForOperation());
-	copyItemCommand->executeAction(_vectorStore);
+	_invoker->executeCommand(_vectorStore,copyItemCommand, _successMessage);
 
-	string copiedData = copyItemCommand->getCopiedData();
-	if(copiedData!="") {
-		_outputFile->addLine(copiedData);
-		setSuccessMessage(copyItemCommand->getMessage());
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
-	setInputBoxMessage("");
 
 }
 
-void Controller::edit() {
-	if(_isFirstCommandCall) {
-		int lineNumber = getLineNumberForOperation();
-		if(lineNumber == 0) {
-			setSuccessMessage(ERROR_INVALID_LINE_NUMBER);
-			setInputBoxMessage("");
-		} else {
-			ostringstream oss;
+void Controller::edit(Item data) {
+	EditItem *editItemCommand = new EditItem(getLineNumberForOperation(), data);
+	_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
 
-			oss << _vectorStore[lineNumber - 1].event;
-			oss << "[" << _vectorStore[lineNumber-1].eventDate[0];
-			oss << "/" << _vectorStore[lineNumber-1].eventDate[1];
-			oss << ", " << _vectorStore[lineNumber-1].eventStartTime[0];
-			oss << ":" << _vectorStore[lineNumber-1].eventStartTime[1] << "]";
-
-			string lineToCopy = "edit " + oss.str();
-			setSuccessMessage("");
-			setInputBoxMessage(lineToCopy);
-		}
-		_isFirstCommandCall = false;
-		_lineNumberOperation = lineNumber;
-	} else {
-		sprintf_s(_buffer, SUCCESS_EDITED.c_str(), 
-			_vectorStore[_lineNumberOperation - 1].event.c_str(), 
-			_parser->getEvent().c_str());
-
-		Item temp = initializeItem(_parser->getEvent(),
-			_parser->getDay(),
-			_parser->getMonth(),
-			_parser->getHour(),
-			_parser->getMinute(),
-			7);
-
-		_vectorStore[_lineNumberOperation - 1] = temp;
-		rewriteFile();
-		_isFirstCommandCall = true;
-		setSuccessMessage(_buffer);
-		setInputBoxMessage("");
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
 }
 

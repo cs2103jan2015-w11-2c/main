@@ -11,7 +11,11 @@ using namespace std;
 	static const string SUCCESS_COPIED = "copied line: \"%s\" \n";
 	static const string ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
 	static const string ERROR_FILE_EMPTY  = "File is empty\n";
-	static const string SUCCESS_SORTED = "All content sorted alphabetically\n";
+	static const string SUCCESS_SORTED_ALPHA = "All content sorted alphabetically\n";
+	static const string SUCCESS_SORTED_CHRONO = "All content sorted chronologically\n";
+	static const string ERROR_SEARCH_ITEM_NOT_FOUND = "\"%s\" Not found!\n";
+	static const string SUCCESS_EDITED = "\"%s\" changed to \"%s\"!\n";
+
 
 class Command {
 public:
