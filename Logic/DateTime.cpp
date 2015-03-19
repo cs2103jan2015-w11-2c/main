@@ -96,4 +96,9 @@ public:
 		return true;
 	}
 
+	bool DateTime::isValidTime(int hour, int minute) {
+		return (hour >= 0 && hour <= 24 && minute >= 0 && minute <= 60);
+	}
+
+
 };

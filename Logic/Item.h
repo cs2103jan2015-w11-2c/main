@@ -10,7 +10,9 @@ public:
 	DateTime itemDate;
 	string event;
 	int eventDate[3];
-	// 24 hour format
+	// 24 hour format, 
+	// hour: 1 - 24 (0 == undefined, 24 == 12 am)
+	// minute: 0 - 59
 	int eventStartTime[2];
 	int eventEndTime[2];
 	int colour;
