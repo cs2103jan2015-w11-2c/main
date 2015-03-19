@@ -24,17 +24,12 @@ Controller::Controller(void) {
 
 string Controller::executeCommand(string inputText) {
 	_parser = new Parser(inputText);
-
-	//int month = _parser->getMonth();
-	//int day = _parser->getDay();
-	//int hour = _parser->getHour();
-	//int mins = _parser->getMinute();
-	//int colour = 7; //temp, until parser can set colours
+	_parser->extractUserCommand(inputText);
 
 	string userCommand = _parser->getUserCommand();
 	string commandData = _parser->getEvent();
 
-	Item data; //= initializeItem(commandData, day, month, hour, mins, colour);
+	Item data = _parser->getItem();
 
 	if (userCommand == "display") {
 		setSuccessMessage("display");
@@ -91,20 +86,6 @@ bool Controller::rewriteFile() {
 		_outputFile->addLine(_vectorStore[i].event);
 	}
 	return true;
-}
-
-Item Controller::initializeItem(string event, int day, int month, int hour, int min, int col, bool bold) {
-	Item temp;
-
-	temp.event=event;
-	temp.eventDate[0] = day;
-	temp.eventDate[1] = month;
-	temp.eventStartTime[0] = hour;
-	temp.eventStartTime[1] = min;
-	temp.colour = col;
-	temp.bold = bold;
-
-	return temp;
 }
 
 void Controller::commandOptions(string command) {
@@ -189,6 +170,7 @@ void Controller::copy() {
 }
 
 void Controller::edit(Item data) {
+}/*
 	EditItem *editItemCommand = new EditItem(getLineNumberForOperation(), data);
 	_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
 
@@ -215,6 +197,7 @@ void Controller::edit(Item data) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
 }
+*/
 
 string Controller::rename(string newFileName) {
 	if(newFileName == "") {

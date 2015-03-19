@@ -36,9 +36,6 @@ public:
 		expected = "";
 		Assert::AreEqual(expected, parse.getUserCommand());
 	}
-
-
-
 	};
 
 	TEST_CLASS(DateTimeParserTest) {
@@ -136,8 +133,6 @@ public:
 		Assert::AreEqual(expected, hour);
 	}
 
-
-
 	TEST_METHOD(extractDateTimeTest1) {
 		string inputArray[] = {"12/3/2015"}; 
 		Item item;
@@ -186,12 +181,12 @@ public:
 		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
 		int expectedStartMinute = 30;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
-		/*
+		
 		int expectedEndHour = 0;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
 		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
-		*/
+		
 	}
 
 	TEST_METHOD(extractDateTimeTest3) {

@@ -12,7 +12,6 @@ Parser::Parser() {
 Parser::Parser(string userInput) {
 	_lineOpNumber = 0;
 	_fullUserInput = userInput;
-	extractUserCommand(_fullUserInput);
 	extractDateAndTime(_event);
 }
 
@@ -60,6 +59,7 @@ void Parser::extractUserCommand(string fullString) {
 		_event = _event.substr(spacePos);
 		spacePos = _event.find_first_not_of(" ");
 		_event = _event.substr(spacePos);
+		_item.event = _event;
 	}
 
 }
