@@ -83,9 +83,11 @@ public:
 
 	vector<RESULT> sortAlphabetical();
 
+	void sortChronological(vector<Item> &);
+
 	vector<RESULT> search(string);
 
-	vector<RESULT> copy();
+	vector<RESULT> copy(Item);
 
 	vector<RESULT> edit(Item);
 

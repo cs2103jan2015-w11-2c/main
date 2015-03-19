@@ -1,13 +1,7 @@
 #include "Controller.h"
 #include "easylogging++.h"
 
-const string Controller::SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"\n";
-const string Controller::SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s\n";
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
-const string Controller::ERROR_NO_FILENAME = "No filename specified!\n";
-const string Controller::ERROR_FILE_ALREADY_EXISTS = "A file with the same name already exists in the location specified";
-const string Controller::ERROR_FILEPATH_NOT_FOUND = "The specified filepath was not found or the file already exists there";
-
 
 char Controller::_buffer[1000];
 
@@ -132,6 +126,8 @@ vector<RESULT> Controller::addData(Item item) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
 
+	sortChronological(_vectorStore);
+
 	return generateResults(_vectorStore);
 }
 
@@ -186,9 +182,13 @@ vector<RESULT> Controller::sortAlphabetical() {
 	SortAlphabetical *sortAlphabeticalCommand = new SortAlphabetical();
 	_invoker->executeCommand(_vectorStore,sortAlphabeticalCommand, _successMessage);
 
-	//
-
 	return generateResults(_vectorStore);
+}
+
+void Controller::sortChronological(vector<Item> &inputVector) {
+
+	SortChronological *sortChronologicalCommand = new SortChronological();
+	_invoker->executeCommand(inputVector,sortChronologicalCommand, _successMessage);
 }
 
 vector<RESULT> Controller::search(string searchText) {
@@ -197,16 +197,20 @@ vector<RESULT> Controller::search(string searchText) {
 	SearchItem *searchItemCommand = new SearchItem(searchText);
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
 	
+	sortChronological(tempVector);
+
 	return generateResults(tempVector);
 }
 
-vector<RESULT> Controller::copy() {
-	CopyItem *copyItemCommand = new CopyItem(getLineNumberForOperation());
+vector<RESULT> Controller::copy(Item input) {
+	CopyItem *copyItemCommand = new CopyItem(getLineNumberForOperation(), input);
 	_invoker->executeCommand(_vectorStore,copyItemCommand, _successMessage);
 
 	if(!rewriteFile()) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
+
+	sortChronological(_vectorStore);
 
 	return generateResults(_vectorStore);
 }
@@ -223,31 +227,13 @@ vector<RESULT> Controller::edit(Item data) {
 }
 
 void Controller::rename(string newFileName) {
-	if(newFileName == "") {
-		setSuccessMessage(ERROR_NO_FILENAME);
-	} else {
-		int dotPos = newFileName.length() - 4;
-		if(newFileName[dotPos] != '.') { //ensure that the file is a .txt file
-			newFileName = newFileName + ".txt";
-		}
-		if(_outputFile->changeFileName(newFileName)) {
-			char buffer[1000];
-			sprintf_s(buffer, SUCCESS_FILENAME_CHANGED.c_str(), _outputFile->getFileName().c_str());
-			setSuccessMessage(buffer);
-		} else {
-			setSuccessMessage(ERROR_FILE_ALREADY_EXISTS);
-		}
-	}
+	RenameFile *renameFileCommand = new RenameFile(newFileName);
+	_invoker->executeCommand(_outputFile, renameFileCommand, _successMessage);
 }
 
 void Controller::move(string newFileLocation) {
-	if(_outputFile->changeFileLocation(newFileLocation)) {
-		char buffer[1000];
-		sprintf_s(_buffer, SUCCESS_FILE_LOCATION_CHANGED.c_str(), _outputFile->getFullFileName().c_str());
-		setSuccessMessage(buffer);
-	} else {
-		setSuccessMessage(ERROR_FILEPATH_NOT_FOUND);
-	}
+	MoveFileLocation *moveFileCommand = new MoveFileLocation;
+	_invoker->executeCommand(_outputFile, moveFileCommand, _successMessage);
 }
 
 string Controller::getHelp() {
