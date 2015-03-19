@@ -51,6 +51,7 @@ string Item::dateToString() {
 		return oss.str();
 	}
 }
+
 string Item::timeToString() {
 	ostringstream oss;
 	if(eventStartTime[0] == -1) {

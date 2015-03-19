@@ -1,4 +1,6 @@
 #include "Parser.h"
+#include "easylogging++.h"
+
 
 Parser::Parser() {
 	resetDateTime();
@@ -17,12 +19,21 @@ Parser::Parser(string userInput) {
 }
 
 void Parser::resetDateTime() {
-	_day = 0;
-	_month = 0;
-	_year = 2015;
-	_hour = -1;
-	_minute = 0;
-	_duration = 1;
+	_item.eventDate[0] = 0;
+	_item.eventDate[1] = 0;
+	_item.eventDate[2] = _dateTime.getCurrentYear();
+	_item.eventStartTime[0] = -1;
+	_item.eventStartTime[1] = 0;
+	_item.eventEndTime[0] = -1;
+	_item.eventEndTime[1] = 0;
+	_item.colour = 0;
+	_item.bold = false;
+}
+
+void Parser::setDate(int day, int month, int year) {
+	_item.eventDate[0] = day;
+	_item.eventDate[1] = month;
+	_item.eventDate[2] = year;
 }
 
 string Parser::getUserCommand() {
@@ -33,39 +44,20 @@ string Parser::getEvent() {
 	return _event;
 }
 
-
-int Parser::getDay() {
-	return _day;
-}
-
-
-int Parser::getMonth() {
-	return _month;
-}
-
-int Parser::getYear() {
-	return _year;
-}
-
-
-int Parser::getHour() {
-	return _hour;
-}
-
-int Parser::getMinute() {
-	return _minute;
+Item Parser::getItem() {
+	return _item;
 }
 
 
 int Parser::getLineOpNumber() {
-	if(_event == "") {
+	if (_event == "") {
 		throw std::out_of_range("No line number");
 	}
 
 	char *end;
 	_lineOpNumber = (int)strtol(_event.c_str(), &end, 10);
 
-	if(*end != 0 || _lineOpNumber <= 0) {
+	if (*end != 0 || _lineOpNumber <= 0) {
 		throw std::out_of_range("Invalid line number");
 	}
 
@@ -74,27 +66,30 @@ int Parser::getLineOpNumber() {
 
 void Parser::extractUserCommand(string fullString) {
 	_event = removeSpacePadding(fullString);
-	if(_event == "") {
+	if (_event == "") {
 		_userCommand = "";
 		return;
 	}
 	size_t spacePos = _event.find_first_of(" ");
 	if (spacePos == string::npos) {
 		_userCommand = _event;
+		_userCommand = convertStringToLowerCase(_userCommand);
 		_event = "";
 	} else {
 		_userCommand = _event.substr(0, spacePos);
+		_userCommand = convertStringToLowerCase(_userCommand);
 		_event = _event.substr(spacePos);
 		spacePos = _event.find_first_not_of(" ");
 		_event = _event.substr(spacePos);
 	}
+
 }
 
-size_t Parser::findFrontBracket(string inputLine){
+size_t Parser::findFrontBracket(string inputLine) {
 	return (inputLine.find_first_of("["));
 }
 
-size_t Parser::findDateDelimiters(string inputLine){
+size_t Parser::findDateDelimiters(string inputLine) {
 	return (inputLine.find_first_of("/._"));
 }
 
@@ -102,134 +97,167 @@ void Parser::extractDateAndTime(string input) {
 	resetDateTime();
 	size_t frontBracketPos = findFrontBracket(_event);
 
-	if(frontBracketPos != string::npos) {
+	if (frontBracketPos != string::npos) {
 		string rawDateTimeChunk = _event.substr(frontBracketPos + 1);
-		//remove date and time data from commandData
 		_event = _event.substr(0, frontBracketPos);
-		istringstream iss (rawDateTimeChunk);
-		string demarcateDateTime[3];
-		int i = 0;
-		while(iss >> demarcateDateTime[i]) {
-			i++;
+		splitDateTime(rawDateTimeChunk);
+	}
+}
+
+void Parser::splitDateTime(string input) {
+	istringstream iss(convertStringToLowerCase(input));
+	string demarcateDateTime[7];
+	int i = 0;
+	while (iss >> demarcateDateTime[i]) {
+		i++;
+	}
+
+	switch (i) {
+		// no date or time, set to today
+	case 0: {
+		setDate(_dateTime.getCurrentDay(), _dateTime.getCurrentMonth(), _dateTime.getCurrentYear());
+		break;
+	}
+
+			// only date or only time
+	case 1: {
+		handleOneDateInput(demarcateDateTime);
+		break;
+	}
+
+			// both date and time, 24hrs
+	case 2: {
+		handleTwoDateInput(demarcateDateTime);
+		break;
+	}
+			// both date and time, 12hrs
+	case 3: {
+		size_t dateDelimiterPos = findDateDelimiters(demarcateDateTime[0]);
+		if (dateDelimiterPos != string::npos) {
+			separateDayMonthYear(demarcateDateTime[0]);
+
+			if (!_dateTime.isValidDate(_item.eventDate[0], _item.eventDate[1], _item.eventDate[2])) {
+				//error message, wrong format
+			}
 		}
 
-		switch (i) {
-			// no date or time
-		case 0: {
-			//date = _today
-			break;
-			   }
-
-			   // only date or only time
-		case 1: {
-			size_t dateDelimiterPos= findDateDelimiters(demarcateDateTime[0]);
-			if(dateDelimiterPos != string::npos) {
-				separateDayMonth(demarcateDateTime[0]);
-				if(!dateTime.isValidDate(_day, _month, _year)) {
-					_month = 0;
-					_day = 0;
-					//error message, wrong format
+		separateHourMinute(demarcateDateTime[1], _item.eventStartTime[0], _item.eventStartTime[1]);
+		if (!_dateTime.isValidDate(_item.eventDate[0], _item.eventDate[1], _item.eventDate[2])) {
+			//error message, wrong format
+		} else {
+			if (demarcateDateTime[2] == "m") {
+				if (_item.eventStartTime[0] == 12) {
+					_item.eventStartTime[0] = 0;
 				}
-			} else {
-				separateHourMinute(demarcateDateTime[0]);
-				//must set date to be _today
-				if(!isValidTime()) {
-					_hour = -1;
-					_minute = 0;
-					//error message, wrong format
+			} else if (demarcateDateTime[2] == "p") {
+				_item.eventStartTime[0] += 12;
+				if (!isValidTime(_item.eventStartTime[0], _item.eventStartTime[1])) {
+					_item.eventStartTime[0] -= 12;
 				}
 			}
+		}
+		break;
+	}
 
-			break;
-			   }
+	default: {
+		break;
+	}
+	}
+}
 
-			   // both date and time, 24hrs
-		case 2: {
-			size_t dateDelimiterPos= findDateDelimiters(demarcateDateTime[0]);
-			int count = 0;
-			if(dateDelimiterPos != string::npos) {
-				separateDayMonth(demarcateDateTime[count]);
-				count++;
-				if(!dateTime.isValidDate(_day, _month, _year)) {
-					_month = 0;
-					_day = 0;
-					//error message, wrong format
-				}
-			}
-
-			separateHourMinute(demarcateDateTime[count]);
-			if(!isValidTime()) {
-				_hour = -1;
-				_minute = 0;
-				//error message, wrong format
-			} 
-			if(count < 1) {
-				if(demarcateDateTime[2] == "m") {
-					if(_hour == 12) {
-						_hour = 0;
-					}
-				} else if(demarcateDateTime[2] == "p") {
-					_hour += 12;
-					if(!isValidTime()) {
-						_hour -= 12;
-					}
-				}
-			}
-
-			break;
-			   }
-			   // both date and time, 12hrs
-		case 3: {
-			size_t dateDelimiterPos= findDateDelimiters(demarcateDateTime[0]);
-			if(dateDelimiterPos != string::npos) {
-				separateDayMonth(demarcateDateTime[0]);
-
-				if(!dateTime.isValidDate(_day, _month, _year)) {
-					//error message, wrong format
-				}
-			}
-
-			separateHourMinute(demarcateDateTime[1]);
-			if(!isValidTime()) {
-				//error message, wrong format
-			} else {
-				if(demarcateDateTime[2] == "m") {
-					if(_hour == 12) {
-						_hour = 0;
-					}
-				} else if(demarcateDateTime[2] == "p") {
-					_hour += 12;
-					if(!isValidTime()) {
-						_hour -= 12;
-					}
-				}
-			}
-			break;
-			   }
-
-		default: {
-			break;
-			    }
+void Parser::handleOneDateInput(string inputArray[]) {
+	size_t dateDelimiterPos = findDateDelimiters(inputArray[0]);
+	if (dateDelimiterPos != string::npos) {
+		separateDayMonthYear(inputArray[0]);
+		try {
+			verifyItemDate();
+		} catch (const out_of_range& e) {
+			LOG(ERROR) << "handleOneDateInput throws: " << e.what();
+			clog << e.what();
+		}
+	}
+	// else if(WEEKDAY INPUT (E.G. FRIDAY))
+	else {
+		separateHourMinute(inputArray[0], _item.eventStartTime[0], _item.eventStartTime[1]);
+		verifyItemTime(_item.eventStartTime[0], _item.eventStartTime[1]);
+		try {
+			verifyItemDate();
+		} catch (const out_of_range& e) {
+			LOG(ERROR) << "handleOneDateInput throws: " << e.what();
+			clog << e.what();
 		}
 	}
 }
 
-bool Parser::isValidTime() {
-	return (_hour >= 0 && _hour < 24 && _minute >= 0 && _minute < 60);
+void Parser::handleTwoDateInput(string inputArray[]) {
+	size_t dateDelimiterPos = findDateDelimiters(inputArray[0]);
+	int count = 0;
+	if (dateDelimiterPos != string::npos) {
+		separateDayMonthYear(inputArray[count]);
+		verifyItemDate();
+		// catch error message
+		count++;
+	} else if (inputArray[0] == "next") {
+	} // else if(inputArray[0] == MAP)
+	else {
+		separateHourMinute(inputArray[count], _item.eventStartTime[0], _item.eventStartTime[1]);
+		verifyItemTime(_item.eventStartTime[0], _item.eventStartTime[1]);
+		// catch error message
+	}
+	if (count < 1) {
+		if (inputArray[2] == "m") {
+			if (_item.eventStartTime[0] == 12) {
+				_item.eventStartTime[0] = 0;
+			}
+		} else if (inputArray[2] == "p" || inputArray[2] == "pm") {
+			_item.eventStartTime[0] += 12;
+			if (!isValidTime(_item.eventStartTime[0], _item.eventStartTime[1])) {
+				_item.eventStartTime[0] -= 12;
+			}
+		}
+	}
+
 }
 
-void Parser::separateDayMonth(string dayMonth) {
+
+bool Parser::isValidTime(int hour, int minute) {
+	return (hour >= 0 && hour < 24 && minute >= 0 && minute < 60);
+}
+
+void Parser::separateDayMonthYear(string dayMonth) {
 	char *intEnd;
-	_day = (int)strtol(dayMonth.c_str(), &intEnd, 10);
-	_month = (int)strtol(intEnd + 1, &intEnd, 10);
+	_item.eventDate[0] = (int)strtol(dayMonth.c_str(), &intEnd, 10);
+	_item.eventDate[1] = (int)strtol(intEnd + 1, &intEnd, 10);
+	_item.eventDate[2] = (int)strtol(intEnd + 1, &intEnd, 10);
 }
 
-void Parser::separateHourMinute(string hourMinute) {
+void Parser::separateHourMinute(string hourMinute, int& hour, int& minute) {
 	char *intEnd;
-	_hour = (int)strtol(hourMinute.c_str(), &intEnd, 10);
-	_minute = (int)strtol(intEnd + 1, &intEnd, 10);
+	hour = (int)strtol(hourMinute.c_str(), &intEnd, 10);
+	minute = (int)strtol(intEnd + 1, &intEnd, 10);
 }
 
+void Parser::verifyItemDate() {
+	if (_item.eventDate[2] == 0) {
+		_item.eventDate[2] = _dateTime.getCurrentYear();
+	} else if (_item.eventDate[2] < 2000) {
+		_item.eventDate[2] += 2000;
+	}
+
+	if (!_dateTime.isValidDate(_item.eventDate[0], _item.eventDate[1], _item.eventDate[2])) {
+		_item.eventDate[0] = 0;
+		_item.eventDate[1] = 0;
+		throw std::out_of_range("Invalid date input!");
+	}
+}
+
+void Parser::verifyItemTime(int& hour, int& minute) {
+	if (!isValidTime(_item.eventStartTime[0], _item.eventStartTime[1])) {
+		_item.eventStartTime[0] = -1;
+		_item.eventStartTime[1] = 0;
+		throw std::out_of_range("Invalid time input!");
+	}
+}
 
 
 string Parser::removeSpacePadding(string line) {
@@ -247,6 +275,11 @@ string Parser::removeSpacePadding(string line) {
 int Parser::convertStringToInteger(string numberString) {
 	char *end;
 	return (int)strtol(numberString.c_str(), &end, 10);
+}
+
+string Parser::convertStringToLowerCase(string inputString) {
+	transform(inputString.begin(), inputString.end(), inputString.begin(), ::tolower);
+	return inputString;
 }
 
 Parser::~Parser(void) {

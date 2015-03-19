@@ -27,16 +27,16 @@ Controller::Controller(void) {
 string Controller::executeCommand(string inputText) {
 	_parser = new Parser(inputText);
 
-	int month = _parser->getMonth();
-	int day = _parser->getDay();
-	int hour = _parser->getHour();
-	int mins = _parser->getMinute();
-	int colour = 7; //temp, until parser can set colours
+	//int month = _parser->getMonth();
+	//int day = _parser->getDay();
+	//int hour = _parser->getHour();
+	//int mins = _parser->getMinute();
+	//int colour = 7; //temp, until parser can set colours
 
 	string userCommand = _parser->getUserCommand();
 	string commandData = _parser->getEvent();
 
-	Item data = initializeItem(commandData, day, month, hour, mins, colour);
+	Item data; //= initializeItem(commandData, day, month, hour, mins, colour);
 
 	if (userCommand == "display") {
 		setSuccessMessage("display");
@@ -240,12 +240,11 @@ void Controller::edit() {
 			_vectorStore[_lineNumberOperation - 1].event.c_str(), 
 			_parser->getEvent().c_str());
 
-		Item temp = initializeItem(_parser->getEvent(),
-			_parser->getDay(),
-			_parser->getMonth(),
-			_parser->getHour(),
-			_parser->getMinute(),
-			7);
+		Item temp;// = initializeItem(_parser->getEvent(),
+			//_parser->getDay(),
+			//_parser->getMonth(),
+			//_parser->getHour(),
+			//_parser->getMinute(),
 
 		_vectorStore[_lineNumberOperation - 1] = temp;
 		rewriteFile();

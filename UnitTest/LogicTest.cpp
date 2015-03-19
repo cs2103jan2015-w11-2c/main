@@ -37,7 +37,29 @@ public:
 		parse.extractUserCommand("  ");
 		expected = "";
 		Assert::AreEqual(expected, parse.getUserCommand());
-	} 
+	}
+
+	TEST_METHOD(separateDayMonthTest) {
+		Parser parse;
+		int expected;
+
+		parse.separateDayMonthYear("12/04/15");
+		expected = 12;
+		Assert::AreEqual(expected, parse.getItem().eventDate[0]);
+		expected = 04;
+		Assert::AreEqual(expected, parse.getItem().eventDate[1]);
+		expected = 15;
+		Assert::AreEqual(expected, parse.getItem().eventDate[2]);
+
+		parse.separateDayMonthYear("12_04");
+		expected = 12;
+		Assert::AreEqual(expected, parse.getItem().eventDate[0]);
+		expected = 04;
+		Assert::AreEqual(expected, parse.getItem().eventDate[1]);
+		expected = 0;
+		Assert::AreEqual(expected, parse.getItem().eventDate[2]);
+
+	}
 
 	};
 

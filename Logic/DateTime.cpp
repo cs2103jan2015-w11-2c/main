@@ -7,6 +7,8 @@
 using namespace std;
 
 //constants
+const int MIN_YEAR = 2000;
+const int MAX_YEAR = 3000;
 const string WEEKDAY[]={"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 const string MONTH[]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 
@@ -85,6 +87,10 @@ public:
 			if(isLeapYear(year) && day <= 29) {
 				return true;
 			} else return (day < 29);
+		}
+
+		if(year < MIN_YEAR || year > MAX_YEAR) {
+			return false;
 		}
 
 		return true;
