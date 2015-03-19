@@ -3,14 +3,10 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "Item.cpp"
+#include "Item.h"
 #include "Command.h"
 
 using namespace std;
-
-//CONSTANTS
-const std::string ERROR_COPY_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
-const std::string SUCCESS_COPIED = "copied line: \"%s\" \n";
 
 class CopyItem : public Command {
 private:
@@ -34,10 +30,10 @@ public:
 	~CopyItem() {
 	}
 
-	void executeAction(vector<ITEM>& vectorStore) {
+	void executeAction(vector<Item>& vectorStore) {
 
 		if(_input == 0) {
-			_message = ERROR_COPY_INVALID_LINE_NUMBER;
+			_message = ERROR_INVALID_LINE_NUMBER;
 		}
 		else {
 			_message = "";

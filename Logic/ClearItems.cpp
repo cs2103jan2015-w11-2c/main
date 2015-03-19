@@ -2,13 +2,10 @@
 
 #include <iostream>
 #include <vector>
-#include "Item.cpp"
+#include "Item.h"
 #include "Command.h"
 
 using namespace std;
-
-//CONSTANTS
-const string SUCCESS_CLEARED = "All content deleted!\n";
 
 class ClearItems : public Command {
 public:
@@ -18,7 +15,7 @@ public:
 	~ClearItems() {
 	}
 
-	void executeAction(vector<ITEM>& vectorStore) {
+	void executeAction(vector<Item>& vectorStore) {
 		vectorStore.clear();
 	}
 

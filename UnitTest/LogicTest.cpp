@@ -1,13 +1,11 @@
 #include "stdafx.h"
-#include "Parser.h"
-#include "DateTime.cpp"
-#include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UnitTest {
 	TEST_CLASS(ParserTest) {
 public:
+
 
 	TEST_METHOD(RemoveSpacePaddingTest) {
 		Parser parse;
@@ -39,27 +37,7 @@ public:
 		parse.extractUserCommand("  ");
 		expected = "";
 		Assert::AreEqual(expected, parse.getUserCommand());
-	}
-
-	TEST_METHOD(LineNumberTest) {
-		Parser parse;
-
-		parse.setCommandData("1");
-		Assert::AreEqual(true, parse.haveValidLineNumber());
-		Assert::AreEqual(1, parse.getLineOpNumber());
-
-		parse.setCommandData("23 ");
-		Assert::AreEqual(true, parse.haveValidLineNumber());
-		Assert::AreEqual(23, parse.getLineOpNumber());
-
-		parse.setCommandData("23 4");
-		Assert::AreEqual(true, parse.haveValidLineNumber());
-		Assert::AreEqual(23, parse.getLineOpNumber());
-
-		parse.setCommandData("a 4");
-		Assert::AreEqual(false, parse.haveValidLineNumber());
-		Assert::AreEqual(0, parse.getLineOpNumber());
-	}
+	} 
 
 	};
 
@@ -70,15 +48,15 @@ public:
 	TEST_METHOD(getWeekDayTest) {
 		DateTime dateTest;
 
-		string expected = "Thu";
+		string expected = "Thursday";
 		Assert::AreEqual(expected, dateTest.getWeekDay(19, 3, 2015));
 
-		expected = "Mon";
+		expected = "Monday";
 		Assert::AreEqual(expected, dateTest.getWeekDay(29, 2, 2016));
 
 	}
 
-		TEST_METHOD(isLeapYearTest) {
+	TEST_METHOD(isLeapYearTest) {
 		DateTime dateTest;
 
 		bool expected = true;
@@ -87,6 +65,40 @@ public:
 		expected = false;
 		Assert::AreEqual(expected, dateTest.isLeapYear(2019));
 	}
+	};
+
+	TEST_CLASS(ITEMTest) {
+public:
+
+	TEST_METHOD(tooStringTest) {
+		Item test;
+
+		test.event = "";
+		test.eventDate[0] = 18;
+		test.eventDate[1] = 3;
+		test.eventDate[2] = 2015;
+		test.eventStartTime[0] = 10;
+		test.eventStartTime[1] = 0;
+		test.eventEndTime[0] = 12;
+		test.eventEndTime[1] = 0;
+		test.colour = 0;
+		test.bold = false;
+
+		string expected = "Wednesday, 18 Mar 2015";
+		Assert::AreEqual(expected, test.dateToString());
+
+		expected = "[10:00 am - 12:00 pm]";
+		Assert::AreEqual(expected, test.timeToString());
+
+		test.eventStartTime[0] = 16;
+		test.eventStartTime[1] = 30;
+		test.eventEndTime[0] = -1;
+		test.eventEndTime[1] = 0;
+		expected = "[4:30 pm]";
+		Assert::AreEqual(expected, test.timeToString());
+
+	}
+
 
 	};
 }

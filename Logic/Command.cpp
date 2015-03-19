@@ -6,7 +6,7 @@ Command::Command() {
 Command::~Command() {
 }
 
-void Command::executeAction() {
+void Command::executeAction(vector<Item>& vectorStore) {
 }
 
 string Command::getMessage() {

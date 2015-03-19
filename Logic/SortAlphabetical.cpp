@@ -4,13 +4,10 @@
 #include <vector>
 #include <algorithm>
 #include <string>
-#include "Item.cpp"
+#include "Item.h"
 #include "Command.h"
 
 using namespace std;
-
-const string SUCCESS_SORTED = "All content sorted alphabetically\n";
-const string ERROR_FILE_EMPTY = "File is empty\n";
 
 class SortAlphabetical : public Command {
 private:
@@ -25,8 +22,8 @@ public:
 	}
 
 	
-	void swap(ITEM& item1, ITEM& item2) {
-		ITEM tempItem = item1;
+	void swap(Item& item1, Item& item2) {
+		Item tempItem = item1;
 		item1 = item2;
 		item2 = tempItem;
 	}
@@ -36,7 +33,7 @@ public:
 		return currentString;
 	}
 
-	void selectionSortIgnoreCase(vector<ITEM>& vectorStore) {
+	void selectionSortIgnoreCase(vector<Item>& vectorStore) {
 	for (unsigned int i = 0; i < (vectorStore.size() - 1); i++) {
 		int minIndex = i;
 		string minString = getLowerCaseString(vectorStore[minIndex].event);
@@ -57,7 +54,7 @@ public:
 	}
 }
 
-	void executeAction(vector<ITEM>& vectorStore) {
+	void executeAction(vector<Item>& vectorStore) {
 		if (vectorStore.empty()) {
 			_message = ERROR_FILE_EMPTY;
 		}
