@@ -13,20 +13,15 @@
 
 using namespace std;
 
-struct Result {
+struct RESULT {
 	int lineNumber;
 	string date, event, time;
 };
 
 class Controller {
 private:
-	static const string SUCCESS_EDITED;
 	static const string SUCCESS_FILENAME_CHANGED;
 	static const string SUCCESS_FILE_LOCATION_CHANGED;
-	static const string ERROR_INVALID_COMMAND;
-	static const string ERROR_INVALID_LINE_NUMBER;
-	static const string ERROR_FILE_EMPTY;
-	static const string ERROR_SEARCH_ITEM_NOT_FOUND;
 	static const string ERROR_FILE_OPERATION_FAILED;
 	static const string ERROR_NO_FILENAME;
 	static const string ERROR_FILE_ALREADY_EXISTS;
@@ -52,7 +47,7 @@ private:
 public:
 	Controller(void);
 
-	string executeCommand(string);
+	vector<RESULT> executeCommand(string);
 
 	//API for UI (Main Text Box)
 	string getInputBoxMessage();
@@ -66,46 +61,42 @@ public:
 
 	void initializeVector();
 
+	vector<RESULT> generateResults(vector<Item>);
+
 	bool rewriteFile();
 
 	Item initializeItem(string, int, int, int, int, int color = 7, bool bold = false);
 
 	void commandOptions(string);
 
-	void addData(Item);
+	vector<RESULT> addData(Item);
 
 	//returns the data deleted or *#*#*#*#* if not found
-	void deleteData();
+	vector<RESULT> deleteData();
 
 	//returns line number for operation or 0 if line number is invalid
 	int getLineNumberForOperation();
 
-	string displayAll();
+	vector<RESULT> displayAll();
 
-	void clearAll();
+	vector<RESULT> clearAll();
 
-	void sortAlphabetical();
+	vector<RESULT> sortAlphabetical();
 
-	void selectionSortIgnoreCase();
+	vector<RESULT> search(string);
 
-	string getLowerCaseString(string);
+	vector<RESULT> copy();
 
-	void swap(string& string1, string& string2);
-
-	void search(string);
-
-	void copy();
-
-	void edit(Item);
+	vector<RESULT> edit(Item);
 
 	//NEED TO IMPLEMENT A textfile to reflect the change
 	//in name so that the next time the program is run
 	//it will not revert to old file name
-	string rename(string newFileName);
+	void rename(string newFileName);
 
 	//Example of new file path:
 	//C:\Users\Username\My Documents
-	string move(string newFileLocation);
+	void move(string newFileLocation);
 
 	string getSuccessMessage(string successType, string description = "");
 
