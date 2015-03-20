@@ -11,10 +11,10 @@ MessageManager::MessageManager(void) {
 }
 
 Void MessageManager::generateMessageOutputs(String^ textFromUser) {
-	string operationSucess = magicMemo->executeCommand(convertToStdString(textFromUser));
-	_successMessage = convertToSystemString(operationSucess);
+	//string operationSucess = magicMemo->executeCommand(convertToStdString(textFromUser));
+	//_successMessage = convertToSystemString(operationSucess);
 	//_todayTaskBoxMessage = convertToSystemString(magicMemo->
-	_allTaskBoxMessage = convertToSystemString(magicMemo->displayAll());
+	//_allTaskBoxMessage = convertToSystemString(magicMemo->displayAll());
 }
 
 String^ MessageManager::getSuccessMessage() {
