@@ -3,7 +3,7 @@
 
 FileStorage::FileStorage(void) {
 	fileConfigFileName = "fileConfigurations.txt";
-	defaultFileName = "MagicMemo.txt";
+	defaultFileName = "MagicMemo Task List.txt";
 
 	if(isFileEmpty(fileConfigFileName)) {  //if not initialized
 		initializeFileConfig();
@@ -64,8 +64,12 @@ bool FileStorage::changeFileName(string newFileName) {
 	}
 		
 	string oldFileName = getFullFileName();
+<<<<<<< HEAD
 	assert(!newFileName.empty());  
 	assert(newFileName!= NULL); //filename cannot be empty or null
+=======
+	assert(!newFileName.empty());  //filename cannot be empty or null
+>>>>>>> master
 	setFileName(newFileName);
 	rename(oldFileName.c_str(), getFullFileName().c_str());
 	updateFileConfigInfo();

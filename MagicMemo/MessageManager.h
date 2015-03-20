@@ -9,27 +9,60 @@
 using namespace std;
 using namespace System;
 
+struct HIGHLIGHT {
+	int index;
+	int length;
+};
 
 ref class MessageManager {
 private:
 	Controller* magicMemo;
+	
+	vector<RESULT>* _resultVector;
+
+	vector<HIGHLIGHT>* _numberHighlight;
+	vector<HIGHLIGHT>* _dateHighlight;
+	vector<HIGHLIGHT>* _timeHighlight;
+	vector<HIGHLIGHT>* _eventHighlight;
+	vector<HIGHLIGHT>* _completedHighlight;
+	
+
 	String^ _userInput;
 	String^ _successMessage;
-	String^ _mainOutputBoxMessage;
+	String^ _todayTaskBoxMessage;
+	String^ _allTaskBoxMessage;
 	String^ _inputBoxMessage;
+
+	int indexCount;
 
 public:
 	MessageManager(void);
 
-	MessageManager(String^);
+	Void generateMessageOutputs(String^);
 
-	Void generateMessageOutputs();
+	Void calculateIndexes();
+
+	Void calculateDateIndex();
+
+	Void calculateEventIndex();
+
+	String^ toString();
 
 	String^ getSuccessMessage();
 
-	String^ getMainOutputBoxMessage();
+	String^ getTodayTaskBoxMessage();
+
+	String^ getAllTaskBoxMessage();
 
 	String^ getInputBoxMessage();
+
+	vector<HIGHLIGHT>* getNumberHighlight();
+
+	vector<HIGHLIGHT>* getTimeHighlight();
+
+	vector<HIGHLIGHT>* getDateHighlight();
+
+	vector<HIGHLIGHT>* getEventHighlight();
 
 	// convert from std::string to System::String^
 	String^ convertToSystemString(string);

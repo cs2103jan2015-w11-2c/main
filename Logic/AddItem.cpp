@@ -2,17 +2,15 @@
 
 #include <iostream>
 #include <vector>
-#include "Item.cpp"
+#include "Item.h"
 #include "Command.h"
 
 using namespace std;
 
-//CONSTANTS
-const string SUCCESS_ADDED = "Added line: \"%s\"\n";
-
 class AddItem :public Command {
 private:
-	ITEM _input;
+	Item _input;
+	string _message;
 
 public:
 	AddItem() {
@@ -26,23 +24,27 @@ public:
 		_input.eventEndTime[1] = 0;
 		_input.colour = 7; 
 		_input.bold = false;
+
+		_message = "";
 	}
 
-	AddItem(const ITEM input) {
+	AddItem(const Item input) {
 		_input = input;
+		_message = "";
 	}
 
 	~AddItem() {
 	}
 
-	void executeAction(vector<ITEM> &vectorStore) {
+	void executeAction(vector<Item> &vectorStore) {
 		vectorStore.push_back(_input);
+
+		char buffer[1000];
+		sprintf_s(buffer, SUCCESS_ADDED.c_str(), _input.toString().c_str());
+		_message = buffer;
 	}
 
 	string getMessage() {
-		char buffer[1000];
-		sprintf_s(buffer, SUCCESS_ADDED.c_str(), _input.event.c_str());
-		
-		return buffer;
+		return _message;
 	}
 };

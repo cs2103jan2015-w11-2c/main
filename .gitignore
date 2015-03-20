@@ -4,6 +4,7 @@
 *.vcxproj
 *.filters
 *.txt
+*.log
 
 # User-specific files
 *.suo
