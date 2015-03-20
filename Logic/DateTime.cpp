@@ -57,7 +57,7 @@ public:
 	}
 	
 	// given which day in the week is the event, return the date
-	/*string getDateFromWeekDay(int day, int month, int year, string weekDay){
+	string getDateFromWeekDay(string weekDay){
 	map<int, string> weekDayList;
 	map<int, string> weekList;
 	string weekAndDay[1];
@@ -66,10 +66,11 @@ public:
 	if(spacePos != string::npos){
 		weekAndDay[0] = weekDay.substr(0,spacePos);
 		weekAndDay[1] = weekDay.substr(spacePos);
-	}
-	else{
+	
+	}else{
+		weekAndDay[0] = NULL;
 		weekAndDay[1] = weekDay;
-	}
+	}  
 
 	weekDayList[1] = "Monday";
 	weekDayList[2] = "Tuesday";
@@ -79,28 +80,33 @@ public:
 	weekDayList[6] = "Saturday";
 	weekDayList[7] = "Sunday";
 
-	weekList[1] = "Last";
-	weekList[8] = "This";
-	weekList[15] = "Next";
 
-	map<int, string>::iterator iter;
-	iter = weekList.begin();
-	while(iter->second != weekAndDay[1]){
-		iter++;
+
+	if (weekAndDay[0] == "This" ) || (weekAndDay[0] == NULL){
+    int weekNo = 0;
+	}else if(weekAndDay[0] == "Next"){
+	int weekNo = 7;
 	}
-	int weekNo = iter->first;
 
+    string currentWeekDay = getCurrentWeekDay();
+	map<int, string>::iterator iter;
 	iter = weekDayList.begin();
-	while(iter->second != weekAndDay[0]){
+	while(iter->second != weekAndDay[1]){
 		iter++;
 	}
 	int weekDayNo = iter->first;
 
-
-
-	string currentWeekDay = getWeekDay(day, month, year);
+	iter = weekDayList.begin();
+	while(iter->second != currentWeekDay){
+		iter++;
+	}
+	int currentWeekDayNo = iter->first;
+	int diffInDay = currentWeekDayNo - weekDayNo;
 	
-	}*/
+	get
+
+	
+	}
 
 	// returns the weekday name for the specified day, month and year
 	// Sunday, Monday, .... Saturday
