@@ -1,5 +1,10 @@
 #include "DateTimeParser.h"
 
+const string DateTimeParser::ERROR_NO_DAY_SPECIFIED = "Invalid input: No day specified after \"next\"";
+const string DateTimeParser::ERROR_NO_TIME_SPECIFIED = "Invalid input: Time expected after \"-\"";
+const string DateTimeParser::ERROR_INVALID_DATE_INPUT = "Invalid date input!";
+const string DateTimeParser::ERROR_INVALID_TIME_INPUT = "Invalid time input!";
+const string DateTimeParser::ERROR_INVALID_END_TIME = "Invalid end time: end time must be greater than start time";
 
 DateTimeParser::DateTimeParser(void) {
 	_day = 0;
@@ -121,13 +126,13 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 		// throws exception if weekday is expected but not given
 		if(isNextWeek && _day == 0) {
 			isNextWeek = false;
-			throw std::out_of_range("Invalid input: No day specified after \"next\"");
+			throw std::out_of_range(ERROR_NO_DAY_SPECIFIED);
 		}
 
 		// throws exception if time is expected but not given
 		if(hasDash && !separateHourMinute(inputArray[i], _startHour, _startMinute)) {
 			hasDash = false;
-			throw std::out_of_range("Invalid input: Time expected after \"-\"");
+			throw std::out_of_range(ERROR_NO_TIME_SPECIFIED);
 		}
 
 		// "next" keyword
@@ -144,10 +149,9 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 			if(isNextWeek) {
 				_day += 7;
 				isNextWeek = false;
-			} // remember to check for date validity!
+			} 
 			// date/month/year
 		} else if(isDelimitedDate(inputArray[i])) {
-			//separateDayMonthYear(inputArray[i], _day, _month, _year);
 			LOG(INFO) << "DELIMITED DATE";
 			// start time
 		} else if(isFirstTimeInstance && separateHourMinute(inputArray[i], _startHour, _startMinute)) {
@@ -171,7 +175,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 			LOG(INFO) << "PM OR M, End Hour";
 		}
 		LOG(INFO) << "********************************************";
-
+		verifyAllDateTime();
 		updateItemFields();
 	}
 }
@@ -193,7 +197,7 @@ bool DateTimeParser::isDelimitedDate(string input) {
 		try {
 			verifyItemDate(_day, _month, _year);
 		} catch (const out_of_range& e) {
-			LOG(ERROR) << "handleOneDateInput throws: " << e.what();
+			LOG(ERROR) << "isDelimitedDate Error: " << e.what();
 			clog << e.what();
 		}
 		return true;
@@ -227,6 +231,13 @@ bool DateTimeParser::separateHourMinute(string hourMinute, int& hour, int& minut
 	return (hour != 0);
 }
 
+void DateTimeParser::verifyAllDateTime() {
+	verifyItemDate(_day, _month, _year);
+	verifyItemTime(_startHour, _startMinute);
+	verifyItemTime(_endHour, _endMinute);
+	verifyStartEndTime(_startHour, _startMinute, _endHour, _endMinute);
+}
+
 void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
 	if (year == 0) {
 		year = _dateTime.getCurrentYear();
@@ -238,7 +249,7 @@ void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
 		day = 0;
 		month = 0;
 		year = 0;
-		//throw std::out_of_range("Invalid date input!");
+		throw std::out_of_range(ERROR_INVALID_DATE_INPUT);
 	}
 }
 
@@ -246,7 +257,15 @@ void DateTimeParser::verifyItemTime(int& hour, int& minute) {
 	if (!_dateTime.isValidTime(hour, minute)) {
 		hour = 0;
 		minute = 0;
-		throw std::out_of_range("Invalid time input!");
+		throw std::out_of_range(ERROR_INVALID_TIME_INPUT);
+	}
+}
+
+void DateTimeParser::verifyStartEndTime(int startHr, int startMin, int& endHr, int& endMin) {
+	if((endHr < startHr) || ((endHr == startHr) && (endMin <= startMin))) {
+		endHr = 0;
+		endMin = 0;
+		throw std::out_of_range(ERROR_INVALID_END_TIME);
 	}
 }
 
