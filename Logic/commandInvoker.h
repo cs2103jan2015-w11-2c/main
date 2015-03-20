@@ -12,7 +12,6 @@
 #include "CopyItem.cpp"
 #include "SearchItem.cpp"
 #include "EditItem.cpp"
-#include "SortChronological.cpp"
 #include "RenameFile.cpp"
 #include "MoveFile.cpp"
 

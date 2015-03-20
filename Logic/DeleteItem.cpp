@@ -35,8 +35,6 @@ public:
 		assert(lineToBeDeleted>=0);
 
 		int sizeOfVectorStore = vectorStore.size();
-		assert(sizeOfVectorStore>0);
-
 		assert(lineToBeDeleted<=sizeOfVectorStore);
 
 		if(_lineNumber == 0) {

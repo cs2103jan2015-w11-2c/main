@@ -14,8 +14,10 @@
 using namespace std;
 
 struct RESULT {
-	int lineNumber;
-	string date, event, time;
+	string lineNumber;
+	string date;
+	string event;
+	string time;
 };
 
 class Controller {
@@ -81,8 +83,6 @@ public:
 
 	vector<RESULT> sortAlphabetical();
 
-	void sortChronological(vector<Item> &);
-
 	vector<RESULT> search(string);
 
 	vector<RESULT> copy(Item);
@@ -98,11 +98,15 @@ public:
 	//C:\Users\Username\My Documents
 	void move(string newFileLocation);
 
-	string getSuccessMessage(string successType, string description = "");
-
 	string getHelp();
 
 	vector<Item> getVectorStore();
+
+	void swap(Item&, Item&);
+
+	int compareEarlierThan(const Item, const Item);
+
+	void chronoSort(vector<Item>&);
 
 	~Controller(void);
 };
