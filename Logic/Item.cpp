@@ -5,9 +5,9 @@ Item::Item() {
 	eventDate[0] = 0;
 	eventDate[1] = 0;
 	eventDate[2] = 0;
-	eventStartTime[0] = -1;
+	eventStartTime[0] = 0;
 	eventStartTime[1] = 0;
-	eventEndTime[0] = -1;
+	eventEndTime[0] = 0;
 	eventEndTime[1] = 0;
 	colour = 0;
 	bold = false;
@@ -17,7 +17,9 @@ Item::~Item() {
 }
 
 int Item::getHour(int hour) {
-	if(hour > 12 && hour < 24) {
+	if(hour == 24) {
+		return 0;
+	} else if(hour > 12 && hour < 24) {
 		return hour - 12;
 	} else {
 		return hour;
@@ -25,7 +27,7 @@ int Item::getHour(int hour) {
 }
 
 string Item::getMinute(int minute) {
-	if(minute == 0) {
+	if( minute == 0) {
 		return "00";
 	} else {
 		return to_string(minute);
@@ -51,16 +53,17 @@ string Item::dateToString() {
 		return oss.str();
 	}
 }
+
 string Item::timeToString() {
 	ostringstream oss;
-	if(eventStartTime[0] == -1) {
+	if(eventStartTime[0] == 0) {
 		return "";
 	} else {
 		string startTimeOfDay = getAMPM(eventStartTime[0]);
 		oss << "[" << getHour(eventStartTime[0]) << ":" ;
 		oss << getMinute(eventStartTime[1]) << " " << startTimeOfDay;
 
-		if(eventEndTime[0] != -1) {
+		if(eventEndTime[0] != 0) {
 			string endTimeOfDay = getAMPM(eventEndTime[0]);
 			oss << " - " << getHour(eventEndTime[0]) << ":";
 			oss << getMinute(eventEndTime[1]) << " " << endTimeOfDay;

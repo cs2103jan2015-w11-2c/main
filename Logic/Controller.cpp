@@ -1,16 +1,7 @@
 #include "Controller.h"
 #include "easylogging++.h"
 
-const string Controller::SUCCESS_EDITED = "\"%s\" changed to \"%s\"!\n";
-const string Controller::SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"\n";
-const string Controller::SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s\n";
-const string Controller::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!\n";
-const string Controller::ERROR_SEARCH_ITEM_NOT_FOUND = "\"%s\" Not found!\n";
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
-const string Controller::ERROR_NO_FILENAME = "No filename specified!\n";
-const string Controller::ERROR_FILE_ALREADY_EXISTS = "A file with the same name already exists in the location specified";
-const string Controller::ERROR_FILEPATH_NOT_FOUND = "The specified filepath was not found or the file already exists there";
-
 
 char Controller::_buffer[1000];
 
@@ -24,36 +15,33 @@ Controller::Controller(void) {
 	_invoker = new CommandInvoker;
 }
 
-string Controller::executeCommand(string inputText) {
+vector<RESULT> Controller::executeCommand(string inputText) {
 	_parser = new Parser(inputText);
-
-	int month = _parser->getMonth();
-	int day = _parser->getDay();
-	int hour = _parser->getHour();
-	int mins = _parser->getMinute();
-	int colour = 7; //temp, until parser can set colours
+	_parser->extractUserCommand(inputText);
 
 	string userCommand = _parser->getUserCommand();
 	string commandData = _parser->getEvent();
 
-	Item data = initializeItem(commandData, day, month, hour, mins, colour);
+	Item data = _parser->getItem();
+
+	//Item data = _parser->getItem();
 
 	if (userCommand == "display") {
-		setSuccessMessage("display");
+		return displayAll();
 	} else if (userCommand == "add") {
-		addData(data);
+		return addData(data);
 	} else if (userCommand == "delete") {
-		deleteData();
+		return deleteData();
 	} else if (userCommand == "clear") {
-		clearAll();
+		return clearAll();
 	} else if (userCommand == "sort") {
-		sortAlphabetical();
+		return sortAlphabetical();
 	} else if (userCommand == "search") {
-		search(commandData);
+		return search(commandData);
 	} else if (userCommand == "copy") {
-		copy();
+		return copy(data);
 	} else if (userCommand == "edit") {
-		edit();
+		return edit(data);
 	} else if (userCommand == "rename") {
 		rename(commandData);
 	} else if (userCommand == "move") {
@@ -61,7 +49,7 @@ string Controller::executeCommand(string inputText) {
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
-	return getSuccessMessage();
+	return generateResults(_vectorStore);
 }
 
 //API for UI (Main Text Box)
@@ -87,6 +75,18 @@ void Controller::initializeVector() {
 	//vectorStore = outputFile.getAllFileData();
 }
 
+vector<RESULT> Controller::generateResults(vector<Item> inputVector) {
+	vector<RESULT> results;
+	for (unsigned int i = 0; i < inputVector.size(); i++) {
+		results[i].lineNumber = i + 1;
+		results[i].date = inputVector[i].dateToString();
+		results[i].time = inputVector[i].timeToString();
+		results[i].event = inputVector[i].event;
+	}
+
+	return results;
+}
+
 bool Controller::rewriteFile() {
 	_outputFile->clearFile();
 	for (unsigned int i = 0; i < _vectorStore.size(); i++) {
@@ -95,46 +95,33 @@ bool Controller::rewriteFile() {
 	return true;
 }
 
-Item Controller::initializeItem(string event, int day, int month, int hour, int min, int col, bool bold) {
-	Item temp;
-
-	temp.event=event;
-	temp.eventDate[0] = day;
-	temp.eventDate[1] = month;
-	temp.eventStartTime[0] = hour;
-	temp.eventStartTime[1] = min;
-	temp.colour = col;
-	temp.bold = bold;
-
-	return temp;
-}
-
 void Controller::commandOptions(string command) {
 
 }
 
-void Controller::addData(Item item) {
+vector<RESULT> Controller::addData(Item item) {
 	AddItem *addItemCommand = new AddItem(item);
+	_invoker->executeCommand(_vectorStore,addItemCommand, _successMessage);
+	
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
 
-	_invoker->executeCommand(_vectorStore,addItemCommand);
+	sortChronological(_vectorStore);
 
-	_outputFile->addLine(item.event);
-
-	setInputBoxMessage("");
-	setSuccessMessage(addItemCommand->getMessage());
+	return generateResults(_vectorStore);
 }
 
-void Controller::deleteData() {
+vector<RESULT> Controller::deleteData() {
 	DeleteItem *deleteItemCommand = new DeleteItem(getLineNumberForOperation());
 	
-	_invoker->executeCommand(_vectorStore, deleteItemCommand);
+	_invoker->executeCommand(_vectorStore, deleteItemCommand, _successMessage);
 
-	if(rewriteFile()) {
-		setSuccessMessage(deleteItemCommand->getMessage());
-	} else {
+	if(!rewriteFile()) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
 	
+	return generateResults(_vectorStore);
 }
 
 int Controller::getLineNumberForOperation() {
@@ -154,131 +141,82 @@ int Controller::getLineNumberForOperation() {
 
 }
 
-string Controller::displayAll() {
-	return "";
+vector<RESULT> Controller::displayAll() {
+	return generateResults(_vectorStore);
 	//return _vectorStore;
 }
 
-void Controller::clearAll() {
+vector<RESULT> Controller::clearAll() {
 	ClearItems *clearItemsCommand = new ClearItems;
 
-	clearItemsCommand->executeAction(_vectorStore);
+	_invoker->executeCommand(_vectorStore,clearItemsCommand, _successMessage);
 
-	if(_outputFile->clearFile()) {
-		setSuccessMessage(clearItemsCommand->getMessage());
-	} else {
+	if(!_outputFile->clearFile()) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
+
+	return generateResults(_vectorStore);
 }
 
-void Controller::sortAlphabetical() {
+vector<RESULT> Controller::sortAlphabetical() {
 
 	SortAlphabetical *sortAlphabeticalCommand = new SortAlphabetical();
-	sortAlphabeticalCommand->executeAction(_vectorStore);
+	_invoker->executeCommand(_vectorStore,sortAlphabeticalCommand, _successMessage);
 
-	setInputBoxMessage("");
-	setSuccessMessage(sortAlphabeticalCommand->getMessage());
+	return generateResults(_vectorStore);
 }
 
-void Controller::search(string searchText) {
-	ostringstream oss;
-	transform(searchText.begin(), searchText.end(), searchText.begin(), ::tolower);
-	for (unsigned int i = 0; i < _vectorStore.size(); i++) {
-		string currentString = _vectorStore[i].event;
-		transform(currentString.begin(), currentString.end(), currentString.begin(), ::tolower);
-		size_t position = currentString.find(searchText);
-		if (position != string::npos) {
-			oss << (i + 1) << ". " << _vectorStore[i].event << endl << endl;
-		}
-	}
+void Controller::sortChronological(vector<Item> &inputVector) {
 
-	if (oss.str() == "") {
-		sprintf_s(_buffer, ERROR_SEARCH_ITEM_NOT_FOUND.c_str(), searchText.c_str());
-		setSuccessMessage(_buffer);
-	}
-	//to be changed to be shown in main outputbox
-	setSuccessMessage(oss.str());
-	setInputBoxMessage("");
+	SortChronological *sortChronologicalCommand = new SortChronological();
+	_invoker->executeCommand(inputVector,sortChronologicalCommand, _successMessage);
 }
 
-void Controller::copy() {
-	CopyItem *copyItemCommand = new CopyItem(getLineNumberForOperation());
-	copyItemCommand->executeAction(_vectorStore);
+vector<RESULT> Controller::search(string searchText) {
+	vector<Item> tempVector = _vectorStore;
 
-	string copiedData = copyItemCommand->getCopiedData();
-	if(copiedData!="") {
-		_outputFile->addLine(copiedData);
-		setSuccessMessage(copyItemCommand->getMessage());
+	SearchItem *searchItemCommand = new SearchItem(searchText);
+	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
+	
+	sortChronological(tempVector);
+
+	return generateResults(tempVector);
+}
+
+vector<RESULT> Controller::copy(Item input) {
+	CopyItem *copyItemCommand = new CopyItem(getLineNumberForOperation(), input);
+	_invoker->executeCommand(_vectorStore,copyItemCommand, _successMessage);
+
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
-	setInputBoxMessage("");
+
+	sortChronological(_vectorStore);
+
+	return generateResults(_vectorStore);
+}
+
+vector<RESULT> Controller::edit(Item data) {
+	EditItem *editItemCommand = new EditItem(getLineNumberForOperation(), data);
+
+	_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
+
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
+
+	return generateResults(_vectorStore);
+}
+
+void Controller::rename(string newFileName) {
+	RenameFile *renameFileCommand = new RenameFile(newFileName);
+	_invoker->executeCommand(_outputFile, renameFileCommand, _successMessage);
 
 }
 
-void Controller::edit() {
-	if(_isFirstCommandCall) {
-		int lineNumber = getLineNumberForOperation();
-		if(lineNumber == 0) {
-			setSuccessMessage(ERROR_INVALID_LINE_NUMBER);
-			setInputBoxMessage("");
-		} else {
-			ostringstream oss;
-
-			oss << _vectorStore[lineNumber - 1].event;
-			oss << "[" << _vectorStore[lineNumber-1].eventDate[0];
-			oss << "/" << _vectorStore[lineNumber-1].eventDate[1];
-			oss << ", " << _vectorStore[lineNumber-1].eventStartTime[0];
-			oss << ":" << _vectorStore[lineNumber-1].eventStartTime[1] << "]";
-
-			string lineToCopy = "edit " + oss.str();
-			setSuccessMessage("");
-			setInputBoxMessage(lineToCopy);
-		}
-		_isFirstCommandCall = false;
-		_lineNumberOperation = lineNumber;
-	} else {
-		sprintf_s(_buffer, SUCCESS_EDITED.c_str(), 
-			_vectorStore[_lineNumberOperation - 1].event.c_str(), 
-			_parser->getEvent().c_str());
-
-		Item temp = initializeItem(_parser->getEvent(),
-			_parser->getDay(),
-			_parser->getMonth(),
-			_parser->getHour(),
-			_parser->getMinute(),
-			7);
-
-		_vectorStore[_lineNumberOperation - 1] = temp;
-		rewriteFile();
-		_isFirstCommandCall = true;
-		setSuccessMessage(_buffer);
-		setInputBoxMessage("");
-	}
-}
-
-string Controller::rename(string newFileName) {
-	if(newFileName == "") {
-		return ERROR_NO_FILENAME;
-	} else {
-		int dotPos = newFileName.length() - 4;
-		if(newFileName[dotPos] != '.') { //ensure that the file is a .txt file
-			newFileName = newFileName + ".txt";
-		}
-		if(_outputFile->changeFileName(newFileName)) {
-			sprintf_s(_buffer, SUCCESS_FILENAME_CHANGED.c_str(), _outputFile->getFileName().c_str());
-			return _buffer;
-		} else {
-			return ERROR_FILE_ALREADY_EXISTS;
-		}
-	}
-}
-
-string Controller::move(string newFileLocation) {
-	if(_outputFile->changeFileLocation(newFileLocation)) {
-		sprintf_s(_buffer, SUCCESS_FILE_LOCATION_CHANGED.c_str(), _outputFile->getFullFileName().c_str());
-		return _buffer;
-	} else {
-		return ERROR_FILEPATH_NOT_FOUND;
-	}
+void Controller::move(string newFileLocation) {
+	MoveFileLocation *moveFileCommand = new MoveFileLocation;
+	_invoker->executeCommand(_outputFile, moveFileCommand, _successMessage);
 }
 
 string Controller::getHelp() {
