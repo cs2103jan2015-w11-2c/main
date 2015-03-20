@@ -9,10 +9,23 @@
 using namespace std;
 using namespace System;
 
+struct HIGHLIGHT {
+	int index;
+	int length;
+};
 
 ref class MessageManager {
 private:
 	Controller* magicMemo;
+	
+	vector<RESULT>* _resultVector;
+
+	vector<HIGHLIGHT>* _numberHighlight;
+	vector<HIGHLIGHT>* _dateHighlight;
+	vector<HIGHLIGHT>* _eventHighlight;
+	vector<HIGHLIGHT>* _completedHighlight;
+	
+
 	String^ _userInput;
 	String^ _successMessage;
 	String^ _todayTaskBoxMessage;
@@ -23,6 +36,12 @@ public:
 	MessageManager(void);
 
 	Void generateMessageOutputs(String^);
+
+	Void calculateNumberIndex();
+
+	Void calculateDateIndex();
+
+	Void calculateEventIndex();
 
 	String^ getSuccessMessage();
 

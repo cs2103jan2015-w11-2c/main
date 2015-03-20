@@ -1,6 +1,13 @@
 #include "Item.h"
 
 Item::Item() {
+	initilizeItem();
+}
+
+Item::~Item() {
+}
+
+void Item::initilizeItem() {
 	event = "";
 	eventDate[0] = 0;
 	eventDate[1] = 0;
@@ -11,9 +18,6 @@ Item::Item() {
 	eventEndTime[1] = 0;
 	colour = 0;
 	bold = false;
-}
-
-Item::~Item() {
 }
 
 int Item::getHour(int hour) {

@@ -3,6 +3,12 @@
 
 MessageManager::MessageManager(void) {
 	magicMemo = new Controller();
+	
+	_numberHighlight = new vector<HIGHLIGHT>;
+	_dateHighlight = new vector<HIGHLIGHT>;
+	_eventHighlight = new vector<HIGHLIGHT>;
+	_completedHighlight = new vector<HIGHLIGHT>;
+	
 	_userInput = "";
 	_successMessage = "";
 	_todayTaskBoxMessage = "";
@@ -11,10 +17,19 @@ MessageManager::MessageManager(void) {
 }
 
 Void MessageManager::generateMessageOutputs(String^ textFromUser) {
-	//string operationSucess = magicMemo->executeCommand(convertToStdString(textFromUser));
-	//_successMessage = convertToSystemString(operationSucess);
+	*_resultVector = magicMemo->executeCommand(convertToStdString(textFromUser));
+	_successMessage = convertToSystemString(magicMemo->getSuccessMessage());
 	//_todayTaskBoxMessage = convertToSystemString(magicMemo->
 	//_allTaskBoxMessage = convertToSystemString(magicMemo->displayAll());
+}
+
+Void MessageManager::calculateNumberIndex() {
+}
+
+Void MessageManager::calculateDateIndex() {
+}
+
+Void MessageManager::calculateEventIndex() {
 }
 
 String^ MessageManager::getSuccessMessage() {

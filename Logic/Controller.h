@@ -15,7 +15,9 @@ using namespace std;
 
 struct RESULT {
 	int lineNumber;
-	string date, event, time;
+	string date;
+	string event;
+	string time;
 };
 
 class Controller {
@@ -97,8 +99,6 @@ public:
 	//Example of new file path:
 	//C:\Users\Username\My Documents
 	void move(string newFileLocation);
-
-	string getSuccessMessage(string successType, string description = "");
 
 	string getHelp();
 

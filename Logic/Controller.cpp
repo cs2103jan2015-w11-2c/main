@@ -24,8 +24,6 @@ vector<RESULT> Controller::executeCommand(string inputText) {
 
 	Item data = _parser->getItem();
 
-	//Item data = _parser->getItem();
-
 	if (userCommand == "display") {
 		return displayAll();
 	} else if (userCommand == "add") {
@@ -159,7 +157,6 @@ vector<RESULT> Controller::clearAll() {
 }
 
 vector<RESULT> Controller::sortAlphabetical() {
-
 	SortAlphabetical *sortAlphabeticalCommand = new SortAlphabetical();
 	_invoker->executeCommand(_vectorStore,sortAlphabeticalCommand, _successMessage);
 
@@ -167,7 +164,6 @@ vector<RESULT> Controller::sortAlphabetical() {
 }
 
 void Controller::sortChronological(vector<Item> &inputVector) {
-
 	SortChronological *sortChronologicalCommand = new SortChronological();
 	_invoker->executeCommand(inputVector,sortChronologicalCommand, _successMessage);
 }
