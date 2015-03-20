@@ -65,8 +65,6 @@ public:
 
 	bool rewriteFile();
 
-	Item initializeItem(string, int, int, int, int, int color = 7, bool bold = false);
-
 	void commandOptions(string);
 
 	vector<RESULT> addData(Item);

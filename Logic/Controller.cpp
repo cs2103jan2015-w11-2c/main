@@ -17,17 +17,12 @@ Controller::Controller(void) {
 
 vector<RESULT> Controller::executeCommand(string inputText) {
 	_parser = new Parser(inputText);
-
-	int month = _parser->getMonth();
-	int day = _parser->getDay();
-	int hour = _parser->getHour();
-	int mins = _parser->getMinute();
-	int colour = 7; //temp, until parser can set colours
+	_parser->extractUserCommand(inputText);
 
 	string userCommand = _parser->getUserCommand();
 	string commandData = _parser->getEvent();
 
-	Item data = initializeItem(commandData, day, month, hour, mins, colour);
+	Item data = _parser->getItem();
 
 	//Item data = _parser->getItem();
 
@@ -44,7 +39,7 @@ vector<RESULT> Controller::executeCommand(string inputText) {
 	} else if (userCommand == "search") {
 		return search(commandData);
 	} else if (userCommand == "copy") {
-		return copy();
+		return copy(data);
 	} else if (userCommand == "edit") {
 		return edit(data);
 	} else if (userCommand == "rename") {
@@ -82,7 +77,7 @@ void Controller::initializeVector() {
 
 vector<RESULT> Controller::generateResults(vector<Item> inputVector) {
 	vector<RESULT> results;
-	for (int i = 0; i < inputVector.size(); i++) {
+	for (unsigned int i = 0; i < inputVector.size(); i++) {
 		results[i].lineNumber = i + 1;
 		results[i].date = inputVector[i].dateToString();
 		results[i].time = inputVector[i].timeToString();
@@ -98,20 +93,6 @@ bool Controller::rewriteFile() {
 		_outputFile->addLine(_vectorStore[i].event);
 	}
 	return true;
-}
-
-Item Controller::initializeItem(string event, int day, int month, int hour, int min, int col, bool bold) {
-	Item temp;
-
-	temp.event=event;
-	temp.eventDate[0] = day;
-	temp.eventDate[1] = month;
-	temp.eventStartTime[0] = hour;
-	temp.eventStartTime[1] = min;
-	temp.colour = col;
-	temp.bold = bold;
-
-	return temp;
 }
 
 void Controller::commandOptions(string command) {
@@ -217,6 +198,7 @@ vector<RESULT> Controller::copy(Item input) {
 
 vector<RESULT> Controller::edit(Item data) {
 	EditItem *editItemCommand = new EditItem(getLineNumberForOperation(), data);
+
 	_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
 
 	if(!rewriteFile()) {
@@ -229,6 +211,7 @@ vector<RESULT> Controller::edit(Item data) {
 void Controller::rename(string newFileName) {
 	RenameFile *renameFileCommand = new RenameFile(newFileName);
 	_invoker->executeCommand(_outputFile, renameFileCommand, _successMessage);
+
 }
 
 void Controller::move(string newFileLocation) {
