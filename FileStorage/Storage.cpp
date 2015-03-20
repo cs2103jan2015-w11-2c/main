@@ -3,7 +3,6 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <cassert>
 #include "Storage.h"
 using namespace std;
 
@@ -101,6 +100,7 @@ void Storage::verifyTokenContent(const vector<string>& tokenStorage) {
 	}
 }
 
+
 //check whether a string purely consists of integers
 bool Storage::isNumber(const string& s) {
     string::const_iterator it = s.begin();
@@ -112,6 +112,7 @@ bool Storage::isNumber(const string& s) {
     return !s.empty() && it == s.end();
 }
 
+
 void Storage::storeDateTime(vector<Item> &content){
 	vector<string> tempVector;
 	ifstream inFile(getFullFileName());
@@ -122,7 +123,7 @@ void Storage::storeDateTime(vector<Item> &content){
 	tempVector[3]._event=_item.getMonth();
 	tempVector[4]._event=_item.getHour();
 	tempVector[5]._event=_item.getMinute();
-    tempVector.push_back(event);
+    tempVector.push_back(content);
 	inFile.close();}
 }
 
