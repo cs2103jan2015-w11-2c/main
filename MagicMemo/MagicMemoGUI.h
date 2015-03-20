@@ -240,28 +240,36 @@ namespace UI {
 			vector<HIGHLIGHT>* _timeHighlight = magicManager->getTimeHighlight();
 			vector<HIGHLIGHT>* _eventHighlight = magicManager->getEventHighlight();
 
+			//date
 			for(unsigned int i = 0; i < _dateHighlight->size(); i++) {
 				allTaskBox->Select(_dateHighlight->at(i).index,_dateHighlight->at(i).length);
-				allTaskBox->SelectionColor = System::Drawing::Color::Brown;
-				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Times", 16, FontStyle::Bold);
+				allTaskBox->SelectionColor = System::Drawing::Color::DarkBlue;
+				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Cooper", 11, FontStyle::Bold);
+				allTaskBox->SelectionAlignment = HorizontalAlignment::Center;
 			}
 
+			//number
 			for(unsigned int i = 0; i < _numberHighlight->size(); i++) {
 				allTaskBox->Select(_numberHighlight->at(i).index, _numberHighlight->at(i).length);
 				allTaskBox->SelectionColor = System::Drawing::Color::Black;
-				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Times", 14, FontStyle::Regular);
+				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Italic);
+				allTaskBox->SelectionAlignment = HorizontalAlignment::Left;
 			}
 
+			//time
 			for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
 				allTaskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
-				allTaskBox->SelectionColor = System::Drawing::Color::Green;
-				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Times", 14, FontStyle::Regular);
+				allTaskBox->SelectionColor = System::Drawing::Color::DarkGreen;
+				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Regular);
+				allTaskBox->SelectionAlignment = HorizontalAlignment::Left;
 			}
 
+			//event
 			for(unsigned int i = 0; i < _eventHighlight->size(); i++) {
 				allTaskBox->Select(_eventHighlight->at(i).index, _eventHighlight->at(i).length);
-				allTaskBox->SelectionColor = System::Drawing::Color::Blue;
-				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Times", 14, FontStyle::Regular);
+				allTaskBox->SelectionColor = System::Drawing::Color::Black;
+				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Regular);
+				allTaskBox->SelectionAlignment = HorizontalAlignment::Left;
 			}
 
 
