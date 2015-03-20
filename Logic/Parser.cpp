@@ -12,9 +12,10 @@ Parser::Parser() {
 Parser::Parser(string userInput) {
 	_lineOpNumber = 0;
 	_fullUserInput = userInput;
-	
-	extractDateAndTime(userInput);
+
 	extractUserCommand(_event);
+
+	extractDateAndTime(userInput);
 
 }
 
@@ -79,6 +80,15 @@ void Parser::extractDateAndTime(string input) {
 		_event = input.substr(0, frontBracketPos);
 		convertStringToLowerCase(rawDateTimeChunk);
 		_splitDateTime.updateItemDateTime(rawDateTimeChunk, _item);
+
+		LOG(INFO) << 	"XYZ*********ITEM*********:";
+		LOG(INFO) << 	_item.eventDate[0];
+		LOG(INFO) << 	_item.eventDate[1];
+		LOG(INFO) << 	_item.eventDate[2];
+		LOG(INFO) << 	_item.eventStartTime[0];
+		LOG(INFO) << 	_item.eventStartTime[1];
+		LOG(INFO) << 	_item.eventEndTime[0];
+		LOG(INFO) << 	_item.eventEndTime[1];
 	}
 }
 

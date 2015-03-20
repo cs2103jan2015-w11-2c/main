@@ -16,6 +16,7 @@ void DateTimeParser::updateItemDateTime(string rawDateTime, Item& item) {
 	_item = item;
 	resetDateTime();
 	calculateDateTime(rawDateTime);
+	item = _item;
 }
 
 void DateTimeParser::resetDateTime() {

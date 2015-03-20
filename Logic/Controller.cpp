@@ -26,6 +26,16 @@ vector<RESULT> Controller::executeCommand(string inputText) {
 	commandData = _parser->getEvent();
 	data = _parser->getItem();
 
+	LOG(INFO) << 	"ITEM Values:";
+	LOG(INFO) <<	data.event;
+	LOG(INFO) <<	data.eventDate[0];
+	LOG(INFO) << 	data.eventDate[1];
+	LOG(INFO) << 	data.eventDate[2];
+	LOG(INFO) << 	data.eventStartTime[0];
+	LOG(INFO) << 	data.eventStartTime[1];
+	LOG(INFO) << 	data.eventEndTime[0];
+	LOG(INFO) << 	data.eventEndTime[1];
+
 	if (userCommand == "display") {
 		return displayAll();
 	} else if (userCommand == "add") {
