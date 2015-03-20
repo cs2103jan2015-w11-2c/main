@@ -12,7 +12,6 @@ class Parser {
 private:
 	Item _item;
 	DateTimeParser _splitDateTime;
-	string _fullUserInput;
 
 	string _userCommand;
 	string _event;
@@ -26,8 +25,6 @@ public:
 	void Parser::init();
 
 	string getUserCommand();
-
-	string getEvent();
 
 	Item getItem();
 

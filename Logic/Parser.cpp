@@ -3,7 +3,6 @@
 
 
 Parser::Parser() {
-	_fullUserInput = "";
 	_userCommand = "";
 	_event = "";
 	_lineOpNumber = 0;
@@ -11,20 +10,16 @@ Parser::Parser() {
 
 Parser::Parser(string userInput) {
 	_lineOpNumber = 0;
-	_fullUserInput = userInput;
+	_event = userInput;
 
-	extractUserCommand(_event);
+	extractUserCommand(userInput);
 
-	extractDateAndTime(userInput);
+	extractDateAndTime(_event);
 
 }
 
 string Parser::getUserCommand() {
 	return _userCommand;
-}
-
-string Parser::getEvent() {
-	return _event;
 }
 
 Item Parser::getItem() {
@@ -77,18 +72,10 @@ void Parser::extractDateAndTime(string input) {
 
 	if (frontBracketPos != string::npos) {
 		string rawDateTimeChunk = input.substr(frontBracketPos + 1);
-		_event = input.substr(0, frontBracketPos);
+		_event = removeSpacePadding(input.substr(0, frontBracketPos));
+		_item.event = _event;
 		convertStringToLowerCase(rawDateTimeChunk);
 		_splitDateTime.updateItemDateTime(rawDateTimeChunk, _item);
-
-		LOG(INFO) << 	"XYZ*********ITEM*********:";
-		LOG(INFO) << 	_item.eventDate[0];
-		LOG(INFO) << 	_item.eventDate[1];
-		LOG(INFO) << 	_item.eventDate[2];
-		LOG(INFO) << 	_item.eventStartTime[0];
-		LOG(INFO) << 	_item.eventStartTime[1];
-		LOG(INFO) << 	_item.eventEndTime[0];
-		LOG(INFO) << 	_item.eventEndTime[1];
 	}
 }
 

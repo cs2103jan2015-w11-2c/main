@@ -23,8 +23,8 @@ vector<RESULT> Controller::executeCommand(string inputText) {
 	_parser = new Parser(inputText);
 
 	userCommand = _parser->getUserCommand();
-	commandData = _parser->getEvent();
 	data = _parser->getItem();
+	commandData = data.event;
 
 	LOG(INFO) << 	"ITEM Values:";
 	LOG(INFO) <<	data.event;

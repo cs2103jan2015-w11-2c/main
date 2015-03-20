@@ -37,16 +37,14 @@ public:
 		Assert::AreEqual(expected, parse.getUserCommand());
 	}
 	
-
 	TEST_METHOD(extractDateAndTimeTest) {
-		string inputString = "add testing [12/3/15 2 pm - 4";
+		string inputString = "add testing [23/4";
 		Item item;
 		Parser parse(inputString);
-		//parse.extractUserCommand(inputString);
 		item = parse.getItem();
 
-		string expected = "add testing";
-		Assert::AreEqual(expected, item.dateToString());
+		string expected = "testing";
+		Assert::AreEqual(expected, item.event);
 	}
 
 	};
