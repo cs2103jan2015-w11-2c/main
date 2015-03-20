@@ -175,7 +175,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 			LOG(INFO) << "PM OR M, End Hour";
 		}
 		LOG(INFO) << "********************************************";
-		verifyAllDateTime();
+		//verifyAllDateTime();
 		updateItemFields();
 	}
 }
