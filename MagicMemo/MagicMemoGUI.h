@@ -6,6 +6,7 @@
 #include "Controller.h"
 #include "MessageManager.h"
 
+
 using namespace std;
 
 namespace UI {
@@ -41,9 +42,7 @@ namespace UI {
 			}
 		}
 	private: System::Windows::Forms::Label^  todayTaskBoxLabel;
-	protected: 
 
-	protected:
 	private: System::Windows::Forms::TextBox^  commandInputBox;
 	private: System::Windows::Forms::Label^  allTaskBoxLabel;
 
@@ -192,7 +191,6 @@ namespace UI {
 		}
 	private:
 		System::Void commandInputBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
-
 			if(e->KeyCode == Keys::Enter) {
 				String^ inputText = commandInputBox->Text;
 				fillGUITextBoxes(inputText);
@@ -229,6 +227,7 @@ namespace UI {
 	private:
 		// Sets success message and fills task boxes
 		System::Void fillGUITextBoxes(String^ userInput) {
+
 			magicManager->generateMessageOutputs(userInput);
 
 			String^ successMessage = magicManager->getSuccessMessage();
