@@ -22,6 +22,7 @@ private:
 
 	vector<HIGHLIGHT>* _numberHighlight;
 	vector<HIGHLIGHT>* _dateHighlight;
+	vector<HIGHLIGHT>* _timeHighlight;
 	vector<HIGHLIGHT>* _eventHighlight;
 	vector<HIGHLIGHT>* _completedHighlight;
 	
@@ -32,16 +33,20 @@ private:
 	String^ _allTaskBoxMessage;
 	String^ _inputBoxMessage;
 
+	int indexCount;
+
 public:
 	MessageManager(void);
 
 	Void generateMessageOutputs(String^);
 
-	Void calculateNumberIndex();
+	Void calculateIndexes();
 
 	Void calculateDateIndex();
 
 	Void calculateEventIndex();
+
+	String^ toString();
 
 	String^ getSuccessMessage();
 
@@ -50,6 +55,14 @@ public:
 	String^ getAllTaskBoxMessage();
 
 	String^ getInputBoxMessage();
+
+	vector<HIGHLIGHT>* getNumberHighlight();
+
+	vector<HIGHLIGHT>* getTimeHighlight();
+
+	vector<HIGHLIGHT>* getDateHighlight();
+
+	vector<HIGHLIGHT>* getEventHighlight();
 
 	// convert from std::string to System::String^
 	String^ convertToSystemString(string);

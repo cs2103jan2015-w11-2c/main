@@ -7,22 +7,24 @@ char Controller::_buffer[1000];
 
 INITIALIZE_EASYLOGGINGPP
 
-Controller::Controller(void) {
-	initializeVector();
-	_isFirstCommandCall = true;
-	_parser = new Parser;
-	_outputFile = new FileStorage;
-	_invoker = new CommandInvoker;
+	Controller::Controller(void) {
+		initializeVector();
+		_isFirstCommandCall = true;
+		_parser = new Parser;
+		_outputFile = new FileStorage;
+		_invoker = new CommandInvoker;
 }
 
 vector<RESULT> Controller::executeCommand(string inputText) {
+	string userCommand = "";
+	string commandData = "";
+	Item data;
+	
 	_parser = new Parser(inputText);
-	_parser->extractUserCommand(inputText);
 
-	string userCommand = _parser->getUserCommand();
-	string commandData = _parser->getEvent();
-
-	Item data = _parser->getItem();
+	userCommand = _parser->getUserCommand();
+	commandData = _parser->getEvent();
+	data = _parser->getItem();
 
 	if (userCommand == "display") {
 		return displayAll();
@@ -102,7 +104,7 @@ void Controller::commandOptions(string command) {
 vector<RESULT> Controller::addData(Item item) {
 	AddItem *addItemCommand = new AddItem(item);
 	_invoker->executeCommand(_vectorStore,addItemCommand, _successMessage);
-	
+
 	if(!rewriteFile()) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
@@ -114,13 +116,13 @@ vector<RESULT> Controller::addData(Item item) {
 
 vector<RESULT> Controller::deleteData() {
 	DeleteItem *deleteItemCommand = new DeleteItem(getLineNumberForOperation());
-	
+
 	_invoker->executeCommand(_vectorStore, deleteItemCommand, _successMessage);
 
 	if(!rewriteFile()) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
-	
+
 	return generateResults(_vectorStore);
 }
 
@@ -170,7 +172,7 @@ vector<RESULT> Controller::search(string searchText) {
 
 	SearchItem *searchItemCommand = new SearchItem(searchText);
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
-	
+
 	chronoSort(tempVector);
 
 	return generateResults(tempVector);

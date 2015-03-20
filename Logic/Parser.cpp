@@ -12,7 +12,10 @@ Parser::Parser() {
 Parser::Parser(string userInput) {
 	_lineOpNumber = 0;
 	_fullUserInput = userInput;
-	extractDateAndTime(_event);
+	
+	extractDateAndTime(userInput);
+	extractUserCommand(_event);
+
 }
 
 string Parser::getUserCommand() {
@@ -69,11 +72,11 @@ size_t Parser::findFrontBracket(string inputLine) {
 }
 
 void Parser::extractDateAndTime(string input) {
-	size_t frontBracketPos = findFrontBracket(_event);
+	size_t frontBracketPos = findFrontBracket(input);
 
 	if (frontBracketPos != string::npos) {
-		string rawDateTimeChunk = _event.substr(frontBracketPos + 1);
-		_event = _event.substr(0, frontBracketPos);
+		string rawDateTimeChunk = input.substr(frontBracketPos + 1);
+		_event = input.substr(0, frontBracketPos);
 		convertStringToLowerCase(rawDateTimeChunk);
 		_splitDateTime.updateItemDateTime(rawDateTimeChunk, _item);
 	}
