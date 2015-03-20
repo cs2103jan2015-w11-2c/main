@@ -83,8 +83,6 @@ public:
 
 	vector<RESULT> sortAlphabetical();
 
-	void sortChronological(vector<Item> &);
-
 	vector<RESULT> search(string);
 
 	vector<RESULT> copy(Item);
@@ -103,6 +101,12 @@ public:
 	string getHelp();
 
 	vector<Item> getVectorStore();
+
+	void swap(Item&, Item&);
+
+	int compareEarlierThan(const Item, const Item);
+
+	void chronoSort(vector<Item>&);
 
 	~Controller(void);
 };

@@ -3,7 +3,8 @@
 
 MessageManager::MessageManager(void) {
 	magicMemo = new Controller();
-	
+	_resultVector = new vector<RESULT>;
+
 	_numberHighlight = new vector<HIGHLIGHT>;
 	_dateHighlight = new vector<HIGHLIGHT>;
 	_eventHighlight = new vector<HIGHLIGHT>;

@@ -76,10 +76,12 @@ void Controller::initializeVector() {
 vector<RESULT> Controller::generateResults(vector<Item> inputVector) {
 	vector<RESULT> results;
 	for (unsigned int i = 0; i < inputVector.size(); i++) {
-		results[i].lineNumber = i + 1;
-		results[i].date = inputVector[i].dateToString();
-		results[i].time = inputVector[i].timeToString();
-		results[i].event = inputVector[i].event;
+		RESULT temp;
+		temp.lineNumber = i + 1;
+		temp.date = inputVector[i].dateToString();
+		temp.time = inputVector[i].timeToString();
+		temp.event = inputVector[i].event;
+		results.push_back(temp);
 	}
 
 	return results;
@@ -105,7 +107,7 @@ vector<RESULT> Controller::addData(Item item) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
 
-	sortChronological(_vectorStore);
+	chronoSort(_vectorStore);
 
 	return generateResults(_vectorStore);
 }
@@ -163,18 +165,13 @@ vector<RESULT> Controller::sortAlphabetical() {
 	return generateResults(_vectorStore);
 }
 
-void Controller::sortChronological(vector<Item> &inputVector) {
-	SortChronological *sortChronologicalCommand = new SortChronological();
-	_invoker->executeCommand(inputVector,sortChronologicalCommand, _successMessage);
-}
-
 vector<RESULT> Controller::search(string searchText) {
 	vector<Item> tempVector = _vectorStore;
 
 	SearchItem *searchItemCommand = new SearchItem(searchText);
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
 	
-	sortChronological(tempVector);
+	chronoSort(tempVector);
 
 	return generateResults(tempVector);
 }
@@ -187,7 +184,7 @@ vector<RESULT> Controller::copy(Item input) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
 
-	sortChronological(_vectorStore);
+	chronoSort(_vectorStore);
 
 	return generateResults(_vectorStore);
 }
@@ -231,6 +228,52 @@ string Controller::getHelp() {
 vector<Item> Controller::getVectorStore() {
 	return _vectorStore;
 }
+
+void Controller::swap(Item& item1, Item& item2) {
+	Item tempItem = item1;
+	item1 = item2;
+	item2 = tempItem;
+}
+
+int Controller::compareEarlierThan(const Item item1, const Item item2) {
+	if (item1.eventDate[2] < item2.eventDate[2]) {
+		return -1;
+	} else if (item1.eventDate[2] == item2.eventDate[2]) {
+		if (item1.eventDate[1] < item2.eventDate[1]) {
+			return -1;
+		} else if (item1.eventDate[1] == item2.eventDate[1]) {
+			if (item1.eventDate[0] < item2.eventDate[0]) {
+				return -1;
+			} else if (item1.eventDate[0] == item2.eventDate[0]) {
+				if (item1.eventStartTime[0] < item2.eventStartTime[0]) {
+					return -1;
+				} else if (item1.eventStartTime[0] == item2.eventStartTime[0]) {
+					if (item1.eventStartTime[1] < item2.eventStartTime[1]) {
+						return -1;
+					} else if (item1.eventStartTime[1] == item2.eventStartTime[1]) {
+						return 0;
+					}
+				}
+			}
+		}
+	}
+	return 1;
+}
+
+void Controller::chronoSort(vector<Item>& vectorStore) {
+	for (unsigned int i = 0; i < (vectorStore.size() - 1); i++) {
+		int minIndex = i;
+		for (unsigned int j = i + 1; j < vectorStore.size(); j++) {
+			if (compareEarlierThan(vectorStore[j], vectorStore[minIndex]) < 0) {
+				minIndex=j;
+			}
+		}
+		if(minIndex != i) {
+			swap(vectorStore[minIndex],vectorStore[i]);
+		}
+	}
+}
+
 
 Controller::~Controller(void) {
 }
