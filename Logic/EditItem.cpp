@@ -29,12 +29,14 @@ public:
 	}
 
 	void executeAction(vector<Item> &vectorStore) {
-		if(_lineNumber == 0) {
-			_message = ERROR_INVALID_LINE_NUMBER;
+		if(_lineNumber == 0   || _lineNumber > vectorStore.size()) {
+			_message = ERROR_INVALID_LINE_NUMBER + " ";
+			_message += ('0'+_lineNumber);
+			_message += "\n";
 		} else {
 			char buffer[1000];
 			sprintf_s(buffer, SUCCESS_EDITED.c_str(), 
-				vectorStore[_lineNumber-1].toString(), 
+				vectorStore[_lineNumber-1].toString().c_str(), 
 				_input.toString().c_str());
 			_message=buffer;
 

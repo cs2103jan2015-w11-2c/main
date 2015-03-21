@@ -29,11 +29,11 @@ public:
 	}
 
 	int getCurrentMonth() {
-		return (_today.tm_mon);
+		return (_today.tm_mon + 1);
 	}
 
 	int getCurrentYear() {
-		return (1990 + _today.tm_year);
+		return (1900 + _today.tm_year);
 	}
 
 	string getCurrentWeekDay() {

@@ -3,13 +3,20 @@
 
 MessageManager::MessageManager(void) {
 	magicMemo = new Controller();
-	_resultVector = new vector<RESULT>;
+	_allTaskVector = new vector<RESULT>;
+	_todayTaskVector = new vector<RESULT>;
 
-	_numberHighlight = new vector<HIGHLIGHT>;
-	_dateHighlight = new vector<HIGHLIGHT>;
-	_timeHighlight = new vector<HIGHLIGHT>;
-	_eventHighlight = new vector<HIGHLIGHT>;
-	_completedHighlight = new vector<HIGHLIGHT>;
+	_allNumberHighlight = new vector<HIGHLIGHT>;
+	_allDateHighlight = new vector<HIGHLIGHT>;
+	_allTimeHighlight = new vector<HIGHLIGHT>;
+	_allEventHighlight = new vector<HIGHLIGHT>;
+	_allCompletedHighlight = new vector<HIGHLIGHT>;
+
+	_todayNumberHighlight = new vector<HIGHLIGHT>;
+	_todayDateHighlight = new vector<HIGHLIGHT>;
+	_todayTimeHighlight = new vector<HIGHLIGHT>;
+	_todayEventHighlight = new vector<HIGHLIGHT>;
+	_todayCompletedHighlight = new vector<HIGHLIGHT>;
 
 	_userInput = "";
 	_successMessage = "";
@@ -19,107 +26,18 @@ MessageManager::MessageManager(void) {
 }
 
 Void MessageManager::generateMessageOutputs(String^ textFromUser) {
-	*_resultVector = magicMemo->executeCommand(convertToStdString(textFromUser));
+	magicMemo->executeCommand(convertToStdString(textFromUser));
+
+	*_allTaskVector = magicMemo->getOtherResult();
+	*_todayTaskVector = magicMemo->getTodayResult();
+
 	_successMessage = convertToSystemString(magicMemo->getSuccessMessage());
-	//_todayTaskBoxMessage = convertToSystemString(magicMemo->
-	//_allTaskBoxMessage = convertToSystemString(magicMemo->displayAll());
 
-	calculateIndexes();
-	_allTaskBoxMessage = toString();
+	calculateAllTaskIndexes();
+	_allTaskBoxMessage = toString(_allTaskVector);
+	
+	calculateTodayTaskIndexes();
+	_todayTaskBoxMessage = toString(_todayTaskVector);
+
 }
 
-Void MessageManager::calculateIndexes() {
-	clearIndexVectors();
-	string prevDate = "";
-	int indexCount = 0;
-	for(unsigned int i = 0; i < _resultVector->size(); i++) {
-		HIGHLIGHT temp;
-		indexCount += i;
-
-		if(_resultVector->at(i).date != prevDate) {
-			temp.index = indexCount;
-			temp.length = _resultVector->at(i).date.length();
-			_dateHighlight->push_back(temp);
-			indexCount += temp.length;
-			prevDate = _resultVector->at(i).date;
-		}
-
-		temp.index = indexCount;
-		temp.length = _resultVector->at(i).lineNumber.length();
-		_numberHighlight->push_back(temp);
-
-		temp.index = temp.index + temp.length;
-		temp.length = _resultVector->at(i).time.length();
-		_timeHighlight->push_back(temp);
-
-		temp.index = temp.index + temp.length;
-		temp.length = _resultVector->at(i).event.length();
-		_eventHighlight->push_back(temp);
-		
-		indexCount = temp.index + temp.length;;
-	}
-}
-
-String^ MessageManager::toString() {
-	ostringstream oss;
-	string prevDate = "";
-	for(unsigned int i = 0; i < _resultVector->size(); i++) {
-		if(_resultVector->at(i).date != prevDate) {
-			oss << _resultVector->at(i).date << endl;
-			prevDate = _resultVector->at(i).date;
-		}
-		oss << _resultVector->at(i).lineNumber << " ";
-		oss << _resultVector->at(i).time << " ";
-		oss << _resultVector->at(i).event << endl;
-	}
-
-	return convertToSystemString(oss.str());
-}
-
-String^ MessageManager::getSuccessMessage() {
-	return _successMessage;
-}
-
-String^ MessageManager::getTodayTaskBoxMessage() {
-	return _todayTaskBoxMessage;
-}
-
-String^ MessageManager::getAllTaskBoxMessage() {
-	return _allTaskBoxMessage;
-}
-
-String^ MessageManager::getInputBoxMessage() {
-	return _inputBoxMessage;
-}
-
-vector<HIGHLIGHT>* MessageManager::getNumberHighlight() {
-	return _numberHighlight;
-}
-
-vector<HIGHLIGHT>* MessageManager::getTimeHighlight() {
-	return _timeHighlight;
-}
-
-vector<HIGHLIGHT>* MessageManager::getDateHighlight() {
-	return _dateHighlight;
-}
-
-vector<HIGHLIGHT>* MessageManager::getEventHighlight() {
-	return _eventHighlight;
-}
-
-Void MessageManager::clearIndexVectors() {
-	_numberHighlight->clear();
-	_dateHighlight->clear();
-	_timeHighlight->clear();
-	_eventHighlight->clear();
-	_completedHighlight->clear();
-}
-
-String^ MessageManager::convertToSystemString(string inputString) {
-	return gcnew String(inputString.c_str());
-}
-
-string MessageManager::convertToStdString(String^ inputString) {
-	return msclr::interop::marshal_as< std::string >(inputString);
-}

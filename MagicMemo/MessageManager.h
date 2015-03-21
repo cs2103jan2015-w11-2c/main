@@ -17,15 +17,22 @@ struct HIGHLIGHT {
 ref class MessageManager {
 private:
 	Controller* magicMemo;
-	
-	vector<RESULT>* _resultVector;
 
-	vector<HIGHLIGHT>* _numberHighlight;
-	vector<HIGHLIGHT>* _dateHighlight;
-	vector<HIGHLIGHT>* _timeHighlight;
-	vector<HIGHLIGHT>* _eventHighlight;
-	vector<HIGHLIGHT>* _completedHighlight;
-	
+	vector<RESULT>* _allTaskVector;
+	vector<RESULT>* _todayTaskVector;
+
+	vector<HIGHLIGHT>* _allNumberHighlight;
+	vector<HIGHLIGHT>* _allDateHighlight;
+	vector<HIGHLIGHT>* _allTimeHighlight;
+	vector<HIGHLIGHT>* _allEventHighlight;
+	vector<HIGHLIGHT>* _allCompletedHighlight;
+
+	vector<HIGHLIGHT>* _todayNumberHighlight;
+	vector<HIGHLIGHT>* _todayDateHighlight;
+	vector<HIGHLIGHT>* _todayTimeHighlight;
+	vector<HIGHLIGHT>* _todayEventHighlight;
+	vector<HIGHLIGHT>* _todayCompletedHighlight;
+
 
 	String^ _userInput;
 	String^ _successMessage;
@@ -38,9 +45,11 @@ public:
 
 	Void generateMessageOutputs(String^);
 
-	Void calculateIndexes();
+	Void calculateAllTaskIndexes();
 
-	String^ toString();
+	Void calculateTodayTaskIndexes();
+
+	String^ toString(vector<RESULT>*);
 
 	String^ getSuccessMessage();
 
@@ -50,19 +59,33 @@ public:
 
 	String^ getInputBoxMessage();
 
-	vector<HIGHLIGHT>* getNumberHighlight();
+	//indexes for the allTaskBox
+	vector<HIGHLIGHT>* getAllNumberHighlight();
 
-	vector<HIGHLIGHT>* getTimeHighlight();
+	vector<HIGHLIGHT>* getAllTimeHighlight();
 
-	vector<HIGHLIGHT>* getDateHighlight();
+	vector<HIGHLIGHT>* getAllDateHighlight();
 
-	vector<HIGHLIGHT>* getEventHighlight();
+	vector<HIGHLIGHT>* getAllEventHighlight();
+
+	//indexes for the todayTaskBox
+	vector<HIGHLIGHT>* getTodayNumberHighlight();
+
+	vector<HIGHLIGHT>* getTodayTimeHighlight();
+
+	vector<HIGHLIGHT>* getTodayDateHighlight();
+
+	vector<HIGHLIGHT>* getTodayEventHighlight();
+
+	Void clearAllTaskIndexVectors();
+
+	Void clearTodayTaskIndexVectors();
 
 	Void clearIndexVectors();
 
 	// convert from std::string to System::String^
 	String^ convertToSystemString(string);
-	
+
 	// convert from System::String^ to std::string
 	string convertToStdString(String^);
 };
