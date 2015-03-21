@@ -33,8 +33,8 @@ int Item::getHour(int hour) {
 }
 
 string Item::getMinute(int minute) {
-	if (minute == 0) {
-		return "00";
+	if (minute < 10) {
+		return ("0" + to_string(minute));
 	} else {
 		return to_string(minute);
 	}
