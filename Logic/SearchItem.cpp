@@ -21,17 +21,15 @@ class SearchItem :public Command {
 private:
 	Item _input;
 	string _message;
-	vector<RESULT> *_todayResult;
 	vector<RESULT> *_otherResult;
 
 public:
 	SearchItem() {
 		_message = "";
 	}
-	SearchItem(const Item input, vector<RESULT> *todayResult, vector<RESULT> *otherResult) {
+	SearchItem(const Item input, vector<RESULT> *otherResult) {
 		_input = input;
 		_message = "";
-		_todayResult = todayResult;
 		_otherResult = otherResult;
 	}
 
@@ -164,24 +162,7 @@ public:
 		return true;
 	}
 
-	bool isToday(Item item) {
-		DateTime newDateTime;
-
-		if (item.eventDate[0] != newDateTime.getCurrentDay()) {
-			return false;
-		}
-		if (item.eventDate[1] != newDateTime.getCurrentMonth()) {
-			return false;
-		}
-		if (item.eventDate[2] != newDateTime.getCurrentYear()) {
-			return false;
-		}
-
-		return true;
-	}
-
 	void filterDateAndTime(vector<Item> &vectorStore) {
-		_todayResult->clear();
 		_otherResult->clear();
 
 		for (unsigned int i = 0; i < vectorStore.size(); i++) {
@@ -191,12 +172,8 @@ public:
 				temp.date = vectorStore[i].dateToString();
 				temp.time = vectorStore[i].timeToString();
 				temp.lineNumber = to_string(i + 1) + ".";
-				if (isToday(vectorStore[i])) {
-					_todayResult->push_back(temp);
-				}
-				else {
-					_otherResult->push_back(temp);
-				}
+				
+				_otherResult->push_back(temp);
 			}
 		}
 	}
@@ -204,7 +181,6 @@ public:
 	void executeAction(vector<Item> &vectorStore) {
 		filterDateAndTime(vectorStore);
 		if(_input.event != "") {
-			powerSearch(_todayResult);
 			powerSearch(_otherResult);
 		}
 

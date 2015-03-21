@@ -31,16 +31,16 @@ public:
 
 	void executeAction(vector<Item>& vectorStore) {
 
-		if(_lineNumber == 0  || _lineNumber > vectorStore.size()) {
+		if(_lineNumber == 0  || _lineNumber > (int)vectorStore.size()) {
 			_message = ERROR_INVALID_LINE_NUMBER + " ";
-			_message += ('0'+_lineNumber);
+			_message += ('0'+ _lineNumber);
 			_message += "\n";
 		}
 		else {
 			_message = "";
 
 			Item copiedData;
-			copiedData = vectorStore[_lineNumber-1];
+			copiedData = vectorStore[_lineNumber - 1];
 			copiedData.eventDate[0] = _input.eventDate[0];
 			copiedData.eventDate[1] = _input.eventDate[1];
 			copiedData.eventDate[2] = _input.eventDate[2];

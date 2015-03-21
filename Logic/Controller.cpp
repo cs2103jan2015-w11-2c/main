@@ -3,13 +3,11 @@
 
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
 
-char Controller::_buffer[1000];
-
 INITIALIZE_EASYLOGGINGPP
 
 	Controller::Controller(void) {
 		initializeVector();
-		_isFirstCommandCall = true;
+		_isSearch = false;
 		_parser = new Parser;
 		_outputFile = new FileStorage;
 		_invoker = new CommandInvoker;
@@ -35,6 +33,12 @@ void Controller::executeCommand(string inputText) {
 	LOG(INFO) << 	data.eventStartTime[1];
 	LOG(INFO) << 	data.eventEndTime[0];
 	LOG(INFO) << 	data.eventEndTime[1];
+
+	if(userCommand == "search") {
+		_isSearch = true;
+	} else {
+		_isSearch = false;
+	}
 
 	if (userCommand == "display") {
 		displayAll();
@@ -171,7 +175,7 @@ void Controller::displayAll() {
 void Controller::clearAll() {
 	ClearItems *clearItemsCommand = new ClearItems;
 
-	_invoker->executeCommand(_vectorStore,clearItemsCommand, _successMessage);
+	_invoker->executeCommand(_vectorStore, clearItemsCommand, _successMessage);
 
 	if(!_outputFile->clearFile()) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
@@ -182,7 +186,7 @@ void Controller::clearAll() {
 
 void Controller::sortAlphabetical() {
 	SortAlphabetical *sortAlphabeticalCommand = new SortAlphabetical();
-	_invoker->executeCommand(_vectorStore,sortAlphabeticalCommand, _successMessage);
+	_invoker->executeCommand(_vectorStore, sortAlphabeticalCommand, _successMessage);
 
 	 generateResults(_vectorStore);
 }
@@ -190,15 +194,17 @@ void Controller::sortAlphabetical() {
 void Controller::search(Item data) {
 	vector<Item> tempVector = _vectorStore;
 
-	SearchItem *searchItemCommand = new SearchItem(data, &_todayResult, &_otherResult);
+	SearchItem *searchItemCommand = new SearchItem(data, &_otherResult);
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
+}
 
-	//generateResults(tempVector);
+bool Controller::isSearch() {
+	return _isSearch;
 }
 
 void Controller::copy(Item input) {
 	CopyItem *copyItemCommand = new CopyItem(_parser->getLineOpNumber()[0], input);
-	_invoker->executeCommand(_vectorStore,copyItemCommand, _successMessage);
+	_invoker->executeCommand(_vectorStore, copyItemCommand, _successMessage);
 
 	chronoSort(_vectorStore);
 
@@ -260,7 +266,7 @@ vector<RESULT> Controller::getOtherResult() {
 	return _otherResult;
 }
 
-void Controller::swap(Item& item1, Item& item2) {
+void Controller::swap(Item &item1, Item &item2) {
 	Item tempItem = item1;
 	item1 = item2;
 	item2 = tempItem;
@@ -291,16 +297,16 @@ int Controller::compareEarlierThan(const Item item1, const Item item2) {
 	return 1;
 }
 
-void Controller::chronoSort(vector<Item>& vectorStore) {
+void Controller::chronoSort(vector<Item> &vectorStore) {
 	for (unsigned int i = 0; i < (vectorStore.size() - 1); i++) {
 		int minIndex = i;
 		for (unsigned int j = i + 1; j < vectorStore.size(); j++) {
 			if (compareEarlierThan(vectorStore[j], vectorStore[minIndex]) < 0) {
-				minIndex=j;
+				minIndex = j;
 			}
 		}
 		if(minIndex != i) {
-			swap(vectorStore[minIndex],vectorStore[i]);
+			swap(vectorStore[minIndex], vectorStore[i]);
 		}
 	}
 }

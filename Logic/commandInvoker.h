@@ -24,7 +24,7 @@ private:
 public:
 	CommandInvoker(void);
 	~CommandInvoker(void);
-	void executeCommand(vector<Item>&, Command *, string&);
+	void executeCommand(vector<Item> &, Command *, string &);
 	void executeCommand(FileStorage *, Command *, string &);
 };
 

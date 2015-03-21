@@ -22,9 +22,6 @@ private:
 	static const string ERROR_FILE_ALREADY_EXISTS;
 	static const string ERROR_FILEPATH_NOT_FOUND;
 
-	static string _MENU;
-	static char _buffer[1000];
-
 	FileStorage *_outputFile;
 	Parser *_parser;
 	CommandInvoker *_invoker;
@@ -37,20 +34,16 @@ private:
 	string _inputBoxMessage;
 	string _successMessage;
 
-	//for edit function, to check if it is the initial edit call
-	bool _isFirstCommandCall;
-	int _lineNumberOperation;
-	
+	//for search function, to check tell UI to change the heading to "Search Results"
+	bool _isSearch;
 
 public:
 	Controller(void);
 
 	void executeCommand(string);
 
-	//API for UI (Main Text Box)
 	string getInputBoxMessage();
 
-	//API for UI (Message Box)
 	string getSuccessMessage();
 
 	void setInputBoxMessage(string);
@@ -80,6 +73,8 @@ public:
 	void sortAlphabetical();
 
 	void search(Item);
+
+	bool isSearch();
 
 	void copy(Item);
 

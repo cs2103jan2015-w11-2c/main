@@ -36,11 +36,11 @@ public:
 		vector<int> deletedLines;
 		ostringstream oss;
 
-		for (int i = 0; i < _lineNumbers.size(); i++) {
+		for (unsigned int i = 0; i < _lineNumbers.size(); i++) {
 			int lineToBeDeleted = _lineNumbers[i];
 
 			alreadyDeleted = false;
-			for(int j = 0; j < deletedLines.size(); j++) {
+			for(unsigned int j = 0; j < deletedLines.size(); j++) {
 				if (deletedLines[j] == lineToBeDeleted) {
 					alreadyDeleted = true;
 					break;
