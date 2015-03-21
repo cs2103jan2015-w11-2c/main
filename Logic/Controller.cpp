@@ -135,7 +135,7 @@ void Controller::addData(Item item) {
 }
 
 void Controller::deleteData() {
-	DeleteItem *deleteItemCommand = new DeleteItem(getLineNumberForOperation());
+	DeleteItem *deleteItemCommand = new DeleteItem(_parser->getLineOpNumber());
 
 	_invoker->executeCommand(_vectorStore, deleteItemCommand, _successMessage);
 
@@ -149,7 +149,7 @@ void Controller::deleteData() {
 int Controller::getLineNumberForOperation() {
 	unsigned int lineNumber = 0;
 	try {
-		lineNumber = _parser->getLineOpNumber();
+		//lineNumber = _parser->getLineOpNumber();
 		if (lineNumber <= 0 || lineNumber > _vectorStore.size()) {
 			return 0;
 		}
@@ -199,7 +199,7 @@ void Controller::search(string searchText) {
 }
 
 void Controller::copy(Item input) {
-	CopyItem *copyItemCommand = new CopyItem(getLineNumberForOperation(), input);
+	CopyItem *copyItemCommand = new CopyItem(_parser->getLineOpNumber()[0], input);
 	_invoker->executeCommand(_vectorStore,copyItemCommand, _successMessage);
 
 	if(!rewriteFile()) {
@@ -212,7 +212,7 @@ void Controller::copy(Item input) {
 }
 
 void Controller::edit(Item data) {
-	EditItem *editItemCommand = new EditItem(getLineNumberForOperation(), data);
+	EditItem *editItemCommand = new EditItem(_parser->getLineOpNumber()[0], data);
 
 	_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
 

@@ -105,19 +105,19 @@ public:
 			newSearchResult.item = vectorStore[i];
 			newSearchResult.editDistance = minEditDist;
 			if (minEditDist < powerSearchLowThreshold) {
-				int j = 0;
+				unsigned int j = 0;
 				while (j < powerSearchLow.size() && powerSearchLow[j].editDistance <= minEditDist) {
 					j++;
 				}
 				powerSearchLow.insert(powerSearchLow.begin() + j, newSearchResult);
 			} else if (isFound) {
-				int j = 0;
+				unsigned int j = 0;
 				while (j < normalSearch.size() && normalSearch[j].editDistance <= minEditDist) {
 					j++;
 				}
 				normalSearch.insert(normalSearch.begin() + j, newSearchResult);
 			} else if (minEditDist < powerSearchHighThreshold) {
-				int j = 0;
+				unsigned int j = 0;
 				while (j < powerSearchHigh.size() && powerSearchHigh[j].editDistance <= minEditDist) {
 					j++;
 				}
@@ -131,7 +131,7 @@ public:
 		temp.insert(temp.end(), powerSearchHigh.begin(), powerSearchHigh.end());
 
 		vectorStore.clear();
-		for (int i = 0; i < temp.size(); i++) {
+		for (unsigned int i = 0; i < temp.size(); i++) {
 			vectorStore.push_back(temp[i].item);
 		}
 

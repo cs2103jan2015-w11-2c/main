@@ -31,8 +31,10 @@ public:
 
 	void executeAction(vector<Item>& vectorStore) {
 
-		if(_lineNumber == 0) {
-			_message = ERROR_INVALID_LINE_NUMBER;
+		if(_lineNumber == 0  || _lineNumber > vectorStore.size()) {
+			_message = ERROR_INVALID_LINE_NUMBER + " ";
+			_message += ('0'+_lineNumber);
+			_message += "\n";
 		}
 		else {
 			_message = "";
