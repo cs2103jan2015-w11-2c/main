@@ -33,7 +33,7 @@ public:
 	}
 
 	int getCurrentYear() {
-		return (1990 + _today.tm_year);
+		return (1900 + _today.tm_year);
 	}
 
 	string getCurrentWeekDay() {

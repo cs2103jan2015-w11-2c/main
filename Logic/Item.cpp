@@ -80,6 +80,6 @@ string Item::timeToString() {
 
 string Item::toString() {
 	ostringstream oss;
-	oss << event << dateToString() << timeToString();
+	oss << event << " "<< dateToString() << " " << timeToString();
 	return oss.str();
 }

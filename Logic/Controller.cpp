@@ -15,7 +15,7 @@ INITIALIZE_EASYLOGGINGPP
 		_invoker = new CommandInvoker;
 }
 
-vector<RESULT> Controller::executeCommand(string inputText) {
+void Controller::executeCommand(string inputText) {
 	string userCommand = "";
 	string commandData = "";
 	Item data;
@@ -37,21 +37,21 @@ vector<RESULT> Controller::executeCommand(string inputText) {
 	LOG(INFO) << 	data.eventEndTime[1];
 
 	if (userCommand == "display") {
-		return displayAll();
+		displayAll();
 	} else if (userCommand == "add") {
-		return addData(data);
+		addData(data);
 	} else if (userCommand == "delete") {
-		return deleteData();
+		deleteData();
 	} else if (userCommand == "clear") {
-		return clearAll();
+		clearAll();
 	} else if (userCommand == "sort") {
-		return sortAlphabetical();
+		sortAlphabetical();
 	} else if (userCommand == "search") {
-		return search(commandData);
+		search(commandData);
 	} else if (userCommand == "copy") {
-		return copy(data);
+		copy(data);
 	} else if (userCommand == "edit") {
-		return edit(data);
+		edit(data);
 	} else if (userCommand == "rename") {
 		rename(commandData);
 	} else if (userCommand == "move") {
@@ -85,18 +85,29 @@ void Controller::initializeVector() {
 	//vectorStore = outputFile.getAllFileData();
 }
 
-vector<RESULT> Controller::generateResults(vector<Item> inputVector) {
-	vector<RESULT> results;
+void Controller::generateResults(vector<Item> inputVector) {
+	vector<RESULT> todayResult;
+	vector<RESULT> otherResult;
+	DateTime newDateTime;
+
 	for (unsigned int i = 0; i < inputVector.size(); i++) {
 		RESULT temp;
+
 		temp.lineNumber = to_string(i + 1) + ".";
 		temp.date = inputVector[i].dateToString();
 		temp.time = inputVector[i].timeToString();
 		temp.event = inputVector[i].event;
-		results.push_back(temp);
+		if (inputVector[i].eventDate[0] == newDateTime.getCurrentDay() &&
+			inputVector[i].eventDate[1] == newDateTime.getCurrentMonth() &&
+			inputVector[i].eventDate[2] == newDateTime.getCurrentYear()) {
+			todayResult.push_back(temp);
+		} else {
+			otherResult.push_back(temp);
+		}
 	}
+	_todayResult = todayResult;
+	_otherResult = otherResult;
 
-	return results;
 }
 
 bool Controller::rewriteFile() {
@@ -111,7 +122,7 @@ void Controller::commandOptions(string command) {
 
 }
 
-vector<RESULT> Controller::addData(Item item) {
+void Controller::addData(Item item) {
 	AddItem *addItemCommand = new AddItem(item);
 	_invoker->executeCommand(_vectorStore,addItemCommand, _successMessage);
 
@@ -121,10 +132,10 @@ vector<RESULT> Controller::addData(Item item) {
 
 	chronoSort(_vectorStore);
 
-	return generateResults(_vectorStore);
+	generateResults(_vectorStore);
 }
 
-vector<RESULT> Controller::deleteData() {
+void Controller::deleteData() {
 	DeleteItem *deleteItemCommand = new DeleteItem(getLineNumberForOperation());
 
 	_invoker->executeCommand(_vectorStore, deleteItemCommand, _successMessage);
@@ -133,7 +144,7 @@ vector<RESULT> Controller::deleteData() {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
 
-	return generateResults(_vectorStore);
+	generateResults(_vectorStore);
 }
 
 int Controller::getLineNumberForOperation() {
@@ -153,12 +164,12 @@ int Controller::getLineNumberForOperation() {
 
 }
 
-vector<RESULT> Controller::displayAll() {
-	return generateResults(_vectorStore);
+void Controller::displayAll() {
+	generateResults(_vectorStore);
 	//return _vectorStore;
 }
 
-vector<RESULT> Controller::clearAll() {
+void Controller::clearAll() {
 	ClearItems *clearItemsCommand = new ClearItems;
 
 	_invoker->executeCommand(_vectorStore,clearItemsCommand, _successMessage);
@@ -167,17 +178,17 @@ vector<RESULT> Controller::clearAll() {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
 
-	return generateResults(_vectorStore);
+	generateResults(_vectorStore);
 }
 
-vector<RESULT> Controller::sortAlphabetical() {
+void Controller::sortAlphabetical() {
 	SortAlphabetical *sortAlphabeticalCommand = new SortAlphabetical();
 	_invoker->executeCommand(_vectorStore,sortAlphabeticalCommand, _successMessage);
 
-	return generateResults(_vectorStore);
+	 generateResults(_vectorStore);
 }
 
-vector<RESULT> Controller::search(string searchText) {
+void Controller::search(string searchText) {
 	vector<Item> tempVector = _vectorStore;
 
 	SearchItem *searchItemCommand = new SearchItem(searchText);
@@ -185,10 +196,10 @@ vector<RESULT> Controller::search(string searchText) {
 
 	chronoSort(tempVector);
 
-	return generateResults(tempVector);
+	generateResults(tempVector);
 }
 
-vector<RESULT> Controller::copy(Item input) {
+void Controller::copy(Item input) {
 	CopyItem *copyItemCommand = new CopyItem(getLineNumberForOperation(), input);
 	_invoker->executeCommand(_vectorStore,copyItemCommand, _successMessage);
 
@@ -198,10 +209,10 @@ vector<RESULT> Controller::copy(Item input) {
 
 	chronoSort(_vectorStore);
 
-	return generateResults(_vectorStore);
+	generateResults(_vectorStore);
 }
 
-vector<RESULT> Controller::edit(Item data) {
+void Controller::edit(Item data) {
 	EditItem *editItemCommand = new EditItem(getLineNumberForOperation(), data);
 
 	_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
@@ -210,7 +221,7 @@ vector<RESULT> Controller::edit(Item data) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
 
-	return generateResults(_vectorStore);
+	generateResults(_vectorStore);
 }
 
 void Controller::rename(string newFileName) {
@@ -237,8 +248,12 @@ string Controller::getHelp() {
 	return oss.str();
 }
 
-vector<Item> Controller::getVectorStore() {
-	return _vectorStore;
+vector<RESULT> Controller::getTodayResult() {
+	return _todayResult;
+}
+
+vector<RESULT> Controller::getOtherResult() {
+	return _otherResult;
 }
 
 void Controller::swap(Item& item1, Item& item2) {
