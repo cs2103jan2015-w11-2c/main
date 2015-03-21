@@ -31,9 +31,9 @@ public:
 
 	Item getItem();
 
-	//returns the line number for operations such as delete
+	//returns a vector of line numbers for operations such as delete
 	//throws out_of_range exception if line number is invalid
-	int getLineOpNumber();
+	vector<int> getLineOpNumber();
 
 	//extracts _userCommand and stores the rest of the input in _event
 	void extractUserCommand(string);

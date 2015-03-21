@@ -28,19 +28,27 @@ Item Parser::getItem() {
 	return _item;
 }
 
-int Parser::getLineOpNumber() {
+vector<int> Parser::getLineOpNumber() {
 	if (_event == "") {
 		throw std::out_of_range(ERROR_NO_LINE_NUMBER);
 	}
 
+	int temp;
+	vector<int> numVector;
+
 	char *end;
-	_lineOpNumber = (int)strtol(_event.c_str(), &end, 10);
-	//integer = (int)strtol(intEnd + 1, &intEnd, 10);
-	if (*end != 0 || _lineOpNumber <= 0) {
+	temp = (int)strtol(_event.c_str(), &end, 10);
+
+	while(temp > 0) {
+		numVector.push_back(temp);
+		temp = (int)strtol(end + 1, &end, 10);
+	}
+
+	if (numVector.empty() || temp < 0) {
 		throw std::out_of_range(ERROR_INVALID_LINE_NUMBER);
 	}
 
-	return _lineOpNumber;
+	return numVector;
 }
 
 void Parser::extractUserCommand(string fullString) {
@@ -78,7 +86,7 @@ void Parser::extractDateAndTime(string input) {
 		_event = removeSpacePadding(input.substr(0, frontBracketPos));
 		_item.event = _event;
 		convertStringToLowerCase(rawDateTimeChunk);
-		
+
 		try {
 			_splitDateTime.updateItemDateTime(rawDateTimeChunk, _item);
 		}catch (const out_of_range& e) {

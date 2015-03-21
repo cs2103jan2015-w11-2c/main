@@ -150,7 +150,7 @@ void Controller::deleteData() {
 int Controller::getLineNumberForOperation() {
 	unsigned int lineNumber = 0;
 	try {
-		lineNumber = _parser->getLineOpNumber();
+		//lineNumber = _parser->getLineOpNumber();
 		if (lineNumber <= 0 || lineNumber > _vectorStore.size()) {
 			return 0;
 		}
