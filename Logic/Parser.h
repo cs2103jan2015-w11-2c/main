@@ -10,6 +10,9 @@ using namespace std;
 
 class Parser {
 private:
+	static const string ERROR_NO_LINE_NUMBER;
+	static const string ERROR_INVALID_LINE_NUMBER;
+
 	Item _item;
 	DateTimeParser _splitDateTime;
 

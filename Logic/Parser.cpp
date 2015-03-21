@@ -1,6 +1,8 @@
 #include "Parser.h"
 #include "easylogging++.h"
 
+const string Parser::ERROR_NO_LINE_NUMBER = "No line number specified!";
+const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!";
 
 Parser::Parser() {
 	_userCommand = "";
@@ -28,14 +30,14 @@ Item Parser::getItem() {
 
 int Parser::getLineOpNumber() {
 	if (_event == "") {
-		throw std::out_of_range("No line number");
+		throw std::out_of_range(ERROR_NO_LINE_NUMBER);
 	}
 
 	char *end;
 	_lineOpNumber = (int)strtol(_event.c_str(), &end, 10);
-
+	//integer = (int)strtol(intEnd + 1, &intEnd, 10);
 	if (*end != 0 || _lineOpNumber <= 0) {
-		throw std::out_of_range("Invalid line number");
+		throw std::out_of_range(ERROR_INVALID_LINE_NUMBER);
 	}
 
 	return _lineOpNumber;
@@ -67,6 +69,7 @@ size_t Parser::findFrontBracket(string inputLine) {
 	return (inputLine.find_first_of("["));
 }
 
+// try - catch to be moved to Controller?
 void Parser::extractDateAndTime(string input) {
 	size_t frontBracketPos = findFrontBracket(input);
 
@@ -75,7 +78,12 @@ void Parser::extractDateAndTime(string input) {
 		_event = removeSpacePadding(input.substr(0, frontBracketPos));
 		_item.event = _event;
 		convertStringToLowerCase(rawDateTimeChunk);
-		_splitDateTime.updateItemDateTime(rawDateTimeChunk, _item);
+		
+		try {
+			_splitDateTime.updateItemDateTime(rawDateTimeChunk, _item);
+		}catch (const out_of_range& e) {
+
+		}
 	}
 }
 

@@ -16,8 +16,6 @@ MessageManager::MessageManager(void) {
 	_todayTaskBoxMessage = "";
 	_allTaskBoxMessage = "";
 	_inputBoxMessage = "";
-
-	indexCount = 0;
 }
 
 Void MessageManager::generateMessageOutputs(String^ textFromUser) {
@@ -31,47 +29,50 @@ Void MessageManager::generateMessageOutputs(String^ textFromUser) {
 }
 
 Void MessageManager::calculateIndexes() {
+	clearIndexVectors();
 	string prevDate = "";
-
+	int indexCount = 0;
 	for(unsigned int i = 0; i < _resultVector->size(); i++) {
 		HIGHLIGHT temp;
-		indexCount += i;
+		//indexCount += i;
 
 		if(_resultVector->at(i).date != prevDate) {
 			temp.index = indexCount;
-			temp.length = sizeof(_resultVector->at(i).date);
+			temp.length = _resultVector->at(i).date.length();
 			_dateHighlight->push_back(temp);
-			indexCount += temp.length;
+			indexCount = indexCount + temp.length + 1;
 			prevDate = _resultVector->at(i).date;
 		}
 
 		temp.index = indexCount;
-		temp.length = sizeof(_resultVector->at(i).lineNumber);
+		temp.length = _resultVector->at(i).lineNumber.length();
 		_numberHighlight->push_back(temp);
 
-		temp.index = temp.index + temp.length;
-		temp.length = sizeof(_resultVector->at(i).time);
+		temp.index = temp.index + temp.length + 1;
+		temp.length = _resultVector->at(i).time.length();
 		_timeHighlight->push_back(temp);
 
+		if(temp.index > 0) {
+			temp.index += 1;
+		}
+
 		temp.index = temp.index + temp.length;
-		temp.length = sizeof(_resultVector->at(i).event);
+		temp.length = _resultVector->at(i).event.length();
 		_eventHighlight->push_back(temp);
 		
-		indexCount = temp.index + temp.length;;
+		indexCount = temp.index + temp.length + 1;
 	}
-}
-
-Void MessageManager::calculateDateIndex() {
-}
-
-Void MessageManager::calculateEventIndex() {
 }
 
 String^ MessageManager::toString() {
 	ostringstream oss;
-
+	string prevDate = "";
 	for(unsigned int i = 0; i < _resultVector->size(); i++) {
-		oss << _resultVector->at(i).lineNumber << ". ";
+		if(_resultVector->at(i).date != prevDate) {
+			oss << _resultVector->at(i).date << endl;
+			prevDate = _resultVector->at(i).date;
+		}
+		oss << _resultVector->at(i).lineNumber << " ";
 		oss << _resultVector->at(i).time << " ";
 		oss << _resultVector->at(i).event << endl;
 	}
@@ -109,6 +110,14 @@ vector<HIGHLIGHT>* MessageManager::getDateHighlight() {
 
 vector<HIGHLIGHT>* MessageManager::getEventHighlight() {
 	return _eventHighlight;
+}
+
+Void MessageManager::clearIndexVectors() {
+	_numberHighlight->clear();
+	_dateHighlight->clear();
+	_timeHighlight->clear();
+	_eventHighlight->clear();
+	_completedHighlight->clear();
 }
 
 String^ MessageManager::convertToSystemString(string inputString) {
