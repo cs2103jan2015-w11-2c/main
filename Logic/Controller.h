@@ -86,7 +86,7 @@ public:
 
 	void sortAlphabetical();
 
-	void search(string);
+	void search(Item);
 
 	void copy(Item);
 

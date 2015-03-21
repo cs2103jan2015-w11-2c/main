@@ -47,7 +47,7 @@ void Controller::executeCommand(string inputText) {
 	} else if (userCommand == "sort") {
 		sortAlphabetical();
 	} else if (userCommand == "search") {
-		search(commandData);
+		search(data);
 	} else if (userCommand == "copy") {
 		copy(data);
 	} else if (userCommand == "edit") {
@@ -187,10 +187,10 @@ void Controller::sortAlphabetical() {
 	 generateResults(_vectorStore);
 }
 
-void Controller::search(string searchText) {
+void Controller::search(Item data) {
 	vector<Item> tempVector = _vectorStore;
 
-	SearchItem *searchItemCommand = new SearchItem(searchText);
+	SearchItem *searchItemCommand = new SearchItem(data);
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
 
 	//chronoSort(tempVector);

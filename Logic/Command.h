@@ -13,6 +13,7 @@ using namespace std;
 	static const string SUCCESS_SORTED_ALPHA = "All content sorted alphabetically\n";
 	static const string SUCCESS_SORTED_CHRONO = "All content sorted chronologically\n";
 	static const string SUCCESS_EDITED = "\"%s\" changed to \"%s\"!\n";
+	static const string SUCCESS_SEARCH = "Search results for: \"%s\" \n";
 	static const string SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"\n";
 	static const string SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s\n";
 	static const string ERROR_INVALID_LINE_NUMBER = "Invalid line number specified:";

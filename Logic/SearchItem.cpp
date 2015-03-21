@@ -19,15 +19,16 @@ struct SEARCHRESULT {
 
 class SearchItem :public Command {
 private:
-	string _input;
+	Item _input;
 	string _message;
 
 public:
 	SearchItem() {
-		_input = "";
+		_message = "";
 	}
-	SearchItem(const string input) {
+	SearchItem(const Item input) {
 		_input = input;
+		_message = "";
 	}
 
 	~SearchItem() {
@@ -72,23 +73,25 @@ public:
 		return difference[inputSize];
 	}
 
-	void executeAction(vector<Item> &vectorStore) {
+	void powerSearch(vector<Item> &vectorStore) {
 		vector<SEARCHRESULT> powerSearchLow;
 		vector<SEARCHRESULT> normalSearch;
 		vector<SEARCHRESULT> powerSearchHigh;
 
-		transform(_input.begin(), _input.end(), _input.begin(), ::tolower);
+		string fullInput = _input.event;
+
+		transform(fullInput.begin(), fullInput.end(), fullInput.begin(), ::tolower);
 		
 		for (unsigned int i = 0; i < vectorStore.size(); i++) {
 			string currentString = vectorStore[i].event;
 			transform(currentString.begin(), currentString.end(), currentString.begin(), ::tolower);
 			
-			istringstream issInput(_input);
+			istringstream issInput(fullInput);
 			string inputWord;
 			bool isFound = false;
 			int minEditDist = initialMinEditDist;
 			while (issInput >> inputWord) {
-				size_t position = currentString.find(_input);
+				size_t position = currentString.find(fullInput);
 				if (!isFound && position != string::npos) {
 					isFound = true;
 				}
@@ -134,13 +137,52 @@ public:
 		for (unsigned int i = 0; i < temp.size(); i++) {
 			vectorStore.push_back(temp[i].item);
 		}
+	}
+
+	bool isSameDateAndTime(const Item item, const Item input) {
+		for (int i = 0; i < 3; i++) {
+			if(input.eventDate[i] != 0 && item.eventDate[i] != input.eventDate[i]) {
+				return false;
+			}
+		}
+		for (int i = 0; i < 2; i++) {
+			if(input.eventDate[i] != 0 && item.eventStartTime[i] != input.eventStartTime[i]) {
+				return false;
+			}
+		}
+		for (int i = 0; i < 2; i++) {
+			if(input.eventDate[i] != 0 && item.eventEndTime[i] != input.eventEndTime[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	void filterDateAndTime(vector<Item> &vectorStore) {
+		vector<Item> temp;
+
+		for (unsigned int i = 0; i < vectorStore.size(); i++) {
+			if (isSameDateAndTime(vectorStore[i], _input)) {
+				temp.push_back(vectorStore[i]);
+			}
+		}
+		vectorStore = temp;
+	}
+
+	void executeAction(vector<Item> &vectorStore) {
+		filterDateAndTime(vectorStore);
+		if(_input.event != "") {
+			powerSearch(vectorStore);
+		}
 
 		char buffer[1000];
-		_message = "";
-		if (temp.size()==0) {
-			sprintf_s(buffer, ERROR_SEARCH_ITEM_NOT_FOUND.c_str(), _input.c_str());
-			_message = buffer;
+		if (vectorStore.size() == 0) {
+			sprintf_s(buffer, ERROR_SEARCH_ITEM_NOT_FOUND.c_str(), _input.toString().c_str());
 		}
+		else {
+			sprintf_s(buffer, SUCCESS_SEARCH.c_str(), _input.toString().c_str());
+		}
+		_message = buffer;
 	}
 
 	string getMessage() {
