@@ -16,6 +16,9 @@ struct HIGHLIGHT {
 
 ref class MessageManager {
 private:
+	static String^ LABEL_IS_SEARCH = "Search Results";
+	static String^ LABEL_ALL_TASKS = "Upcoming Tasks";
+
 	Controller* magicMemo;
 
 	vector<RESULT>* _allTaskVector;
@@ -58,6 +61,8 @@ public:
 	String^ getAllTaskBoxMessage();
 
 	String^ getInputBoxMessage();
+
+	String^ getAllTaskBoxLabel();
 
 	//indexes for the allTaskBox
 	vector<HIGHLIGHT>* getAllNumberHighlight();

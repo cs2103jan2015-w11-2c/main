@@ -89,7 +89,7 @@ void Parser::extractDateAndTime(string input) {
 
 		try {
 			_splitDateTime.updateItemDateTime(rawDateTimeChunk, _item);
-		}catch (const out_of_range& e) {
+		} catch (const out_of_range& e) {
 
 		}
 	}

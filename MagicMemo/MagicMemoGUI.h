@@ -79,7 +79,7 @@ namespace UI {
 			this->todayTaskBoxLabel->AutoSize = true;
 			this->todayTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12.75F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->todayTaskBoxLabel->Location = System::Drawing::Point(81, 51);
+			this->todayTaskBoxLabel->Location = System::Drawing::Point(86, 51);
 			this->todayTaskBoxLabel->Name = L"todayTaskBoxLabel";
 			this->todayTaskBoxLabel->Size = System::Drawing::Size(126, 20);
 			this->todayTaskBoxLabel->TabIndex = 0;
@@ -238,6 +238,8 @@ namespace UI {
 			successMessageLabel->Text = successMessage;
 
 			allTaskBox->Text = magicManager->getAllTaskBoxMessage();
+
+			allTaskBoxLabel->Text = magicManager->getAllTaskBoxLabel();
 
 			vector<HIGHLIGHT>* _allNumberHighlight = magicManager->getAllNumberHighlight();
 			vector<HIGHLIGHT>* _allDateHighlight = magicManager->getAllDateHighlight();
