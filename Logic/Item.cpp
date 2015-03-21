@@ -33,7 +33,7 @@ int Item::getHour(int hour) {
 }
 
 string Item::getMinute(int minute) {
-	if( minute == 0) {
+	if (minute == 0) {
 		return "00";
 	} else {
 		return to_string(minute);
@@ -41,7 +41,7 @@ string Item::getMinute(int minute) {
 }
 
 string Item::getAMPM(int hour) {
-	if(hour >= 12 && hour < 24) {
+	if (hour >= 12 && hour < 24) {
 		return "pm";
 	} else {
 		return "am";

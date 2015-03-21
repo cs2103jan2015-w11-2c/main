@@ -1,6 +1,5 @@
 #include "MessageManager.h"
 
-
 MessageManager::MessageManager(void) {
 	magicMemo = new Controller();
 	_allTaskVector = new vector<RESULT>;
@@ -141,6 +140,14 @@ String^ MessageManager::getAllTaskBoxMessage() {
 
 String^ MessageManager::getInputBoxMessage() {
 	return _inputBoxMessage;
+}
+
+String^ MessageManager::getAllTaskBoxLabel() {
+	if(magicMemo->isSearch()) {
+		return LABEL_IS_SEARCH;
+	} else {
+		return LABEL_ALL_TASKS;
+	}
 }
 
 vector<HIGHLIGHT>* MessageManager::getAllNumberHighlight() {

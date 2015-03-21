@@ -52,26 +52,20 @@ public:
 		if (item1.event != item2.event) {
 			return false;
 		}
-		if (item1.eventDate[0] != item2.eventDate[0]) {
-			return false;
+		for (int i = 0; i < 3; i++) {
+			if (item1.eventDate[i] != item2.eventDate[i]) {
+				return false;
+			}
 		}
-		if (item1.eventDate[1] != item2.eventDate[1]) {
-			return false;
+		for (int i = 0; i < 2; i++) {
+			if (item1.eventStartTime[i] != item2.eventStartTime[i]) {
+				return false;
+			}
 		}
-		if (item1.eventDate[2] != item2.eventDate[2]) {
-			return false;
-		}
-		if (item1.eventStartTime[0] != item2.eventStartTime[0]) {
-			return false;
-		}
-		if (item1.eventStartTime[1] != item2.eventStartTime[1]) {
-			return false;
-		}
-		if (item1.eventEndTime[0] != item2.eventEndTime[0]) {
-			return false;
-		}
-		if (item1.eventEndTime[1] != item2.eventEndTime[1]) {
-			return false;
+		for (int i = 0; i < 2; i++) {
+			if (item1.eventEndTime[i] != item2.eventEndTime[i]) {
+				return false;
+			}
 		}
 		if (item1.colour != item2.colour) {
 			return false;
@@ -79,7 +73,6 @@ public:
 		if (item1.bold != item2.bold) {
 			return false;
 		}
-
 		return true;
 	}
 
