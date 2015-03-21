@@ -47,12 +47,12 @@ void FileStorage::addLine(Item item) {
 	fstream outFile;
 	ostringstream out;
 	outFile.open(getFullFileName(), fstream::out | fstream::app);
-
+	out << "* "; //Placeholder that will be removed by Parser's extractUserCommand
 	if(item.eventDate[0]== 0 && item.eventDate[1] == 0 && item.eventDate[2] == 0) {
-		out << item.event << endl;
+		out << item.event;
 	} else { 
-		out << item.event << " ";
-		out << "[" <<item.eventDate[0] << "/" << item.eventDate[1] << "/" << item.eventDate[2];
+		out << item.event;
+		out << " [" <<item.eventDate[0] << "/" << item.eventDate[1] << "/" << item.eventDate[2];
 		out << " " << item.eventStartTime[0] << ":" << item.eventStartTime[1];
 		out << " - " << item.eventEndTime[0] << ":" << item.eventEndTime[1];
 	}
