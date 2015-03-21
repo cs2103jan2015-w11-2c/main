@@ -29,7 +29,7 @@ public:
 	}
 
 	int getCurrentMonth() {
-		return (_today.tm_mon);
+		return (_today.tm_mon + 1);
 	}
 
 	int getCurrentYear() {

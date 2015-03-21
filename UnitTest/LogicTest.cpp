@@ -335,6 +335,14 @@ public:
 		expected = false;
 		Assert::AreEqual(expected, dateTest.isLeapYear(2019));
 	}
+
+	TEST_METHOD(getCurrentMonthTest) {
+		DateTime dateTest;
+
+		int expected = 3;
+		Assert::AreEqual(expected, dateTest.getCurrentMonth());
+	}
+
 	};
 
 	TEST_CLASS(ITEMTest) {

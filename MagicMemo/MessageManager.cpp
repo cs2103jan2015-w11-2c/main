@@ -3,13 +3,20 @@
 
 MessageManager::MessageManager(void) {
 	magicMemo = new Controller();
-	_resultVector = new vector<RESULT>;
+	_allTaskVector = new vector<RESULT>;
+	_todayTaskVector = new vector<RESULT>;
 
-	_numberHighlight = new vector<HIGHLIGHT>;
-	_dateHighlight = new vector<HIGHLIGHT>;
-	_timeHighlight = new vector<HIGHLIGHT>;
-	_eventHighlight = new vector<HIGHLIGHT>;
-	_completedHighlight = new vector<HIGHLIGHT>;
+	_allNumberHighlight = new vector<HIGHLIGHT>;
+	_allDateHighlight = new vector<HIGHLIGHT>;
+	_allTimeHighlight = new vector<HIGHLIGHT>;
+	_allEventHighlight = new vector<HIGHLIGHT>;
+	_allCompletedHighlight = new vector<HIGHLIGHT>;
+
+	_todayNumberHighlight = new vector<HIGHLIGHT>;
+	_todayDateHighlight = new vector<HIGHLIGHT>;
+	_todayTimeHighlight = new vector<HIGHLIGHT>;
+	_todayEventHighlight = new vector<HIGHLIGHT>;
+	_todayCompletedHighlight = new vector<HIGHLIGHT>;
 
 	_userInput = "";
 	_successMessage = "";
@@ -19,65 +26,102 @@ MessageManager::MessageManager(void) {
 }
 
 Void MessageManager::generateMessageOutputs(String^ textFromUser) {
+	*_allTaskVector = magicMemo->getOtherResult();
+	*_todayTaskVector = magicMemo->getTodayResult();
 
-	//use getTodayResult() to get results for today, and getOtherResult() to get results for the rest
 	magicMemo->executeCommand(convertToStdString(textFromUser));
 	*_resultVector = magicMemo->getOtherResult();
 	_successMessage = convertToSystemString(magicMemo->getSuccessMessage());
-	//_todayTaskBoxMessage = convertToSystemString(magicMemo->
-	//_allTaskBoxMessage = convertToSystemString(magicMemo->displayAll());
 
-	calculateIndexes();
-	_allTaskBoxMessage = toString();
+	calculateAllTaskIndexes();
+	_allTaskBoxMessage = toString(_allTaskVector);
+	
+	calculateTodayTaskIndexes();
+	_todayTaskBoxMessage = toString(_todayTaskVector);
+
 }
 
-Void MessageManager::calculateIndexes() {
-	clearIndexVectors();
+Void MessageManager::calculateAllTaskIndexes() {
+	clearAllTaskIndexVectors();
 	string prevDate = "";
 	int indexCount = 0;
-	for(unsigned int i = 0; i < _resultVector->size(); i++) {
+	for(unsigned int i = 0; i < _allTaskVector->size(); i++) {
 		HIGHLIGHT temp;
-		//indexCount += i;
 
-		if(_resultVector->at(i).date != prevDate) {
+		if(_allTaskVector->at(i).date != prevDate) {
 			temp.index = indexCount;
-			temp.length = _resultVector->at(i).date.length();
-			_dateHighlight->push_back(temp);
+			temp.length = _allTaskVector->at(i).date.length();
+			_allDateHighlight->push_back(temp);
 			indexCount = indexCount + temp.length + 1;
-			prevDate = _resultVector->at(i).date;
+			prevDate = _allTaskVector->at(i).date;
 		}
 
 		temp.index = indexCount;
-		temp.length = _resultVector->at(i).lineNumber.length();
-		_numberHighlight->push_back(temp);
+		temp.length = _allTaskVector->at(i).lineNumber.length();
+		_allNumberHighlight->push_back(temp);
 
 		temp.index = temp.index + temp.length + 1;
-		temp.length = _resultVector->at(i).time.length();
-		_timeHighlight->push_back(temp);
+		temp.length = _allTaskVector->at(i).time.length();
+		_allTimeHighlight->push_back(temp);
 
 		if(temp.index > 0) {
 			temp.index += 1;
 		}
 
 		temp.index = temp.index + temp.length;
-		temp.length = _resultVector->at(i).event.length();
-		_eventHighlight->push_back(temp);
+		temp.length = _allTaskVector->at(i).event.length();
+		_allEventHighlight->push_back(temp);
 		
 		indexCount = temp.index + temp.length + 1;
 	}
 }
 
-String^ MessageManager::toString() {
+Void MessageManager::calculateTodayTaskIndexes() {
+	clearTodayTaskIndexVectors();
+	string prevDate = "";
+	int indexCount = 0;
+	for(unsigned int i = 0; i < _todayTaskVector->size(); i++) {
+		HIGHLIGHT temp;
+
+		if(_todayTaskVector->at(i).date != prevDate) {
+			temp.index = indexCount;
+			temp.length = _todayTaskVector->at(i).date.length();
+			_todayDateHighlight->push_back(temp);
+			indexCount = indexCount + temp.length + 1;
+			prevDate = _todayTaskVector->at(i).date;
+		}
+
+		temp.index = indexCount;
+		temp.length = _todayTaskVector->at(i).lineNumber.length();
+		_todayNumberHighlight->push_back(temp);
+
+		temp.index = temp.index + temp.length + 1;
+		temp.length = _todayTaskVector->at(i).time.length();
+		_todayTimeHighlight->push_back(temp);
+
+		if(temp.index > 0) {
+			temp.index += 1;
+		}
+
+		temp.index = temp.index + temp.length;
+		temp.length = _todayTaskVector->at(i).event.length();
+		_todayEventHighlight->push_back(temp);
+		
+		indexCount = temp.index + temp.length + 1;
+	}
+}
+
+String^ MessageManager::toString(vector<RESULT>* taskVector) {
 	ostringstream oss;
 	string prevDate = "";
-	for(unsigned int i = 0; i < _resultVector->size(); i++) {
-		if(_resultVector->at(i).date != prevDate) {
-			oss << _resultVector->at(i).date << endl;
-			prevDate = _resultVector->at(i).date;
+	for(unsigned int i = 0; i < taskVector->size(); i++) {
+		if(taskVector->at(i).date != prevDate) {
+			oss << taskVector->at(i).date << endl;
+			prevDate = taskVector->at(i).date;
 		}
-		oss << _resultVector->at(i).lineNumber << " ";
-		oss << _resultVector->at(i).time << " ";
-		oss << _resultVector->at(i).event << endl;
+		oss << taskVector->at(i).lineNumber << " ";
+		oss << taskVector->at(i).time << " ";
+		oss << taskVector->at(i).event << endl;
 	}
 
 	return convertToSystemString(oss.str());
@@ -99,29 +143,54 @@ String^ MessageManager::getInputBoxMessage() {
 	return _inputBoxMessage;
 }
 
-vector<HIGHLIGHT>* MessageManager::getNumberHighlight() {
-	return _numberHighlight;
+vector<HIGHLIGHT>* MessageManager::getAllNumberHighlight() {
+	return _allNumberHighlight;
 }
 
-vector<HIGHLIGHT>* MessageManager::getTimeHighlight() {
-	return _timeHighlight;
+vector<HIGHLIGHT>* MessageManager::getAllTimeHighlight() {
+	return _allTimeHighlight;
 }
 
-vector<HIGHLIGHT>* MessageManager::getDateHighlight() {
-	return _dateHighlight;
+vector<HIGHLIGHT>* MessageManager::getAllDateHighlight() {
+	return _allDateHighlight;
 }
 
-vector<HIGHLIGHT>* MessageManager::getEventHighlight() {
-	return _eventHighlight;
+vector<HIGHLIGHT>* MessageManager::getAllEventHighlight() {
+	return _allEventHighlight;
 }
 
-Void MessageManager::clearIndexVectors() {
-	_numberHighlight->clear();
-	_dateHighlight->clear();
-	_timeHighlight->clear();
-	_eventHighlight->clear();
-	_completedHighlight->clear();
+vector<HIGHLIGHT>* MessageManager::getTodayNumberHighlight() {
+	return _todayNumberHighlight;
 }
+
+vector<HIGHLIGHT>* MessageManager::getTodayTimeHighlight() {
+	return _todayTimeHighlight;
+}
+
+vector<HIGHLIGHT>* MessageManager::getTodayDateHighlight() {
+	return _todayDateHighlight;
+}
+
+vector<HIGHLIGHT>* MessageManager::getTodayEventHighlight() {
+	return _todayEventHighlight;
+}
+
+Void MessageManager::clearAllTaskIndexVectors() {
+	_allNumberHighlight->clear();
+	_allDateHighlight->clear();
+	_allTimeHighlight->clear();
+	_allEventHighlight->clear();
+	_allCompletedHighlight->clear();
+}
+
+Void MessageManager::clearTodayTaskIndexVectors() {
+	_todayNumberHighlight->clear();
+	_todayDateHighlight->clear();
+	_todayTimeHighlight->clear();
+	_todayEventHighlight->clear();
+	_todayCompletedHighlight->clear();
+}
+
 
 String^ MessageManager::convertToSystemString(string inputString) {
 	return gcnew String(inputString.c_str());
