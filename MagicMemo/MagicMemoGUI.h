@@ -238,7 +238,20 @@ namespace UI {
 			successMessageLabel->Text = successMessage;
 
 			allTaskBox->Text = magicManager->getAllTaskBoxMessage();
-			colorTextInAllTaskBox();
+
+			vector<HIGHLIGHT>* _allNumberHighlight = magicManager->getAllNumberHighlight();
+			vector<HIGHLIGHT>* _allDateHighlight = magicManager->getAllDateHighlight();
+			vector<HIGHLIGHT>* _allTimeHighlight = magicManager->getAllTimeHighlight();
+			vector<HIGHLIGHT>* _allEventHighlight = magicManager->getAllEventHighlight();
+			colorTextInAllTaskBox(_allNumberHighlight, _allDateHighlight, _allTimeHighlight, _allEventHighlight, allTaskBox);
+			
+			todayTaskBox->Text = magicManager->getTodayTaskBoxMessage();
+			vector<HIGHLIGHT>* _todayNumberHighlight = magicManager->getTodayNumberHighlight();
+			vector<HIGHLIGHT>* _todayDateHighlight = magicManager->getTodayDateHighlight();
+			vector<HIGHLIGHT>* _todayTimeHighlight = magicManager->getTodayTimeHighlight();
+			vector<HIGHLIGHT>* _todayEventHighlight = magicManager->getTodayEventHighlight();
+			colorTextInAllTaskBox(_todayNumberHighlight, _todayDateHighlight, _todayTimeHighlight, _todayEventHighlight, todayTaskBox);
+			
 
 			commandInputBox->Text = "";
 			commandInputBox->SelectionStart = 100;
@@ -249,45 +262,45 @@ namespace UI {
 			}
 		}
 
-		System::Void colorTextInAllTaskBox() {
-			vector<HIGHLIGHT>* _numberHighlight = magicManager->getNumberHighlight();
-			vector<HIGHLIGHT>* _dateHighlight = magicManager->getDateHighlight();
-			vector<HIGHLIGHT>* _timeHighlight = magicManager->getTimeHighlight();
-			vector<HIGHLIGHT>* _eventHighlight = magicManager->getEventHighlight();
+		System::Void colorTextInAllTaskBox(vector<HIGHLIGHT>* _numberHighlight, 
+			vector<HIGHLIGHT>* _dateHighlight,
+			vector<HIGHLIGHT>* _timeHighlight,
+			vector<HIGHLIGHT>* _eventHighlight, 
+			RichTextBox^ taskBox) {
 
-			//date
-			for(unsigned int i = 0; i < _dateHighlight->size(); i++) {
-				allTaskBox->Select(_dateHighlight->at(i).index,_dateHighlight->at(i).length);
-				allTaskBox->SelectionColor = System::Drawing::Color::DarkBlue;
-				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Cooper", 11, FontStyle::Bold);
-				allTaskBox->SelectionAlignment = HorizontalAlignment::Center;
-			}
+				//date
+				for(unsigned int i = 0; i < _dateHighlight->size(); i++) {
+					taskBox->Select(_dateHighlight->at(i).index,_dateHighlight->at(i).length);
+					taskBox->SelectionColor = System::Drawing::Color::DarkBlue;
+					taskBox->SelectionFont = gcnew System::Drawing::Font("Cooper", 11, FontStyle::Bold);
+					taskBox->SelectionAlignment = HorizontalAlignment::Center;
+				}
 
-			//number
-			for(unsigned int i = 0; i < _numberHighlight->size(); i++) {
-				allTaskBox->Select(_numberHighlight->at(i).index, _numberHighlight->at(i).length);
-				allTaskBox->SelectionColor = System::Drawing::Color::Black;
-				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Italic);
-				allTaskBox->SelectionAlignment = HorizontalAlignment::Left;
-			}
+				//number
+				for(unsigned int i = 0; i < _numberHighlight->size(); i++) {
+					taskBox->Select(_numberHighlight->at(i).index, _numberHighlight->at(i).length);
+					taskBox->SelectionColor = System::Drawing::Color::Black;
+					taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Italic);
+					taskBox->SelectionAlignment = HorizontalAlignment::Left;
+				}
 
-			//time
-			for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
-				allTaskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
-				allTaskBox->SelectionColor = System::Drawing::Color::DarkGreen;
-				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Regular);
-				allTaskBox->SelectionAlignment = HorizontalAlignment::Left;
-			}
+				//time
+				for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
+					taskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
+					taskBox->SelectionColor = System::Drawing::Color::DarkGreen;
+					taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Regular);
+					taskBox->SelectionAlignment = HorizontalAlignment::Left;
+				}
 
-			//event
-			for(unsigned int i = 0; i < _eventHighlight->size(); i++) {
-				allTaskBox->Select(_eventHighlight->at(i).index, _eventHighlight->at(i).length);
-				allTaskBox->SelectionColor = System::Drawing::Color::Black;
-				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Regular);
-				allTaskBox->SelectionAlignment = HorizontalAlignment::Left;
-			}
-
+				//event
+				for(unsigned int i = 0; i < _eventHighlight->size(); i++) {
+					taskBox->Select(_eventHighlight->at(i).index, _eventHighlight->at(i).length);
+					taskBox->SelectionColor = System::Drawing::Color::Black;
+					taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Regular);
+					taskBox->SelectionAlignment = HorizontalAlignment::Left;
+				}
 		}
+
 
 	};
 
