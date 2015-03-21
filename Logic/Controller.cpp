@@ -125,11 +125,11 @@ void Controller::addData(Item item) {
 	AddItem *addItemCommand = new AddItem(item);
 	_invoker->executeCommand(_vectorStore,addItemCommand, _successMessage);
 
+	chronoSort(_vectorStore);
+
 	if(!rewriteFile()) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
-
-	chronoSort(_vectorStore);
 
 	generateResults(_vectorStore);
 }
@@ -193,8 +193,6 @@ void Controller::search(Item data) {
 	SearchItem *searchItemCommand = new SearchItem(data);
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
 
-	//chronoSort(tempVector);
-
 	generateResults(tempVector);
 }
 
@@ -202,19 +200,26 @@ void Controller::copy(Item input) {
 	CopyItem *copyItemCommand = new CopyItem(_parser->getLineOpNumber()[0], input);
 	_invoker->executeCommand(_vectorStore,copyItemCommand, _successMessage);
 
+	chronoSort(_vectorStore);
+
 	if(!rewriteFile()) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
-
-	chronoSort(_vectorStore);
 
 	generateResults(_vectorStore);
 }
 
 void Controller::edit(Item data) {
-	EditItem *editItemCommand = new EditItem(_parser->getLineOpNumber()[0], data);
+	int lineNumber = _parser->getLineOpNumber()[0];
+	
+	_parser->extractUserCommand(data.event);
+	Item item = _parser->getItem();
+
+	EditItem *editItemCommand = new EditItem(lineNumber, item);
 
 	_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
+
+	chronoSort(_vectorStore);
 
 	if(!rewriteFile()) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);

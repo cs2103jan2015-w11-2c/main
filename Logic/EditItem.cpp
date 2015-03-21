@@ -36,7 +36,7 @@ public:
 		} else {
 			char buffer[1000];
 			sprintf_s(buffer, SUCCESS_EDITED.c_str(), 
-				vectorStore[_lineNumber-1].toString(), 
+				vectorStore[_lineNumber-1].toString().c_str(), 
 				_input.toString().c_str());
 			_message=buffer;
 
