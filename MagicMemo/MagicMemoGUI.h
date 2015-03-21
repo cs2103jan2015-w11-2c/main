@@ -244,24 +244,29 @@ namespace UI {
 				allTaskBox->Select(_dateHighlight->at(i).index,_dateHighlight->at(i).length);
 				allTaskBox->SelectionColor = System::Drawing::Color::Brown;
 				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Times", 16, FontStyle::Bold);
+				allTaskBox->SelectionAlignment = HorizontalAlignment::Center;
 			}
 
 			for(unsigned int i = 0; i < _numberHighlight->size(); i++) {
 				allTaskBox->Select(_numberHighlight->at(i).index, _numberHighlight->at(i).length);
 				allTaskBox->SelectionColor = System::Drawing::Color::Black;
 				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Times", 14, FontStyle::Regular);
+				allTaskBox->SelectionAlignment = HorizontalAlignment::Left;
+			
 			}
 
 			for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
 				allTaskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
 				allTaskBox->SelectionColor = System::Drawing::Color::Green;
 				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Times", 14, FontStyle::Regular);
+				allTaskBox->SelectionAlignment = HorizontalAlignment::Left;
 			}
 
 			for(unsigned int i = 0; i < _eventHighlight->size(); i++) {
 				allTaskBox->Select(_eventHighlight->at(i).index, _eventHighlight->at(i).length);
 				allTaskBox->SelectionColor = System::Drawing::Color::Blue;
 				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Times", 14, FontStyle::Regular);
+				allTaskBox->SelectionAlignment = HorizontalAlignment::Left;
 			}
 
 

@@ -33,18 +33,12 @@ private:
 	String^ _allTaskBoxMessage;
 	String^ _inputBoxMessage;
 
-	int indexCount;
-
 public:
 	MessageManager(void);
 
 	Void generateMessageOutputs(String^);
 
 	Void calculateIndexes();
-
-	Void calculateDateIndex();
-
-	Void calculateEventIndex();
 
 	String^ toString();
 
@@ -63,6 +57,8 @@ public:
 	vector<HIGHLIGHT>* getDateHighlight();
 
 	vector<HIGHLIGHT>* getEventHighlight();
+
+	Void clearIndexVectors();
 
 	// convert from std::string to System::String^
 	String^ convertToSystemString(string);

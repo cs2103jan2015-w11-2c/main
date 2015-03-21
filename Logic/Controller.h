@@ -14,7 +14,7 @@
 using namespace std;
 
 struct RESULT {
-	int lineNumber;
+	string lineNumber;
 	string date;
 	string event;
 	string time;

@@ -1,5 +1,4 @@
 #include "FileStorage.h"
-#include <cassert>
 
 FileStorage::FileStorage(void) {
 	fileConfigFileName = "fileConfigurations.txt";
@@ -62,12 +61,7 @@ bool FileStorage::changeFileName(string newFileName) {
 	if(fileExists(newFileName)) {
 		return false;
 	}
-		
 	string oldFileName = getFullFileName();
-<<<<<<< HEAD
-	assert(!newFileName.empty());  //filename cannot be empty or null
-=======
->>>>>>> master
 	setFileName(newFileName);
 	rename(oldFileName.c_str(), getFullFileName().c_str());
 	updateFileConfigInfo();
@@ -84,11 +78,10 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 	}
 
 	string newFullFileName = newFilePath + "\\" + fileName;
-    if(fileExists(newFullFileName)) {
+
+	if(fileExists(newFullFileName)) {
 		return false;
 	}
-	
-	assert(newFilePath!=filePath);  //new filePath cannot be the same as old one
 
 	rename(getFullFileName().c_str(), newFullFileName.c_str());
 	setFilePath(newFilePath);

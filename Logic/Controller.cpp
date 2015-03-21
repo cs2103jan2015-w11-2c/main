@@ -89,7 +89,7 @@ vector<RESULT> Controller::generateResults(vector<Item> inputVector) {
 	vector<RESULT> results;
 	for (unsigned int i = 0; i < inputVector.size(); i++) {
 		RESULT temp;
-		temp.lineNumber = i + 1;
+		temp.lineNumber = to_string(i + 1) + ".";
 		temp.date = inputVector[i].dateToString();
 		temp.time = inputVector[i].timeToString();
 		temp.event = inputVector[i].event;
