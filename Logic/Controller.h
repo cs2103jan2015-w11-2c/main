@@ -13,13 +13,6 @@
 
 using namespace std;
 
-struct RESULT {
-	string lineNumber;
-	string date;
-	string event;
-	string time;
-};
-
 class Controller {
 private:
 	static const string SUCCESS_FILENAME_CHANGED;

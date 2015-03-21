@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class AddItem :public Command {
+class AddItem : public Command {
 private:
 	Item _input;
 	string _message;

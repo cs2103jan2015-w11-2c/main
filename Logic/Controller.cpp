@@ -123,7 +123,7 @@ void Controller::commandOptions(string command) {
 
 void Controller::addData(Item item) {
 	AddItem *addItemCommand = new AddItem(item);
-	_invoker->executeCommand(_vectorStore,addItemCommand, _successMessage);
+	_invoker->executeCommand(_vectorStore, addItemCommand, _successMessage);
 
 	chronoSort(_vectorStore);
 
@@ -190,10 +190,10 @@ void Controller::sortAlphabetical() {
 void Controller::search(Item data) {
 	vector<Item> tempVector = _vectorStore;
 
-	SearchItem *searchItemCommand = new SearchItem(data);
+	SearchItem *searchItemCommand = new SearchItem(data, &_todayResult, &_otherResult);
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
 
-	generateResults(tempVector);
+	//generateResults(tempVector);
 }
 
 void Controller::copy(Item input) {
