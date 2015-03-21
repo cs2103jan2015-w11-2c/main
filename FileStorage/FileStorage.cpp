@@ -44,10 +44,30 @@ vector<string> FileStorage::getAllFileData() {
 }
 
 void FileStorage::addLine(string sentence) {
-	fstream outFile;
+	vector<Item> tempVector;
+    fstream outFile;
+	while(getline(outFile,sentence)){
+	tempVector[1]._event=_item.event;
+    size_t spacePos = sentence.find_first_of("[");
+    if(_item.eventDate[0]== 0){
+		tempVector[2]._event=_item.eventDate[0];}
+	else if(_item.eventDate[1]==0){
+		tempVector[3]._event=_item.eventDate[1];}
+	else if(_item.eventDate[2]==0){
+		tempVector[4]._event=_item.eventDate[2];}
+	else if(_item.evenrStartTime[0]==0){
+		tempVector[5]._event=_item.eventStartTime[0];}
+	else if(_item.eventStartTime[1]==0){
+		tempVector[6]._event=_item.eventStartTime[1];}
+	else if(_item.eventEndTime[0]){
+		tempVector[7]._event=_item.eventEndTime[0];}
+	else if(_item.eventEndTime[1]==0){
+		tempVector[8]._event=_item.eventEndTime[1];}
+	tempVector.push_back(sentence);}
+
 	outFile.open(getFullFileName(), fstream::out | fstream::app);
 	outFile << sentence << endl;
-	outFile.close();
+    outFile.close();
 }
 
 bool FileStorage::clearFile() {
