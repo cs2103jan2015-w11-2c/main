@@ -22,6 +22,7 @@ Void MessageManager::generateMessageOutputs(String^ textFromUser) {
 
 	//use getTodayResult() to get results for today, and getOtherResult() to get results for the rest
 	magicMemo->executeCommand(convertToStdString(textFromUser));
+	*_resultVector = magicMemo->getOtherResult();
 	_successMessage = convertToSystemString(magicMemo->getSuccessMessage());
 	//_todayTaskBoxMessage = convertToSystemString(magicMemo->
 	//_allTaskBoxMessage = convertToSystemString(magicMemo->displayAll());

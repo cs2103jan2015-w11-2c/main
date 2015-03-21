@@ -59,7 +59,6 @@ void Controller::executeCommand(string inputText) {
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
-	return generateResults(_vectorStore);
 }
 
 //API for UI (Main Text Box)
@@ -98,7 +97,7 @@ void Controller::generateResults(vector<Item> inputVector) {
 		temp.time = inputVector[i].timeToString();
 		temp.event = inputVector[i].event;
 		if (inputVector[i].eventDate[0] == newDateTime.getCurrentDay() &&
-			inputVector[i].eventDate[1] == newDateTime.getCurrentMonth() &&
+			inputVector[i].eventDate[1] - 1 == newDateTime.getCurrentMonth() &&
 			inputVector[i].eventDate[2] == newDateTime.getCurrentYear()) {
 			todayResult.push_back(temp);
 		} else {
@@ -194,7 +193,7 @@ void Controller::search(string searchText) {
 	SearchItem *searchItemCommand = new SearchItem(searchText);
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
 
-	chronoSort(tempVector);
+	//chronoSort(tempVector);
 
 	generateResults(tempVector);
 }
