@@ -44,19 +44,21 @@ vector<string> FileStorage::getAllFileData() {
 }
 
 void FileStorage::addLine(Item item) {
-    fstream outFile;
+	fstream outFile(fullFileName);
 	ostringstream out;
 	if(item.eventDate[0]== 0 && item.eventDate[1] == 0 && item.eventDate[2] == 0) {
-		 out<<item.event;}
-	else { 
-		out<<item.event<<"["<<item.eventDate[0]<<item.eventDate[1]<<item.eventDate[2];
-		out<<" "<<item.eventStartTime[0]<<item.eventStartTime[1]<<"-";
-		out<<item.eventEndTime[0]<<item.eventEndTime[1];
-		string t=out.str();
-        outFile.open(getFullFileName(), fstream::out | fstream::app);
-	    outFile << t << endl;
-        outFile.close();
-	}}
+		out << item.event << endl;
+	} else { 
+		out << item.event << " ";
+		out << "[" <<item.eventDate[0] << "/" << item.eventDate[1] << "/" << item.eventDate[2];
+		out << " " << item.eventStartTime[0] << ":" << item.eventStartTime[1];
+		out << " - " << item.eventEndTime[0] << ":" << item.eventEndTime[1];
+		string temp = out.str();
+		outFile.open(getFullFileName(), fstream::out | fstream::app);
+		outFile << temp << endl;
+		outFile.close();
+	}
+}
 
 bool FileStorage::clearFile() {
 	fstream outFile;

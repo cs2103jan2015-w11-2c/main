@@ -102,10 +102,11 @@ vector<RESULT> Controller::generateResults(vector<Item> inputVector) {
 bool Controller::rewriteFile() {
 	_outputFile->clearFile();
 	for (unsigned int i = 0; i < _vectorStore.size(); i++) {
-		_outputFile->addLine(_vectorStore[i].event);
+		_outputFile->addLine(_vectorStore[i]);
 	}
 	return true;
 }
+
 
 void Controller::commandOptions(string command) {
 
@@ -114,10 +115,12 @@ void Controller::commandOptions(string command) {
 vector<RESULT> Controller::addData(Item item) {
 	AddItem *addItemCommand = new AddItem(item);
 	_invoker->executeCommand(_vectorStore,addItemCommand, _successMessage);
-
+	
 	if(!rewriteFile()) {
 		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
 	}
+	
+	
 
 	chronoSort(_vectorStore);
 
