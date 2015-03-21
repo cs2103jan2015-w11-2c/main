@@ -81,8 +81,6 @@ public:
 
 	Void clearTodayTaskIndexVectors();
 
-	Void clearIndexVectors();
-
 	// convert from std::string to System::String^
 	String^ convertToSystemString(string);
 
