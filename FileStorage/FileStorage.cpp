@@ -46,7 +46,6 @@ vector<string> FileStorage::getAllFileData() {
 void FileStorage::addLine(Item item) {
     fstream outFile;
 	ostringstream out;
-	Item item;
 	if(item.eventDate[0]== 0 && item.eventDate[1] == 0 && item.eventDate[2] == 0) {
 		 out<<item.event;}
 	else { 
@@ -57,7 +56,7 @@ void FileStorage::addLine(Item item) {
         outFile.open(getFullFileName(), fstream::out | fstream::app);
 	    outFile << t << endl;
         outFile.close();
-}
+	}}
 
 bool FileStorage::clearFile() {
 	fstream outFile;
