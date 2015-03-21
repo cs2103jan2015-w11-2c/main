@@ -97,7 +97,7 @@ void Controller::generateResults(vector<Item> inputVector) {
 		temp.time = inputVector[i].timeToString();
 		temp.event = inputVector[i].event;
 		if (inputVector[i].eventDate[0] == newDateTime.getCurrentDay() &&
-			inputVector[i].eventDate[1] - 1 == newDateTime.getCurrentMonth() &&
+			inputVector[i].eventDate[1] == newDateTime.getCurrentMonth() &&
 			inputVector[i].eventDate[2] == newDateTime.getCurrentYear()) {
 			todayResult.push_back(temp);
 		} else {

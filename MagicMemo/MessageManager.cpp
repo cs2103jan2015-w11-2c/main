@@ -26,11 +26,9 @@ MessageManager::MessageManager(void) {
 }
 
 Void MessageManager::generateMessageOutputs(String^ textFromUser) {
+	magicMemo->executeCommand(convertToStdString(textFromUser));
 	*_allTaskVector = magicMemo->getOtherResult();
 	*_todayTaskVector = magicMemo->getTodayResult();
-
-	magicMemo->executeCommand(convertToStdString(textFromUser));
-	*_resultVector = magicMemo->getOtherResult();
 	_successMessage = convertToSystemString(magicMemo->getSuccessMessage());
 
 	calculateAllTaskIndexes();
