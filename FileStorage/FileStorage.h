@@ -30,7 +30,7 @@ public:
 
 	vector<string> getAllFileData();
 
-	void addLine(string);
+	void addLine(Item);
 
 	bool clearFile();
 
