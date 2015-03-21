@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <stack>
 #include "FileStorage.h"
 #include "Item.h"
 #include "Command.h"
@@ -17,6 +18,9 @@
 
 class CommandInvoker
 {
+private:
+	stack<Command> *_undo;
+	stack<Command> *_redo;
 public:
 	CommandInvoker(void);
 	~CommandInvoker(void);
