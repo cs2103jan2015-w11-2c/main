@@ -36,7 +36,6 @@ vector<Item> FileStorage::getAllFileData() {
 	vector<Item> tempVector;
 	ifstream readFile(getFullFileName());
 	Parser parse;
-	string s;
 	Item content=parse.getItem();
 	while(readFile>>content){
 	tempVector.push_back(content);
