@@ -57,6 +57,12 @@ public:
 	//returns the weekday number if a match is found
 	//returns 0 if match is not found
 	int mapWeekDay(string);
+	
+	//return the month from the weekday given
+	int mapToGetMonth(string);
+	
+	//return the date from the weekday given
+	int mapToGetDate(string);
 
 	// returns true if the string is a date of format day/month{/year}
 	bool isDelimitedDate(string input);
