@@ -17,7 +17,6 @@ private:
 	DateTimeParser _splitDateTime;
 
 	string _userCommand;
-	int _lineOpNumber;
 
 public:
 	Parser();

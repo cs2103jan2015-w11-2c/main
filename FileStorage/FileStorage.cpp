@@ -36,14 +36,17 @@ vector<Item> FileStorage::getAllFileData() {
 	vector<Item> tempVector;
 	Parser parse;
 	string content;
+	
 	ifstream readFile(getFullFileName());
-	while(getline(readFile,content)) {
-	  parse.setStringToParse(content);
-      Item i=parse.getItem();
-      tempVector.push_back(i);
-	  readFile.close();
-	  return tempVector;
+	while(getline(readFile, content)) {
+		parse.setStringToParse(content);
+		parse.extractDateAndTime();
+		Item i = parse.getItem();
+		tempVector.push_back(i);
 	}
+	readFile.close();
+	
+	return tempVector;
 }
 
 void FileStorage::addLine(Item item) {

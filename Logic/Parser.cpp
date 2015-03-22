@@ -6,12 +6,12 @@ const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!
 
 Parser::Parser() {
 	_userCommand = "";
-	_lineOpNumber = 0;
-	_item.initilizeItem();
+	_item.initializeItem();
 }
 
 
 void Parser::setStringToParse(string userInput) {
+	_item.initializeItem();
 	_item.event = userInput;
 }
 
@@ -68,7 +68,7 @@ void Parser::extractUserCommand() {
 }
 
 size_t Parser::findFrontBracket(string inputLine) {
-	return (inputLine.find_first_of("["));
+	return (inputLine.find_last_of("["));
 }
 
 // try - catch to be moved to Controller?

@@ -23,7 +23,7 @@ public:
 	Item(void);
 	~Item(void);
 
-	void initilizeItem();
+	void initializeItem();
 	int getHour(int hour);
 	string getMinute(int minute);
 	string getAMPM(int hour);

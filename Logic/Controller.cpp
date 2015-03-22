@@ -6,11 +6,11 @@ const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n"
 INITIALIZE_EASYLOGGINGPP
 
 	Controller::Controller(void) {
-		initializeVector();
 		_isSearch = false;
 		_parser = new Parser;
 		_outputFile = new FileStorage;
 		_invoker = new CommandInvoker;
+		initializeVector();
 }
 
 void Controller::executeCommand(string inputText) {
@@ -90,8 +90,7 @@ void Controller::setSuccessMessage(string message) {
 }
 
 void Controller::initializeVector() {
-	//outputFile needs to be able to work with ITEM structure
-	//vectorStore = outputFile.getAllFileData();
+	_vectorStore = _outputFile->getAllFileData();
 }
 
 void Controller::generateResults(vector<Item> inputVector) {

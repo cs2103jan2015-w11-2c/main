@@ -44,7 +44,7 @@ public:
 	}
 
 	TEST_METHOD(extractDateAndTimeTest) {
-		string inputString = "testing [23/4";
+		string inputString = "testing [23/4 4:0 - 6:0";
 		Item item;
 		Parser parse;
 		parse.setStringToParse(inputString);
@@ -53,6 +53,22 @@ public:
 
 		string expected = "testing";
 		Assert::AreEqual(expected, item.event);
+
+		int expectedDay = 23;
+		Assert::AreEqual(expectedDay, item.eventDate[0]);
+		int expectedMonth = 4;
+		Assert::AreEqual(expectedMonth, item.eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, item.eventDate[2]);
+
+		int expectedStartHour = 4;
+		Assert::AreEqual(expectedStartHour, item.eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, item.eventStartTime[1]);
+		int expectedEndHour = 6;
+		Assert::AreEqual(expectedEndHour, item.eventEndTime[0]);
+		int expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, item.eventEndTime[1]);
 	}
 
 	};

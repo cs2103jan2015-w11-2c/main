@@ -3,13 +3,13 @@
 const string Item::MESSAGE_UNDATED_TASK = "Undated";
 
 Item::Item() {
-	initilizeItem();
+	initializeItem();
 }
 
 Item::~Item() {
 }
 
-void Item::initilizeItem() {
+void Item::initializeItem() {
 	event = "";
 	eventDate[0] = 0;
 	eventDate[1] = 0;
