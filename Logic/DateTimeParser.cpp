@@ -116,7 +116,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	bool isNextWeek= false;
 	bool hasDash = false;
 	bool isFirstTimeInstance = true;
-	resetDateTime();
+	resetItemDateTime();
 
 	for(int i = 0; i < arrSize; i++) {
 		LOG(INFO) << "Starting to extract DateTime, round: " << i;

@@ -14,6 +14,7 @@ class DeleteItem : public Command {
 private:
 	vector<int> _lineNumbers;
 	string _message;
+	vector<Item> _deletedItems;
 public:
 	DeleteItem() {
 		_message = "";
@@ -36,6 +37,7 @@ public:
 		vector<int> deletedLines;
 		ostringstream oss;
 
+		_message = "";
 		for (unsigned int i = 0; i < _lineNumbers.size(); i++) {
 			int lineToBeDeleted = _lineNumbers[i];
 
@@ -58,6 +60,7 @@ public:
 					}
 					_message += ('0' + _lineNumbers[i]);
 				} else {
+					_deletedItems.push_back(vectorStore[lineToBeDeleted - 1 - i]);
 					vectorStore.erase(vectorStore.begin() + (lineToBeDeleted - 1 - i));
 					if (isFirstSuccess) {
 						isFirstSuccess = false;
@@ -82,5 +85,11 @@ public:
 
 	string getMessage() {
 		return _message;
+	}
+
+	void negateAction(vector<Item> &vectorStore) {
+		for (unsigned int i = 0; i < _deletedItems.size(); i++) {
+			vectorStore.push_back(_deletedItems[i]);
+		}
 	}
 };

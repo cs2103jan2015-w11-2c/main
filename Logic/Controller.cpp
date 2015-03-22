@@ -60,6 +60,10 @@ void Controller::executeCommand(string inputText) {
 		rename(commandData);
 	} else if (userCommand == "move") {
 		move(commandData);
+	} else if (userCommand == "undo") {
+		undo();
+	} else if (userCommand == "redo") {
+		redo();
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
@@ -245,6 +249,29 @@ void Controller::move(string newFileLocation) {
 	_invoker->executeCommand(_outputFile, moveFileCommand, _successMessage);
 }
 
+void Controller::undo() {
+	_invoker->undo(_vectorStore, _successMessage);
+	chronoSort(_vectorStore);
+
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
+
+	generateResults(_vectorStore);
+}
+
+void Controller::redo() {
+	_invoker->redo(_vectorStore, _successMessage);
+
+	chronoSort(_vectorStore);
+
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
+
+	generateResults(_vectorStore);
+}
+
 string Controller::getHelp() {
 	ostringstream oss;
 	oss << "Command:		Program execution:\n";
@@ -298,7 +325,7 @@ int Controller::compareEarlierThan(const Item item1, const Item item2) {
 }
 
 void Controller::chronoSort(vector<Item> &vectorStore) {
-	for (unsigned int i = 0; i < (vectorStore.size() - 1); i++) {
+	for (int i = 0; i < ((int)vectorStore.size() - 1); i++) {
 		int minIndex = i;
 		for (unsigned int j = i + 1; j < vectorStore.size(); j++) {
 			if (compareEarlierThan(vectorStore[j], vectorStore[minIndex]) < 0) {

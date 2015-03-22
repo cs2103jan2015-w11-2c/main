@@ -12,7 +12,8 @@ class CopyItem : public Command {
 private:
 	int _lineNumber;
 	Item _input;
-	std::string _message;
+	string _message;
+	Item _copiedData;
 
 public:
 	CopyItem() {
@@ -39,26 +40,62 @@ public:
 		else {
 			_message = "";
 
-			Item copiedData;
-			copiedData = vectorStore[_lineNumber - 1];
-			copiedData.eventDate[0] = _input.eventDate[0];
-			copiedData.eventDate[1] = _input.eventDate[1];
-			copiedData.eventDate[2] = _input.eventDate[2];
-			copiedData.eventStartTime[0] = _input.eventStartTime[0];
-			copiedData.eventStartTime[1] = _input.eventStartTime[1];
-			copiedData.eventEndTime[0] = _input.eventEndTime[0];
-			copiedData.eventEndTime[1] = _input.eventEndTime[1];
+			_copiedData = vectorStore[_lineNumber - 1];
+			_copiedData.eventDate[0] = _input.eventDate[0];
+			_copiedData.eventDate[1] = _input.eventDate[1];
+			_copiedData.eventDate[2] = _input.eventDate[2];
+			_copiedData.eventStartTime[0] = _input.eventStartTime[0];
+			_copiedData.eventStartTime[1] = _input.eventStartTime[1];
+			_copiedData.eventEndTime[0] = _input.eventEndTime[0];
+			_copiedData.eventEndTime[1] = _input.eventEndTime[1];
 			
-			vectorStore.push_back(copiedData);
+			vectorStore.push_back(_copiedData);
 			
 			char buffer[1000];
 
-			sprintf_s(buffer, SUCCESS_COPIED.c_str(), copiedData.toString().c_str());
+			sprintf_s(buffer, SUCCESS_COPIED.c_str(), _copiedData.toString().c_str());
 			_message = buffer;
 		}
 	}
 
-	std::string getMessage() {
+	string getMessage() {
 		return _message;
+	}
+
+	bool isMatch(const Item item1, const Item item2) {
+		if (item1.event != item2.event) {
+			return false;
+		}
+		for (int i = 0; i < 3; i++) {
+			if (item1.eventDate[i] != item2.eventDate[i]) {
+				return false;
+			}
+		}
+		for (int i = 0; i < 2; i++) {
+			if (item1.eventStartTime[i] != item2.eventStartTime[i]) {
+				return false;
+			}
+		}
+		for (int i = 0; i < 2; i++) {
+			if (item1.eventEndTime[i] != item2.eventEndTime[i]) {
+				return false;
+			}
+		}
+		if (item1.colour != item2.colour) {
+			return false;
+		}
+		if (item1.bold != item2.bold) {
+			return false;
+		}
+		return true;
+	}
+
+	void negateAction(vector<Item> &vectorStore) {
+		for (unsigned int i = 0; i < vectorStore.size(); i++) {
+			if (isMatch(vectorStore[i], _copiedData)) {
+				vectorStore.erase(vectorStore.begin() + i);
+				break;
+			}
+		}
 	}
 };
