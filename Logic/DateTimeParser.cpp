@@ -123,7 +123,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	for(int i = 0; i < arrSize; i++) {
 		LOG(INFO) << "Starting to extract DateTime, round: " << i;
 
-		_day = mapToGetDate(inputArray[i]);
+		_day = mapToGetDate(inputArray[i],&_month);
 
 		// throws exception if weekday is expected but not given
 		if(isNextWeek && _day == 0) {
@@ -185,26 +185,12 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 
 int DateTimeParser::mapWeekDay(string weekDay) {
 	map<int, string> weekDayList;
-	string weekIndicator;
-	string weekDayIndicator;
 	string currentWeekDay = _dateTime.getCurrentWeekDay();
 	int spacePos = weekDay.find_first_of(" ");
-	int weekNo;
 	int weekDayNo;
 	int diffInDay;
 	int currentWeekDayNo;
 	int currentDay;
-
-
-
-	if(spacePos != string::npos){
-		weekIndicator = weekDay.substr(0,spacePos);
-		weekDayIndicator = weekDay.substr(spacePos);
-
-	}else{
-		weekIndicator = "0";
-		weekDayIndicator = weekDay;
-	}  
 
 	weekDayList[1] = "Monday";
 	weekDayList[2] = "Tuesday";
@@ -215,16 +201,9 @@ int DateTimeParser::mapWeekDay(string weekDay) {
 	weekDayList[7] = "Sunday";
 
   
-   if ((weekIndicator == "This" ) || (weekIndicator == "0" )){
-		 weekNo = 0;
-	}else if(weekIndicator == "Next"){
-		 weekNo = 7;
-	}
-
-	
 	map<int, string>::iterator iter;
 	iter = weekDayList.begin();
-	while(iter->second != weekDayIndicator){
+	while(iter->second != weekDay){
 		iter++;
 	}
      weekDayNo = iter->first;
@@ -235,52 +214,45 @@ int DateTimeParser::mapWeekDay(string weekDay) {
 	}
 	 currentWeekDayNo = iter->first;
 	
-	 diffInDay = weekNo + weekDayNo - currentWeekDayNo;
+	 diffInDay = weekDayNo - currentWeekDayNo;
      currentDay = _dateTime.getCurrentDay() + diffInDay;
      
 	 return currentDay;
 
 }
 
-int DateTimeParser::mapToGetDate(string weekDay) {
+int DateTimeParser::mapToGetDate(string weekDay,int&_month) {
     int currentDay=mapWeekDay(weekDay);
 	int currentMonth = _dateTime.getCurrentMonth();
-	if((currentMonth == 4) || (currentMonth == 6) || (currentMonth == 9) || (currentMonth || 11)) {
+	int currentYear = _dateTime.getCurrentYear();
+
+	if((currentMonth == 4) || (currentMonth == 6) || (currentMonth == 9) || (currentMonth == 11)) {
 		if(currentDay > 30) {
 			currentDay = currentDay - 30;
+			currentMonth = currentMonth + 1;
 		}
 	}else if(currentMonth == 2){
-	    if(currentDay > 28) {
-			currentDay = currentDay - 28;
+	    if(currentYear%4 == 0){
+		 if(currentDay > 29) {
+			 currentDay = currentDay - 29;
+		     currentMonth = currentMonth + 1;
+		 }
+		}else if(currentYear%4 != 0){
+		 if(currentDay > 28) {
+			 currentDay = currentDay - 28;
+		 currentMonth = currentMonth + 1;
 		}
+	}
+
 	}else {
 		if(currentDay > 31) {
 			currentDay = currentDay - 31;
+			currentMonth = currentMonth + 1;
 		}
 	}
+	_month = currentMonth;
 	return currentDay;
 }
-int DateTimeParser::mapToGetMonth(string weekDay) {
-	int currentDay=mapToGetDate(weekDay);	
-	int currentMonth = _dateTime.getCurrentMonth();
-	if((currentMonth == 4) || (currentMonth == 6) || (currentMonth == 9) || (currentMonth || 11)) {
-		if(currentDay > 30) {
-			currentMonth = currentMonth + 1;
-		}
-	}else if(currentMonth == 2){
-	    if(currentDay > 28) {
-			currentMonth = currentMonth + 1;
-		}
-	}else {
-		if(currentDay > 31) {
-			currentMonth = currentMonth + 1;
-		}
-	}
-
-	return currentMonth;
-}
-
-
 
 
 bool DateTimeParser::isDelimitedDate(string input) {
