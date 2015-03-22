@@ -34,13 +34,15 @@ string FileStorage::getFullFileName() {
 
 vector<Item> FileStorage::getAllFileData() {
 	vector<Item> tempVector;
-	ifstream readFile(getFullFileName());
 	Parser parse;
-	Item content=parse.getItem();
-	while(readFile>>content){
-	tempVector.push_back(content);
-	readFile.close();
-	return tempVector;
+	string content;
+	ifstream readFile(getFullFileName());
+	while(getline(readFile,content)) {
+	  parse.setStringToParse(content);
+      Item i=parse.getItem();
+      tempVector.push_back(i);
+	  readFile.close();
+	  return tempVector;
 	}
 }
 
