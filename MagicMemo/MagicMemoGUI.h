@@ -77,11 +77,11 @@ namespace UI {
 			// todayTaskBoxLabel
 			// 
 			this->todayTaskBoxLabel->AutoSize = true;
-			this->todayTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->todayTaskBoxLabel->Location = System::Drawing::Point(87, 50);
+			this->todayTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12.75F, System::Drawing::FontStyle::Regular, 
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			this->todayTaskBoxLabel->Location = System::Drawing::Point(86, 51);
 			this->todayTaskBoxLabel->Name = L"todayTaskBoxLabel";
-			this->todayTaskBoxLabel->Size = System::Drawing::Size(121, 18);
+			this->todayTaskBoxLabel->Size = System::Drawing::Size(126, 20);
 			this->todayTaskBoxLabel->TabIndex = 0;
 			this->todayTaskBoxLabel->Text = L"Today\'s Tasks";
 			// 
@@ -91,9 +91,9 @@ namespace UI {
 			this->commandInputBox->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
 			this->commandInputBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->commandInputBox->Location = System::Drawing::Point(23, 351);
+			this->commandInputBox->Location = System::Drawing::Point(23, 358);
 			this->commandInputBox->Name = L"commandInputBox";
-			this->commandInputBox->Size = System::Drawing::Size(536, 22);
+			this->commandInputBox->Size = System::Drawing::Size(541, 22);
 			this->commandInputBox->TabIndex = 1;
 			this->commandInputBox->Text = L"Enter text here:";
 			this->commandInputBox->UseWaitCursor = true;
@@ -103,23 +103,23 @@ namespace UI {
 			// allTaskBoxLabel
 			// 
 			this->allTaskBoxLabel->AutoSize = true;
-			this->allTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 11.25F, System::Drawing::FontStyle::Regular, 
+			this->allTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12.75F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->allTaskBoxLabel->Location = System::Drawing::Point(371, 54);
+			this->allTaskBoxLabel->Location = System::Drawing::Point(367, 51);
 			this->allTaskBoxLabel->Name = L"allTaskBoxLabel";
-			this->allTaskBoxLabel->Size = System::Drawing::Size(128, 17);
+			this->allTaskBoxLabel->Size = System::Drawing::Size(147, 20);
 			this->allTaskBoxLabel->TabIndex = 5;
 			this->allTaskBoxLabel->Text = L"Upcoming Tasks";
 			// 
 			// programHeading
 			// 
 			this->programHeading->AutoSize = true;
-			this->programHeading->Font = (gcnew System::Drawing::Font(L"AR DELANEY", 32.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->programHeading->Font = (gcnew System::Drawing::Font(L"AR DELANEY", 35.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->programHeading->ForeColor = System::Drawing::Color::DarkBlue;
-			this->programHeading->Location = System::Drawing::Point(156, -2);
+			this->programHeading->Location = System::Drawing::Point(140, -2);
 			this->programHeading->Name = L"programHeading";
-			this->programHeading->Size = System::Drawing::Size(278, 52);
+			this->programHeading->Size = System::Drawing::Size(303, 57);
 			this->programHeading->TabIndex = 6;
 			this->programHeading->Text = L"Magic Memo";
 			// 
@@ -128,11 +128,11 @@ namespace UI {
 			this->allTaskBox->BackColor = System::Drawing::Color::White;
 			this->allTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->allTaskBox->Location = System::Drawing::Point(304, 76);
+			this->allTaskBox->Location = System::Drawing::Point(305, 76);
 			this->allTaskBox->Margin = System::Windows::Forms::Padding(5);
 			this->allTaskBox->Name = L"allTaskBox";
 			this->allTaskBox->ReadOnly = true;
-			this->allTaskBox->Size = System::Drawing::Size(255, 245);
+			this->allTaskBox->Size = System::Drawing::Size(259, 245);
 			this->allTaskBox->TabIndex = 7;
 			this->allTaskBox->Text = L"";
 			this->allTaskBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::allTaskBox_KeyDown);
@@ -142,7 +142,7 @@ namespace UI {
 			this->successMessageLabel->AutoSize = true;
 			this->successMessageLabel->Font = (gcnew System::Drawing::Font(L"Comic Sans MS", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->successMessageLabel->Location = System::Drawing::Point(25, 329);
+			this->successMessageLabel->Location = System::Drawing::Point(25, 336);
 			this->successMessageLabel->Name = L"successMessageLabel";
 			this->successMessageLabel->Size = System::Drawing::Size(170, 19);
 			this->successMessageLabel->TabIndex = 8;
@@ -157,7 +157,7 @@ namespace UI {
 			this->todayTaskBox->Margin = System::Windows::Forms::Padding(4);
 			this->todayTaskBox->Name = L"todayTaskBox";
 			this->todayTaskBox->ReadOnly = true;
-			this->todayTaskBox->Size = System::Drawing::Size(255, 245);
+			this->todayTaskBox->Size = System::Drawing::Size(259, 245);
 			this->todayTaskBox->TabIndex = 9;
 			this->todayTaskBox->Text = L"";
 			this->todayTaskBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::lastActionBox_KeyDown);
@@ -166,7 +166,7 @@ namespace UI {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(586, 383);
+			this->ClientSize = System::Drawing::Size(590, 391);
 			this->Controls->Add(this->todayTaskBox);
 			this->Controls->Add(this->successMessageLabel);
 			this->Controls->Add(this->allTaskBox);
@@ -193,17 +193,17 @@ namespace UI {
 		System::Void commandInputBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
 			if(e->KeyCode == Keys::Enter) {
 				String^ inputText = commandInputBox->Text;
-				fillGUITextBoxes(inputText);
+				setGuiText(inputText);
 			}
 
 			// Ctrl + Z
 			if (e->KeyData == (Keys::Control | Keys::Z)) {
-				fillGUITextBoxes("undo");
+				setGuiText("undo");
 			}   
 
 			// Ctrl + R
 			if (e->KeyData == (Keys::Control | Keys::R)) {
-				fillGUITextBoxes("redo");
+				setGuiText("redo");
 			}
 
 		}
@@ -211,13 +211,17 @@ namespace UI {
 	private: 
 		// return focus to the intput textbox on keypress
 		System::Void allTaskBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
-			commandInputBox->Focus(); 
+			if((e->KeyCode != Keys::Up) && (e->KeyCode != Keys::Down) && (e->KeyCode != Keys::Left) && (e->KeyCode != Keys::Right)) {
+				commandInputBox->Focus(); 
+			}
 		}
 
 	private: 
 		// return focus to the intput textbox on keypress
 		System::Void lastActionBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
-			commandInputBox->Focus();    
+			if((e->KeyCode != Keys::Up) && (e->KeyCode != Keys::Down) && (e->KeyCode != Keys::Left) && (e->KeyCode != Keys::Right)) {
+				commandInputBox->Focus(); 
+			}
 		}
 
 	private: 
@@ -226,7 +230,7 @@ namespace UI {
 
 	private:
 		// Sets success message and fills task boxes
-		System::Void fillGUITextBoxes(String^ userInput) {
+		System::Void setGuiText(String^ userInput) {
 
 			magicManager->generateMessageOutputs(userInput);
 
@@ -235,6 +239,7 @@ namespace UI {
 
 			allTaskBox->Text = magicManager->getAllTaskBoxMessage();
 
+<<<<<<< HEAD
 			vector<HIGHLIGHT>* _numberHighlight = magicManager->getNumberHighlight();
 			vector<HIGHLIGHT>* _dateHighlight = magicManager->getDateHighlight();
 			vector<HIGHLIGHT>* _timeHighlight = magicManager->getTimeHighlight();
@@ -269,6 +274,23 @@ namespace UI {
 				allTaskBox->SelectionAlignment = HorizontalAlignment::Left;
 			}
 
+=======
+			allTaskBoxLabel->Text = magicManager->getAllTaskBoxLabel();
+
+			vector<HIGHLIGHT>* _allNumberHighlight = magicManager->getAllNumberHighlight();
+			vector<HIGHLIGHT>* _allDateHighlight = magicManager->getAllDateHighlight();
+			vector<HIGHLIGHT>* _allTimeHighlight = magicManager->getAllTimeHighlight();
+			vector<HIGHLIGHT>* _allEventHighlight = magicManager->getAllEventHighlight();
+			colorTextInAllTaskBox(_allNumberHighlight, _allDateHighlight, _allTimeHighlight, _allEventHighlight, allTaskBox);
+			
+			todayTaskBox->Text = magicManager->getTodayTaskBoxMessage();
+			vector<HIGHLIGHT>* _todayNumberHighlight = magicManager->getTodayNumberHighlight();
+			vector<HIGHLIGHT>* _todayDateHighlight = magicManager->getTodayDateHighlight();
+			vector<HIGHLIGHT>* _todayTimeHighlight = magicManager->getTodayTimeHighlight();
+			vector<HIGHLIGHT>* _todayEventHighlight = magicManager->getTodayEventHighlight();
+			colorTextInAllTaskBox(_todayNumberHighlight, _todayDateHighlight, _todayTimeHighlight, _todayEventHighlight, todayTaskBox);
+			
+>>>>>>> master
 
 			commandInputBox->Text = "";
 			commandInputBox->SelectionStart = 100;
@@ -277,6 +299,45 @@ namespace UI {
 				MessageBox::Show("Good bye!");
 				Application::Exit();
 			}
+		}
+
+		System::Void colorTextInAllTaskBox(vector<HIGHLIGHT>* _numberHighlight, 
+			vector<HIGHLIGHT>* _dateHighlight,
+			vector<HIGHLIGHT>* _timeHighlight,
+			vector<HIGHLIGHT>* _eventHighlight, 
+			RichTextBox^ taskBox) {
+
+				//date
+				for(unsigned int i = 0; i < _dateHighlight->size(); i++) {
+					taskBox->Select(_dateHighlight->at(i).index,_dateHighlight->at(i).length);
+					taskBox->SelectionColor = System::Drawing::Color::DarkBlue;
+					taskBox->SelectionFont = gcnew System::Drawing::Font("Cooper", 11, FontStyle::Bold);
+					taskBox->SelectionAlignment = HorizontalAlignment::Center;
+				}
+
+				//number
+				for(unsigned int i = 0; i < _numberHighlight->size(); i++) {
+					taskBox->Select(_numberHighlight->at(i).index, _numberHighlight->at(i).length);
+					taskBox->SelectionColor = System::Drawing::Color::Black;
+					taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Italic);
+					taskBox->SelectionAlignment = HorizontalAlignment::Left;
+				}
+
+				//time
+				for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
+					taskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
+					taskBox->SelectionColor = System::Drawing::Color::DarkGreen;
+					taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Regular);
+					taskBox->SelectionAlignment = HorizontalAlignment::Left;
+				}
+
+				//event
+				for(unsigned int i = 0; i < _eventHighlight->size(); i++) {
+					taskBox->Select(_eventHighlight->at(i).index, _eventHighlight->at(i).length);
+					taskBox->SelectionColor = System::Drawing::Color::Black;
+					taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Regular);
+					taskBox->SelectionAlignment = HorizontalAlignment::Left;
+				}
 		}
 
 

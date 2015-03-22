@@ -15,6 +15,12 @@ using namespace std;
 class DateTimeParser {
 
 private:
+	static const string ERROR_NO_DAY_SPECIFIED;
+	static const string ERROR_NO_TIME_SPECIFIED;
+	static const string ERROR_INVALID_DATE_INPUT;
+	static const string ERROR_INVALID_TIME_INPUT;
+	static const string ERROR_INVALID_END_TIME;
+
 	Item _item;
 	DateTime _dateTime;
 	
@@ -48,11 +54,8 @@ public:
 	void calculateDateTime(string);
 
 	// extracts the date and time into item's date/time attributes
+	// throws exceptions if invalid dates and times are input
 	void extractDateTime(string [], int);
-
-	//void handleOneDateInput(string []);
-
-	//void handleTwoDateInput(string inputArray []);
 
 	//returns the weekday number if a match is found
 	//returns 0 if match is not found
@@ -77,10 +80,18 @@ public:
 	//returns false if invalid time
 	bool separateHourMinute(string, int&, int&);
 
-	//ensure that date is correct. If not, throws an exception
+	//verifies that the date and time is valid
+	void verifyAllDateTime();
+
+	//throws an out_of_range exception if date is invalid
 	void verifyItemDate(int&, int&, int&);
 
+	//throws an out_of_range exception if time is invalid
 	void verifyItemTime(int&, int&);
+
+	//ensures that the end time is always greater than the start time
+	//throws an out_of_range exception otherwise
+	void verifyStartEndTime(int, int, int&, int&);
 
 	// returns 0 if unsuccessful (or number is 0)
 	// otherwise returns the converted number

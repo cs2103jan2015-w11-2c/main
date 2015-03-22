@@ -13,12 +13,6 @@
 
 using namespace std;
 
-struct RESULT {
-	string lineNumber;
-	string date;
-	string event;
-	string time;
-};
 
 class Controller {
 private:
@@ -29,32 +23,28 @@ private:
 	static const string ERROR_FILE_ALREADY_EXISTS;
 	static const string ERROR_FILEPATH_NOT_FOUND;
 
-	static string _MENU;
-	static char _buffer[1000];
-
 	FileStorage *_outputFile;
 	Parser *_parser;
 	CommandInvoker *_invoker;
 	vector<Item> _vectorStore;
+	vector<RESULT> _todayResult;
+	vector<RESULT> _otherResult;
+
 
 	//To be passed to the GUI
 	string _inputBoxMessage;
 	string _successMessage;
 
-	//for edit function, to check if it is the initial edit call
-	bool _isFirstCommandCall;
-	int _lineNumberOperation;
-	
+	//for search function, to check tell UI to change the heading to "Search Results"
+	bool _isSearch;
 
 public:
 	Controller(void);
 
-	vector<RESULT> executeCommand(string);
+	void executeCommand(string);
 
-	//API for UI (Main Text Box)
 	string getInputBoxMessage();
 
-	//API for UI (Message Box)
 	string getSuccessMessage();
 
 	void setInputBoxMessage(string);
@@ -63,31 +53,33 @@ public:
 
 	void initializeVector();
 
-	vector<RESULT> generateResults(vector<Item>);
+	void generateResults(vector<Item>);
 
 	bool rewriteFile();
 
 	void commandOptions(string);
 
-	vector<RESULT> addData(Item);
+	void addData(Item);
 
 	//returns the data deleted or *#*#*#*#* if not found
-	vector<RESULT> deleteData();
+	void deleteData();
 
 	//returns line number for operation or 0 if line number is invalid
 	int getLineNumberForOperation();
 
-	vector<RESULT> displayAll();
+	void displayAll();
 
-	vector<RESULT> clearAll();
+	void clearAll();
 
-	vector<RESULT> sortAlphabetical();
+	void sortAlphabetical();
 
-	vector<RESULT> search(string);
+	void search(Item);
 
-	vector<RESULT> copy(Item);
+	bool isSearch();
 
-	vector<RESULT> edit(Item);
+	void copy(Item);
+
+	void edit(Item);
 
 	//NEED TO IMPLEMENT A textfile to reflect the change
 	//in name so that the next time the program is run
@@ -98,9 +90,15 @@ public:
 	//C:\Users\Username\My Documents
 	void move(string newFileLocation);
 
+	void undo();
+
+	void redo();
+
 	string getHelp();
 
-	vector<Item> getVectorStore();
+	vector<RESULT> getTodayResult();
+
+	vector<RESULT> getOtherResult();
 
 	void swap(Item&, Item&);
 
