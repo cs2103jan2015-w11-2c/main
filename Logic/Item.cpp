@@ -1,5 +1,7 @@
 #include "Item.h"
 
+const string Item::MESSAGE_UNDATED_TASK = "Undated";
+
 Item::Item() {
 	initilizeItem();
 }
@@ -31,15 +33,15 @@ int Item::getHour(int hour) {
 }
 
 string Item::getMinute(int minute) {
-	if( minute == 0) {
-		return "00";
+	if (minute < 10) {
+		return ("0" + to_string(minute));
 	} else {
 		return to_string(minute);
 	}
 }
 
 string Item::getAMPM(int hour) {
-	if(hour >= 12 && hour < 24) {
+	if (hour >= 12 && hour < 24) {
 		return "pm";
 	} else {
 		return "am";
@@ -48,7 +50,7 @@ string Item::getAMPM(int hour) {
 
 string Item::dateToString() {
 	if((eventDate[0] == 0) && (eventDate[1] == 0) && (eventDate[1] == 0)) {
-		return "";
+		return MESSAGE_UNDATED_TASK;
 	} else {
 		ostringstream oss;
 		oss << itemDate.getWeekDay(eventDate[0], eventDate[1], eventDate[2]);
@@ -80,6 +82,6 @@ string Item::timeToString() {
 
 string Item::toString() {
 	ostringstream oss;
-	oss << event << dateToString() << timeToString();
+	oss << event << ": "<< dateToString() << " " << timeToString();
 	return oss.str();
 }

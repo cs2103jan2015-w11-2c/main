@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class AddItem :public Command {
+class AddItem : public Command {
 private:
 	Item _input;
 	string _message;
@@ -47,4 +47,44 @@ public:
 	string getMessage() {
 		return _message;
 	}
+
+	bool isMatch(const Item item1, const Item item2) {
+		if (item1.event != item2.event) {
+			return false;
+		}
+		for (int i = 0; i < 3; i++) {
+			if (item1.eventDate[i] != item2.eventDate[i]) {
+				return false;
+			}
+		}
+		for (int i = 0; i < 2; i++) {
+			if (item1.eventStartTime[i] != item2.eventStartTime[i]) {
+				return false;
+			}
+		}
+		for (int i = 0; i < 2; i++) {
+			if (item1.eventEndTime[i] != item2.eventEndTime[i]) {
+				return false;
+			}
+		}
+		if (item1.colour != item2.colour) {
+			return false;
+		}
+		if (item1.bold != item2.bold) {
+			return false;
+		}
+		return true;
+	}
+
+	void negateAction(vector<Item> &vectorStore) {
+		vector<Item>::iterator iter;
+
+		for (iter = vectorStore.begin(); iter != vectorStore.end(); iter++) {
+			if (isMatch(*iter, _input)) {
+				vectorStore.erase(iter);
+				break;
+			}
+		}
+	}
+
 };

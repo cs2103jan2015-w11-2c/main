@@ -7,6 +7,8 @@ using namespace std;
 
 class Item {
 public:
+	static const string MESSAGE_UNDATED_TASK;
+
 	DateTime itemDate;
 	string event;
 	int eventDate[3];

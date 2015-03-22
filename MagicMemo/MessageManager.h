@@ -16,16 +16,26 @@ struct HIGHLIGHT {
 
 ref class MessageManager {
 private:
-	Controller* magicMemo;
-	
-	vector<RESULT>* _resultVector;
+	static String^ LABEL_IS_SEARCH = "Search Results";
+	static String^ LABEL_ALL_TASKS = "Upcoming Tasks";
 
-	vector<HIGHLIGHT>* _numberHighlight;
-	vector<HIGHLIGHT>* _dateHighlight;
-	vector<HIGHLIGHT>* _timeHighlight;
-	vector<HIGHLIGHT>* _eventHighlight;
-	vector<HIGHLIGHT>* _completedHighlight;
-	
+	Controller* magicMemo;
+
+	vector<RESULT>* _allTaskVector;
+	vector<RESULT>* _todayTaskVector;
+
+	vector<HIGHLIGHT>* _allNumberHighlight;
+	vector<HIGHLIGHT>* _allDateHighlight;
+	vector<HIGHLIGHT>* _allTimeHighlight;
+	vector<HIGHLIGHT>* _allEventHighlight;
+	vector<HIGHLIGHT>* _allCompletedHighlight;
+
+	vector<HIGHLIGHT>* _todayNumberHighlight;
+	vector<HIGHLIGHT>* _todayDateHighlight;
+	vector<HIGHLIGHT>* _todayTimeHighlight;
+	vector<HIGHLIGHT>* _todayEventHighlight;
+	vector<HIGHLIGHT>* _todayCompletedHighlight;
+
 
 	String^ _userInput;
 	String^ _successMessage;
@@ -33,20 +43,16 @@ private:
 	String^ _allTaskBoxMessage;
 	String^ _inputBoxMessage;
 
-	int indexCount;
-
 public:
 	MessageManager(void);
 
 	Void generateMessageOutputs(String^);
 
-	Void calculateIndexes();
+	Void calculateAllTaskIndexes();
 
-	Void calculateDateIndex();
+	Void calculateTodayTaskIndexes();
 
-	Void calculateEventIndex();
-
-	String^ toString();
+	String^ toString(vector<RESULT>*);
 
 	String^ getSuccessMessage();
 
@@ -56,17 +62,33 @@ public:
 
 	String^ getInputBoxMessage();
 
-	vector<HIGHLIGHT>* getNumberHighlight();
+	String^ getAllTaskBoxLabel();
 
-	vector<HIGHLIGHT>* getTimeHighlight();
+	//indexes for the allTaskBox
+	vector<HIGHLIGHT>* getAllNumberHighlight();
 
-	vector<HIGHLIGHT>* getDateHighlight();
+	vector<HIGHLIGHT>* getAllTimeHighlight();
 
-	vector<HIGHLIGHT>* getEventHighlight();
+	vector<HIGHLIGHT>* getAllDateHighlight();
+
+	vector<HIGHLIGHT>* getAllEventHighlight();
+
+	//indexes for the todayTaskBox
+	vector<HIGHLIGHT>* getTodayNumberHighlight();
+
+	vector<HIGHLIGHT>* getTodayTimeHighlight();
+
+	vector<HIGHLIGHT>* getTodayDateHighlight();
+
+	vector<HIGHLIGHT>* getTodayEventHighlight();
+
+	Void clearAllTaskIndexVectors();
+
+	Void clearTodayTaskIndexVectors();
 
 	// convert from std::string to System::String^
 	String^ convertToSystemString(string);
-	
+
 	// convert from System::String^ to std::string
 	string convertToStdString(String^);
 };

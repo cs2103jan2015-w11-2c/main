@@ -10,7 +10,7 @@ using namespace std;
 const int MIN_YEAR = 2000;
 const int MAX_YEAR = 3000;
 const string WEEKDAY[]={"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-const string MONTH[]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+const string MONTH[]={"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 class DateTime {
 
@@ -29,11 +29,11 @@ public:
 	}
 
 	int getCurrentMonth() {
-		return (_today.tm_mon);
+		return (_today.tm_mon + 1);
 	}
 
 	int getCurrentYear() {
-		return (1990 + _today.tm_year);
+		return (1900 + _today.tm_year);
 	}
 
 	string getCurrentWeekDay() {
