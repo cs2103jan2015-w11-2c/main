@@ -30,14 +30,18 @@ Void MessageManager::generateMessageOutputs(String^ textFromUser) {
 	*_allTaskVector = magicMemo->getOtherResult();
 	*_todayTaskVector = magicMemo->getTodayResult();
 
+	//successMessageLabel
 	_successMessage = convertToSystemString(magicMemo->getSuccessMessage());
 
+	//allTaskBox
+	clearAllTaskIndexVectors();
 	calculateAllTaskIndexes();
 	_allTaskBoxMessage = toString(_allTaskVector);
 	
+	//todayTaskBox
+	clearTodayTaskIndexVectors();
 	calculateTodayTaskIndexes();
 	_todayTaskBoxMessage = toString(_todayTaskVector);
-
 }
 
 Void MessageManager::calculateAllTaskIndexes() {
@@ -110,6 +114,61 @@ Void MessageManager::calculateTodayTaskIndexes() {
 	}
 }
 
+Void MessageManager::colorAllTaskBox(RichTextBox^ allTaskBox) {
+	colorTextInTaskBox(_allNumberHighlight, _allDateHighlight, _allTimeHighlight, _allEventHighlight, allTaskBox);
+}
+
+Void MessageManager::colorTodayTaskBox(RichTextBox^ todayTaskBox) {
+	colorTextInTaskBox(_todayNumberHighlight, _todayDateHighlight, _todayTimeHighlight, _todayEventHighlight, todayTaskBox);
+}
+
+Void MessageManager::colorTextInTaskBox(vector<HIGHLIGHT>* _numberHighlight, 
+								vector<HIGHLIGHT>* _dateHighlight,
+								vector<HIGHLIGHT>* _timeHighlight,
+								vector<HIGHLIGHT>* _eventHighlight, 
+								RichTextBox^ taskBox) {
+
+									//date
+									for(unsigned int i = 0; i < _dateHighlight->size(); i++) {
+										taskBox->Select(_dateHighlight->at(i).index,_dateHighlight->at(i).length);
+										taskBox->SelectionColor = System::Drawing::Color::DarkBlue;
+										taskBox->SelectionFont = gcnew System::Drawing::Font("Cooper", 11, FontStyle::Bold);
+										taskBox->SelectionAlignment = HorizontalAlignment::Center;
+									}
+
+									//number
+									for(unsigned int i = 0; i < _numberHighlight->size(); i++) {
+										taskBox->Select(_numberHighlight->at(i).index, _numberHighlight->at(i).length);
+										taskBox->SelectionColor = System::Drawing::Color::Black;
+										taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Italic);
+										taskBox->SelectionAlignment = HorizontalAlignment::Left;
+									}
+
+									//time
+									for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
+										taskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
+										taskBox->SelectionColor = System::Drawing::Color::DarkGreen;
+										taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Regular);
+										taskBox->SelectionAlignment = HorizontalAlignment::Left;
+									}
+
+									//event
+									for(unsigned int i = 0; i < _eventHighlight->size(); i++) {
+										taskBox->Select(_eventHighlight->at(i).index, _eventHighlight->at(i).length);
+										taskBox->SelectionColor = System::Drawing::Color::Black;
+										taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Regular);
+										taskBox->SelectionAlignment = HorizontalAlignment::Left;
+									}
+}
+
+Void MessageManager::updateAutoCompleteSource(TextBox^ inputBox) {
+	inputBox->AutoCompleteCustomSource->Clear();
+
+	inputBox->AutoCompleteCustomSource->Add("search hello");
+	inputBox->AutoCompleteCustomSource->Add("search hi");
+
+}
+
 String^ MessageManager::toString(vector<RESULT>* taskVector) {
 	ostringstream oss;
 	string prevDate = "";
@@ -148,38 +207,6 @@ String^ MessageManager::getAllTaskBoxLabel() {
 	} else {
 		return LABEL_ALL_TASKS;
 	}
-}
-
-vector<HIGHLIGHT>* MessageManager::getAllNumberHighlight() {
-	return _allNumberHighlight;
-}
-
-vector<HIGHLIGHT>* MessageManager::getAllTimeHighlight() {
-	return _allTimeHighlight;
-}
-
-vector<HIGHLIGHT>* MessageManager::getAllDateHighlight() {
-	return _allDateHighlight;
-}
-
-vector<HIGHLIGHT>* MessageManager::getAllEventHighlight() {
-	return _allEventHighlight;
-}
-
-vector<HIGHLIGHT>* MessageManager::getTodayNumberHighlight() {
-	return _todayNumberHighlight;
-}
-
-vector<HIGHLIGHT>* MessageManager::getTodayTimeHighlight() {
-	return _todayTimeHighlight;
-}
-
-vector<HIGHLIGHT>* MessageManager::getTodayDateHighlight() {
-	return _todayDateHighlight;
-}
-
-vector<HIGHLIGHT>* MessageManager::getTodayEventHighlight() {
-	return _todayEventHighlight;
 }
 
 Void MessageManager::clearAllTaskIndexVectors() {
