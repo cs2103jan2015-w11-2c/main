@@ -25,16 +25,22 @@ public:
 	TEST_METHOD(ExtractUserCommandTest) {
 		Parser parse;
 		string expected = "add";
+		
+		parse.setStringToParse("Add testing");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
+		
+		parse.setStringToParse("Add   testing");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
+		
+		parse.setStringToParse("Add");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
 
-		parse.extractUserCommand("Add testing");
-		Assert::AreEqual(expected, parse.getUserCommand());
-		parse.extractUserCommand("Add   testing");
-		Assert::AreEqual(expected, parse.getUserCommand());
-		parse.extractUserCommand("Add");
-		Assert::AreEqual(expected, parse.getUserCommand());
-
-		parse.extractUserCommand("  ");
 		expected = "";
+		parse.setStringToParse("    ");
+		parse.extractUserCommand();
 		Assert::AreEqual(expected, parse.getUserCommand());
 	}
 <<<<<<< HEAD
@@ -43,9 +49,11 @@ public:
 
 >>>>>>> master
 	TEST_METHOD(extractDateAndTimeTest) {
-		string inputString = "add testing [23/4";
+		string inputString = "testing [23/4";
 		Item item;
-		Parser parse(inputString);
+		Parser parse;
+		parse.setStringToParse(inputString);
+		parse.extractDateAndTime();
 		item = parse.getItem();
 
 		string expected = "testing";

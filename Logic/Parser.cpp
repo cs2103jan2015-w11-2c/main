@@ -5,18 +5,13 @@ const string Parser::ERROR_NO_LINE_NUMBER = "No line number specified!";
 const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!";
 Parser::Parser() {
 	_userCommand = "";
-	_event = "";
 	_lineOpNumber = 0;
+	_item.initilizeItem();
 }
 
-Parser::Parser(string userInput) {
-	_lineOpNumber = 0;
-	_event = userInput;
 
-	extractUserCommand(userInput);
-
-	extractDateAndTime(_event);
-
+void Parser::setStringToParse(string userInput) {
+	_item.event = userInput;
 }
 
 string Parser::getUserCommand() {
@@ -28,7 +23,7 @@ Item Parser::getItem() {
 }
 
 vector<int> Parser::getLineOpNumber() {
-	if (_event == "") {
+	if (_item.event == "") {
 		throw std::out_of_range(ERROR_NO_LINE_NUMBER);
 	}
 
@@ -36,7 +31,7 @@ vector<int> Parser::getLineOpNumber() {
 	vector<int> numVector;
 
 	char *end;
-	temp = (int)strtol(_event.c_str(), &end, 10);
+	temp = (int)strtol(_item.event.c_str(), &end, 10);
 
 	while(temp > 0) {
 		numVector.push_back(temp);
@@ -50,24 +45,23 @@ vector<int> Parser::getLineOpNumber() {
 	return numVector;
 }
 
-void Parser::extractUserCommand(string fullString) {
-	_event = removeSpacePadding(fullString);
-	if (_event == "") {
+void Parser::extractUserCommand() {
+	_item.event = removeSpacePadding(_item.event);
+	if (_item.event == "") {
 		_userCommand = "";
 		return;
 	}
-	size_t spacePos = _event.find_first_of(" ");
+	size_t spacePos = _item.event.find_first_of(" ");
 	if (spacePos == string::npos) {
-		_userCommand = _event;
+		_userCommand = _item.event;
 		_userCommand = convertStringToLowerCase(_userCommand);
-		_event = "";
+		_item.event = "";
 	} else {
-		_userCommand = _event.substr(0, spacePos);
+		_userCommand = _item.event.substr(0, spacePos);
 		_userCommand = convertStringToLowerCase(_userCommand);
-		_event = _event.substr(spacePos);
-		spacePos = _event.find_first_not_of(" ");
-		_event = _event.substr(spacePos);
-		_item.event = _event;
+		_item.event = _item.event.substr(spacePos);
+		spacePos = _item.event.find_first_not_of(" ");
+		_item.event = _item.event.substr(spacePos);
 	}
 
 }
@@ -77,13 +71,12 @@ size_t Parser::findFrontBracket(string inputLine) {
 }
 
 // try - catch to be moved to Controller?
-void Parser::extractDateAndTime(string input) {
-	size_t frontBracketPos = findFrontBracket(input);
+void Parser::extractDateAndTime() {
+	size_t frontBracketPos = findFrontBracket(_item.event);
 
 	if (frontBracketPos != string::npos) {
-		string rawDateTimeChunk = input.substr(frontBracketPos + 1);
-		_event = removeSpacePadding(input.substr(0, frontBracketPos));
-		_item.event = _event;
+		string rawDateTimeChunk = _item.event.substr(frontBracketPos + 1);
+		_item.event = removeSpacePadding(_item.event.substr(0, frontBracketPos));
 		convertStringToLowerCase(rawDateTimeChunk);
 
 		try {

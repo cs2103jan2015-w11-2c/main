@@ -18,8 +18,10 @@ void Controller::executeCommand(string inputText) {
     string userCommand = "";
 	string commandData = "";
 	Item data;
-	
-	_parser = new Parser(inputText);
+
+	_parser->setStringToParse(inputText);
+	_parser->extractUserCommand();
+	_parser->extractDateAndTime();
 
 	userCommand = _parser->getUserCommand();
 	data = _parser->getItem();
@@ -108,7 +110,7 @@ void Controller::generateResults(vector<Item> inputVector) {
 		if (inputVector[i].eventDate[0] == newDateTime.getCurrentDay() &&
 			inputVector[i].eventDate[1] == newDateTime.getCurrentMonth() &&
 			inputVector[i].eventDate[2] == newDateTime.getCurrentYear()) {
-			todayResult.push_back(temp);
+				todayResult.push_back(temp);
 		} else {
 			otherResult.push_back(temp);
 		}
@@ -194,7 +196,7 @@ void Controller::sortAlphabetical() {
 SortAlphabetical *sortAlphabeticalCommand = new SortAlphabetical();
 	_invoker->executeCommand(_vectorStore, sortAlphabeticalCommand, _successMessage);
 
-	 generateResults(_vectorStore);
+	generateResults(_vectorStore);
 }
 
 
@@ -221,8 +223,8 @@ void Controller::copy(Item input) {
 
 	void Controller::edit(Item data) {
 	int lineNumber = _parser->getLineOpNumber()[0];
-	
-	_parser->extractUserCommand(data.event);
+
+	_parser->extractUserCommand();
 	Item item = _parser->getItem();
 
 	EditItem *editItemCommand = new EditItem(lineNumber, item);
