@@ -117,7 +117,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	for(int i = 0; i < arrSize; i++) {
 		LOG(INFO) << "Starting to extract DateTime, round: " << i;
 
-		_day = mapWeekDay(inputArray[i]);
+		_day = mapToGetDate(inputArray[i]);
 
 		// throws exception if weekday is expected but not given
 		if(isNextWeek && _day == 0) {

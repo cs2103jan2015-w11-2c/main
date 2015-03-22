@@ -47,35 +47,70 @@ string Item::getAMPM(int hour) {
 }
 
 string Item::dateToString() {
-	if((eventDate[0] == 0) && (eventDate[1] == 0) && (eventDate[1] == 0)) {
+ostringstream oss;
+	if((eventDate[0] == 0) && (eventDate[1] == 0) && (eventDate[2] == 0)) {
 		return "";
-	} else {
-		ostringstream oss;
-		oss << itemDate.getWeekDay(eventDate[0], eventDate[1], eventDate[2]);
-		oss << ", " << eventDate[0] << " ";
-		oss << itemDate.getMonth(eventDate[1]) << " " << eventDate[2];
+
+	} else if((eventDate[0] == 0)&&(eventDate[1] != 0) && (eventDate[2] != 0)) {
+		oss << "[" << itemDate.getWeekDay(eventDate[0], eventDate[1], eventDate[2]);
+		oss << ", " << eventDate[0] << "/" << eventDate[1] << "/" << eventDate[2];
 		return oss.str();
+
+	} else if((eventDate[0] == 0)&&(eventDate[1] != 0) && (eventDate[2] != 0)) {
+		oss << "[  /" << eventDate[1] << "/" << eventDate[2];
+		return oss.str();
+
+	}else if((eventDate[0] != 0) && (eventDate[1] == 0) && (eventDate[2] != 0)){
+		return "";
+
+	}else if((eventDate[0] != 0) && (eventDate[1] != 0) && (eventDate[2] == 0)){    
+		oss << "[" << itemDate.getWeekDay(eventDate[0], eventDate[1], eventDate[2]);
+		oss << ", " << eventDate[0] << "/" << eventDate[1];
+
+	}else if((eventDate[0] == 0) && (eventDate[1] != 0) && (eventDate[2] == 0)){
+		oss << "[ /" << eventDate[1] ;
+
+	}else if((eventDate[0] != 0) && (eventDate[1] == 0) && (eventDate[2] == 0)){
+		return "";	
 	}
 }
 
 string Item::timeToString() {
 	ostringstream oss;
-	if(eventStartTime[0] == 0) {
-		return "";
-	} else {
-		string startTimeOfDay = getAMPM(eventStartTime[0]);
-		oss << "[" << getHour(eventStartTime[0]) << ":" ;
-		oss << getMinute(eventStartTime[1]) << " " << startTimeOfDay;
+		int startHour;
+		int endHour;
 
-		if(eventEndTime[0] != 0) {
-			string endTimeOfDay = getAMPM(eventEndTime[0]);
-			oss << " - " << getHour(eventEndTime[0]) << ":";
-			oss << getMinute(eventEndTime[1]) << " " << endTimeOfDay;
+		if((eventStartTime[0] == -1) && (eventEndTime[0] == -1)) {
+			return "";
+		
+		}else if((eventStartTime[0] != -1) && (eventEndTime[0] != -1)){
+			if(eventStartTime[0] == 0){
+			startHour = 12;
+	     	}else if(eventStartTime[0] > 12){
+		    startHour = eventStartTime[0] - 12;
+		    }
+		    
+		    if(eventEndTime[0] == 0){
+			endHour = 12;
+			}else if(eventEndTime[0] > 12){
+			endHour = eventEndTime[0] - 12;
+			}
+	    
+		oss << ", " << eventStartTime[0] << ":" << getMinute(eventStartTime[1]);
+		oss << " - " << eventEndTime[0] << ":" << getMinute(eventEndTime[1])<<"]";
+
+		}else if((eventStartTime[0] != -1) && (eventEndTime[0] == -1)){
+			if(eventStartTime[0] == 0){
+			startHour = 12;
+	     	}else if(eventStartTime[0] > 12){
+		    startHour = eventStartTime[0] - 12;
+			} 
+		oss << ", " << eventStartTime[0] << ":" << getMinute(eventStartTime[1])<<"]";
+
+		}else if((eventStartTime[0] == -1) && (eventEndTime[0] != -1)){
+			return "";
 		}
-		oss << "]";
-
-		return oss.str();
-	}
+	
 }
 
 string Item::toString() {
