@@ -48,4 +48,7 @@ public:
 	string getMessage() {
 		return _message;
 	}
+	
+	void negateAction(vector<Item> &vectorStore) {
+	}
 };

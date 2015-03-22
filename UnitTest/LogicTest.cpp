@@ -24,23 +24,31 @@ public:
 	TEST_METHOD(ExtractUserCommandTest) {
 		Parser parse;
 		string expected = "add";
+		
+		parse.setStringToParse("Add testing");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
+		
+		parse.setStringToParse("Add   testing");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
+		
+		parse.setStringToParse("Add");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
 
-		parse.extractUserCommand("Add testing");
-		Assert::AreEqual(expected, parse.getUserCommand());
-		parse.extractUserCommand("Add   testing");
-		Assert::AreEqual(expected, parse.getUserCommand());
-		parse.extractUserCommand("Add");
-		Assert::AreEqual(expected, parse.getUserCommand());
-
-		parse.extractUserCommand("  ");
 		expected = "";
+		parse.setStringToParse("    ");
+		parse.extractUserCommand();
 		Assert::AreEqual(expected, parse.getUserCommand());
 	}
-	
+
 	TEST_METHOD(extractDateAndTimeTest) {
-		string inputString = "add testing [23/4";
+		string inputString = "testing [23/4";
 		Item item;
-		Parser parse(inputString);
+		Parser parse;
+		parse.setStringToParse(inputString);
+		parse.extractDateAndTime();
 		item = parse.getItem();
 
 		string expected = "testing";
@@ -68,12 +76,12 @@ public:
 		Assert::AreEqual(expected, year);
 
 
-		parse.separateDayMonthYear("12_05", day, month, year);
-		expected = 12;
+		parse.separateDayMonthYear("22_05", day, month, year);
+		expected = 22;
 		Assert::AreEqual(expected, day);
 		expected = 5;
 		Assert::AreEqual(expected, month);
-		expected = 0;
+		expected = 2015;
 		Assert::AreEqual(expected, year);
 
 
@@ -124,13 +132,14 @@ public:
 		try {
 			parse.verifyItemDate(day, month, year);
 		} catch (const out_of_range& e) {
-			expected = 0;
-			Assert::AreEqual(expected, day);
-			expected = 0;
-			Assert::AreEqual(expected, month);
-			expected = 2015;
-			Assert::AreEqual(expected, year);
+
 		}
+		expected = 0;
+		Assert::AreEqual(expected, day);
+		expected = 0;
+		Assert::AreEqual(expected, month);
+		expected = 0;
+		Assert::AreEqual(expected, year);
 	}
 
 	TEST_METHOD(is12HourTest) {
@@ -192,12 +201,12 @@ public:
 		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
 		int expectedStartMinute = 30;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
-		
+
 		int expectedEndHour = 0;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
 		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
-		
+
 	}
 
 	TEST_METHOD(extractDateTimeTest3) {
@@ -285,7 +294,7 @@ public:
 		string inputString = "12/3/15 6 p - 7";
 		Item item;
 		DateTimeParser parse;
-		
+
 		try {
 			parse.updateItemDateTime(inputString, item);
 		} catch (const out_of_range& e) {		
@@ -343,6 +352,12 @@ public:
 		Assert::AreEqual(expected, dateTest.getCurrentMonth());
 	}
 
+	TEST_METHOD(getCurrentYearTest) {
+		DateTime dateTest;
+
+		int expected = 2015;
+		Assert::AreEqual(expected, dateTest.getCurrentYear());
+	}
 	};
 
 	TEST_CLASS(ITEMTest) {

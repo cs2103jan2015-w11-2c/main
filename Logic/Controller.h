@@ -89,6 +89,10 @@ public:
 	//C:\Users\Username\My Documents
 	void move(string newFileLocation);
 
+	void undo();
+
+	void redo();
+
 	string getHelp();
 
 	vector<RESULT> getTodayResult();

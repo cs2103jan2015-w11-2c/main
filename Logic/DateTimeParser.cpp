@@ -37,7 +37,7 @@ void DateTimeParser::resetDateTime() {
 void DateTimeParser::resetItemDateTime() {
 	_item.eventDate[0] = 0;
 	_item.eventDate[1] = 0;
-	_item.eventDate[2] = _dateTime.getCurrentYear();
+	_item.eventDate[2] = 0;
 	_item.eventStartTime[0] = 0;
 	_item.eventStartTime[1] = 0;
 	_item.eventEndTime[0] = 0;
@@ -117,6 +117,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	bool hasDash = false;
 	bool isFirstTimeInstance = true;
 	resetDateTime();
+	resetItemDateTime();
 
 	for(int i = 0; i < arrSize; i++) {
 		LOG(INFO) << "Starting to extract DateTime, round: " << i;
@@ -193,7 +194,7 @@ bool DateTimeParser::isDelimitedDate(string input) {
 
 	if (dateDelimiterPos != string::npos) {
 		separateDayMonthYear(input, _day, _month, _year);
-
+		
 		try {
 			verifyItemDate(_day, _month, _year);
 		} catch (const out_of_range& e) {
@@ -217,11 +218,15 @@ bool DateTimeParser::is12Hour(string input, int& hour) {
 	return false;
 }
 
-void DateTimeParser::separateDayMonthYear(string dayMonth, int& day, int& month, int& year) {
+void DateTimeParser::separateDayMonthYear(string input, int& day, int& month, int& year) {
 	char *intEnd;
-	day = (int)strtol(dayMonth.c_str(), &intEnd, 10);
+	day = (int)strtol(input.c_str(), &intEnd, 10);
 	month = (int)strtol(intEnd + 1, &intEnd, 10);
 	year = (int)strtol(intEnd + 1, &intEnd, 10);
+	
+	if((*intEnd != 0) || (year == 0)) {
+		year = _dateTime.getCurrentYear();
+	}
 }
 
 bool DateTimeParser::separateHourMinute(string hourMinute, int& hour, int& minute) {
@@ -244,7 +249,7 @@ void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
 	} else if (year < 2000) {
 		year += 2000;
 	}
-
+	
 	if (!_dateTime.isValidDate(day, month, year)) {
 		day = 0;
 		month = 0;

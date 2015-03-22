@@ -17,8 +17,10 @@ void Controller::executeCommand(string inputText) {
 	string userCommand = "";
 	string commandData = "";
 	Item data;
-	
-	_parser = new Parser(inputText);
+
+	_parser->setStringToParse(inputText);
+	_parser->extractUserCommand();
+	_parser->extractDateAndTime();
 
 	userCommand = _parser->getUserCommand();
 	data = _parser->getItem();
@@ -60,6 +62,10 @@ void Controller::executeCommand(string inputText) {
 		rename(commandData);
 	} else if (userCommand == "move") {
 		move(commandData);
+	} else if (userCommand == "undo") {
+		undo();
+	} else if (userCommand == "redo") {
+		redo();
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
@@ -103,7 +109,7 @@ void Controller::generateResults(vector<Item> inputVector) {
 		if (inputVector[i].eventDate[0] == newDateTime.getCurrentDay() &&
 			inputVector[i].eventDate[1] == newDateTime.getCurrentMonth() &&
 			inputVector[i].eventDate[2] == newDateTime.getCurrentYear()) {
-			todayResult.push_back(temp);
+				todayResult.push_back(temp);
 		} else {
 			otherResult.push_back(temp);
 		}
@@ -188,7 +194,7 @@ void Controller::sortAlphabetical() {
 	SortAlphabetical *sortAlphabeticalCommand = new SortAlphabetical();
 	_invoker->executeCommand(_vectorStore, sortAlphabeticalCommand, _successMessage);
 
-	 generateResults(_vectorStore);
+	generateResults(_vectorStore);
 }
 
 void Controller::search(Item data) {
@@ -217,8 +223,8 @@ void Controller::copy(Item input) {
 
 void Controller::edit(Item data) {
 	int lineNumber = _parser->getLineOpNumber()[0];
-	
-	_parser->extractUserCommand(data.event);
+
+	_parser->extractUserCommand();
 	Item item = _parser->getItem();
 
 	EditItem *editItemCommand = new EditItem(lineNumber, item);
@@ -243,6 +249,29 @@ void Controller::rename(string newFileName) {
 void Controller::move(string newFileLocation) {
 	MoveFileLocation *moveFileCommand = new MoveFileLocation;
 	_invoker->executeCommand(_outputFile, moveFileCommand, _successMessage);
+}
+
+void Controller::undo() {
+	_invoker->undo(_vectorStore, _successMessage);
+	chronoSort(_vectorStore);
+
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
+
+	generateResults(_vectorStore);
+}
+
+void Controller::redo() {
+	_invoker->redo(_vectorStore, _successMessage);
+
+	chronoSort(_vectorStore);
+
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
+
+	generateResults(_vectorStore);
 }
 
 string Controller::getHelp() {
@@ -298,7 +327,7 @@ int Controller::compareEarlierThan(const Item item1, const Item item2) {
 }
 
 void Controller::chronoSort(vector<Item> &vectorStore) {
-	for (unsigned int i = 0; i < (vectorStore.size() - 1); i++) {
+	for (int i = 0; i < ((int)vectorStore.size() - 1); i++) {
 		int minIndex = i;
 		for (unsigned int j = i + 1; j < vectorStore.size(); j++) {
 			if (compareEarlierThan(vectorStore[j], vectorStore[minIndex]) < 0) {

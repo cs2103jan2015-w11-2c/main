@@ -16,15 +16,23 @@
 #include "RenameFile.cpp"
 #include "MoveFile.cpp"
 
+//CONSTANTS
+static const int MAX_UNDO = 20;
+static const int MAX_REDO = 20;
+static const string SUCCESS_UNDO = "Successful undo of: ";
+
 class CommandInvoker
 {
 private:
-	stack<Command> *_undo;
-	stack<Command> *_redo;
+	int _numRedo;
+	vector<Command *> *_undo;
+	vector<Command *> *_redo;
 public:
 	CommandInvoker(void);
 	~CommandInvoker(void);
 	void executeCommand(vector<Item> &, Command *, string &);
 	void executeCommand(FileStorage *, Command *, string &);
+	void undo(vector<Item> &, string &);
+	void redo(vector<Item> &, string &);
 };
 

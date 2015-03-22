@@ -37,6 +37,6 @@ public:
 	~Command();
 	virtual void executeAction(FileStorage *);	
 	virtual void executeAction(vector<Item> &);
-	//virtual void executeAction(string&);
+	virtual void negateAction(vector<Item> &);
 	virtual string getMessage();
 };
