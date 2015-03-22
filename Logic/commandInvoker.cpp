@@ -1,6 +1,5 @@
 #include "commandInvoker.h"
 
-
 CommandInvoker::CommandInvoker(void) {
 	_numUndo = 0;
 	_undo = new vector<Command *>;
@@ -17,7 +16,7 @@ void CommandInvoker::executeCommand(vector<Item> &vectorStore, Command *command,
 
 	_numUndo = 0;
 
-	if(_undo->size() >= 20) {
+	if(_undo->size() >= MAX_UNDO) {
 		_undo->erase(_undo->begin());
 	}
 
@@ -61,7 +60,7 @@ void CommandInvoker::redo(vector<Item> &vectorStore, string &message) {
 	command->executeAction(vectorStore);
 	message = _redo->back()->getMessage();
 	
-	if(_undo->size() >= 20) {
+	if(_undo->size() >= MAX_REDO) {
 		_undo->erase(_undo->begin());
 	}
 	_undo->push_back(_redo->back());

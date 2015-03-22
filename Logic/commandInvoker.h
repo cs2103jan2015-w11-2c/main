@@ -17,6 +17,8 @@
 #include "MoveFile.cpp"
 
 //CONSTANTS
+static const int MAX_UNDO = 20;
+static const int MAX_REDO = 20;
 static const string SUCCESS_UNDO = "Successful undo of: ";
 
 class CommandInvoker
