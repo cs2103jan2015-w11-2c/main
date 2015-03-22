@@ -28,7 +28,7 @@ public:
 
 	string getFullFileName();
 
-	vector<string> getAllFileData();
+	vector<Item> getAllFileData();
 
 	void addLine(Item);
 

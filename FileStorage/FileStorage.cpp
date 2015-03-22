@@ -32,15 +32,15 @@ string FileStorage::getFullFileName() {
 	}
 }
 
-vector<string> FileStorage::getAllFileData() {
-	vector<string> tempVector;
-	ifstream inFile(getFullFileName());
-	string content;
-	while (getline(inFile, content)) {
-		tempVector.push_back(content);
-	}
-	inFile.close();
+vector<Item> FileStorage::getAllFileData() {
+	vector<Item> tempVector;
+	ifstream readFile(getFullFileName());
+	Parser parse;
+	while(readFile>>parse.getItem){
+	tempVector.push_back(parse.getItem);
+	readFile.close();
 	return tempVector;
+	}
 }
 
 void FileStorage::addLine(Item item) {
