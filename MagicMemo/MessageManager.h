@@ -8,6 +8,10 @@
 
 using namespace std;
 using namespace System;
+using namespace System::Collections;
+using namespace System::Windows::Forms;
+using namespace System::Drawing;
+
 
 struct HIGHLIGHT {
 	int index;
@@ -47,10 +51,24 @@ public:
 	MessageManager(void);
 
 	Void generateMessageOutputs(String^);
-
+	
+	//calculate the indexes for text formatting
 	Void calculateAllTaskIndexes();
 
 	Void calculateTodayTaskIndexes();
+
+	Void colorAllTaskBox(RichTextBox^ taskBox);
+
+	Void colorTodayTaskBox(RichTextBox^ taskBox);
+
+	Void colorTextInTaskBox(vector<HIGHLIGHT>* _numberHighlight, 
+		vector<HIGHLIGHT>* _dateHighlight,
+		vector<HIGHLIGHT>* _timeHighlight,
+		vector<HIGHLIGHT>* _eventHighlight, 
+		RichTextBox^ taskBox);
+
+	//Auto-complete collection
+	Void updateAutoCompleteSource(TextBox^ inputBox);
 
 	String^ toString(vector<RESULT>*);
 
@@ -63,24 +81,6 @@ public:
 	String^ getInputBoxMessage();
 
 	String^ getAllTaskBoxLabel();
-
-	//indexes for the allTaskBox
-	vector<HIGHLIGHT>* getAllNumberHighlight();
-
-	vector<HIGHLIGHT>* getAllTimeHighlight();
-
-	vector<HIGHLIGHT>* getAllDateHighlight();
-
-	vector<HIGHLIGHT>* getAllEventHighlight();
-
-	//indexes for the todayTaskBox
-	vector<HIGHLIGHT>* getTodayNumberHighlight();
-
-	vector<HIGHLIGHT>* getTodayTimeHighlight();
-
-	vector<HIGHLIGHT>* getTodayDateHighlight();
-
-	vector<HIGHLIGHT>* getTodayEventHighlight();
 
 	Void clearAllTaskIndexVectors();
 
