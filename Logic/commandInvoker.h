@@ -24,7 +24,7 @@ static const string SUCCESS_UNDO = "Successful undo of: ";
 class CommandInvoker
 {
 private:
-	int _numUndo;
+	int _numRedo;
 	vector<Command *> *_undo;
 	vector<Command *> *_redo;
 public:
