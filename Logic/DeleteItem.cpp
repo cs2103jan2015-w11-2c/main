@@ -91,5 +91,6 @@ public:
 		for (unsigned int i = 0; i < _deletedItems.size(); i++) {
 			vectorStore.push_back(_deletedItems[i]);
 		}
+		_deletedItems.clear();
 	}
 };
