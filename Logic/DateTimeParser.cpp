@@ -1,4 +1,3 @@
-#include <map>
 #include "DateTimeParser.h"
 
 const string DateTimeParser::ERROR_NO_DAY_SPECIFIED = "Invalid input: No day specified after \"next\"";
@@ -123,7 +122,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	for(int i = 0; i < arrSize; i++) {
 		LOG(INFO) << "Starting to extract DateTime, round: " << i;
 
-		_day = mapToGetDate(inputArray[i],&_month);
+		_day = mapWeekDay(inputArray[i]);
 
 		// throws exception if weekday is expected but not given
 		if(isNextWeek && _day == 0) {
@@ -182,78 +181,12 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	}
 }
 
-
-int DateTimeParser::mapWeekDay(string weekDay) {
-	map<int, string> weekDayList;
-	string currentWeekDay = _dateTime.getCurrentWeekDay();
-	int spacePos = weekDay.find_first_of(" ");
-	int weekDayNo;
-	int diffInDay;
-	int currentWeekDayNo;
-	int currentDay;
-
-	weekDayList[1] = "Monday";
-	weekDayList[2] = "Tuesday";
-	weekDayList[3] = "Wednesday";
-	weekDayList[4] = "Thursday";
-	weekDayList[5] = "Friday";
-	weekDayList[6] = "Saturday";
-	weekDayList[7] = "Sunday";
-
-  
-	map<int, string>::iterator iter;
-	iter = weekDayList.begin();
-	while(iter->second != weekDay){
-		iter++;
-	}
-     weekDayNo = iter->first;
-
-	iter = weekDayList.begin();
-	while(iter->second != currentWeekDay){
-		iter++;
-	}
-	 currentWeekDayNo = iter->first;
-	
-	 diffInDay = weekDayNo - currentWeekDayNo;
-     currentDay = _dateTime.getCurrentDay() + diffInDay;
-     
-	 return currentDay;
-
+// TO BE EDITED!!!!
+int DateTimeParser::mapWeekDay(string day) {
+	if(day == "Fri") {
+		return 1;
+	} else return 0;
 }
-
-int DateTimeParser::mapToGetDate(string weekDay,int&_month) {
-    int currentDay=mapWeekDay(weekDay);
-	int currentMonth = _dateTime.getCurrentMonth();
-	int currentYear = _dateTime.getCurrentYear();
-
-	if((currentMonth == 4) || (currentMonth == 6) || (currentMonth == 9) || (currentMonth == 11)) {
-		if(currentDay > 30) {
-			currentDay = currentDay - 30;
-			currentMonth = currentMonth + 1;
-		}
-	}else if(currentMonth == 2){
-	    if(currentYear%4 == 0){
-		 if(currentDay > 29) {
-			 currentDay = currentDay - 29;
-		     currentMonth = currentMonth + 1;
-		 }
-		}else if(currentYear%4 != 0){
-		 if(currentDay > 28) {
-			 currentDay = currentDay - 28;
-		 currentMonth = currentMonth + 1;
-		}
-	}
-
-	}else {
-		if(currentDay > 31) {
-			currentDay = currentDay - 31;
-			currentMonth = currentMonth + 1;
-		}
-	}
-	_month = currentMonth;
-	return currentDay;
-}
-
 
 bool DateTimeParser::isDelimitedDate(string input) {
 

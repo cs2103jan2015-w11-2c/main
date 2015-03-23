@@ -31,4 +31,3 @@ public:
 	string timeToString();
 	string toString();
 };
-
