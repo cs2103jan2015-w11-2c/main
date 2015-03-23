@@ -52,3 +52,4 @@ public:
 
 	~Parser(void);
 };
+

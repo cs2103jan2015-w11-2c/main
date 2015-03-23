@@ -37,3 +37,4 @@ public:
 	void undo(vector<Item> &, string &);
 	void redo(vector<Item> &, string &);
 };
+

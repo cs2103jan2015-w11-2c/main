@@ -62,3 +62,4 @@ public:
 
 	~FileStorage(void);
 };
+
