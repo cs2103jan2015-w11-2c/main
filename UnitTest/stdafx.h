@@ -15,4 +15,5 @@
 #include "Parser.h"
 #include "ITEM.h"
 #include "DateTime.h"
+#include "FileStorage.h"
 #include <exception>
