@@ -10,30 +10,30 @@ using namespace std;
 
 class Parser {
 private:
-	static const string ERROR_NO_LINE_NUMBER;
-	static const string ERROR_INVALID_LINE_NUMBER;
-
 	Item _item;
 	DateTimeParser _splitDateTime;
 
 	string _userCommand;
+	string _event;
+	int _lineOpNumber;
 
 public:
 	Parser();
 
-	void setStringToParse(string);
+	Parser(string);
+
+	void Parser::init();
 
 	string getUserCommand();
 
 	Item getItem();
 
-	//returns a vector of line numbers for operations such as delete
+	//returns the line number for operations such as delete
 	//throws out_of_range exception if line number is invalid
-	vector<int> getLineOpNumber();
+	int getLineOpNumber();
 
-	//extracts the first word of Item.event
-	//and stores it in _userCommand
-	void extractUserCommand();
+	//extracts _userCommand and stores the rest of the input in _event
+	void extractUserCommand(string);
 
 	size_t findFrontBracket(string);
 
@@ -41,7 +41,7 @@ public:
 	//if time is input as 12 hr, input p to specify pm
 	//12 is taken as 12 noon. if 12 am, then input m
 	//remove date and time data from commandData
-	void extractDateAndTime();
+	void extractDateAndTime(string);
 
 	//remove leading and ending whitespace of string, if any
 	//if only whitespaces are input, then it returns

@@ -32,47 +32,21 @@ string FileStorage::getFullFileName() {
 	}
 }
 
-vector<Item> FileStorage::getAllFileData() {
-	vector<Item> tempVector;
-	Parser parse;
+vector<string> FileStorage::getAllFileData() {
+	vector<string> tempVector;
+	ifstream inFile(getFullFileName());
 	string content;
-
-	ifstream readFile(getFullFileName());
-	while(getline(readFile, content)) {
-		parse.setStringToParse(content);
-		parse.extractDateAndTime();
-		Item i = parse.getItem();
-		tempVector.push_back(i);
+	while (getline(inFile, content)) {
+		tempVector.push_back(content);
 	}
-	readFile.close();
-
+	inFile.close();
 	return tempVector;
 }
 
-void FileStorage::addLine(Item item) {
+void FileStorage::addLine(string sentence) {
 	fstream outFile;
-	ostringstream out;
-	bool setBracket = false;
 	outFile.open(getFullFileName(), fstream::out | fstream::app);
-	out << item.event;
-
-	if(item.eventDate[0] != 0 && item.eventDate[1] != 0 && item.eventDate[2] != 0) {
-		out << " [" <<item.eventDate[0] << "/" << item.eventDate[1] << "/" << item.eventDate[2];
-		setBracket = true;
-	}
-
-	if(item.eventStartTime[0] != 0) {
-		if(!setBracket) {
-			out << "[";
-		}
-		out << " " << item.eventStartTime[0] << ":" << item.eventStartTime[1];
-	}
-	if(item.eventEndTime[0] !=  0) {
-		out << " - " << item.eventEndTime[0] << ":" << item.eventEndTime[1];
-	}
-
-	string temp = out.str();
-	outFile << temp << endl;
+	outFile << sentence << endl;
 	outFile.close();
 }
 

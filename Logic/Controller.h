@@ -2,14 +2,23 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 #include <algorithm>
-#include "DateTime.h"
+#include <sstream>
+#include "DateTime.cpp"
 #include "Parser.h"
 #include "FileStorage.h"
 #include "Item.h"
 #include "CommandInvoker.h"
 
 using namespace std;
+
+struct RESULT {
+	string lineNumber;
+	string date;
+	string event;
+	string time;
+};
 
 class Controller {
 private:
@@ -20,28 +29,32 @@ private:
 	static const string ERROR_FILE_ALREADY_EXISTS;
 	static const string ERROR_FILEPATH_NOT_FOUND;
 
+	static string _MENU;
+	static char _buffer[1000];
+
 	FileStorage *_outputFile;
 	Parser *_parser;
 	CommandInvoker *_invoker;
 	vector<Item> _vectorStore;
-	vector<RESULT> _todayResult;
-	vector<RESULT> _otherResult;
-
 
 	//To be passed to the GUI
 	string _inputBoxMessage;
 	string _successMessage;
 
-	//for search function, to check tell UI to change the heading to "Search Results"
-	bool _isSearch;
+	//for edit function, to check if it is the initial edit call
+	bool _isFirstCommandCall;
+	int _lineNumberOperation;
+	
 
 public:
 	Controller(void);
 
-	void executeCommand(string);
+	vector<RESULT> executeCommand(string);
 
+	//API for UI (Main Text Box)
 	string getInputBoxMessage();
 
+	//API for UI (Message Box)
 	string getSuccessMessage();
 
 	void setInputBoxMessage(string);
@@ -50,33 +63,31 @@ public:
 
 	void initializeVector();
 
-	void generateResults(vector<Item>);
+	vector<RESULT> generateResults(vector<Item>);
 
 	bool rewriteFile();
 
 	void commandOptions(string);
 
-	void addData(Item);
+	vector<RESULT> addData(Item);
 
 	//returns the data deleted or *#*#*#*#* if not found
-	void deleteData();
+	vector<RESULT> deleteData();
 
 	//returns line number for operation or 0 if line number is invalid
 	int getLineNumberForOperation();
 
-	void displayAll();
+	vector<RESULT> displayAll();
 
-	void clearAll();
+	vector<RESULT> clearAll();
 
-	void sortAlphabetical();
+	vector<RESULT> sortAlphabetical();
 
-	void search(Item);
+	vector<RESULT> search(string);
 
-	bool isSearch();
+	vector<RESULT> copy(Item);
 
-	void copy(Item);
-
-	void edit(Item);
+	vector<RESULT> edit(Item);
 
 	//NEED TO IMPLEMENT A textfile to reflect the change
 	//in name so that the next time the program is run
@@ -87,15 +98,9 @@ public:
 	//C:\Users\Username\My Documents
 	void move(string newFileLocation);
 
-	void undo();
-
-	void redo();
-
 	string getHelp();
 
-	vector<RESULT> getTodayResult();
-
-	vector<RESULT> getOtherResult();
+	vector<Item> getVectorStore();
 
 	void swap(Item&, Item&);
 

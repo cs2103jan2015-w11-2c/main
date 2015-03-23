@@ -12,8 +12,7 @@ class CopyItem : public Command {
 private:
 	int _lineNumber;
 	Item _input;
-	string _message;
-	Item _copiedData;
+	std::string _message;
 
 public:
 	CopyItem() {
@@ -32,70 +31,32 @@ public:
 
 	void executeAction(vector<Item>& vectorStore) {
 
-		if(_lineNumber == 0  || _lineNumber > (int)vectorStore.size()) {
-			_message = ERROR_INVALID_LINE_NUMBER + " ";
-			_message += ('0'+ _lineNumber);
-			_message += "\n";
+		if(_lineNumber == 0) {
+			_message = ERROR_INVALID_LINE_NUMBER;
 		}
 		else {
 			_message = "";
 
-			_copiedData = vectorStore[_lineNumber - 1];
-			_copiedData.eventDate[0] = _input.eventDate[0];
-			_copiedData.eventDate[1] = _input.eventDate[1];
-			_copiedData.eventDate[2] = _input.eventDate[2];
-			_copiedData.eventStartTime[0] = _input.eventStartTime[0];
-			_copiedData.eventStartTime[1] = _input.eventStartTime[1];
-			_copiedData.eventEndTime[0] = _input.eventEndTime[0];
-			_copiedData.eventEndTime[1] = _input.eventEndTime[1];
+			Item copiedData;
+			copiedData = vectorStore[_lineNumber-1];
+			copiedData.eventDate[0] = _input.eventDate[0];
+			copiedData.eventDate[1] = _input.eventDate[1];
+			copiedData.eventDate[2] = _input.eventDate[2];
+			copiedData.eventStartTime[0] = _input.eventStartTime[0];
+			copiedData.eventStartTime[1] = _input.eventStartTime[1];
+			copiedData.eventEndTime[0] = _input.eventEndTime[0];
+			copiedData.eventEndTime[1] = _input.eventEndTime[1];
 			
-			vectorStore.push_back(_copiedData);
+			vectorStore.push_back(copiedData);
 			
 			char buffer[1000];
 
-			sprintf_s(buffer, SUCCESS_COPIED.c_str(), _copiedData.toString().c_str());
+			sprintf_s(buffer, SUCCESS_COPIED.c_str(), copiedData.toString().c_str());
 			_message = buffer;
 		}
 	}
 
-	string getMessage() {
+	std::string getMessage() {
 		return _message;
-	}
-
-	bool isMatch(const Item item1, const Item item2) {
-		if (item1.event != item2.event) {
-			return false;
-		}
-		for (int i = 0; i < 3; i++) {
-			if (item1.eventDate[i] != item2.eventDate[i]) {
-				return false;
-			}
-		}
-		for (int i = 0; i < 2; i++) {
-			if (item1.eventStartTime[i] != item2.eventStartTime[i]) {
-				return false;
-			}
-		}
-		for (int i = 0; i < 2; i++) {
-			if (item1.eventEndTime[i] != item2.eventEndTime[i]) {
-				return false;
-			}
-		}
-		if (item1.colour != item2.colour) {
-			return false;
-		}
-		if (item1.bold != item2.bold) {
-			return false;
-		}
-		return true;
-	}
-
-	void negateAction(vector<Item> &vectorStore) {
-		for (unsigned int i = 0; i < vectorStore.size(); i++) {
-			if (isMatch(vectorStore[i], _copiedData)) {
-				vectorStore.erase(vectorStore.begin() + i);
-				break;
-			}
-		}
 	}
 };
