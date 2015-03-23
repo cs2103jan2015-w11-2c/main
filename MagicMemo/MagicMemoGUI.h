@@ -29,6 +29,7 @@ namespace UI {
 		MagicMemoGUI(void) {
 			InitializeComponent();
 			magicManager = gcnew MessageManager();
+			setGuiText("display");
 		}
 
 	protected:
