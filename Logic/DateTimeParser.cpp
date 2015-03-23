@@ -1,4 +1,6 @@
+
 #include "DateTimeParser.h"
+
 
 const string DateTimeParser::ERROR_NO_DAY_SPECIFIED = "Invalid input: No day specified after \"next\"";
 const string DateTimeParser::ERROR_NO_TIME_SPECIFIED = "Invalid input: Time expected after \"-\"";
@@ -183,7 +185,6 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 
 // TO BE EDITED!!!!
 int DateTimeParser::mapWeekDay(string weekDay) {
-	map<int, string> weekDayList;
 	string currentWeekDay = _dateTime.getCurrentWeekDay();
 	int spacePos = weekDay.find_first_of(" ");
 	int weekDayNo;
@@ -191,29 +192,40 @@ int DateTimeParser::mapWeekDay(string weekDay) {
 	int currentWeekDayNo;
 	int currentDay;
 
-	weekDayList[1] = "Monday";
-	weekDayList[2] = "Tuesday";
-	weekDayList[3] = "Wednesday";
-	weekDayList[4] = "Thursday";
-	weekDayList[5] = "Friday";
-	weekDayList[6] = "Saturday";
-	weekDayList[7] = "Sunday";
-
-  
-	map<int, string>::iterator iter;
-	iter = weekDayList.begin();
-	while(iter->second != weekDay){
-		iter++;
+	if(weekDay =="Monday"){
+	weekDayNo = 1;
+	}else if(weekDay =="Tuesday"){
+	weekDayNo = 2;
+	}else if(weekDay =="Wednesday"){
+	weekDayNo = 3;
+	}else if(weekDay =="Thursday"){
+	weekDayNo = 4;
+	}else if(weekDay =="Friday"){
+	weekDayNo = 5;
+	}else if(weekDay =="Saturday"){
+	weekDayNo = 6;
+	}else if(weekDay =="Sunday"){
+	weekDayNo = 7;
 	}
-     weekDayNo = iter->first;
-
-	iter = weekDayList.begin();
-	while(iter->second != currentWeekDay){
-		iter++;
-	}
-	 currentWeekDayNo = iter->first;
+   
 	
-	 diffInDay = weekDayNo - currentWeekDayNo;
+	if(currentWeekDay =="Monday"){
+	currentWeekDayNo = 1;
+	}else if(currentWeekDay =="Tuesday"){
+	currentWeekDayNo = 2;
+	}else if(currentWeekDay =="Wednesday"){
+	currentWeekDayNo = 3;
+	}else if(currentWeekDay =="Thursday"){
+	currentWeekDayNo = 4;
+	}else if(currentWeekDay =="Friday"){
+	currentWeekDayNo = 5;
+	}else if(currentWeekDay =="Saturday"){
+	currentWeekDayNo = 6;
+	}else if(currentWeekDay =="Sunday"){
+	currentWeekDayNo = 7;
+	}
+
+	 diffInDay = currentWeekDayNo - weekDayNo;
      currentDay = _dateTime.getCurrentDay() + diffInDay;
      
 	 return currentDay;
