@@ -51,8 +51,7 @@ public:
 	MessageManager(void);
 
 	Void generateMessageOutputs(String^);
-	
-	//calculate the indexes for text formatting
+
 	Void calculateAllTaskIndexes();
 
 	Void calculateTodayTaskIndexes();
