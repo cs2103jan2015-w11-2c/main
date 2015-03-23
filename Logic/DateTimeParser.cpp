@@ -45,15 +45,15 @@ void DateTimeParser::resetItemDateTime() {
 }
 
 void DateTimeParser::updateItemFields() {
-	LOG(INFO) << 	"Before update";
+	LOG(INFO) << "Before update";
 
-	LOG(INFO) << 	_item.eventDate[0];
-	LOG(INFO) << 	_item.eventDate[1];
-	LOG(INFO) << 	_item.eventDate[2];
-	LOG(INFO) << 	_item.eventStartTime[0];
-	LOG(INFO) << 	_item.eventStartTime[1];
-	LOG(INFO) << 	_item.eventEndTime[0];
-	LOG(INFO) << 	_item.eventEndTime[1];
+	LOG(INFO) << _item.eventDate[0];
+	LOG(INFO) << _item.eventDate[1];
+	LOG(INFO) << _item.eventDate[2];
+	LOG(INFO) << _item.eventStartTime[0];
+	LOG(INFO) << _item.eventStartTime[1];
+	LOG(INFO) << _item.eventEndTime[0];
+	LOG(INFO) << _item.eventEndTime[1];
 
 	if(_item.eventDate[0] == 0) {
 		_item.eventDate[0] = _day;
@@ -76,14 +76,14 @@ void DateTimeParser::updateItemFields() {
 	if(_item.eventEndTime[1] == 0) {
 		_item.eventEndTime[1] = _endMinute;
 	}
-	LOG(INFO) << 	"After update:";
-	LOG(INFO) << 	_item.eventDate[0];
-	LOG(INFO) << 	_item.eventDate[1];
-	LOG(INFO) << 	_item.eventDate[2];
-	LOG(INFO) << 	_item.eventStartTime[0];
-	LOG(INFO) << 	_item.eventStartTime[1];
-	LOG(INFO) << 	_item.eventEndTime[0];
-	LOG(INFO) << 	_item.eventEndTime[1];
+	LOG(INFO) << "After update:";
+	LOG(INFO) << _item.eventDate[0];
+	LOG(INFO) << _item.eventDate[1];
+	LOG(INFO) << _item.eventDate[2];
+	LOG(INFO) << _item.eventStartTime[0];
+	LOG(INFO) << _item.eventStartTime[1];
+	LOG(INFO) << _item.eventEndTime[0];
+	LOG(INFO) << _item.eventEndTime[1];
 	LOG(INFO) << "";
 }
 
@@ -233,6 +233,11 @@ bool DateTimeParser::separateHourMinute(string hourMinute, int& hour, int& minut
 	char *intEnd;
 	hour = (int)strtol(hourMinute.c_str(), &intEnd, 10);
 	minute = (int)strtol(intEnd + 1, &intEnd, 10);
+	
+	if(*intEnd != 0) {
+		minute = 0;
+	}
+	
 	return (hour != 0);
 }
 
