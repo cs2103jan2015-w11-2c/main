@@ -28,18 +28,26 @@ vector<int> Parser::getLineOpNumber() {
 		throw std::out_of_range(ERROR_NO_LINE_NUMBER);
 	}
 
-	int temp;
+	int lineNum;
 	vector<int> numVector;
 
 	char *end;
-	temp = (int)strtol(_item.event.c_str(), &end, 10);
+	lineNum = (int)strtol(_item.event.c_str(), &end, 10);
 
-	while(temp > 0) {
-		numVector.push_back(temp);
-		temp = (int)strtol(end + 1, &end, 10);
+	while(lineNum > 0) {
+		char tempChar = *end;
+		int tempInt = lineNum;
+		numVector.push_back(lineNum);	
+		lineNum = (int)strtol(end + 1, &end, 10);
+		
+		if((tempChar == '-') && (lineNum > tempInt)) {
+			for(int i = 1; i < (lineNum - tempInt); i++) {
+				numVector.push_back(tempInt + i);
+			}
+		}
 	}
 
-	if (numVector.empty() || temp < 0) {
+	if (numVector.empty() || lineNum < 0) {
 		throw std::out_of_range(ERROR_INVALID_LINE_NUMBER);
 	}
 
