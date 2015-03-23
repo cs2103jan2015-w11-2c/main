@@ -25,6 +25,7 @@ class CommandInvoker
 {
 private:
 	int _numRedo;
+	bool _enableUndoFlag;
 	vector<Command *> *_undo;
 	vector<Command *> *_redo;
 public:
@@ -32,6 +33,7 @@ public:
 	~CommandInvoker(void);
 	void executeCommand(vector<Item> &, Command *, string &);
 	void executeCommand(FileStorage *, Command *, string &);
+	void disableUndo();
 	void undo(vector<Item> &, string &);
 	void redo(vector<Item> &, string &);
 };

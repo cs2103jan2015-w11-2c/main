@@ -2,6 +2,7 @@
 
 CommandInvoker::CommandInvoker(void) {
 	_numRedo = 0;
+	_enableUndoFlag = true;
 	_undo = new vector<Command *>;
 	_redo = new vector<Command *>;
 }
@@ -14,19 +15,27 @@ void CommandInvoker::executeCommand(vector<Item> &vectorStore, Command *command,
 	command->executeAction(vectorStore);
 	message = command->getMessage();
 
-	_numRedo = 0;
-	_redo->clear();
+	if(_enableUndoFlag) {
+		_numRedo = 0;
+		_redo->clear();
 
-	if(_undo->size() >= MAX_UNDO) {
-		_undo->erase(_undo->begin());
+		if(_undo->size() >= MAX_UNDO) {
+			_undo->erase(_undo->begin());
+		}
+
+		_undo->push_back(command);
 	}
+	_enableUndoFlag = true;
 
-	_undo->push_back(command);
 }
 
 void CommandInvoker::executeCommand(FileStorage *outputFile, Command *command, string &message) {
 	command->executeAction(outputFile);
 	message = command->getMessage();
+}
+
+void CommandInvoker::disableUndo() {
+	_enableUndoFlag = false;
 }
 
 void CommandInvoker::undo(vector<Item> &vectorStore, string &message) {

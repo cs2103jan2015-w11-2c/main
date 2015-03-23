@@ -200,6 +200,7 @@ void Controller::search(Item data) {
 	vector<Item> tempVector = _vectorStore;
 
 	SearchItem *searchItemCommand = new SearchItem(data, &_otherResult);
+	_invoker->disableUndo();
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
 }
 
