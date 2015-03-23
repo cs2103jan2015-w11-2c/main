@@ -188,8 +188,8 @@ int DateTimeParser::mapWeekDay(string weekDay) {
 	string currentWeekDay = _dateTime.getCurrentWeekDay();
 	int spacePos = weekDay.find_first_of(" ");
 	int weekDayNo;
-	int diffInDay;
 	int currentWeekDayNo;
+	int diffInDay;
 	int currentDay;
 
 	if(weekDay =="Monday"){
@@ -225,7 +225,7 @@ int DateTimeParser::mapWeekDay(string weekDay) {
 	currentWeekDayNo = 7;
 	}
 
-	 diffInDay = currentWeekDayNo - weekDayNo;
+	 diffInDay = currentWeekDayNo/* - weekDayNo*/;
      currentDay = _dateTime.getCurrentDay() + diffInDay;
      
 	 return currentDay;
