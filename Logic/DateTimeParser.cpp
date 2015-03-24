@@ -125,13 +125,12 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	for(int i = 0; i < arrSize; i++) {
 		LOG(INFO) << "Starting to extract DateTime, round: " << i;
 
-		/*_day = mapToGetDate(inputArray[i],_month);*/
-
+		/*
 		// throws exception if weekday is expected but not given
 		if(isNextWeek && _day == 0) {
-			isNextWeek = false;
-			throw std::out_of_range(ERROR_NO_DAY_SPECIFIED);
-		}
+		isNextWeek = false;
+		throw std::out_of_range(ERROR_NO_DAY_SPECIFIED);
+		}*/
 
 		// throws exception if time is expected but not given
 		if(hasDash && !separateHourMinute(inputArray[i], _endHour, _endMinute)) {
@@ -148,7 +147,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 			LOG(INFO) << "DASH";
 			hasDash = true;
 			// weekday (e.g. Friday)
-		} else if(_day != 0) {
+		} else if(mapWeekDay(inputArray[i], _day, _month, _year)) {
 			LOG(INFO) << "WEEKDAY";
 			if(isNextWeek) {
 				_day += 7;
@@ -192,62 +191,54 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 
 }
 
-bool DateTimeParser::mapWeekDay(string weekDay,int&_date,int&_month,int&_year) {
+
+bool DateTimeParser::mapWeekDay(string weekDay, int& _date, int &_month, int &_year) {
+
 	string currentWeekDay = _dateTime.getCurrentWeekDay();
 	int currentMonth= _dateTime.getCurrentMonth();
 	int currentYear = _dateTime.getCurrentYear();
 	int currentDay = _dateTime.getCurrentDay();
 	int weekDayIndex = 6;
-	int currentWeekDayIndex  = 0;
+	int currentWeekDayIndex = _dateTime.getIntWeekDay(currentDay, currentMonth, currentYear);
 	int diffInDay;
 
-	std::map<string,int> weekday;
-	weekday["monday"] = 1;
-	weekday["mon"] = 1;
-	weekday["tuesday"] = 2;
-	weekday["tue"] = 2;
-	weekday["tues"] = 2;
-	weekday["wednesday"] = 3;
-	weekday["wed"] = 3;
-	weekday["thursday"] = 4;
-	weekday["thur"] = 4;
-	weekday["thurs"] = 4;
-	weekday["friday"] = 5;
-	weekday["fri"] = 5;
-	weekday["saturday"] = 6;
-	weekday["sat"] = 6;
-	weekday["sunday"] = 7;
-	weekday["sun"] = 7;
+	std::map<string,int> weekDays;
+	weekDays["monday"] = 1;
+	weekDays["mon"] = 1;
+	weekDays["tuesday"] = 2;
+	weekDays["tue"] = 2;
+	weekDays["tues"] = 2;
+	weekDays["wednesday"] = 3;
+	weekDays["wed"] = 3;
+	weekDays["thursday"] = 4;
+	weekDays["thur"] = 4;
+	weekDays["thurs"] = 4;
+	weekDays["friday"] = 5;
+	weekDays["fri"] = 5;
+	weekDays["saturday"] = 6;
+	weekDays["sat"] = 6;
+	weekDays["sunday"] = 7;
+	weekDays["sun"] = 7;
 
-	std::map<string,int>::iterator it1 = weekday.begin(); 
+	std::map<string,int>::iterator iter = weekDays.begin(); 
 	bool isMatch = false;
-	while((it1 != weekday.end()) && (!isMatch)){
-		if(it1->first == weekDay){
-			weekDayIndex = it1->second;
+	while((iter != weekDays.end()) && (!isMatch)){
+		if(iter->first == weekDay){
+			weekDayIndex = iter->second;
 			isMatch = true;
 		}
-		it1++;
+		iter++;
 	}
 
-
-	std::map<string,int>::iterator it2 = weekday.begin(); 
-	bool isFound = false;
-	while((it2 != weekday.end()) && (!isFound)){
-		if(it2->first == currentWeekDay){
-			currentWeekDayIndex = it2->second;
-			isFound = true;
-		}
-		it2++;
-	}
-
-	if(weekDayIndex > currentWeekDayIndex){
+	if(weekDayIndex > currentWeekDayIndex) {
 		diffInDay = weekDayIndex - currentWeekDayIndex;
-	}else if(weekDayIndex == currentWeekDayIndex){
+	} else if(weekDayIndex == currentWeekDayIndex) {
 		diffInDay = 7;
-	}else{
+	} else {
 		diffInDay = weekDayIndex - currentWeekDayIndex + 7;
 	}
 	currentDay = currentDay + diffInDay; 
+
 	//if the current month have 30 days
 	if((currentMonth == 4) || (currentMonth == 6) || (currentMonth == 9) || (currentMonth == 11)) {
 		if(currentDay > 30) {
@@ -277,14 +268,17 @@ bool DateTimeParser::mapWeekDay(string weekDay,int&_date,int&_month,int&_year) {
 			currentMonth = currentMonth + 1;
 		}
 	}
-
-	_month = currentMonth;
-	_year = currentYear;
-	_date = currentDay;
-	return isMatch;
+	if(isMatch) {
+		_month = currentMonth;
+		_year = currentYear;
+		_date = currentDay;
+		return true;
+	} else {
+		return false;
+	}
 }
 
-int DateTimeParser::mapMonth(string inputMonth){
+int DateTimeParser::mapMonth(string inputMonth) {
 	std::map<string,int> month;
 	month["january"] = 1;
 	month["jan"] = 1;
@@ -327,8 +321,8 @@ int DateTimeParser::mapMonth(string inputMonth){
 	if (isFound) {
 		return returnValue;
 	} else {
-		return 0;}
-
+		return 0;
+        }
 
 }
 

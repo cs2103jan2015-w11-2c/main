@@ -390,7 +390,9 @@ public:
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 	}
 
-	TEST_METHOD(mapWeekDayTest1) {
+
+		TEST_METHOD(mapWeekDayTest1) {
+
 		DateTimeParser parse;
 		string inputThu = "thursday";
 		string inputThuShort1 = "thurs";
@@ -409,18 +411,9 @@ public:
 		Assert::AreEqual(expectedDay, _date);
 		Assert::AreEqual(expectedMonth, _month);
 		Assert::AreEqual(expectedYear, _year);
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThu,_date,_month,_year));
-		/*
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputMonShort,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputTue,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputTueShort1,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputTueShort2,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputWed,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputWedShort,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThu,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThuShort1,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThuShort2,_day,_month,_year));
-		*/
+
+		Assert::AreEqual(expectedResult, parse.mapWeekDay(inputThu, _date, _month, _year));
+	
 	}
 	// test for next Monday(when monday of this week alr passes)
 	TEST_METHOD(mapWeekDayTest2) {
