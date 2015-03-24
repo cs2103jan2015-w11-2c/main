@@ -1,6 +1,4 @@
-#include <map>
 #include "DateTimeParser.h"
-
 
 const string DateTimeParser::ERROR_NO_DAY_SPECIFIED = "Invalid input: No day specified after \"next\"";
 const string DateTimeParser::ERROR_NO_TIME_SPECIFIED = "Invalid input: Time expected after \"-\"";
@@ -118,13 +116,14 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	bool isNextWeek= false;
 	bool hasDash = false;
 	bool isFirstTimeInstance = true;
+	bool isSecondTimeInstance = false;
 	resetDateTime();
 	resetItemDateTime();
 
 	for(int i = 0; i < arrSize; i++) {
 		LOG(INFO) << "Starting to extract DateTime, round: " << i;
 
-		/*_day = mapToGetDate(inputArray[i],_month);*/
+		_day = mapWeekDay(inputArray[i],_day, _month, _year);
 
 		// throws exception if weekday is expected but not given
 		if(isNextWeek && _day == 0) {
@@ -133,7 +132,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 		}
 
 		// throws exception if time is expected but not given
-		if(hasDash && !separateHourMinute(inputArray[i], _startHour, _startMinute)) {
+		if(hasDash && !separateHourMinute(inputArray[i], _endHour, _endMinute)) {
 			hasDash = false;
 			throw std::out_of_range(ERROR_NO_TIME_SPECIFIED);
 		}
@@ -158,21 +157,22 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 			LOG(INFO) << "DELIMITED DATE";
 			// start time
 		} else if(isFirstTimeInstance && separateHourMinute(inputArray[i], _startHour, _startMinute)) {
-			LOG(INFO) << "START TIME";
 			isFirstTimeInstance = false;
+			LOG(INFO) << "START TIME";
 			// end time
 		} else if(!isFirstTimeInstance && hasDash && separateHourMinute(inputArray[i], _endHour, _endMinute)) {
-			LOG(INFO) << "END TIME";
-			isFirstTimeInstance = true;
 			hasDash = false;
+			isSecondTimeInstance = true;
+			LOG(INFO) << "END TIME";
 			// duration entered instead of end time
-		} else if(!isFirstTimeInstance && !hasDash && convertStringToInteger(inputArray[i]) > 0) {
-			LOG(INFO) << "DURATION ADDED FROM START";
-			isFirstTimeInstance = true;
-			_endHour = _startHour + convertStringToInteger(inputArray[i]);
+		} else if(!isFirstTimeInstance && !hasDash && (convertStringToInteger(inputArray[i]) > 0)) {
+			int duration = convertStringToInteger(inputArray[i]);
+			_startHour == 24 ? _endHour = 1 : _endHour = _startHour + duration;
 			_endMinute = _startMinute;
+			isSecondTimeInstance = true;
+			LOG(INFO) << "DURATION ADDED FROM START";
 			// "m", "p", or "pm" keywords
-		} else if(!isFirstTimeInstance && is12Hour(inputArray[i], _startHour)) {
+		} else if(!isSecondTimeInstance && is12Hour(inputArray[i], _startHour)) {
 			LOG(INFO) << "PM OR M, Start Hour";
 		} else if(is12Hour(inputArray[i], _endHour)) {
 			LOG(INFO) << "PM OR M, End Hour";
@@ -180,14 +180,15 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 		LOG(INFO) << "********************************************";
 
 		//try {
-		verifyAllDateTime();
 		/*} catch(exception &e) {
-		LOG(ERROR) << "Exception Triggered!";
-		LOG(ERROR) << e.what();
+			LOG(ERROR) << "Exception Triggered!";
+			LOG(ERROR) << e.what();
 		}*/
-
+		
 		updateItemFields();
 	}
+		verifyAllDateTime();
+
 }
 
 /*
@@ -482,10 +483,10 @@ bool DateTimeParser::isDelimitedDate(string input) {
 }
 
 bool DateTimeParser::is12Hour(string input, int& hour) {
-	if ((input == "p") || (input == "pm") || ((input == "m") && (hour == 12))) {
+	if (((input == "p") || (input == "pm")) || ((input == "m") && (hour == 12))) {
 		hour += 12;
 		//ignores p for 24hr input
-		if (!_dateTime.isValidTime(hour, 0)) {
+		if (!_dateTime.isValidTime(hour, 0) || (hour == 24 && input != "m")) {
 			hour -= 12;
 		}
 		return true;
@@ -508,7 +509,7 @@ bool DateTimeParser::separateHourMinute(string hourMinute, int& hour, int& minut
 	char *intEnd;
 	hour = (int)strtol(hourMinute.c_str(), &intEnd, 10);
 	minute = (int)strtol(intEnd + 1, &intEnd, 10);
-
+	
 	if(*intEnd != 0) {
 		minute = 0;
 	}
@@ -517,15 +518,10 @@ bool DateTimeParser::separateHourMinute(string hourMinute, int& hour, int& minut
 }
 
 void DateTimeParser::verifyAllDateTime() {
-	verifyItemDate(_day, _month, _year);
-	verifyItemTime(_startHour, _startMinute);
-	verifyItemTime(_endHour, _endMinute);
-	verifyStartEndTime(_startHour, _startMinute, _endHour, _endMinute);
-	/*
+	verifyItemDate(_item.eventDate[0], _item.eventDate[1], _item.eventDate[2]);
 	verifyItemTime(_item.eventStartTime[0], _item.eventStartTime[1]);
 	verifyItemTime(_item.eventEndTime[0], _item.eventEndTime[1]);
 	verifyStartEndTime(_item.eventStartTime[0], _item.eventStartTime[1], _item.eventEndTime[0], _item.eventEndTime[1]);
-	*/
 }
 
 void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
@@ -552,7 +548,9 @@ void DateTimeParser::verifyItemTime(int& hour, int& minute) {
 }
 
 void DateTimeParser::verifyStartEndTime(int startHr, int startMin, int& endHr, int& endMin) {
-	if((endHr < startHr) || ((endHr == startHr) && (endMin <= startMin))) {
+	int tempStartHr;
+	startHr == 24 ? tempStartHr = 0 : tempStartHr = startHr;
+	if((endHr < tempStartHr) || ((endHr <= tempStartHr) && (endMin <= startMin))) {
 		endHr = 0;
 		endMin = 0;
 		//throw std::out_of_range(ERROR_INVALID_END_TIME);

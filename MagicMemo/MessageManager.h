@@ -94,4 +94,3 @@ public:
 	// convert from System::String^ to std::string
 	string convertToStdString(String^);
 };
-
