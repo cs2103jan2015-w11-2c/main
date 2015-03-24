@@ -23,7 +23,7 @@ private:
 
 	Item _item;
 	DateTime _dateTime;
-	
+
 	int _day;
 	int _month;
 	int _year;
@@ -57,13 +57,9 @@ public:
 	// throws exceptions if invalid dates and times are input
 	void extractDateTime(string [], int);
 
-	//returns the weekday number if a match is found
-	//returns 0 if match is not found
-	int mapWeekDay(string);
-	
-	
-	//return the date from the weekday given
-	int mapToGetDate(string,int&);
+
+	//returns true if match is not found
+	bool mapWeekDay(string,int&,int&,int&);
 
 
 	// returns true if the string is a date of format day/month{/year}

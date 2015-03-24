@@ -124,7 +124,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	for(int i = 0; i < arrSize; i++) {
 		LOG(INFO) << "Starting to extract DateTime, round: " << i;
 
-		_day = mapToGetDate(inputArray[i],_month);
+		/*_day = mapToGetDate(inputArray[i],_month);*/
 
 		// throws exception if weekday is expected but not given
 		if(isNextWeek && _day == 0) {
@@ -184,85 +184,93 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 }
 
 // TO BE EDITED!!!!
-int DateTimeParser::mapWeekDay(string weekDay) {
+bool DateTimeParser::mapWeekDay(string weekDay,int&_month,int&_date,int&_year) {
 	string currentWeekDay = _dateTime.getCurrentWeekDay();
-	int spacePos = weekDay.find_first_of(" ");
-	int weekDayNo;
-	int currentWeekDayNo;
-	int diffInDay;
-	int currentDay;
-
-	if(weekDay =="Monday"){
-	weekDayNo = 1;
-	}else if(weekDay =="Tuesday"){
-	weekDayNo = 2;
-	}else if(weekDay =="Wednesday"){
-	weekDayNo = 3;
-	}else if(weekDay =="Thursday"){
-	weekDayNo = 4;
-	}else if(weekDay =="Friday"){
-	weekDayNo = 5;
-	}else if(weekDay =="Saturday"){
-	weekDayNo = 6;
-	}else if(weekDay =="Sunday"){
-	weekDayNo = 7;
-	}
-   
-	
-	if(currentWeekDay =="Monday"){
-	currentWeekDayNo = 1;
-	}else if(currentWeekDay =="Tuesday"){
-	currentWeekDayNo = 2;
-	}else if(currentWeekDay =="Wednesday"){
-	currentWeekDayNo = 3;
-	}else if(currentWeekDay =="Thursday"){
-	currentWeekDayNo = 4;
-	}else if(currentWeekDay =="Friday"){
-	currentWeekDayNo = 5;
-	}else if(currentWeekDay =="Saturday"){
-	currentWeekDayNo = 6;
-	}else if(currentWeekDay =="Sunday"){
-	currentWeekDayNo = 7;
-	}
-
-	 diffInDay = currentWeekDayNo/* - weekDayNo*/;
-     currentDay = _dateTime.getCurrentDay() + diffInDay;
-     
-	 return currentDay;
-}
-
-int DateTimeParser::mapToGetDate(string weekDay,int&_month) {
-    int currentDay=mapWeekDay(weekDay);
-	int currentMonth = _dateTime.getCurrentMonth();
+	int currentMonth= _dateTime.getCurrentMonth();
 	int currentYear = _dateTime.getCurrentYear();
+	int spacePos = weekDay.find_first_of(" ");
+	int diffInDay;
+	bool isMatch = true;
 
+	int currentDay = _dateTime.getCurrentDay();
+	//initialise current weekday Number as 0
+	int currentWeekDayNo = 0;
+	if(currentWeekDay =="monday"){
+		currentWeekDayNo = 1;
+	}else if(currentWeekDay =="tuesday"){
+		currentWeekDayNo = 2;
+	}else if(currentWeekDay =="wednesday"){
+		currentWeekDayNo = 3;
+	}else if(currentWeekDay =="thursday"){
+		currentWeekDayNo = 4;
+	}else if(currentWeekDay =="friday"){
+		currentWeekDayNo = 5;
+	}else if(currentWeekDay =="saturday"){
+		currentWeekDayNo = 6;
+	}else if(currentWeekDay =="sunday"){
+		currentWeekDayNo = 7;
+	}
+	//initialise weekDayNo with a zero value
+	int weekDayNo = 0;
+	if((weekDay =="monday")||(weekDay =="mon")){
+		weekDayNo = 1;
+	}else if((weekDay =="tuesday")||(weekDay =="tue")||(weekDay == "tues")){
+		weekDayNo = 2;
+	}else if((weekDay =="wednesday")||(weekDay =="wed")){
+		weekDayNo = 3;
+	}else if((weekDay =="thursday")||(weekDay =="thurs")||(weekDay =="thur")){
+		weekDayNo = 4;
+	}else if((weekDay =="friday")||(weekDay =="fri")){
+		weekDayNo = 5;
+	}else if((weekDay =="saturday")||(weekDay =="sat")){
+		weekDayNo = 6;
+	}else if((weekDay =="sunday")||(weekDay =="sun")){
+		weekDayNo = 7;
+	}else{
+		isMatch = false;
+	}
+
+
+	diffInDay = weekDayNo - currentWeekDayNo;
+
+	//if the current month have 30 days
 	if((currentMonth == 4) || (currentMonth == 6) || (currentMonth == 9) || (currentMonth == 11)) {
 		if(currentDay > 30) {
 			currentDay = currentDay - 30;
 			currentMonth = currentMonth + 1;
 		}
+		//if current month is feburary in a leap year, there are 29 days,else there are 28 days 
 	}else if(currentMonth == 2){
-	    if(currentYear%4 == 0){
-		 if(currentDay > 29) {
-			 currentDay = currentDay - 29;
-		     currentMonth = currentMonth + 1;
-		 }
+		if(currentYear%4 == 0){
+			if(currentDay > 29) {
+				currentDay = currentDay - 29;
+				currentMonth = currentMonth + 1;
+			}
 		}else if(currentYear%4 != 0){
-		 if(currentDay > 28) {
-			 currentDay = currentDay - 28;
-		 currentMonth = currentMonth + 1;
+			if(currentDay > 28) {
+				currentDay = currentDay - 28;
+				currentMonth = currentMonth + 1;
+			}
 		}
-	}
-
-	}else {
+		//
+	}else if(currentMonth == 12){
+		if(currentDay>31){
+			currentDay = currentDay - 30;
+			currentMonth = 1;
+			currentYear=currentYear+1;
+		}
+	}else{
 		if(currentDay > 31) {
 			currentDay = currentDay - 31;
 			currentMonth = currentMonth + 1;
 		}
 	}
 	_month = currentMonth;
-	return currentDay;
+	_year = currentYear;
+	_date = currentDay;
+	return isMatch;
 }
+
 
 
 bool DateTimeParser::isDelimitedDate(string input) {
@@ -271,7 +279,7 @@ bool DateTimeParser::isDelimitedDate(string input) {
 
 	if (dateDelimiterPos != string::npos) {
 		separateDayMonthYear(input, _day, _month, _year);
-		
+
 		try {
 			verifyItemDate(_day, _month, _year);
 		} catch (const out_of_range& e) {
@@ -300,7 +308,7 @@ void DateTimeParser::separateDayMonthYear(string input, int& day, int& month, in
 	day = (int)strtol(input.c_str(), &intEnd, 10);
 	month = (int)strtol(intEnd + 1, &intEnd, 10);
 	year = (int)strtol(intEnd + 1, &intEnd, 10);
-	
+
 	if((*intEnd != 0) || (year == 0)) {
 		year = _dateTime.getCurrentYear();
 	}
@@ -310,11 +318,11 @@ bool DateTimeParser::separateHourMinute(string hourMinute, int& hour, int& minut
 	char *intEnd;
 	hour = (int)strtol(hourMinute.c_str(), &intEnd, 10);
 	minute = (int)strtol(intEnd + 1, &intEnd, 10);
-	
+
 	if(*intEnd != 0) {
 		minute = 0;
 	}
-	
+
 	return (hour != 0);
 }
 
@@ -331,7 +339,7 @@ void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
 	} else if (year < 2000) {
 		year += 2000;
 	}
-	
+
 	if (!_dateTime.isValidDate(day, month, year)) {
 		day = 0;
 		month = 0;
