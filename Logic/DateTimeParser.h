@@ -59,7 +59,9 @@ public:
 
 	//returns the weekday number if a match is found
 	//returns 0 if match is not found
-	int mapWeekDay(string);
+	bool mapWeekDay(string, int&, int&, int&);
+
+	int mapMonth(string);
 
 	// returns true if the string is a date of format day/month{/year}
 	bool isDelimitedDate(string input);
