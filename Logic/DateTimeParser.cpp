@@ -1,4 +1,4 @@
-
+#include <map>
 #include "DateTimeParser.h"
 
 
@@ -268,9 +268,56 @@ bool DateTimeParser::mapWeekDay(string weekDay,int&_month,int&_date,int&_year) {
 	_month = currentMonth;
 	_year = currentYear;
 	_date = currentDay;
+    return isMatch;
 }
 
+int DateTimeParser::mapMonth(string inputMonth){
+	std::map<string,int> month;
+	month["january"] = 1;
+	month["jan"] = 1;
+	month["february"] = 2;
+	month["feb"] = 2;
+	month["march"] = 3;
+	month["mar"] = 3;
+	month["april"] = 4;
+	month["apr"] = 4;
+	month ["may"] = 5;
+	month["june"] = 6;
+	month["jun"] = 6;
+	month["july"] = 7;
+	month["jul"] = 7;
+	month["august"] = 8;
+	month["aug"] = 8;
+	month["september"]= 9;
+	month["sep"] = 9;
+	month["sept"] = 9;
+	month["october"] = 10;
+	month["oct"] = 10;
+	month["november"] = 11;
+	month["nov"] = 11;
+	month["novem"] = 11;
+	month ["december"] = 12;
+	month["dec"] = 12;
+	month["decem"] = 12;
+	
+	int returnValue;
+	bool isFound=false;
+	std::map<string,int>::iterator it=month.begin(); 
 
+	while((it!=month.end()) && (!isFound)){
+		if(it->first == inputMonth){
+		returnValue = it->second;
+		isFound = true;}
+		it++;
+	}
+    
+	if (isFound){
+	return returnValue;
+	}else{
+	return 0;}
+
+
+}
 
 bool DateTimeParser::isDelimitedDate(string input) {
 

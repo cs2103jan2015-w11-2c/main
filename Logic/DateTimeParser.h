@@ -60,7 +60,9 @@ public:
 
 	//returns true if match is not found
 	bool mapWeekDay(string,int&,int&,int&);
-
+	
+	//return the month in terms of number if can match,else return 0
+	int mapMonth(string);
 
 	// returns true if the string is a date of format day/month{/year}
 	bool isDelimitedDate(string input);

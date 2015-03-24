@@ -357,12 +357,12 @@ public:
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputTue,_day,_month,_year));
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputTueShort1,_day,_month,_year));
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputTueShort2,_day,_month,_year));
-		//Assert::AreEqual(expectedResult,parse.mapWeekDay(inputWed,_day,_month,_year));
-		//Assert::AreEqual(expectedResult,parse.mapWeekDay(inputWedShort,_day,_month,_year));
+		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputWed,_day,_month,_year));
+		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputWedShort,_day,_month,_year));
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThu,_day,_month,_year));
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThuShort1,_day,_month,_year));
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThuShort2,_day,_month,_year));
-		
+
 	}
 
 	TEST_METHOD(mapWeekDayTest2) {
@@ -379,7 +379,7 @@ public:
 		int _year;
 
 		bool expectedResult = true; 
-		
+
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputFri,_day,_month,_year));
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputFriShort,_day,_month,_year));
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputSat,_day,_month,_year));
@@ -387,19 +387,110 @@ public:
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputSun,_day,_month,_year));
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputSunShort,_day,_month,_year));
 	}
+
 	//test for invalid input string
 	TEST_METHOD(mapWeekDayTest3) {
-	DateTimeParser parse;
+		DateTimeParser parse;
 		string input1 = "today";
 		string input2 = "wronginput";
 		int _day;
 		int _month;
 		int _year;
-		bool expectedResult = true; 
+		bool expectedResult = false; 
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(input1,_day,_month,_year));
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(input2,_day,_month,_year));
 	}
-	};
+
+
+	TEST_METHOD(mapMonthTest){
+		DateTimeParser parse;
+		string test1= "january";
+		string testShort1= "jan";
+		string test2= "february";
+		string testShort2= "feb";
+		string test3= "march";
+		string testShort3= "mar";
+		string test4= "april";
+		string testShort4= "apr";
+		string test5= "may";
+		string test6= "june";
+		string testShort6= "jun";
+		string test7= "july";
+		string testShort7= "jul";
+		string test8= "august";
+		string testShort8= "aug";
+		string test9= "september";
+		string testShort9= "sept";
+		string test10= "october";
+		string testShort10= "oct";
+		string test11= "november";
+		string testShort11= "nov";
+		string testShort111= "novem";
+		string test12= "december";
+		string testShort12= "dec";
+
+		int expectedOutput1 = 1;
+		int expectedOutput1d = 1;
+		int expectedOutput2 = 2;
+		int expectedOutput2d = 2;
+		int expectedOutput3 = 3;
+		int expectedOutput3d = 3;
+		int expectedOutput4 = 4;
+		int expectedOutput4d = 4;
+		int expectedOutput5 = 5;
+		int expectedOutput6 = 6;
+		int expectedOutput6d = 6;
+		int expectedOutput7 = 7;
+		int expectedOutput7d = 7;
+		int expectedOutput8 = 8;
+		int expectedOutput8d = 8;
+		int expectedOutput9 = 9;
+		int expectedOutput9d = 9;
+		int expectedOutput10 = 10;
+		int expectedOutput10d = 10;
+		int expectedOutput11 = 11;
+		int expectedOutput11d = 11;
+		int expectedOutput11c = 11;
+		int expectedOutput12 = 12;
+		int expectedOutput12d = 12;
+
+		Assert::AreEqual(expectedOutput1,parse.mapMonth(test1));
+		Assert::AreEqual(expectedOutput1d,parse.mapMonth(testShort1));
+		Assert::AreEqual(expectedOutput2,parse.mapMonth(test2));
+		Assert::AreEqual(expectedOutput2d,parse.mapMonth(testShort2));
+		Assert::AreEqual(expectedOutput3,parse.mapMonth(test3));
+		Assert::AreEqual(expectedOutput3d,parse.mapMonth(testShort3));
+		Assert::AreEqual(expectedOutput4,parse.mapMonth(test4));
+		Assert::AreEqual(expectedOutput4d,parse.mapMonth(testShort4));
+		Assert::AreEqual(expectedOutput5,parse.mapMonth(test5));
+		Assert::AreEqual(expectedOutput6,parse.mapMonth(test6));
+		Assert::AreEqual(expectedOutput6d,parse.mapMonth(testShort6));
+		Assert::AreEqual(expectedOutput7,parse.mapMonth(test7));
+		Assert::AreEqual(expectedOutput7d,parse.mapMonth(testShort7));
+		Assert::AreEqual(expectedOutput8,parse.mapMonth(test8));
+		Assert::AreEqual(expectedOutput8d,parse.mapMonth(testShort8));
+		Assert::AreEqual(expectedOutput9,parse.mapMonth(test9));
+		Assert::AreEqual(expectedOutput9d,parse.mapMonth(testShort9));
+		Assert::AreEqual(expectedOutput10,parse.mapMonth(test10));
+		Assert::AreEqual(expectedOutput10d,parse.mapMonth(testShort10));
+		Assert::AreEqual(expectedOutput11,parse.mapMonth(test11));
+		Assert::AreEqual(expectedOutput11d,parse.mapMonth(testShort11));
+		Assert::AreEqual(expectedOutput11c,parse.mapMonth(testShort111));
+		Assert::AreEqual(expectedOutput12,parse.mapMonth(test12));
+		Assert::AreEqual(expectedOutput12d,parse.mapMonth(testShort12));	
+	}
+
+	//test for invalid input such as "friday" and "lastMonth"
+	TEST_METHOD(mapMonthTest2) {
+		DateTimeParser parse;
+		string test1= "friday";
+		string test2= "lastMonth";
+		int expectedZero = 0;
+		Assert::AreEqual(expectedZero,parse.mapMonth(test1));
+		Assert::AreEqual(expectedZero,parse.mapMonth(test2));
+	}
+	
+};
 
 
 	TEST_CLASS(DateTimeTest) {
