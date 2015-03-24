@@ -11,16 +11,19 @@ using namespace std;
 class MoveFileLocation : public Command {
 private:
 	string _fileLocation;
+	string _oldFileLocation;
 	string _message;
 
 public:
 	MoveFileLocation() {
 		_fileLocation = "";
+		_oldFileLocation = "";
 		_message = "";
 	}
 
 	MoveFileLocation(const string fileLocation) {
 		_fileLocation = fileLocation;
+		_oldFileLocation = "";
 		_message = "";
 	}
 
@@ -28,6 +31,7 @@ public:
 	}
 
 	void executeAction(FileStorage *outputFile) {
+		_oldFileLocation = outputFile->getFileLocation();
 		if(outputFile->changeFileLocation(_fileLocation)) {
 			char buffer[1000];
 			sprintf_s(buffer, SUCCESS_FILE_LOCATION_CHANGED.c_str(), outputFile->getFullFileName().c_str());
@@ -39,8 +43,5 @@ public:
 
 	string getMessage() {
 		return _message;
-	}
-	
-	void negateAction(vector<Item> &vectorStore) {
 	}
 };
