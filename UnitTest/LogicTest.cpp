@@ -328,8 +328,10 @@ public:
 	}
 
 	/* boundary case for full range of time values */
-	TEST_METHOD(extractDateTimeTest5) {
+TEST_METHOD(extractDateTimeTest5) {
+
 		string inputArray[] = {"12/5/15", "1:00", "-", "11:59", "p"}; 
+
 		Item item;
 		DateTimeParser parse;
 
@@ -345,7 +347,9 @@ public:
 		int expectedYear = 2015;
 		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
 
+
 		int expectedStartHour = 1;
+
 		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
 		int expectedStartMinute = 0;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);

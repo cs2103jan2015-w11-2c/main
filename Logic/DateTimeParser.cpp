@@ -123,7 +123,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	for(int i = 0; i < arrSize; i++) {
 		LOG(INFO) << "Starting to extract DateTime, round: " << i;
 
-		_day = mapWeekDay(inputArray[i],_day, _month, _year);
+		/*_day = mapToGetDate(inputArray[i],_month);*/
 
 		// throws exception if weekday is expected but not given
 		if(isNextWeek && _day == 0) {
@@ -178,13 +178,12 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 			LOG(INFO) << "PM OR M, End Hour";
 		}
 		LOG(INFO) << "********************************************";
-
-		//try {
-		/*} catch(exception &e) {
-			LOG(ERROR) << "Exception Triggered!";
-			LOG(ERROR) << e.what();
+        
+        /*} catch(exception &e) {
+		LOG(ERROR) << "Exception Triggered!";
+		LOG(ERROR) << e.what();
 		}*/
-		
+
 		updateItemFields();
 	}
 		verifyAllDateTime();
