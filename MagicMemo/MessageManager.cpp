@@ -140,7 +140,7 @@ Void MessageManager::colorTextInTaskBox(vector<HIGHLIGHT>* _numberHighlight,
 									for(unsigned int i = 0; i < _numberHighlight->size(); i++) {
 										taskBox->Select(_numberHighlight->at(i).index, _numberHighlight->at(i).length);
 										taskBox->SelectionColor = System::Drawing::Color::Black;
-										taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Italic);
+										taskBox->SelectionFont = gcnew System::Drawing::Font("Georgia", 12, FontStyle::Italic);
 										taskBox->SelectionAlignment = HorizontalAlignment::Left;
 									}
 
