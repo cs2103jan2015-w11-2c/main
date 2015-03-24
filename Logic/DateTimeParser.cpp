@@ -180,13 +180,12 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 			LOG(INFO) << "PM OR M, End Hour";
 		}
 		LOG(INFO) << "********************************************";
-
-		//try {
-		/*} catch(exception &e) {
-			LOG(ERROR) << "Exception Triggered!";
-			LOG(ERROR) << e.what();
+        
+        /*} catch(exception &e) {
+		LOG(ERROR) << "Exception Triggered!";
+		LOG(ERROR) << e.what();
 		}*/
-		
+
 		updateItemFields();
 	}
 		verifyAllDateTime();
@@ -194,55 +193,70 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 }
 
 // TO BE EDITED!!!!
-bool DateTimeParser::mapWeekDay(string weekDay,int&_month,int&_date,int&_year) {
+bool DateTimeParser::mapWeekDay(string weekDay,int&_date,int&_month,int&_year) {
 	string currentWeekDay = _dateTime.getCurrentWeekDay();
 	int currentMonth= _dateTime.getCurrentMonth();
 	int currentYear = _dateTime.getCurrentYear();
-	int spacePos = weekDay.find_first_of(" ");
-	int diffInDay;
-	bool isMatch = true;
-
 	int currentDay = _dateTime.getCurrentDay();
-	//initialise current weekday Number as 0
-	int currentWeekDayNo = 0;
-	if(currentWeekDay =="monday"){
-		currentWeekDayNo = 1;
-	}else if(currentWeekDay =="tuesday"){
-		currentWeekDayNo = 2;
-	}else if(currentWeekDay =="wednesday"){
-		currentWeekDayNo = 3;
-	}else if(currentWeekDay =="thursday"){
-		currentWeekDayNo = 4;
-	}else if(currentWeekDay =="friday"){
-		currentWeekDayNo = 5;
-	}else if(currentWeekDay =="saturday"){
-		currentWeekDayNo = 6;
-	}else if(currentWeekDay =="sunday"){
-		currentWeekDayNo = 7;
+	int spacePos = weekDay.find_first_of(" ");
+	int weekDayIndex = 6;
+	int currentWeekDayIndex  = 0;
+	int diffInDay;
+
+	std::map<string,int> weekday;
+	weekday["monday"] = 1;
+	weekday["Monday"] = 1;
+	weekday["mon"] = 1;
+	weekday["tuesday"] = 2;
+	weekday["Tuesday"] = 2;
+	weekday["tue"] = 2;
+	weekday["tues"] = 2;
+	weekday["wednesday"] = 3;
+	weekday["Wednesday"] = 3;
+	weekday["wed"] = 3;
+	weekday["thursday"] = 4;
+	weekday["Thursday"] = 4;
+	weekday["thur"] = 4;
+	weekday["thurs"] = 4;
+	weekday["friday"] = 5;
+	weekday["Friday"] = 5;
+	weekday["fri"] = 5;
+	weekday["saturday"] = 6;
+	weekday["Saturday"] = 6;
+	weekday["sat"] = 6;
+	weekday["sunday"] = 7;
+	weekday["Sunday"] = 7;
+	weekday["sun"] = 7;
+
+	std::map<string,int>::iterator it1=weekday.begin(); 
+	bool isMatch=false;
+	while((it1!=weekday.end()) && (!isMatch)){
+		if(it1->first == weekDay){
+			weekDayIndex = it1->second;
+			isMatch = true;
+		}
+		it1++;
 	}
-	//initialise weekDayNo with a zero value
-	int weekDayNo = 0;
-	if((weekDay =="monday")||(weekDay =="mon")){
-		weekDayNo = 1;
-	}else if((weekDay =="tuesday")||(weekDay =="tue")||(weekDay == "tues")){
-		weekDayNo = 2;
-	}else if((weekDay =="wednesday")||(weekDay =="wed")){
-		weekDayNo = 3;
-	}else if((weekDay =="thursday")||(weekDay =="thurs")||(weekDay =="thur")){
-		weekDayNo = 4;
-	}else if((weekDay =="friday")||(weekDay =="fri")){
-		weekDayNo = 5;
-	}else if((weekDay =="saturday")||(weekDay =="sat")){
-		weekDayNo = 6;
-	}else if((weekDay =="sunday")||(weekDay =="sun")){
-		weekDayNo = 7;
+
+
+	std::map<string,int>::iterator it2=weekday.begin(); 
+	bool isFound = false;
+	while((it2!=weekday.end()) && (!isFound)){
+		if(it2->first == currentWeekDay){
+			currentWeekDayIndex = it2->second;
+			isFound = true;
+		}
+		it2++;
+	}
+
+	if(weekDayIndex > currentWeekDayIndex){
+		diffInDay = weekDayIndex - currentWeekDayIndex;
+	}else if(weekDayIndex == currentWeekDayIndex){
+		diffInDay = 7;
 	}else{
-		isMatch = false;
+		diffInDay = weekDayIndex - currentWeekDayIndex + 7;
 	}
-
-
-	diffInDay = weekDayNo - currentWeekDayNo;
-
+	currentDay = currentDay + diffInDay; 
 	//if the current month have 30 days
 	if((currentMonth == 4) || (currentMonth == 6) || (currentMonth == 9) || (currentMonth == 11)) {
 		if(currentDay > 30) {
@@ -275,10 +289,11 @@ bool DateTimeParser::mapWeekDay(string weekDay,int&_month,int&_date,int&_year) {
 			currentMonth = currentMonth + 1;
 		}
 	}
+
 	_month = currentMonth;
 	_year = currentYear;
 	_date = currentDay;
-    return isMatch;
+	return isMatch;
 }
 
 int DateTimeParser::mapMonth(string inputMonth){
@@ -309,22 +324,22 @@ int DateTimeParser::mapMonth(string inputMonth){
 	month ["december"] = 12;
 	month["dec"] = 12;
 	month["decem"] = 12;
-	
+
 	int returnValue;
 	bool isFound=false;
 	std::map<string,int>::iterator it=month.begin(); 
 
 	while((it!=month.end()) && (!isFound)){
 		if(it->first == inputMonth){
-		returnValue = it->second;
-		isFound = true;}
+			returnValue = it->second;
+			isFound = true;}
 		it++;
 	}
-    
+
 	if (isFound){
-	return returnValue;
+		return returnValue;
 	}else{
-	return 0;}
+		return 0;}
 
 
 }
