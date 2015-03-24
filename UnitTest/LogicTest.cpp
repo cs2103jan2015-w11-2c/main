@@ -401,39 +401,15 @@ public:
 		Assert::AreEqual(expectedMonth, _month);
 		Assert::AreEqual(expectedYear, _year);
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThu,_date,_month,_year));
-		/*
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputMonShort,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputTue,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputTueShort1,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputTueShort2,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputWed,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputWedShort,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThu,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThuShort1,_day,_month,_year));
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThuShort2,_day,_month,_year));
-		*/
+		
 	}
 	// test for next Monday(when monday of this week alr passes)
 	TEST_METHOD(mapWeekDayTest2) {
 		DateTimeParser parse;
-		string inputFri = "friday";
-		string inputFriShort = "fri";
-		string inputSat = "saturday";
-		string inputSatShort = "sat";
-		string inputSun = "sunday";
-		string inputSunShort = "sun";
-
+	
 		string inputMon = "monday";
 		string inputMonShort = "mon";
-		string inputTue = "tuesday";
-		string inputTueShort1 = "tue";
-		string inputTueShort2 = "tues";
-		string inputWed = "wednesday";
-		string inputWedShort = "wed";
-		string inputThu = "thursday";
-		string inputThuShort1 = "thurs";
-		string inputThuShort2 = "thur";
-
+	
 		int _date;
 		int _month;
 		int _year;
@@ -447,7 +423,7 @@ public:
 		Assert::AreEqual(expectedDay, _date);
 		Assert::AreEqual(expectedMonth, _month);
 		Assert::AreEqual(expectedYear, _year);
-		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThu,_date,_month,_year));
+		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputMon,_date,_month,_year));
 	}
 	//test for next wednesday(while today is wednesday) and month increases by one
 	TEST_METHOD(mapWeekDayTest3) {
@@ -470,9 +446,61 @@ public:
 		Assert::AreEqual(expectedYear, _year);
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputWed,_date,_month,_year));
 	}
-
-	//test for invalid input string	
+	//test for next weekday in full weekday name 
 	TEST_METHOD(mapWeekDayTest4) {
+		DateTimeParser parse;
+		string input = "next thursday";
+		int _date;
+		int _month;
+		int _year;
+		int expectedDay = 2;
+		int expectedMonth = 4;
+		int expectedYear = 2015;
+
+		parse.mapWeekDay(input, _date, _month, _year);
+		bool expectedResult1 = true; 
+		Assert::AreEqual(expectedDay, _date);
+		Assert::AreEqual(expectedMonth, _month);
+		Assert::AreEqual(expectedYear, _year);
+	}
+	//test for capital letter "Next" and shortform of the weekday
+	TEST_METHOD(mapWeekDayTest5) {
+	    DateTimeParser parse;
+		string input = "Next fri";
+		int _date;
+		int _month;
+		int _year;
+		int expectedDay = 3;
+		int expectedMonth = 4;
+		int expectedYear = 2015;
+
+		parse.mapWeekDay(input, _date, _month, _year);
+		bool expectedResult = true; 
+		Assert::AreEqual(expectedDay, _date);
+		Assert::AreEqual(expectedMonth, _month);
+		Assert::AreEqual(expectedYear, _year);
+		Assert::AreEqual(expectedResult,parse.mapWeekDay(input,_date,_month,_year));
+	}
+	//test for next monday(or any weekday that is earlier or equal to the current weekday)
+	TEST_METHOD(mapWeekDayTest6) {
+	    DateTimeParser parse;
+		string input = "next monday";
+		int _date;
+		int _month;
+		int _year;
+		int expectedDay = 30;
+		int expectedMonth = 3;
+		int expectedYear = 2015;
+
+		parse.mapWeekDay(input, _date, _month, _year);
+		bool expectedResult = true; 
+		Assert::AreEqual(expectedDay, _date);
+		Assert::AreEqual(expectedMonth, _month);
+		Assert::AreEqual(expectedYear, _year);
+		Assert::AreEqual(expectedResult,parse.mapWeekDay(input,_date,_month,_year));
+	}
+	//test for invalid input string	
+	TEST_METHOD(mapWeekDayTest7) {
 		DateTimeParser parse;
 		string input1 = "today";
 		string input2 = "wronginput";
