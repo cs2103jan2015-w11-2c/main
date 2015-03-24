@@ -178,7 +178,14 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 			LOG(INFO) << "PM OR M, End Hour";
 		}
 		LOG(INFO) << "********************************************";
-		//verifyAllDateTime();
+
+		//try {
+			verifyAllDateTime();
+		/*} catch(exception &e) {
+			LOG(ERROR) << "Exception Triggered!";
+			LOG(ERROR) << e.what();
+		}*/
+		
 		updateItemFields();
 	}
 }
@@ -377,6 +384,11 @@ void DateTimeParser::verifyAllDateTime() {
 	verifyItemTime(_startHour, _startMinute);
 	verifyItemTime(_endHour, _endMinute);
 	verifyStartEndTime(_startHour, _startMinute, _endHour, _endMinute);
+	/*
+	verifyItemTime(_item.eventStartTime[0], _item.eventStartTime[1]);
+	verifyItemTime(_item.eventEndTime[0], _item.eventEndTime[1]);
+	verifyStartEndTime(_item.eventStartTime[0], _item.eventStartTime[1], _item.eventEndTime[0], _item.eventEndTime[1]);
+	*/
 }
 
 void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
@@ -390,7 +402,7 @@ void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
 		day = 0;
 		month = 0;
 		year = 0;
-		throw std::out_of_range(ERROR_INVALID_DATE_INPUT);
+		//throw std::out_of_range(ERROR_INVALID_DATE_INPUT);
 	}
 }
 
@@ -398,7 +410,7 @@ void DateTimeParser::verifyItemTime(int& hour, int& minute) {
 	if (!_dateTime.isValidTime(hour, minute)) {
 		hour = 0;
 		minute = 0;
-		throw std::out_of_range(ERROR_INVALID_TIME_INPUT);
+		//throw std::out_of_range(ERROR_INVALID_TIME_INPUT);
 	}
 }
 
@@ -406,7 +418,7 @@ void DateTimeParser::verifyStartEndTime(int startHr, int startMin, int& endHr, i
 	if((endHr < startHr) || ((endHr == startHr) && (endMin <= startMin))) {
 		endHr = 0;
 		endMin = 0;
-		throw std::out_of_range(ERROR_INVALID_END_TIME);
+		//throw std::out_of_range(ERROR_INVALID_END_TIME);
 	}
 }
 

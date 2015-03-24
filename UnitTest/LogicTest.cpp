@@ -125,7 +125,7 @@ public:
 
 	}
 
-	TEST_METHOD(VerifyItemDateTest) {
+	TEST_METHOD(VerifyItemTimeTest) {
 		DateTimeParser parse;
 		int expected;
 		int day = 20;
@@ -148,7 +148,7 @@ public:
 		try {
 			parse.verifyItemDate(day, month, year);
 		} catch (const out_of_range& e) {
-
+			e;
 		}
 		expected = 0;
 		Assert::AreEqual(expected, day);
@@ -156,6 +156,47 @@ public:
 		Assert::AreEqual(expected, month);
 		expected = 0;
 		Assert::AreEqual(expected, year);
+	}
+
+	TEST_METHOD(VerifyItemDateTest) {
+		DateTimeParser parse;
+		int expected;
+		int hour = 26;
+		int minute = 67;
+
+		try {
+			parse.verifyItemTime(hour, minute);
+		} catch (const out_of_range& e) {
+			e;
+		}
+
+		expected = 0;
+		Assert::AreEqual(expected, hour);
+		expected = 0;
+		Assert::AreEqual(expected, minute);
+
+	}
+
+	TEST_METHOD(VerifyStartEndTimeTest) {
+		DateTimeParser parse;
+		int expected;
+		int startHour = 14;
+		int startMinute = 0;
+
+		int endHour = 13;
+		int endMinute = 0;
+
+		try {
+			parse.verifyStartEndTime(startHour, startMinute, endHour, endMinute);
+		} catch (const out_of_range& e) {
+			e;
+		}
+
+		expected = 0;
+		Assert::AreEqual(expected, endHour);
+		expected = 0;
+		Assert::AreEqual(expected, endMinute);
+
 	}
 
 	TEST_METHOD(is12HourTest) {
@@ -177,6 +218,7 @@ public:
 		try {
 			parse.extractDateTime(inputArray, 1);
 		} catch (const out_of_range& e) {
+			e;
 		}
 
 		int expectedDay = 12;
@@ -204,6 +246,7 @@ public:
 		try {
 			parse.extractDateTime(inputArray, 1);
 		} catch (const out_of_range& e) {
+			e;
 		}
 
 		int expectedDay = 0;
@@ -232,7 +275,8 @@ public:
 
 		try {
 			parse.extractDateTime(inputArray, 4);
-		} catch (const out_of_range& e) {		
+		} catch (const out_of_range& e) {	
+			e;
 		}
 		int expectedDay = 12;
 		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
@@ -259,7 +303,8 @@ public:
 
 		try {
 			parse.extractDateTime(inputArray, 4);
-		} catch (const out_of_range& e) {		
+		} catch (const out_of_range& e) {	
+			e;
 		}
 		int expectedDay = 12;
 		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
@@ -286,7 +331,8 @@ public:
 
 		try {
 			parse.extractDateTime(inputArray, 5);
-		} catch (const out_of_range& e) {		
+		} catch (const out_of_range& e) {	
+			e;
 		}
 		int expectedDay = 12;
 		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
@@ -313,7 +359,8 @@ public:
 
 		try {
 			parse.updateItemDateTime(inputString, item);
-		} catch (const out_of_range& e) {		
+		} catch (const out_of_range& e) {	
+			e;
 		}
 
 		int expectedDay = 12;

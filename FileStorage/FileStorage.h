@@ -26,6 +26,8 @@ public:
 
 	string getFileName();
 
+	string getFileLocation();
+		
 	string getFullFileName();
 
 	vector<Item> getAllFileData();
