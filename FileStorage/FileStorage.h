@@ -23,6 +23,8 @@ public:
 
 	string getFileName();
 
+	string getFileLocation();
+		
 	string getFullFileName();
 
 	vector<string> getAllFileData();

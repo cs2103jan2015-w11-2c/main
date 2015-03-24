@@ -4,10 +4,12 @@ using namespace System;
 using namespace System::Windows::Forms;
 
 [STAThread] 
-void main(array<String^>^ args) { 
+int main(array<String^>^ argv) { 
 	Application::EnableVisualStyles(); 
 	Application::SetCompatibleTextRenderingDefault(false);
 
 	UI::MagicMemoGUI mainWindow; 
 	Application::Run(%mainWindow); 
+
+	return 0;
 }

@@ -105,11 +105,17 @@ namespace UI {
 			this->allTaskBoxLabel->AutoSize = true;
 			this->allTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 11.25F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+<<<<<<< HEAD
 			this->allTaskBoxLabel->Location = System::Drawing::Point(371, 54);
 			this->allTaskBoxLabel->Name = L"allTaskBoxLabel";
 			this->allTaskBoxLabel->Size = System::Drawing::Size(128, 17);
+=======
+			this->allTaskBoxLabel->Location = System::Drawing::Point(385, 51);
+			this->allTaskBoxLabel->Name = L"allTaskBoxLabel";
+			this->allTaskBoxLabel->Size = System::Drawing::Size(108, 20);
+>>>>>>> 8f85b4ae3fe9e007a9183d541082b0d9b753e179
 			this->allTaskBoxLabel->TabIndex = 5;
-			this->allTaskBoxLabel->Text = L"Upcoming Tasks";
+			this->allTaskBoxLabel->Text = L"Other Tasks";
 			// 
 			// programHeading
 			// 
@@ -233,6 +239,14 @@ namespace UI {
 			String^ successMessage = magicManager->getSuccessMessage();
 			successMessageLabel->Text = successMessage;
 
+<<<<<<< HEAD
+=======
+			int xCoord;
+			allTaskBoxLabel->Text = magicManager->getAllTaskBoxLabel(xCoord);
+			allTaskBoxLabel->Location = System::Drawing::Point(xCoord, 51);
+
+
+>>>>>>> 8f85b4ae3fe9e007a9183d541082b0d9b753e179
 			allTaskBox->Text = magicManager->getAllTaskBoxMessage();
 
 			vector<HIGHLIGHT>* _numberHighlight = magicManager->getNumberHighlight();

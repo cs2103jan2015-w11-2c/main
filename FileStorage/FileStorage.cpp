@@ -24,6 +24,10 @@ string FileStorage::getFileName() {
 	return fileName;
 }
 
+string FileStorage::getFileLocation() {
+	return filePath;
+}
+
 string FileStorage::getFullFileName() {
 	if(filePath == "") {
 		return fileName;
