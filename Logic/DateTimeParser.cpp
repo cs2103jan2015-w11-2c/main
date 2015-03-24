@@ -180,57 +180,48 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 			LOG(INFO) << "PM OR M, End Hour";
 		}
 		LOG(INFO) << "********************************************";
-        
-        /*} catch(exception &e) {
+
+		/*} catch(exception &e) {
 		LOG(ERROR) << "Exception Triggered!";
 		LOG(ERROR) << e.what();
 		}*/
 
 		updateItemFields();
 	}
-		verifyAllDateTime();
+	verifyAllDateTime();
 
 }
 
-// TO BE EDITED!!!!
 bool DateTimeParser::mapWeekDay(string weekDay,int&_date,int&_month,int&_year) {
 	string currentWeekDay = _dateTime.getCurrentWeekDay();
 	int currentMonth= _dateTime.getCurrentMonth();
 	int currentYear = _dateTime.getCurrentYear();
 	int currentDay = _dateTime.getCurrentDay();
-	int spacePos = weekDay.find_first_of(" ");
 	int weekDayIndex = 6;
 	int currentWeekDayIndex  = 0;
 	int diffInDay;
 
 	std::map<string,int> weekday;
 	weekday["monday"] = 1;
-	weekday["Monday"] = 1;
 	weekday["mon"] = 1;
 	weekday["tuesday"] = 2;
-	weekday["Tuesday"] = 2;
 	weekday["tue"] = 2;
 	weekday["tues"] = 2;
 	weekday["wednesday"] = 3;
-	weekday["Wednesday"] = 3;
 	weekday["wed"] = 3;
 	weekday["thursday"] = 4;
-	weekday["Thursday"] = 4;
 	weekday["thur"] = 4;
 	weekday["thurs"] = 4;
 	weekday["friday"] = 5;
-	weekday["Friday"] = 5;
 	weekday["fri"] = 5;
 	weekday["saturday"] = 6;
-	weekday["Saturday"] = 6;
 	weekday["sat"] = 6;
 	weekday["sunday"] = 7;
-	weekday["Sunday"] = 7;
 	weekday["sun"] = 7;
 
-	std::map<string,int>::iterator it1=weekday.begin(); 
-	bool isMatch=false;
-	while((it1!=weekday.end()) && (!isMatch)){
+	std::map<string,int>::iterator it1 = weekday.begin(); 
+	bool isMatch = false;
+	while((it1 != weekday.end()) && (!isMatch)){
 		if(it1->first == weekDay){
 			weekDayIndex = it1->second;
 			isMatch = true;
@@ -239,9 +230,9 @@ bool DateTimeParser::mapWeekDay(string weekDay,int&_date,int&_month,int&_year) {
 	}
 
 
-	std::map<string,int>::iterator it2=weekday.begin(); 
+	std::map<string,int>::iterator it2 = weekday.begin(); 
 	bool isFound = false;
-	while((it2!=weekday.end()) && (!isFound)){
+	while((it2 != weekday.end()) && (!isFound)){
 		if(it2->first == currentWeekDay){
 			currentWeekDayIndex = it2->second;
 			isFound = true;
@@ -260,30 +251,27 @@ bool DateTimeParser::mapWeekDay(string weekDay,int&_date,int&_month,int&_year) {
 	//if the current month have 30 days
 	if((currentMonth == 4) || (currentMonth == 6) || (currentMonth == 9) || (currentMonth == 11)) {
 		if(currentDay > 30) {
-			currentDay = currentDay - 30;
-			currentMonth = currentMonth + 1;
+			currentDay -= 30;
+			currentMonth++;
 		}
 		//if current month is feburary in a leap year, there are 29 days,else there are 28 days 
-	}else if(currentMonth == 2){
-		if(currentYear%4 == 0){
-			if(currentDay > 29) {
-				currentDay = currentDay - 29;
-				currentMonth = currentMonth + 1;
-			}
-		}else if(currentYear%4 != 0){
-			if(currentDay > 28) {
-				currentDay = currentDay - 28;
-				currentMonth = currentMonth + 1;
-			}
+	} else if((currentMonth == 2) && (_dateTime.isLeapYear(currentYear))) {
+		if(currentDay > 29) {
+			currentDay -= 29;
+			currentMonth++;
 		}
-		//
-	}else if(currentMonth == 12){
-		if(currentDay>31){
+	} else if((currentMonth == 2) && (!_dateTime.isLeapYear(currentYear))) {
+		if(currentDay > 28) {
+			currentDay -= 28;
+			currentMonth ++;
+		}
+	} else if(currentMonth == 12) {
+		if(currentDay>31) {
 			currentDay = currentDay - 30;
 			currentMonth = 1;
 			currentYear=currentYear+1;
 		}
-	}else{
+	} else {
 		if(currentDay > 31) {
 			currentDay = currentDay - 31;
 			currentMonth = currentMonth + 1;
@@ -326,8 +314,8 @@ int DateTimeParser::mapMonth(string inputMonth){
 	month["decem"] = 12;
 
 	int returnValue;
-	bool isFound=false;
-	std::map<string,int>::iterator it=month.begin(); 
+	bool isFound = false;
+	std::map<string,int>::iterator it = month.begin(); 
 
 	while((it!=month.end()) && (!isFound)){
 		if(it->first == inputMonth){
@@ -336,9 +324,9 @@ int DateTimeParser::mapMonth(string inputMonth){
 		it++;
 	}
 
-	if (isFound){
+	if (isFound) {
 		return returnValue;
-	}else{
+	} else {
 		return 0;}
 
 
@@ -389,7 +377,7 @@ bool DateTimeParser::separateHourMinute(string hourMinute, int& hour, int& minut
 	char *intEnd;
 	hour = (int)strtol(hourMinute.c_str(), &intEnd, 10);
 	minute = (int)strtol(intEnd + 1, &intEnd, 10);
-	
+
 	if(*intEnd != 0) {
 		minute = 0;
 	}
