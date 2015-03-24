@@ -177,6 +177,7 @@ public:
 
 	}
 
+	/* boundary condition, end time 1 minute less than start time */
 	TEST_METHOD(VerifyStartEndTimeTest) {
 		DateTimeParser parse;
 		int expected;
@@ -184,7 +185,7 @@ public:
 		int startMinute = 0;
 
 		int endHour = 13;
-		int endMinute = 0;
+		int endMinute = 59;
 
 		try {
 			parse.verifyStartEndTime(startHour, startMinute, endHour, endMinute);
