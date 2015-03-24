@@ -268,7 +268,6 @@ bool DateTimeParser::mapWeekDay(string weekDay,int&_month,int&_date,int&_year) {
 	_month = currentMonth;
 	_year = currentYear;
 	_date = currentDay;
-	return isMatch;
 }
 
 
