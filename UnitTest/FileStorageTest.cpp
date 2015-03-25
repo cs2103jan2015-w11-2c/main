@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include<fstream>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -13,6 +14,7 @@ public:
 	  Assert::AreEqual(expected, storage.getFileName());
 		}
 
+	
 
 	  TEST_METHOD(addLineTest) {
 	  FileStorage storage;
@@ -39,9 +41,25 @@ public:
 	  Assert::AreEqual(expectedStartHour, item.eventStartTime[0]);
 	  int expectedStartMinute=0;
 	  Assert::AreEqual(expectedStartMinute, item.eventStartTime[1]);
-
+	  
 	  }
-      };
+
+	  TEST_METHOD(addLine1Test) {
+	  fstream outFile;
+	  ostringstream out;
+	  FileStorage storage;
+	  outFile.open("HAHA.txt");
+	  Item item;
+     
+	  out << item.event;
+	  string temp=out.str();
+	  outFile.close();
+	  
+	  string expected="stuff [12/3 3:0";
+	  Assert::AreEqual(expected, temp);
+	 
+	 
+      }
    
     
-}
+}; }
