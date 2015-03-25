@@ -8,6 +8,8 @@
 using namespace std;
 
 class ClearItems : public Command {
+private:
+	vector<Item> _vectorStore;
 public:
 	ClearItems() {
 	}
@@ -16,10 +18,15 @@ public:
 	}
 
 	void executeAction(vector<Item>& vectorStore) {
+		_vectorStore = vectorStore;
 		vectorStore.clear();
 	}
 
 	string getMessage() {
 		return SUCCESS_CLEARED;
+	}
+
+	void negateAction(vector<Item> &vectorStore) {
+		vectorStore = _vectorStore;
 	}
 };

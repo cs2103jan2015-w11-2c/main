@@ -4,6 +4,9 @@
 #include <sstream>
 #include <vector>
 #include <Windows.h>
+#include "Item.h"
+#include "Parser.h"
+
 using namespace std;
 
 class FileStorage {
@@ -27,9 +30,9 @@ public:
 		
 	string getFullFileName();
 
-	vector<string> getAllFileData();
+	vector<Item> getAllFileData();
 
-	void addLine(string);
+	void addLine(Item);
 
 	bool clearFile();
 

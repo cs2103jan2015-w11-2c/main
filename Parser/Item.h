@@ -1,12 +1,14 @@
 #pragma once
 #include <iostream>
 #include <sstream>
-#include "DateTime.cpp"
+#include "DateTime.h"
 
 using namespace std;
 
 class Item {
 public:
+	static const string MESSAGE_UNDATED_TASK;
+
 	DateTime itemDate;
 	string event;
 	int eventDate[3];
@@ -21,7 +23,7 @@ public:
 	Item(void);
 	~Item(void);
 
-	void initilizeItem();
+	void initializeItem();
 	int getHour(int hour);
 	string getMinute(int minute);
 	string getAMPM(int hour);

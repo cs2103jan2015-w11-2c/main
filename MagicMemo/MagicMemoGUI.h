@@ -29,6 +29,8 @@ namespace UI {
 		MagicMemoGUI(void) {
 			InitializeComponent();
 			magicManager = gcnew MessageManager();
+			setGuiText("display");
+			successMessageLabel->Text = L"Welcome to Magic Memo!";
 		}
 
 	protected:
@@ -77,11 +79,11 @@ namespace UI {
 			// todayTaskBoxLabel
 			// 
 			this->todayTaskBoxLabel->AutoSize = true;
-			this->todayTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->todayTaskBoxLabel->Location = System::Drawing::Point(87, 50);
+			this->todayTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12.75F, System::Drawing::FontStyle::Regular, 
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			this->todayTaskBoxLabel->Location = System::Drawing::Point(95, 51);
 			this->todayTaskBoxLabel->Name = L"todayTaskBoxLabel";
-			this->todayTaskBoxLabel->Size = System::Drawing::Size(121, 18);
+			this->todayTaskBoxLabel->Size = System::Drawing::Size(126, 20);
 			this->todayTaskBoxLabel->TabIndex = 0;
 			this->todayTaskBoxLabel->Text = L"Today\'s Tasks";
 			// 
@@ -91,9 +93,9 @@ namespace UI {
 			this->commandInputBox->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
 			this->commandInputBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->commandInputBox->Location = System::Drawing::Point(23, 351);
+			this->commandInputBox->Location = System::Drawing::Point(19, 358);
 			this->commandInputBox->Name = L"commandInputBox";
-			this->commandInputBox->Size = System::Drawing::Size(536, 22);
+			this->commandInputBox->Size = System::Drawing::Size(555, 22);
 			this->commandInputBox->TabIndex = 1;
 			this->commandInputBox->Text = L"Enter text here:";
 			this->commandInputBox->UseWaitCursor = true;
@@ -103,29 +105,23 @@ namespace UI {
 			// allTaskBoxLabel
 			// 
 			this->allTaskBoxLabel->AutoSize = true;
-			this->allTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 11.25F, System::Drawing::FontStyle::Regular, 
+			this->allTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12.75F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-<<<<<<< HEAD
-			this->allTaskBoxLabel->Location = System::Drawing::Point(371, 54);
-			this->allTaskBoxLabel->Name = L"allTaskBoxLabel";
-			this->allTaskBoxLabel->Size = System::Drawing::Size(128, 17);
-=======
-			this->allTaskBoxLabel->Location = System::Drawing::Point(385, 51);
+			this->allTaskBoxLabel->Location = System::Drawing::Point(387, 51);
 			this->allTaskBoxLabel->Name = L"allTaskBoxLabel";
 			this->allTaskBoxLabel->Size = System::Drawing::Size(108, 20);
->>>>>>> 8f85b4ae3fe9e007a9183d541082b0d9b753e179
 			this->allTaskBoxLabel->TabIndex = 5;
 			this->allTaskBoxLabel->Text = L"Other Tasks";
 			// 
 			// programHeading
 			// 
 			this->programHeading->AutoSize = true;
-			this->programHeading->Font = (gcnew System::Drawing::Font(L"AR DELANEY", 32.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->programHeading->Font = (gcnew System::Drawing::Font(L"AR DELANEY", 35.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->programHeading->ForeColor = System::Drawing::Color::DarkBlue;
-			this->programHeading->Location = System::Drawing::Point(156, -2);
+			this->programHeading->Location = System::Drawing::Point(140, -2);
 			this->programHeading->Name = L"programHeading";
-			this->programHeading->Size = System::Drawing::Size(278, 52);
+			this->programHeading->Size = System::Drawing::Size(303, 57);
 			this->programHeading->TabIndex = 6;
 			this->programHeading->Text = L"Magic Memo";
 			// 
@@ -134,11 +130,11 @@ namespace UI {
 			this->allTaskBox->BackColor = System::Drawing::Color::White;
 			this->allTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->allTaskBox->Location = System::Drawing::Point(304, 76);
+			this->allTaskBox->Location = System::Drawing::Point(304, 75);
 			this->allTaskBox->Margin = System::Windows::Forms::Padding(5);
 			this->allTaskBox->Name = L"allTaskBox";
 			this->allTaskBox->ReadOnly = true;
-			this->allTaskBox->Size = System::Drawing::Size(255, 245);
+			this->allTaskBox->Size = System::Drawing::Size(270, 255);
 			this->allTaskBox->TabIndex = 7;
 			this->allTaskBox->Text = L"";
 			this->allTaskBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::allTaskBox_KeyDown);
@@ -146,11 +142,11 @@ namespace UI {
 			// successMessageLabel
 			// 
 			this->successMessageLabel->AutoSize = true;
-			this->successMessageLabel->Font = (gcnew System::Drawing::Font(L"Comic Sans MS", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->successMessageLabel->Location = System::Drawing::Point(25, 329);
+			this->successMessageLabel->Font = (gcnew System::Drawing::Font(L"Franklin Gothic Demi", 12, System::Drawing::FontStyle::Regular, 
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			this->successMessageLabel->Location = System::Drawing::Point(20, 335);
 			this->successMessageLabel->Name = L"successMessageLabel";
-			this->successMessageLabel->Size = System::Drawing::Size(170, 19);
+			this->successMessageLabel->Size = System::Drawing::Size(197, 21);
 			this->successMessageLabel->TabIndex = 8;
 			this->successMessageLabel->Text = L"Welcome to Magic Memo!";
 			// 
@@ -159,12 +155,12 @@ namespace UI {
 			this->todayTaskBox->BackColor = System::Drawing::Color::White;
 			this->todayTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->todayTaskBox->Location = System::Drawing::Point(23, 76);
+			this->todayTaskBox->Location = System::Drawing::Point(19, 75);
 			this->todayTaskBox->Margin = System::Windows::Forms::Padding(4);
 			this->todayTaskBox->Name = L"todayTaskBox";
 			this->todayTaskBox->ReadOnly = true;
-			this->todayTaskBox->Size = System::Drawing::Size(255, 245);
-			this->todayTaskBox->TabIndex = 9;
+			this->todayTaskBox->Size = System::Drawing::Size(270, 255);
+			this->todayTaskBox->TabIndex = 7;
 			this->todayTaskBox->Text = L"";
 			this->todayTaskBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::lastActionBox_KeyDown);
 			// 
@@ -172,7 +168,7 @@ namespace UI {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(586, 383);
+			this->ClientSize = System::Drawing::Size(590, 391);
 			this->Controls->Add(this->todayTaskBox);
 			this->Controls->Add(this->successMessageLabel);
 			this->Controls->Add(this->allTaskBox);
@@ -199,31 +195,36 @@ namespace UI {
 		System::Void commandInputBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
 			if(e->KeyCode == Keys::Enter) {
 				String^ inputText = commandInputBox->Text;
-				fillGUITextBoxes(inputText);
+				setGuiText(inputText);
+
+				magicManager->updateAutoCompleteSource(commandInputBox);
 			}
 
 			// Ctrl + Z
 			if (e->KeyData == (Keys::Control | Keys::Z)) {
-				fillGUITextBoxes("undo");
+				setGuiText("undo");
 			}   
 
 			// Ctrl + R
 			if (e->KeyData == (Keys::Control | Keys::R)) {
-				fillGUITextBoxes("redo");
+				setGuiText("redo");
 			}
-
 		}
 
 	private: 
 		// return focus to the intput textbox on keypress
 		System::Void allTaskBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
-			commandInputBox->Focus(); 
+			if((e->KeyCode != Keys::Up) && (e->KeyCode != Keys::Down) && (e->KeyCode != Keys::Left) && (e->KeyCode != Keys::Right)) {
+				commandInputBox->Focus(); 
+			}
 		}
 
 	private: 
 		// return focus to the intput textbox on keypress
 		System::Void lastActionBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
-			commandInputBox->Focus();    
+			if((e->KeyCode != Keys::Up) && (e->KeyCode != Keys::Down) && (e->KeyCode != Keys::Left) && (e->KeyCode != Keys::Right)) {
+				commandInputBox->Focus(); 
+			}
 		}
 
 	private: 
@@ -232,68 +233,40 @@ namespace UI {
 
 	private:
 		// Sets success message and fills task boxes
-		System::Void fillGUITextBoxes(String^ userInput) {
+		System::Void setGuiText(String^ userInput) {
 
 			magicManager->generateMessageOutputs(userInput);
 
 			String^ successMessage = magicManager->getSuccessMessage();
 			successMessageLabel->Text = successMessage;
 
-<<<<<<< HEAD
-=======
 			int xCoord;
 			allTaskBoxLabel->Text = magicManager->getAllTaskBoxLabel(xCoord);
 			allTaskBoxLabel->Location = System::Drawing::Point(xCoord, 51);
 
 
->>>>>>> 8f85b4ae3fe9e007a9183d541082b0d9b753e179
 			allTaskBox->Text = magicManager->getAllTaskBoxMessage();
+			todayTaskBox->Text = magicManager->getTodayTaskBoxMessage();
 
-			vector<HIGHLIGHT>* _numberHighlight = magicManager->getNumberHighlight();
-			vector<HIGHLIGHT>* _dateHighlight = magicManager->getDateHighlight();
-			vector<HIGHLIGHT>* _timeHighlight = magicManager->getTimeHighlight();
-			vector<HIGHLIGHT>* _eventHighlight = magicManager->getEventHighlight();
+			magicManager->colorAllTaskBox(allTaskBox);
+			magicManager->colorTodayTaskBox(todayTaskBox);
 
-			for(unsigned int i = 0; i < _dateHighlight->size(); i++) {
-				allTaskBox->Select(_dateHighlight->at(i).index,_dateHighlight->at(i).length);
-				allTaskBox->SelectionColor = System::Drawing::Color::Brown;
-				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Times", 16, FontStyle::Bold);
-				allTaskBox->SelectionAlignment = HorizontalAlignment::Center;
-			}
+			clearCommandBox();
 
-			for(unsigned int i = 0; i < _numberHighlight->size(); i++) {
-				allTaskBox->Select(_numberHighlight->at(i).index, _numberHighlight->at(i).length);
-				allTaskBox->SelectionColor = System::Drawing::Color::Black;
-				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Times", 14, FontStyle::Regular);
-				allTaskBox->SelectionAlignment = HorizontalAlignment::Left;
-			
-			}
+			checkExit(successMessage);
+		}
 
-			for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
-				allTaskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
-				allTaskBox->SelectionColor = System::Drawing::Color::Green;
-				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Times", 14, FontStyle::Regular);
-				allTaskBox->SelectionAlignment = HorizontalAlignment::Left;
-			}
-
-			for(unsigned int i = 0; i < _eventHighlight->size(); i++) {
-				allTaskBox->Select(_eventHighlight->at(i).index, _eventHighlight->at(i).length);
-				allTaskBox->SelectionColor = System::Drawing::Color::Blue;
-				allTaskBox->SelectionFont = gcnew System::Drawing::Font("Times", 14, FontStyle::Regular);
-				allTaskBox->SelectionAlignment = HorizontalAlignment::Left;
-			}
-
-
+		System::Void clearCommandBox() {
 			commandInputBox->Text = "";
 			commandInputBox->SelectionStart = 100;
+		}
 
-			if (successMessage == "exit") {
+		System::Void checkExit(String^ input) {
+			if (input == "exit") {
 				MessageBox::Show("Good bye!");
 				Application::Exit();
 			}
 		}
-
-
 	};
 
 }
