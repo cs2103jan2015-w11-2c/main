@@ -644,7 +644,6 @@ public:
 
 
 	};
-
 	TEST_CLASS(CommandTest) {
 	public:
 		TEST_METHOD(itemToStringTest) {
