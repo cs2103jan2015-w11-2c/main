@@ -23,7 +23,7 @@ private:
 
 	Item _item;
 	DateTime _dateTime;
-
+	
 	int _day;
 	int _month;
 	int _year;
@@ -60,7 +60,6 @@ public:
 	//returns the weekday number if a match is found
 	//returns 0 if match is not found
 	bool mapWeekDay(string, int&, int&, int&);
-
 
 	int mapMonth(string);
 
@@ -100,4 +99,3 @@ public:
 	Item getItem();
 
 };
-
