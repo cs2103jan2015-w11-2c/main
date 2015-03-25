@@ -136,20 +136,21 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 		}
 
 		// "next" keyword
-		if(inputArray[i] == "next") {
+		if((inputArray[i] == "next") || (inputArray[i] == "nex")) {
 			LOG(INFO) << "NEXT";
 			isNextWeek = true;
 			// "-" keyword
 		} else if(inputArray[i] == "-") {
-			LOG(INFO) << "DASH";
 			hasDash = true;
+			LOG(INFO) << "DASH";
 			// weekday (e.g. Friday)
 		} else if(mapWeekDay(inputArray[i], _day, _month, _year)) {
-			LOG(INFO) << "WEEKDAY";
 			if(isNextWeek) {
 				_day += 7;
+				handleDayOverflow(_day, _month, _year);
 				isNextWeek = false;
 			} 
+			LOG(INFO) << "WEEKDAY";
 			// date/month/year
 		} else if(isDelimitedDate(inputArray[i])) {
 			LOG(INFO) << "DELIMITED DATE";
@@ -225,20 +226,15 @@ bool DateTimeParser::mapWeekDay(string weekDay, int& _date, int &_month, int &_y
 		iter++;
 	}
 
-	diffInDay = (weekDayIndex - currentWeekDayIndex + 7) % 7;
-
-	currentDay = currentDay + diffInDay; 
-
-	if((currentDay > 31) && (currentMonth == 12)) {
-		currentDay -= 31;
-		currentMonth = 1;
-		currentYear++;
+	if(weekDayIndex == currentWeekDayIndex) {
+		diffInDay = 7;
+	} else {
+		diffInDay = (weekDayIndex - currentWeekDayIndex + 7) % 7;
 	}
 
-	if(currentDay > _dateTime.numDaysInMonth(currentMonth, currentYear)) {
-		currentMonth++;
-		currentDay -= _dateTime.numDaysInMonth(currentMonth, currentYear);
-	}
+	currentDay += diffInDay; 
+
+	handleDayOverflow(currentDay, currentMonth, currentYear);
 
 	if(isMatch) {
 		_month = currentMonth;
@@ -295,6 +291,19 @@ int DateTimeParser::mapMonth(string inputMonth) {
 	} else {
 		return 0;}
 
+}
+
+void DateTimeParser::handleDayOverflow(int& day, int& month, int& year) {
+	if((day > 31) && (month == 12)) {
+		day -= 31;
+		month = 1;
+		year++;
+	}
+
+	if(day > _dateTime.numDaysInMonth(month, year)) {
+		day -= _dateTime.numDaysInMonth(month, year);
+		month++;
+	}
 }
 
 bool DateTimeParser::isDelimitedDate(string input) {
