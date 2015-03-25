@@ -390,6 +390,8 @@ TEST_METHOD(extractDateTimeTest5) {
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 	}
 
+	/*test case for a weekday that is in the same week*/
+	/*test for full weekday name and shor forms*/
 	TEST_METHOD(mapWeekDayTest1) {
 		DateTimeParser parse;
 		string inputThu = "thursday";
@@ -411,7 +413,18 @@ TEST_METHOD(extractDateTimeTest5) {
 		Assert::AreEqual(expectedYear, _year);
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThu,_date,_month,_year));
 		
+		Assert::AreEqual(expectedDay, _date);
+		Assert::AreEqual(expectedMonth, _month);
+		Assert::AreEqual(expectedYear, _year);
+		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThuShort1,_date,_month,_year));
+
+		Assert::AreEqual(expectedDay, _date);
+		Assert::AreEqual(expectedMonth, _month);
+		Assert::AreEqual(expectedYear, _year);
+		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThuShort2,_date,_month,_year));
 	}
+
+
 	// test for next Monday(when monday of this week alr passes)
 	TEST_METHOD(mapWeekDayTest2) {
 		DateTimeParser parse;
@@ -434,7 +447,9 @@ TEST_METHOD(extractDateTimeTest5) {
 		Assert::AreEqual(expectedYear, _year);
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputMon,_date,_month,_year));
 	}
-	//test for next wednesday(while today is wednesday) and month increases by one
+	
+	/*test case for next wednesday(while today is wednesday) and*/
+	/*month increases by one*/
 	TEST_METHOD(mapWeekDayTest3) {
 		DateTimeParser parse;
 		string inputWed = "wednesday";
@@ -455,7 +470,8 @@ TEST_METHOD(extractDateTimeTest5) {
 		Assert::AreEqual(expectedYear, _year);
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputWed,_date,_month,_year));
 	}
-	//test for next weekday in full weekday name 
+
+	/*test for next weekday in full weekday name */
 	TEST_METHOD(mapWeekDayTest4) {
 		DateTimeParser parse;
 		string input = "next thursday";
@@ -472,7 +488,8 @@ TEST_METHOD(extractDateTimeTest5) {
 		Assert::AreEqual(expectedMonth, _month);
 		Assert::AreEqual(expectedYear, _year);
 	}
-	//test for capital letter "Next" and shortform of the weekday
+
+	/*test for capital letter "Next" and shortform of the weekday*/
 	TEST_METHOD(mapWeekDayTest5) {
 	    DateTimeParser parse;
 		string input = "Next fri";
@@ -490,7 +507,9 @@ TEST_METHOD(extractDateTimeTest5) {
 		Assert::AreEqual(expectedYear, _year);
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(input,_date,_month,_year));
 	}
-	//test for next monday(or any weekday that is earlier or equal to the current weekday)
+
+	/*test for next monday(or any weekday that is */
+	/*earlier or equal to the current weekday)*/
 	TEST_METHOD(mapWeekDayTest6) {
 	    DateTimeParser parse;
 		string input = "next monday";
@@ -521,8 +540,8 @@ TEST_METHOD(extractDateTimeTest5) {
 		Assert::AreEqual(expectedResult,parse.mapWeekDay(input2,_day,_month,_year));
 	}
 
-
-	TEST_METHOD(mapMonthTest){
+	/*test case for all full and short forms of the 12 months*/
+	TEST_METHOD(mapMonthTest1){
 		DateTimeParser parse;
 		string test1= "january";
 		string testShort1= "jan";
@@ -600,7 +619,7 @@ TEST_METHOD(extractDateTimeTest5) {
 		Assert::AreEqual(expectedOutput12d,parse.mapMonth(testShort12));	
 	}
 
-	//test for invalid input such as "friday" and "lastMonth"
+	/*test case for invalid input such as "friday" and "lastMonth"*/
 	TEST_METHOD(mapMonthTest2) {
 		DateTimeParser parse;
 		string test1= "friday";
