@@ -122,7 +122,6 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 
 	for(int i = 0; i < arrSize; i++) {
 		LOG(INFO) << "Starting to extract DateTime, round: " << i;
-
 		/*
 		// throws exception if weekday is expected but not given
 		if(isNextWeek && _day == 0) {
@@ -137,20 +136,21 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 		}
 
 		// "next" keyword
-		if(inputArray[i] == "next") {
+		if((inputArray[i] == "next") || (inputArray[i] == "nex")) {
 			LOG(INFO) << "NEXT";
 			isNextWeek = true;
 			// "-" keyword
 		} else if(inputArray[i] == "-") {
-			LOG(INFO) << "DASH";
 			hasDash = true;
+			LOG(INFO) << "DASH";
 			// weekday (e.g. Friday)
 		} else if(mapWeekDay(inputArray[i], _day, _month, _year)) {
-			LOG(INFO) << "WEEKDAY";
 			if(isNextWeek) {
 				_day += 7;
+				handleDayOverflow(_day, _month, _year);
 				isNextWeek = false;
 			} 
+			LOG(INFO) << "WEEKDAY";
 			// date/month/year
 		} else if(isDelimitedDate(inputArray[i])) {
 			LOG(INFO) << "DELIMITED DATE";
@@ -178,6 +178,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 		}
 		LOG(INFO) << "********************************************";
 
+		//try {
 		/*} catch(exception &e) {
 		LOG(ERROR) << "Exception Triggered!";
 		LOG(ERROR) << e.what();
@@ -189,16 +190,12 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 
 }
 
-
 bool DateTimeParser::mapWeekDay(string weekDay, int& _date, int &_month, int &_year) {
 	int currentMonth= _dateTime.getCurrentMonth();
 	int currentYear = _dateTime.getCurrentYear();
 	int currentDay = _dateTime.getCurrentDay();
 	int weekDayIndex = 0;
 	int currentWeekDayIndex = _dateTime.getIntWeekDay(currentDay, currentMonth, currentYear);
-
-	int spacePos = weekDay.find_first_of(" ");
-
 	int diffInDay;
 
 	std::map<string,int> weekDays;
@@ -229,20 +226,15 @@ bool DateTimeParser::mapWeekDay(string weekDay, int& _date, int &_month, int &_y
 		iter++;
 	}
 
-	diffInDay = (weekDayIndex - currentWeekDayIndex + 7) % 7;
-
-	currentDay = currentDay + diffInDay; 
-
-	if((currentDay > 31) && (currentMonth == 12)) {
-		currentDay -= 31;
-		currentMonth = 1;
-		currentYear++;
+	if(weekDayIndex == currentWeekDayIndex) {
+		diffInDay = 7;
+	} else {
+		diffInDay = (weekDayIndex - currentWeekDayIndex + 7) % 7;
 	}
 
-	if(currentDay > _dateTime.numDaysInMonth(currentMonth, currentYear)) {
-		currentMonth++;
-		currentDay -= _dateTime.numDaysInMonth(currentMonth, currentYear);
-	}
+	currentDay += diffInDay; 
+
+	handleDayOverflow(currentDay, currentMonth, currentYear);
 
 	if(isMatch) {
 		_month = currentMonth;
@@ -252,126 +244,6 @@ bool DateTimeParser::mapWeekDay(string weekDay, int& _date, int &_month, int &_y
 	} else {
 		return false;
 	}
-}
-/*
-bool DateTimeParser::mapWeekDay(string weekDay,int&_date,int&_month,int&_year) {
-	string currentWeekDay = _dateTime.getCurrentWeekDay();
-	int currentMonth= _dateTime.getCurrentMonth();
-	int currentYear = _dateTime.getCurrentYear();
-	int currentDay = _dateTime.getCurrentDay();
-	string weekString = "";
-	int weekIndex;
-	int weekDayIndex = 0;
-	int currentWeekDayIndex  = 0;
-	int diffInDay;
-
-	int spacePos = weekDay.find_first_of(" ");
-	if(spacePos != string::npos){
-		weekString = weekDay.substr(0,spacePos);
-		weekDay = weekDay.substr(spacePos+1);
-	}
-	if ((weekString == "next")||(weekString == "Next")){
-		weekIndex = 7;
-	}else {
-		weekIndex = 0;
-	}
-
-
-	std::map<string,int> weekday;
-	weekday["monday"] = 1;
-	weekday["Monday"] = 1;
-	weekday["mon"] = 1;
-	weekday["tuesday"] = 2;
-	weekday["Tuesday"] = 2;
-	weekday["tue"] = 2;
-	weekday["tues"] = 2;
-	weekday["wednesday"] = 3;
-	weekday["Wednesday"] = 3;
-	weekday["wed"] = 3;
-	weekday["thursday"] = 4;
-	weekday["Thursday"] = 4;
-	weekday["thur"] = 4;
-	weekday["thurs"] = 4;
-	weekday["friday"] = 5;
-	weekday["Friday"] = 5;
-	weekday["fri"] = 5;
-	weekday["saturday"] = 6;
-	weekday["Saturday"] = 6;
-	weekday["sat"] = 6;
-	weekday["sunday"] = 7;
-	weekday["Sunday"] = 7;
-	weekday["sun"] = 7;
-
-	std::map<string,int>::iterator it1=weekday.begin(); 
-	bool isMatch=false;
-	while((it1!=weekday.end()) && (!isMatch)){
-		if(it1->first == weekDay){
-			weekDayIndex = it1->second;
-			isMatch = true;
-		}
-		it1++;
-	}
-
-
-	std::map<string,int>::iterator it2=weekday.begin(); 
-	bool isFound = false;
-	while((it2!=weekday.end()) && (!isFound)){
-		if(it2->first == currentWeekDay){
-			currentWeekDayIndex = it2->second;
-			isFound = true;
-		}
-		it2++;
-	}
-
-	if(weekDayIndex > currentWeekDayIndex){
-		if(weekIndex == 7){
-			diffInDay = weekDayIndex - currentWeekDayIndex +7;
-		}else if(weekIndex == 0){
-			diffInDay = weekDayIndex - currentWeekDayIndex;
-		}
-	}else if(weekDayIndex == currentWeekDayIndex){
-		diffInDay = 7;
-	}else{
-		diffInDay = weekDayIndex - currentWeekDayIndex + 7;
-	}
-	currentDay = currentDay + diffInDay; 
-	//if the current month have 30 days
-	if((currentMonth == 4) || (currentMonth == 6) || (currentMonth == 9) || (currentMonth == 11)) {
-		if(currentDay > 30) {
-			currentDay = currentDay - 30;
-			currentMonth = currentMonth + 1;
-		}
-		//if current month is feburary in a leap year, there are 29 days,else there are 28 days 
-	}else if(currentMonth == 2){
-		if(currentYear%4 == 0){
-			if(currentDay > 29) {
-				currentDay = currentDay - 29;
-				currentMonth = currentMonth + 1;
-			}
-		}else if(currentYear%4 != 0){
-			if(currentDay > 28) {
-				currentDay = currentDay - 28;
-				currentMonth = currentMonth + 1;
-			}
-		}
-		//
-	}else if(currentMonth == 12){
-		if(currentDay>31){
-			currentDay = currentDay - 30;
-			currentMonth = 1;
-			currentYear=currentYear+1;
-		}
-	}else{
-		if(currentDay > 31) {
-			currentDay = currentDay - 31;
-			currentMonth = currentMonth + 1;
-		}
-	}
-
-	_month = currentMonth;
-	_year = currentYear;
-	_date = currentDay;
-	return isMatch;
 }
 
 int DateTimeParser::mapMonth(string inputMonth) {
@@ -417,10 +289,22 @@ int DateTimeParser::mapMonth(string inputMonth) {
 	if (isFound) {
 		return returnValue;
 	} else {
-		return 0;
-        }
+		return 0;}
 
-}*/
+}
+
+void DateTimeParser::handleDayOverflow(int& day, int& month, int& year) {
+	if((day > 31) && (month == 12)) {
+		day -= 31;
+		month = 1;
+		year++;
+	}
+
+	if(day > _dateTime.numDaysInMonth(month, year)) {
+		day -= _dateTime.numDaysInMonth(month, year);
+		month++;
+	}
+}
 
 bool DateTimeParser::isDelimitedDate(string input) {
 
