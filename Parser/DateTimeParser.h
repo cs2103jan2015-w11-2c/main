@@ -59,7 +59,13 @@ public:
 
 	//returns the weekday number if a match is found
 	//returns 0 if match is not found
-	int mapWeekDay(string);
+	bool mapWeekDay(string, int&, int&, int&);
+
+	int mapMonth(string);
+
+	//only for use after operations such as adding 'next' to day
+	//handles days greater than the number of days in the current month
+	void handleDayOverflow(int& day, int& month, int& year);
 
 	// returns true if the string is a date of format day/month{/year}
 	bool isDelimitedDate(string input);

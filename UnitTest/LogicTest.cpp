@@ -177,6 +177,7 @@ public:
 
 	}
 
+	/* boundary condition, end time 1 minute less than start time */
 	TEST_METHOD(VerifyStartEndTimeTest) {
 		DateTimeParser parse;
 		int expected;
@@ -184,7 +185,7 @@ public:
 		int startMinute = 0;
 
 		int endHour = 13;
-		int endMinute = 0;
+		int endMinute = 59;
 
 		try {
 			parse.verifyStartEndTime(startHour, startMinute, endHour, endMinute);
@@ -268,64 +269,9 @@ public:
 
 	}
 
+	/* case of different date delimiters, with and w/o minutes, and non pm time */
 	TEST_METHOD(extractDateTimeTest3) {
-		string inputArray[] = {"12/5/15", "2:30", "-", "4"}; 
-		Item item;
-		DateTimeParser parse;
-
-		try {
-			parse.extractDateTime(inputArray, 4);
-		} catch (const out_of_range& e) {	
-			e;
-		}
-		int expectedDay = 12;
-		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
-		int expectedMonth = 5;
-		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
-		int expectedYear = 2015;
-		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
-
-		int expectedStartHour = 2;
-		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
-		int expectedStartMinute = 30;
-		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
-
-		int expectedEndHour = 4;
-		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
-		int expectedEndMinute = 0;
-		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
-	}
-
-	TEST_METHOD(extractDateTimeTest4) {
-		string inputArray[] = {"12/5/15", "3:25", "p", "5"}; 
-		Item item;
-		DateTimeParser parse;
-
-		try {
-			parse.extractDateTime(inputArray, 4);
-		} catch (const out_of_range& e) {	
-			e;
-		}
-		int expectedDay = 12;
-		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
-		int expectedMonth = 5;
-		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
-		int expectedYear = 2015;
-		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
-
-		int expectedStartHour = 15;
-		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
-		int expectedStartMinute = 25;
-		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
-
-		int expectedEndHour = 20;
-		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
-		int expectedEndMinute = 25;
-		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
-	}
-
-	TEST_METHOD(extractDateTimeTest5) {
-		string inputArray[] = {"12/5/15", "3:25", "-", "5", "p"}; 
+		string inputArray[] = {"12.5.15", "12:30", "m", "-", "4"}; 
 		Item item;
 		DateTimeParser parse;
 
@@ -341,19 +287,78 @@ public:
 		int expectedYear = 2015;
 		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
 
-		int expectedStartHour = 3;
+		int expectedStartHour = 24;
 		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
-		int expectedStartMinute = 25;
+		int expectedStartMinute = 30;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
 
-		int expectedEndHour = 17;
+		int expectedEndHour = 4;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
 		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 	}
 
+	/* boundary cases 12 noon to 11 pm */
+	TEST_METHOD(extractDateTimeTest4) {
+		string inputArray[] = {"12/5/15", "12", "p", "11"}; 
+		Item item;
+		DateTimeParser parse;
+
+		try {
+			parse.extractDateTime(inputArray, 4);
+		} catch (const out_of_range& e) {	
+			e;
+		}
+		int expectedDay = 12;
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = 5;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+		int expectedStartHour = 12;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 00;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+
+		int expectedEndHour = 23;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+	/* boundary case for full range of time values */
+	TEST_METHOD(extractDateTimeTest5) {
+		string inputArray[] = {"12/5/15", "1:00", "-", "11:59", "p"}; 
+		Item item;
+		DateTimeParser parse;
+
+		try {
+			parse.extractDateTime(inputArray, 5);
+		} catch (const out_of_range& e) {	
+			e;
+		}
+		int expectedDay = 12;
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = 5;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+		int expectedStartHour = 1;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+
+		int expectedEndHour = 23;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 59;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+	/* boundary test for end time less than start time */
 	TEST_METHOD(updateItemDateTest) {
-		string inputString = "12/3/15 6 p - 7";
+		string inputString = "12/3/15 6 p - 5:59 p";
 		Item item;
 		DateTimeParser parse;
 
@@ -375,10 +380,192 @@ public:
 		int expectedStartMinute = 0;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
 
-		int expectedEndHour = 7;
+		int expectedEndHour = 0;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
 		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+		TEST_METHOD(mapWeekDayTest1) {
+		DateTimeParser parse;
+		string inputThu = "thursday";
+		string inputThuShort1 = "thurs";
+		string inputThuShort2 = "thur";
+
+		int _date;
+		int _month;
+		int _year;
+
+		int expectedDay = 26;
+		int expectedMonth = 3;
+		int expectedYear = 2015;
+		parse.mapWeekDay(inputThu, _date, _month, _year);
+
+		bool expectedResult = true; 
+		Assert::AreEqual(expectedDay, _date);
+		Assert::AreEqual(expectedMonth, _month);
+		Assert::AreEqual(expectedYear, _year);
+		Assert::AreEqual(expectedResult, parse.mapWeekDay(inputThu, _date, _month, _year));
+	
+	}
+	// test for next Monday(when monday of this week alr passes)
+	TEST_METHOD(mapWeekDayTest2) {
+		DateTimeParser parse;
+		string inputFri = "friday";
+		string inputFriShort = "fri";
+		string inputSat = "saturday";
+		string inputSatShort = "sat";
+		string inputSun = "sunday";
+		string inputSunShort = "sun";
+
+		string inputMon = "monday";
+		string inputMonShort = "mon";
+		string inputTue = "tuesday";
+		string inputTueShort1 = "tue";
+		string inputTueShort2 = "tues";
+		string inputWed = "wednesday";
+		string inputWedShort = "wed";
+		string inputThu = "thursday";
+		string inputThuShort1 = "thurs";
+		string inputThuShort2 = "thur";
+
+		int _date;
+		int _month;
+		int _year;
+
+		int expectedDay = 30;
+		int expectedMonth = 3;
+		int expectedYear = 2015;
+		parse.mapWeekDay(inputMon, _date, _month, _year);
+
+		bool expectedResult = true; 
+		Assert::AreEqual(expectedDay, _date);
+		Assert::AreEqual(expectedMonth, _month);
+		Assert::AreEqual(expectedYear, _year);
+		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputThu,_date,_month,_year));
+	}
+	//test for next wednesday(while today is wednesday) and month increases by one
+	TEST_METHOD(mapWeekDayTest3) {
+		DateTimeParser parse;
+		string inputWed = "wednesday";
+		string inputWedShort = "wed";
+
+		int _date;
+		int _month;
+		int _year;
+
+		int expectedDay = 1;
+		int expectedMonth = 4;
+		int expectedYear = 2015;
+		parse.mapWeekDay(inputWed, _date, _month, _year);
+
+		bool expectedResult = true; 
+		Assert::AreEqual(expectedDay, _date);
+		Assert::AreEqual(expectedMonth, _month);
+		Assert::AreEqual(expectedYear, _year);
+		Assert::AreEqual(expectedResult,parse.mapWeekDay(inputWed,_date,_month,_year));
+	}
+
+	//test for invalid input string	
+	TEST_METHOD(mapWeekDayTest4) {
+		DateTimeParser parse;
+		string input1 = "today";
+		string input2 = "wronginput";
+		int _day;
+		int _month;
+		int _year;
+		bool expectedResult = false; 
+		Assert::AreEqual(expectedResult,parse.mapWeekDay(input1,_day,_month,_year));
+		Assert::AreEqual(expectedResult,parse.mapWeekDay(input2,_day,_month,_year));
+	}
+
+
+	TEST_METHOD(mapMonthTest){
+		DateTimeParser parse;
+		string test1= "january";
+		string testShort1= "jan";
+		string test2= "february";
+		string testShort2= "feb";
+		string test3= "march";
+		string testShort3= "mar";
+		string test4= "april";
+		string testShort4= "apr";
+		string test5= "may";
+		string test6= "june";
+		string testShort6= "jun";
+		string test7= "july";
+		string testShort7= "jul";
+		string test8= "august";
+		string testShort8= "aug";
+		string test9= "september";
+		string testShort9= "sept";
+		string test10= "october";
+		string testShort10= "oct";
+		string test11= "november";
+		string testShort11= "nov";
+		string testShort111= "novem";
+		string test12= "december";
+		string testShort12= "dec";
+
+		int expectedOutput1 = 1;
+		int expectedOutput1d = 1;
+		int expectedOutput2 = 2;
+		int expectedOutput2d = 2;
+		int expectedOutput3 = 3;
+		int expectedOutput3d = 3;
+		int expectedOutput4 = 4;
+		int expectedOutput4d = 4;
+		int expectedOutput5 = 5;
+		int expectedOutput6 = 6;
+		int expectedOutput6d = 6;
+		int expectedOutput7 = 7;
+		int expectedOutput7d = 7;
+		int expectedOutput8 = 8;
+		int expectedOutput8d = 8;
+		int expectedOutput9 = 9;
+		int expectedOutput9d = 9;
+		int expectedOutput10 = 10;
+		int expectedOutput10d = 10;
+		int expectedOutput11 = 11;
+		int expectedOutput11d = 11;
+		int expectedOutput11c = 11;
+		int expectedOutput12 = 12;
+		int expectedOutput12d = 12;
+
+		Assert::AreEqual(expectedOutput1,parse.mapMonth(test1));
+		Assert::AreEqual(expectedOutput1d,parse.mapMonth(testShort1));
+		Assert::AreEqual(expectedOutput2,parse.mapMonth(test2));
+		Assert::AreEqual(expectedOutput2d,parse.mapMonth(testShort2));
+		Assert::AreEqual(expectedOutput3,parse.mapMonth(test3));
+		Assert::AreEqual(expectedOutput3d,parse.mapMonth(testShort3));
+		Assert::AreEqual(expectedOutput4,parse.mapMonth(test4));
+		Assert::AreEqual(expectedOutput4d,parse.mapMonth(testShort4));
+		Assert::AreEqual(expectedOutput5,parse.mapMonth(test5));
+		Assert::AreEqual(expectedOutput6,parse.mapMonth(test6));
+		Assert::AreEqual(expectedOutput6d,parse.mapMonth(testShort6));
+		Assert::AreEqual(expectedOutput7,parse.mapMonth(test7));
+		Assert::AreEqual(expectedOutput7d,parse.mapMonth(testShort7));
+		Assert::AreEqual(expectedOutput8,parse.mapMonth(test8));
+		Assert::AreEqual(expectedOutput8d,parse.mapMonth(testShort8));
+		Assert::AreEqual(expectedOutput9,parse.mapMonth(test9));
+		Assert::AreEqual(expectedOutput9d,parse.mapMonth(testShort9));
+		Assert::AreEqual(expectedOutput10,parse.mapMonth(test10));
+		Assert::AreEqual(expectedOutput10d,parse.mapMonth(testShort10));
+		Assert::AreEqual(expectedOutput11,parse.mapMonth(test11));
+		Assert::AreEqual(expectedOutput11d,parse.mapMonth(testShort11));
+		Assert::AreEqual(expectedOutput11c,parse.mapMonth(testShort111));
+		Assert::AreEqual(expectedOutput12,parse.mapMonth(test12));
+		Assert::AreEqual(expectedOutput12d,parse.mapMonth(testShort12));	
+	}
+
+	//test for invalid input such as "friday" and "lastMonth"
+	TEST_METHOD(mapMonthTest2) {
+		DateTimeParser parse;
+		string test1= "friday";
+		string test2= "lastMonth";
+		int expectedZero = 0;
+		Assert::AreEqual(expectedZero,parse.mapMonth(test1));
+		Assert::AreEqual(expectedZero,parse.mapMonth(test2));
 	}
 
 	};
