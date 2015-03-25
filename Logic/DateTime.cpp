@@ -53,24 +53,30 @@ bool DateTime::isLeapYear (int year) {
 	return (((year % 400) == 0) || (year % 4) == 0) && (((year % 100) != 0));
 }
 
+int DateTime::numDaysInMonth(const int& month, const int& year) {
+	if((month <= 0) || (month > 12)) {
+		return 0;
+	} else if((month == 4) || (month == 6) || (month == 9) || (month == 11)) {
+		return 30;
+	} else if(month == 2 && isLeapYear(year)) {
+		return 29;
+	} else if(month == 2 && !isLeapYear(year)) {
+		return 28;
+	} else {
+		return 31;
+	}
+}
+
 bool DateTime::isValidDate(int day, int month, int year) {
-	if((day <= 0) || (month <= 0) || (day > 31) || (month > 12)) {
+	if(year < MIN_YEAR || year > MAX_YEAR) {
 		return false;
 	}
 
-	if((month == 4) || (month == 6) || (month == 9) || (month || 11)) {
-		if(day > 30) {
-			return false;
-		}
+	if((month <= 0) || (month > 12)) {
+		return false;
 	}
 
-	if(month == 2) {
-		if(isLeapYear(year) && day <= 29) {
-			return true;
-		} else return (day < 29);
-	}
-
-	if(year < MIN_YEAR || year > MAX_YEAR) {
+	if((day <= 0) || (day > numDaysInMonth(month, year))) {
 		return false;
 	}
 
