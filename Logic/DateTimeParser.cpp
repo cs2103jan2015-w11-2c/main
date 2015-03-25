@@ -191,7 +191,6 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 
 
 bool DateTimeParser::mapWeekDay(string weekDay, int& _date, int &_month, int &_year) {
-	string currentWeekDay = _dateTime.getCurrentWeekDay();
 	int currentMonth= _dateTime.getCurrentMonth();
 	int currentYear = _dateTime.getCurrentYear();
 	int currentDay = _dateTime.getCurrentDay();
@@ -230,44 +229,21 @@ bool DateTimeParser::mapWeekDay(string weekDay, int& _date, int &_month, int &_y
 		iter++;
 	}
 
-	if(weekDayIndex > currentWeekDayIndex) {
-		diffInDay = weekDayIndex - currentWeekDayIndex;
-	} else if(weekDayIndex == currentWeekDayIndex) {
-		diffInDay = 7;
-	} else {
-		diffInDay = weekDayIndex - currentWeekDayIndex + 7;
-	}
+	diffInDay = (weekDayIndex - currentWeekDayIndex + 7) % 7;
+
 	currentDay = currentDay + diffInDay; 
 
-	//if the current month have 30 days
-	if((currentMonth == 4) || (currentMonth == 6) || (currentMonth == 9) || (currentMonth == 11)) {
-		if(currentDay > 30) {
-			currentDay -= 30;
-			currentMonth++;
-		}
-		//if current month is feburary in a leap year, there are 29 days,else there are 28 days 
-	} else if((currentMonth == 2) && (_dateTime.isLeapYear(currentYear))) {
-		if(currentDay > 29) {
-			currentDay -= 29;
-			currentMonth++;
-		}
-	} else if((currentMonth == 2) && (!_dateTime.isLeapYear(currentYear))) {
-		if(currentDay > 28) {
-			currentDay -= 28;
-			currentMonth ++;
-		}
-	} else if(currentMonth == 12) {
-		if(currentDay>31) {
-			currentDay = currentDay - 30;
-			currentMonth = 1;
-			currentYear=currentYear+1;
-		}
-	} else {
-		if(currentDay > 31) {
-			currentDay = currentDay - 31;
-			currentMonth = currentMonth + 1;
-		}
+	if((currentDay > 31) && (currentMonth == 12)) {
+		currentDay -= 31;
+		currentMonth = 1;
+		currentYear++;
 	}
+
+	if(currentDay > _dateTime.numDaysInMonth(currentMonth, currentYear)) {
+		currentMonth++;
+		currentDay -= _dateTime.numDaysInMonth(currentMonth, currentYear);
+	}
+
 	if(isMatch) {
 		_month = currentMonth;
 		_year = currentYear;
