@@ -45,6 +45,8 @@ public:
 
 	bool isLeapYear (int);
 
+	int numDaysInMonth(const int& month, const int& year);
+
 	bool isValidDate(int, int, int);
 
 	bool isValidTime(int, int);
