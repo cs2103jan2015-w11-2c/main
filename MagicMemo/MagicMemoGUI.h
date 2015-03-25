@@ -30,6 +30,7 @@ namespace UI {
 			InitializeComponent();
 			magicManager = gcnew MessageManager();
 			setGuiText("display");
+			successMessageLabel->Text = L"Welcome to Magic Memo!";
 		}
 
 	protected:
@@ -80,7 +81,7 @@ namespace UI {
 			this->todayTaskBoxLabel->AutoSize = true;
 			this->todayTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12.75F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->todayTaskBoxLabel->Location = System::Drawing::Point(86, 51);
+			this->todayTaskBoxLabel->Location = System::Drawing::Point(95, 51);
 			this->todayTaskBoxLabel->Name = L"todayTaskBoxLabel";
 			this->todayTaskBoxLabel->Size = System::Drawing::Size(126, 20);
 			this->todayTaskBoxLabel->TabIndex = 0;
@@ -92,9 +93,9 @@ namespace UI {
 			this->commandInputBox->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
 			this->commandInputBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->commandInputBox->Location = System::Drawing::Point(23, 358);
+			this->commandInputBox->Location = System::Drawing::Point(19, 358);
 			this->commandInputBox->Name = L"commandInputBox";
-			this->commandInputBox->Size = System::Drawing::Size(541, 22);
+			this->commandInputBox->Size = System::Drawing::Size(555, 22);
 			this->commandInputBox->TabIndex = 1;
 			this->commandInputBox->Text = L"Enter text here:";
 			this->commandInputBox->UseWaitCursor = true;
@@ -106,7 +107,7 @@ namespace UI {
 			this->allTaskBoxLabel->AutoSize = true;
 			this->allTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12.75F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->allTaskBoxLabel->Location = System::Drawing::Point(385, 51);
+			this->allTaskBoxLabel->Location = System::Drawing::Point(387, 51);
 			this->allTaskBoxLabel->Name = L"allTaskBoxLabel";
 			this->allTaskBoxLabel->Size = System::Drawing::Size(108, 20);
 			this->allTaskBoxLabel->TabIndex = 5;
@@ -129,11 +130,11 @@ namespace UI {
 			this->allTaskBox->BackColor = System::Drawing::Color::White;
 			this->allTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->allTaskBox->Location = System::Drawing::Point(305, 76);
+			this->allTaskBox->Location = System::Drawing::Point(304, 75);
 			this->allTaskBox->Margin = System::Windows::Forms::Padding(5);
 			this->allTaskBox->Name = L"allTaskBox";
 			this->allTaskBox->ReadOnly = true;
-			this->allTaskBox->Size = System::Drawing::Size(259, 245);
+			this->allTaskBox->Size = System::Drawing::Size(270, 255);
 			this->allTaskBox->TabIndex = 7;
 			this->allTaskBox->Text = L"";
 			this->allTaskBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::allTaskBox_KeyDown);
@@ -141,11 +142,11 @@ namespace UI {
 			// successMessageLabel
 			// 
 			this->successMessageLabel->AutoSize = true;
-			this->successMessageLabel->Font = (gcnew System::Drawing::Font(L"Comic Sans MS", 9.75F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
-				static_cast<System::Byte>(0)));
-			this->successMessageLabel->Location = System::Drawing::Point(25, 336);
+			this->successMessageLabel->Font = (gcnew System::Drawing::Font(L"Franklin Gothic Demi", 12, System::Drawing::FontStyle::Regular, 
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			this->successMessageLabel->Location = System::Drawing::Point(20, 335);
 			this->successMessageLabel->Name = L"successMessageLabel";
-			this->successMessageLabel->Size = System::Drawing::Size(170, 19);
+			this->successMessageLabel->Size = System::Drawing::Size(197, 21);
 			this->successMessageLabel->TabIndex = 8;
 			this->successMessageLabel->Text = L"Welcome to Magic Memo!";
 			// 
@@ -154,12 +155,12 @@ namespace UI {
 			this->todayTaskBox->BackColor = System::Drawing::Color::White;
 			this->todayTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->todayTaskBox->Location = System::Drawing::Point(23, 76);
+			this->todayTaskBox->Location = System::Drawing::Point(19, 75);
 			this->todayTaskBox->Margin = System::Windows::Forms::Padding(4);
 			this->todayTaskBox->Name = L"todayTaskBox";
 			this->todayTaskBox->ReadOnly = true;
-			this->todayTaskBox->Size = System::Drawing::Size(259, 245);
-			this->todayTaskBox->TabIndex = 9;
+			this->todayTaskBox->Size = System::Drawing::Size(270, 255);
+			this->todayTaskBox->TabIndex = 7;
 			this->todayTaskBox->Text = L"";
 			this->todayTaskBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::lastActionBox_KeyDown);
 			// 
