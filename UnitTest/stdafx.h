@@ -11,6 +11,7 @@
 #include "CppUnitTest.h"
 
 // TODO: reference additional headers your program requires here
+#include "Controller.h"
 #include "DateTimeParser.h"
 #include "Parser.h"
 #include "ITEM.h"
