@@ -132,7 +132,7 @@ Void MessageManager::colorTextInTaskBox(vector<HIGHLIGHT>* _numberHighlight,
 									for(unsigned int i = 0; i < _dateHighlight->size(); i++) {
 										taskBox->Select(_dateHighlight->at(i).index,_dateHighlight->at(i).length);
 										taskBox->SelectionColor = System::Drawing::Color::DarkBlue;
-										taskBox->SelectionFont = gcnew System::Drawing::Font("Cooper", 11, FontStyle::Bold);
+										taskBox->SelectionFont = gcnew System::Drawing::Font("Cooper", 10, FontStyle::Bold);
 										taskBox->SelectionAlignment = HorizontalAlignment::Center;
 									}
 
@@ -140,7 +140,7 @@ Void MessageManager::colorTextInTaskBox(vector<HIGHLIGHT>* _numberHighlight,
 									for(unsigned int i = 0; i < _numberHighlight->size(); i++) {
 										taskBox->Select(_numberHighlight->at(i).index, _numberHighlight->at(i).length);
 										taskBox->SelectionColor = System::Drawing::Color::Black;
-										taskBox->SelectionFont = gcnew System::Drawing::Font("Georgia", 12, FontStyle::Italic);
+										taskBox->SelectionFont = gcnew System::Drawing::Font("Georgia", 11, FontStyle::Italic);
 										taskBox->SelectionAlignment = HorizontalAlignment::Left;
 									}
 
@@ -148,7 +148,7 @@ Void MessageManager::colorTextInTaskBox(vector<HIGHLIGHT>* _numberHighlight,
 									for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
 										taskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
 										taskBox->SelectionColor = System::Drawing::Color::DarkGreen;
-										taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Regular);
+										taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 11, FontStyle::Regular);
 										taskBox->SelectionAlignment = HorizontalAlignment::Left;
 									}
 
@@ -156,7 +156,7 @@ Void MessageManager::colorTextInTaskBox(vector<HIGHLIGHT>* _numberHighlight,
 									for(unsigned int i = 0; i < _eventHighlight->size(); i++) {
 										taskBox->Select(_eventHighlight->at(i).index, _eventHighlight->at(i).length);
 										taskBox->SelectionColor = System::Drawing::Color::Black;
-										taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 12, FontStyle::Regular);
+										taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 11, FontStyle::Regular);
 										taskBox->SelectionAlignment = HorizontalAlignment::Left;
 									}
 }
