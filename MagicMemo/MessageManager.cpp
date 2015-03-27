@@ -17,6 +17,7 @@ MessageManager::MessageManager(void) {
 	_todayEventHighlight = new vector<HIGHLIGHT>;
 	_todayCompletedHighlight = new vector<HIGHLIGHT>;
 
+	isBoxExtended = false;
 	_userInput = "";
 	_successMessage = "";
 	_todayTaskBoxMessage = "";
@@ -37,7 +38,7 @@ Void MessageManager::generateMessageOutputs(String^ textFromUser) {
 	clearAllTaskIndexVectors();
 	calculateAllTaskIndexes();
 	_allTaskBoxMessage = toString(_allTaskVector);
-	
+
 	//todayTaskBox
 	clearTodayTaskIndexVectors();
 	calculateTodayTaskIndexes();
@@ -74,7 +75,7 @@ Void MessageManager::calculateAllTaskIndexes() {
 		temp.index = temp.index + temp.length;
 		temp.length = _allTaskVector->at(i).event.length();
 		_allEventHighlight->push_back(temp);
-		
+
 		indexCount = temp.index + temp.length + 1;
 	}
 }
@@ -109,7 +110,7 @@ Void MessageManager::calculateTodayTaskIndexes() {
 		temp.index = temp.index + temp.length;
 		temp.length = _todayTaskVector->at(i).event.length();
 		_todayEventHighlight->push_back(temp);
-		
+
 		indexCount = temp.index + temp.length + 1;
 	}
 }
@@ -167,6 +168,25 @@ Void MessageManager::updateAutoCompleteSource(TextBox^ inputBox) {
 	inputBox->AutoCompleteCustomSource->Add("search hello");
 	inputBox->AutoCompleteCustomSource->Add("search hi");
 
+}
+
+Void MessageManager::toggleTaskBoxSize(RichTextBox^ todayTaskBox, RichTextBox^ allTaskBox) {
+	if(isBoxExtended) {
+		isBoxExtended = false;
+		todayTaskBox->Location = System::Drawing::Point(19, 75);
+		todayTaskBox->Size = System::Drawing::Size(270, 255);
+
+		allTaskBox->Location = System::Drawing::Point(304, 75);
+		allTaskBox->Size = System::Drawing::Size(270, 255);
+		allTaskBox->Text = "Fail";
+	} else {
+		isBoxExtended = true;
+		todayTaskBox->Location = System::Drawing::Point(19, 10);
+		todayTaskBox->Size = System::Drawing::Size(270, 325);
+
+		allTaskBox->Location = System::Drawing::Point(304, 10);
+		allTaskBox->Size = System::Drawing::Size(270, 325);
+	}
 }
 
 String^ MessageManager::toString(vector<RESULT>* taskVector) {
