@@ -35,6 +35,8 @@ public:
 	//and stores it in _userCommand
 	void extractUserCommand();
 
+	vector <string> getFragmentedEvent();
+
 	size_t findFrontBracket(string);
 
 	//input format is [_day/_month time(24hrs) at the end of the input

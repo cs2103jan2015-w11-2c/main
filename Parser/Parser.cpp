@@ -39,7 +39,7 @@ vector<int> Parser::getLineOpNumber() {
 		int tempInt = lineNum;
 		numVector.push_back(lineNum);	
 		lineNum = (int)strtol(end + 1, &end, 10);
-		
+
 		if((tempChar == '-') && (lineNum > tempInt)) {
 			for(int i = 1; i < (lineNum - tempInt); i++) {
 				numVector.push_back(tempInt + i);
@@ -74,6 +74,50 @@ void Parser::extractUserCommand() {
 	}
 
 }
+
+vector <string> Parser::getFragmentedEvent(){
+	vector<string> outputVec;
+
+	size_t spacePos;
+	spacePos = _item.event.find_first_not_of("[");
+	string wholeEvent = _item.event.substr(0, spacePos - 1);
+	int i = 0;
+
+	spacePos = wholeEvent.find_first_of(" "); 
+	while(spacePos != string::npos){	 
+		outputVec[i] = wholeEvent.substr(spacePos);
+		wholeEvent = wholeEvent.substr(spacePos);
+		i++;
+		spacePos = wholeEvent.find_first_of(" ");
+	}
+
+	string colon = ":";
+	int startHour = _item.getHour(_item.eventStartTime[0]);
+	std::string startHr = std::to_string(startHour);
+	string startMin = _item.getMinute(_item.eventStartTime[1]);
+	string startTime = startHr + colon + startMin;
+
+	int endHour = _item.getHour(_item.eventEndTime[0]);
+	std::string endHr = std::to_string(endHour);
+	string endMin = _item.getMinute(_item.eventEndTime[1]);
+	string endTime = endHr + colon + endMin;
+
+	string monthStr = _item.itemDate.getMonth(_item.eventDate[0]);
+
+	//in sequence, the vector contains:
+	//weekday, day, interger month, 
+	//month, year, start time, end time.
+	outputVec[i] = _item.itemDate.getWeekDay(_item.eventDate[0], _item.eventDate[1], _item.eventDate[2]);
+	outputVec[i + 1] = _item.eventDate[0];
+	outputVec[i + 2] = _item.eventDate[1];
+	outputVec[i + 3] = monthStr;
+	outputVec[i + 4] = _item.eventDate[2];
+    outputVec[i + 5] = startTime;
+	outputVec[i + 6] = endTime;
+	
+	return outputVec;
+}
+
 
 size_t Parser::findFrontBracket(string inputLine) {
 	return (inputLine.find_last_of("["));

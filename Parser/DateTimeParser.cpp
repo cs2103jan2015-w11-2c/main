@@ -399,6 +399,29 @@ void DateTimeParser::verifyStartEndTime(int startHr, int startMin, int& endHr, i
 	}
 }
 
+bool DateTimeParser::isDateKeyWord(string inputWrod){
+	bool isKeyWord = false;
+	std::vector<string> weekDayContainer;
+	weekDayContainer.at(0) = "monday";
+	weekDayContainer.at(1) = "tuesday";
+	weekDayContainer.at(2) = "wednesday";
+	weekDayContainer.at(3) = "thursday";
+	weekDayContainer.at(4) = "friday";
+	weekDayContainer.at(5) = "saturday";
+	weekDayContainer.at(6) = "sunday";
+
+    std::vector<string> monthContainer;
+	monthContainer.at(0) = "january";
+	monthContainer.at(1) = "february";
+	monthContainer.at(3) = "march";
+	monthContainer.at(4) = "april";
+	monthContainer.at(2) = "may";
+	monthContainer.at(2) = "june";
+	monthContainer.at(2) = "july";
+	monthContainer.at(2) = "august";
+	monthContainer.at(2) = "september";
+	
+}
 int DateTimeParser::convertStringToInteger(string numberString) {
 	char *end;
 	return (int)strtol(numberString.c_str(), &end, 10);
