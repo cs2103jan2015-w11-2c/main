@@ -10,6 +10,9 @@ DateTimeParser::DateTimeParser(void) {
 	_day = 0;
 	_month = 0;
 	_year = 0;
+	_endDay = 0;
+	_endMonth = 0;
+	_endYear = 0;
 	_startHour = 0;
 	_startMinute = 0;
 	_endHour = 0;
@@ -28,6 +31,9 @@ void DateTimeParser::resetDateTime() {
 	_day = 0;
 	_month = 0;
 	_year = 0;
+	_endDay = 0;
+	_endMonth = 0;
+	_endYear = 0;
 	_startHour = 0;
 	_startMinute = 0;
 	_endHour = 0;
@@ -38,6 +44,9 @@ void DateTimeParser::resetItemDateTime() {
 	_item.eventDate[0] = 0;
 	_item.eventDate[1] = 0;
 	_item.eventDate[2] = 0;
+	_item.eventEndDate[0] = 0;
+	_item.eventEndDate[1] = 0;
+	_item.eventEndDate[2] = 0;
 	_item.eventStartTime[0] = 0;
 	_item.eventStartTime[1] = 0;
 	_item.eventEndTime[0] = 0;
@@ -45,15 +54,8 @@ void DateTimeParser::resetItemDateTime() {
 }
 
 void DateTimeParser::updateItemFields() {
-	LOG(INFO) << "Before update";
-
-	LOG(INFO) << _item.eventDate[0];
-	LOG(INFO) << _item.eventDate[1];
-	LOG(INFO) << _item.eventDate[2];
-	LOG(INFO) << _item.eventStartTime[0];
-	LOG(INFO) << _item.eventStartTime[1];
-	LOG(INFO) << _item.eventEndTime[0];
-	LOG(INFO) << _item.eventEndTime[1];
+	LOG(INFO) << "Item values update";
+	logItemValues();
 
 	if(_item.eventDate[0] == 0) {
 		_item.eventDate[0] = _day;
@@ -76,15 +78,9 @@ void DateTimeParser::updateItemFields() {
 	if(_item.eventEndTime[1] == 0) {
 		_item.eventEndTime[1] = _endMinute;
 	}
-	LOG(INFO) << "After update:";
-	LOG(INFO) << _item.eventDate[0];
-	LOG(INFO) << _item.eventDate[1];
-	LOG(INFO) << _item.eventDate[2];
-	LOG(INFO) << _item.eventStartTime[0];
-	LOG(INFO) << _item.eventStartTime[1];
-	LOG(INFO) << _item.eventEndTime[0];
-	LOG(INFO) << _item.eventEndTime[1];
-	LOG(INFO) << "";
+
+	LOG(INFO) << "Item values after update:";
+	logItemValues();
 }
 
 void DateTimeParser::setDate(int day, int month, int year) {
@@ -99,7 +95,7 @@ size_t DateTimeParser::findDateDelimiters(string inputLine) {
 
 void DateTimeParser::calculateDateTime(string input) {
 	istringstream iss(input);
-	string demarcateDateTime[7];
+	string demarcateDateTime[9];
 	int i = 0;
 	while (iss >> demarcateDateTime[i]) {
 		i++;
@@ -115,8 +111,10 @@ void DateTimeParser::calculateDateTime(string input) {
 void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	bool isNextWeek= false;
 	bool hasDash = false;
-	bool isFirstTimeInstance = true;
-	bool isSecondTimeInstance = false;
+	bool isStartTime = true;
+	bool isEndTime = false;
+	bool isStartDate = true;
+	bool isEndDate = false;
 	resetDateTime();
 	resetItemDateTime();
 
@@ -139,8 +137,8 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 		if((inputArray[i] == "next") || (inputArray[i] == "nex")) {
 			LOG(INFO) << "NEXT";
 			isNextWeek = true;
-			// "-" keyword
-		} else if(inputArray[i] == "-") {
+			// "-" or "to" keyword
+		} else if((inputArray[i] == "-") || (inputArray[i] == "to")) {
 			hasDash = true;
 			LOG(INFO) << "DASH";
 			// weekday (e.g. Friday)
@@ -149,29 +147,29 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 				_day += 7;
 				handleDayOverflow(_day, _month, _year);
 				isNextWeek = false;
-			} 
+			}
 			LOG(INFO) << "WEEKDAY";
 			// date/month/year
 		} else if(isDelimitedDate(inputArray[i])) {
 			LOG(INFO) << "DELIMITED DATE";
 			// start time
-		} else if(isFirstTimeInstance && separateHourMinute(inputArray[i], _startHour, _startMinute)) {
-			isFirstTimeInstance = false;
+		} else if(isStartTime && separateHourMinute(inputArray[i], _startHour, _startMinute)) {
+			isStartTime = false;
 			LOG(INFO) << "START TIME";
 			// end time
-		} else if(!isFirstTimeInstance && hasDash && separateHourMinute(inputArray[i], _endHour, _endMinute)) {
+		} else if(!isStartTime && hasDash && separateHourMinute(inputArray[i], _endHour, _endMinute)) {
 			hasDash = false;
-			isSecondTimeInstance = true;
+			isEndTime = true;
 			LOG(INFO) << "END TIME";
 			// duration entered instead of end time
-		} else if(!isFirstTimeInstance && !hasDash && (convertStringToInteger(inputArray[i]) > 0)) {
+		} else if(!isStartTime && !hasDash && (convertStringToInteger(inputArray[i]) > 0)) {
 			int duration = convertStringToInteger(inputArray[i]);
 			_startHour == 24 ? _endHour = 1 : _endHour = _startHour + duration;
 			_endMinute = _startMinute;
-			isSecondTimeInstance = true;
+			isEndTime = true;
 			LOG(INFO) << "DURATION ADDED FROM START";
 			// "m", "p", or "pm" keywords
-		} else if(!isSecondTimeInstance && is12Hour(inputArray[i], _startHour)) {
+		} else if(!isEndTime && is12Hour(inputArray[i], _startHour)) {
 			LOG(INFO) << "PM OR M, Start Hour";
 		} else if(is12Hour(inputArray[i], _endHour)) {
 			LOG(INFO) << "PM OR M, End Hour";
@@ -409,4 +407,17 @@ DateTimeParser::~DateTimeParser(void) {
 
 Item DateTimeParser::getItem() {
 	return _item;
+}
+
+void DateTimeParser::logItemValues() {
+	LOG(INFO) << _item.eventDate[0];
+	LOG(INFO) << _item.eventDate[1];
+	LOG(INFO) << _item.eventDate[2];
+	LOG(INFO) << _item.eventEndDate[0];
+	LOG(INFO) << _item.eventEndDate[1];
+	LOG(INFO) << _item.eventEndDate[2];
+	LOG(INFO) << _item.eventStartTime[0];
+	LOG(INFO) << _item.eventStartTime[1];
+	LOG(INFO) << _item.eventEndTime[0];
+	LOG(INFO) << _item.eventEndTime[1];
 }

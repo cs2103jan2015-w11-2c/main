@@ -27,6 +27,9 @@ private:
 	int _day;
 	int _month;
 	int _year;
+	int _endDay;
+	int _endMonth;
+	int _endYear;
 	int _startHour;
 	int _startMinute;
 	int _endHour;
@@ -101,6 +104,9 @@ public:
 
 	//For unit testing
 	Item getItem();
+
+	//For logging
+	void logItemValues();
 
 };
 

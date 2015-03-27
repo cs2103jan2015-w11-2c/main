@@ -14,6 +14,9 @@ void Item::initializeItem() {
 	eventDate[0] = 0;
 	eventDate[1] = 0;
 	eventDate[2] = 0;
+	eventEndDate[0] = 0;
+	eventEndDate[1] = 0;
+	eventEndDate[2] = 0;
 	eventStartTime[0] = 0;
 	eventStartTime[1] = 0;
 	eventEndTime[0] = 0;

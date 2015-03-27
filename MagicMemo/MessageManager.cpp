@@ -170,22 +170,19 @@ Void MessageManager::updateAutoCompleteSource(TextBox^ inputBox) {
 
 }
 
-Void MessageManager::toggleTaskBoxSize(RichTextBox^ todayTaskBox, RichTextBox^ allTaskBox) {
+Void MessageManager::toggleTaskBoxSize(RichTextBox^ allTaskBox, RichTextBox^ todayTaskBox) {
 	if(isBoxExtended) {
 		isBoxExtended = false;
-		todayTaskBox->Location = System::Drawing::Point(19, 75);
-		todayTaskBox->Size = System::Drawing::Size(270, 255);
-
 		allTaskBox->Location = System::Drawing::Point(304, 75);
 		allTaskBox->Size = System::Drawing::Size(270, 255);
-		allTaskBox->Text = "Fail";
+		todayTaskBox->Location = System::Drawing::Point(19, 75);
+		todayTaskBox->Size = System::Drawing::Size(270, 255);
 	} else {
 		isBoxExtended = true;
-		todayTaskBox->Location = System::Drawing::Point(19, 10);
-		todayTaskBox->Size = System::Drawing::Size(270, 325);
-
 		allTaskBox->Location = System::Drawing::Point(304, 10);
 		allTaskBox->Size = System::Drawing::Size(270, 325);
+		todayTaskBox->Location = System::Drawing::Point(19, 10);
+		todayTaskBox->Size = System::Drawing::Size(270, 325);
 	}
 }
 
