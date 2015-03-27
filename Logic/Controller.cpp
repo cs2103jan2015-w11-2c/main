@@ -340,6 +340,29 @@ void Controller::chronoSort(vector<Item> &vectorStore) {
 	}
 }
 
+void Controller::addToInputBank(const string input) {
+	istringstream iss(input);
+	vector<string>::iterator iter;
+
+	string inputWord = "";
+	while(iss >> inputWord) {
+		bool isFound = false;
+		for(iter = _inputBank.begin(); iter != _inputBank.end(); iter++) {
+			if (*iter == inputWord) {
+				isFound = true;
+				break;
+			}
+		}
+		if (!isFound) {
+			_inputBank.push_back(inputWord);
+		}
+	}
+}
+
+vector<string> Controller::getInputMemory() {
+	return _inputBank;
+}
+
 
 Controller::~Controller(void) {
 }
