@@ -359,7 +359,7 @@ void Controller::addToInputBank(const string input) {
 	}
 }
 
-vector<string> Controller::getInputMemory() {
+vector<string> Controller::getInputBank() {
 	return _inputBank;
 }
 
