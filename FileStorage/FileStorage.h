@@ -16,6 +16,7 @@ private:
 	string fileName;
 	string filePath;
 	string fullFileName;
+	string ArchiveFileName;
 
 public:
 	FileStorage(void);
@@ -61,6 +62,8 @@ public:
 
 	//returns the directory of the program
 	string programFilePath();
+
+	void Archive(Item);
 
 	~FileStorage(void);
 };

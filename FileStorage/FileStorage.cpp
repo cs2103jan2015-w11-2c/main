@@ -1,8 +1,10 @@
 #include "FileStorage.h"
 
+
 FileStorage::FileStorage(void) {
 	fileConfigFileName = "fileConfigurations.txt";
 	defaultFileName = "MagicMemo Task List.txt";
+	ArchiveFileName= "backup.txt";
 
 	if(isFileEmpty(fileConfigFileName)) {  //if not initialized
 		initializeFileConfig();
@@ -167,6 +169,26 @@ string FileStorage::programFilePath() {
 	string::size_type pos = string( buffer ).find_last_of( "\\/" );
 	return string( buffer ).substr( 0, pos);
 }
+
+
+void FileStorage::Archive(Item item) {
+    
+    fstream outFile;
+    ostringstream out;
+    Item i;
+
+    outFile.open("backup.txt", fstream :: out | fstream :: app);
+	
+    out << item.event<<" "<<"["
+	    << item.eventDate[0] << "/"<<item.eventDate[1]<<"/"	<<item.eventDate[2]<<" "
+		<< item.eventStartTime[0] << item.eventStartTime[1]	<< ":"
+		<< item.eventEndTime [0] << item.eventEndTime [1];
+
+    string temp=out.str();
+	outFile<<temp<<endl;
+	outFile.close();
+}
+
 
 FileStorage::~FileStorage(void) {
 }
