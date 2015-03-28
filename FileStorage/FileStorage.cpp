@@ -176,9 +176,10 @@ void FileStorage::Archive(Item item) {
     fstream outFile;
     ostringstream out;
     Item i;
-
+	bool isDone=true;
     outFile.open("backup.txt", fstream :: out | fstream :: app);
 	
+	if(isDone) {
     out << item.event<<" "<<"["
 	    << item.eventDate[0] << "/"<<item.eventDate[1]<<"/"	<<item.eventDate[2]<<" "
 		<< item.eventStartTime[0] << item.eventStartTime[1]	<< ":"
@@ -186,7 +187,13 @@ void FileStorage::Archive(Item item) {
 
     string temp=out.str();
 	outFile<<temp<<endl;
+	}
+	else {
+		outFile.open(getFullFileName(),fstream :: out | fstream :: app);
+		addLine(item);
+	}
 	outFile.close();
+
 }
 
 
