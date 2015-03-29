@@ -175,8 +175,7 @@ void FileStorage::Archive(Item item) {
     
     fstream outFile;
     ostringstream out;
-    Item i;
-	bool isDone=true;
+	bool isDone=true; //check the status of the event
     outFile.open("backup.txt", fstream :: out | fstream :: app);
 	
 	if(isDone) {
