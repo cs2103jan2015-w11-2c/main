@@ -106,7 +106,7 @@ public:
 
 	void addToInputBank(const string);
 
-	vector<string> getInputMemory();
+	vector<string> getInputBank();
 
 	~Controller(void);
 };

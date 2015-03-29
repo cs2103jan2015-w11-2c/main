@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <sstream>
+#include "..\EasyLoggingpp\easylogging++.h"
 #include "DateTime.h"
 
 using namespace std;
@@ -31,5 +32,8 @@ public:
 	string dateToString();
 	string timeToString();
 	string toString();
+
+	//for logging
+	void logItemValues();
 };
 

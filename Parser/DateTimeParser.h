@@ -23,7 +23,7 @@ private:
 
 	Item _item;
 	DateTime _dateTime;
-	
+
 	int _day;
 	int _month;
 	int _year;
@@ -62,26 +62,40 @@ public:
 
 	//returns the weekday number if a match is found
 	//returns 0 if match is not found
-	bool mapWeekDay(string, int&, int&, int&);
+	int mapWeekDay(string);
 
 	int mapMonth(string);
+
+	//sets the day, month and year from weekday input
+	void setDateFromWeekDay(int weekDayIndex, int& day, int& month, int& year);
+
+	//accounts for "next" when weekday is specified,
+	//by updating the day, month and year
+	void handleNextWeekDay(int& day, int& month, int& year);
 
 	//only for use after operations such as adding 'next' to day
 	//handles days greater than the number of days in the current month
 	void handleDayOverflow(int& day, int& month, int& year);
 
+	//if end day is less than start day, increment by 7
+	void handleImplicitNext(int&, int&, int&, int&, int&, int&);
+
 	// returns true if the string is a date of format day/month{/year}
-	bool isDelimitedDate(string input);
+	bool isDelimitedDate(string);
+
+	//returns true if the string is a possible time
+	bool isPossibleTime(string input);
 
 	//retuns true if m, p, or pm is found
 	//updates the date to 24hr format
 	bool is12Hour(string, int&);
 
+	//updates the day, month and year
+	//year taken as current year if not specified
 	void separateDayMonthYear(string, int&, int&, int&);
 
 	//updates the hour and minute
-	//returns false if invalid time
-	bool separateHourMinute(string, int&, int&);
+	void separateHourMinute(string, int&, int&);
 
 	//verifies that the date and time is valid
 	void verifyAllDateTime();
@@ -104,9 +118,6 @@ public:
 
 	//For unit testing
 	Item getItem();
-
-	//For logging
-	void logItemValues();
 
 };
 

@@ -88,3 +88,17 @@ string Item::toString() {
 	oss << event << ": "<< dateToString() << " " << timeToString();
 	return oss.str();
 }
+
+void Item::logItemValues() {
+	LOG(INFO) << event;
+	LOG(INFO) << eventDate[0];
+	LOG(INFO) << eventDate[1];
+	LOG(INFO) << eventDate[2];
+	LOG(INFO) << eventEndDate[0];
+	LOG(INFO) << eventEndDate[1];
+	LOG(INFO) << eventEndDate[2];
+	LOG(INFO) << eventStartTime[0];
+	LOG(INFO) << eventStartTime[1];
+	LOG(INFO) << eventEndTime[0];
+	LOG(INFO) << eventEndTime[1];
+}
