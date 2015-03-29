@@ -113,7 +113,7 @@ public:
 	void verifyItemTime(int&, int&);
 
 	//ensures that the end date and time is always greater or equal to the start
-	//throws an out_of_range exception otherwise
+	//throws an out_of_range exception otherwise, and resets the offending values
 	void verifyStartEnd(	
 		int startHr, 
 		int startMin, 
