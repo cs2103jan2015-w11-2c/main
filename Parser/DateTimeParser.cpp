@@ -409,6 +409,7 @@ void DateTimeParser::verifyAllDateTime() {
 	verifyItemDate(_item.eventEndDate[0], _item.eventEndDate[1], _item.eventEndDate[2]);
 	verifyItemTime(_item.eventStartTime[0], _item.eventStartTime[1]);
 	verifyItemTime(_item.eventEndTime[0], _item.eventEndTime[1]);
+	updateItemStartDate();
 	updateItemEndDate();
 	verifyStartEnd(
 		_item.eventStartTime[0], 
@@ -435,6 +436,14 @@ void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
 		month = 0;
 		year = 0;
 		//throw std::out_of_range(ERROR_INVALID_DATE_INPUT);
+	}
+}
+
+void DateTimeParser::updateItemStartDate() {
+	if((_item.eventDate[0] == 0) && (_item.eventDate[1] == 0) && (_item.eventDate[2] == 0)) {
+		_item.eventDate[0] = _dateTime.getCurrentDay();
+		_item.eventDate[1] = _dateTime.getCurrentMonth();
+		_item.eventDate[2] = _dateTime.getCurrentYear();
 	}
 }
 

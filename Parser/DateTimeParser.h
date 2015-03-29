@@ -106,6 +106,9 @@ public:
 	//throws an out_of_range exception if date is invalid
 	void verifyItemDate(int&, int&, int&);
 
+	//if no start date is set, it is set to today
+	void updateItemStartDate();
+
 	//if endDate fields are empty, set them to startDate
 	void updateItemEndDate();
 

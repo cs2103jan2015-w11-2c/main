@@ -150,7 +150,7 @@ Void MessageManager::colorTextInTaskBox(
 		for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
 			taskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
 			taskBox->SelectionColor = System::Drawing::Color::DarkGreen;
-			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 11, FontStyle::Regular);
+			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 10, FontStyle::Regular);
 			taskBox->SelectionAlignment = HorizontalAlignment::Left;
 		}
 

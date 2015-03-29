@@ -28,7 +28,7 @@ public:
 	void initializeItem();
 	int getHour(int hour);
 	string getMinute(int minute);
-	string getAMPM(int hour);
+	string getPM(int hour);
 	string dateToString();
 	string timeToString();
 	string toString();
