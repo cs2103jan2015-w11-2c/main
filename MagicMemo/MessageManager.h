@@ -55,7 +55,7 @@ public:
 	MessageManager(void);
 
 	Void generateMessageOutputs(String^);
-	
+
 	//calculate the indexes for text formatting
 	Void calculateAllTaskIndexes();
 
@@ -65,7 +65,8 @@ public:
 
 	Void colorTodayTaskBox(RichTextBox^ taskBox);
 
-	Void colorTextInTaskBox(vector<HIGHLIGHT>* _numberHighlight, 
+	Void colorTextInTaskBox(
+		vector<HIGHLIGHT>* _numberHighlight, 
 		vector<HIGHLIGHT>* _dateHighlight,
 		vector<HIGHLIGHT>* _timeHighlight,
 		vector<HIGHLIGHT>* _eventHighlight, 

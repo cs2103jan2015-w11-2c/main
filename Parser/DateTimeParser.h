@@ -80,6 +80,9 @@ public:
 	//if end day is less than start day, increment by 7
 	void handleImplicitNext(int&, int&, int&, int&, int&, int&);
 
+	//sets the month, sets the day and resets hour
+	void updateHrDayMon(int monthNum, int& hour, int& day, int& month, int& year, int& itemHour);
+
 	// returns true if the string is a date of format day/month{/year}
 	bool isDelimitedDate(string);
 
@@ -103,12 +106,25 @@ public:
 	//throws an out_of_range exception if date is invalid
 	void verifyItemDate(int&, int&, int&);
 
+	//if endDate fields are empty, set them to startDate
+	void updateItemEndDate();
+
 	//throws an out_of_range exception if time is invalid
 	void verifyItemTime(int&, int&);
 
-	//ensures that the end time is always greater than the start time
+	//ensures that the end date and time is always greater or equal to the start
 	//throws an out_of_range exception otherwise
-	void verifyStartEndTime(int, int, int&, int&);
+	void verifyStartEnd(	
+		int startHr, 
+		int startMin, 
+		int& endHr, 
+		int& endMin,
+		int startDay,
+		int startMonth,
+		int startYear,
+		int& endDay,
+		int& endMonth,
+		int& endYear);
 
 	// returns 0 if unsuccessful (or number is 0)
 	// otherwise returns the converted number
