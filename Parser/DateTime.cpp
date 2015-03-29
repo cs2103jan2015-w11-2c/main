@@ -86,3 +86,21 @@ bool DateTime::isValidDate(int day, int month, int year) {
 bool DateTime::isValidTime(int hour, int minute) {
 	return (hour >= 0 && hour <= 24 && minute >= 0 && minute <= 60);
 }
+
+bool DateTime::isGreate(DateTime& other) {
+	if      ( this->getCurrentHour() < other.getCurrentHour() ){
+		return true;
+	}
+	else if ( this->getCurrentHour() > other.getCurrentHour() ){
+		return false;
+	}
+	else if ( this->getCurrentMinute() < other.getCurrentMinute() ){
+		return  true;
+	}
+	else if ( this->getCurrentMinute() > other.getCurrentMinute() ){
+		return false;
+	}
+	else{
+		return  true;
+	}
+}

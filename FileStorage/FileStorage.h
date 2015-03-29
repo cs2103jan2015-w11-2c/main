@@ -6,6 +6,7 @@
 #include <Windows.h>
 #include "Item.h"
 #include "Parser.h"
+#include "DateTime.h"
 
 using namespace std;
 
@@ -63,7 +64,10 @@ public:
 	//returns the directory of the program
 	string programFilePath();
 
-	void Archive(Item);
+	// utils
+	void archiveDoneFiles(Item&);
+	void archive(Item&);
+	bool  isDone(Item&);
 
 	~FileStorage(void);
 };

@@ -50,4 +50,7 @@ public:
 	bool isValidDate(int, int, int);
 
 	bool isValidTime(int, int);
+
+	// customer defined
+	bool isGreate(DateTime& other);
 };

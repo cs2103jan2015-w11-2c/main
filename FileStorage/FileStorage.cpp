@@ -170,31 +170,55 @@ string FileStorage::programFilePath() {
 	return string( buffer ).substr( 0, pos);
 }
 
-
-void FileStorage::Archive(Item item) {
+/*
+	if (isDone(item)){
+		archiveDoneFiles(item);
+	}
+	else{
+		archive(item);
+	}
+*/
+void FileStorage::archiveDoneFiles(Item& item) {
     
     fstream outFile;
     ostringstream out;
-	bool isDone=true; //check the status of the event
+
     outFile.open("backup.txt", fstream :: out | fstream :: app);
 	
-	if(isDone) {
     out << item.event<<" "<<"["
-	    << item.eventDate[0] << "/"<<item.eventDate[1]<<"/"	<<item.eventDate[2]<<" "
-		<< item.eventStartTime[0] << item.eventStartTime[1]	<< ":"
-		<< item.eventEndTime [0] << item.eventEndTime [1];
+	    << item.eventDate[0] << "/" << item.eventDate[1] <<"/" <<item.eventDate[2] <<" "
+		<< item.eventStartTime[0] << item.eventStartTime[1]  << ":"
+		<< item.eventEndTime[0] << item.eventEndTime[1];
 
     string temp=out.str();
 	outFile<<temp<<endl;
-	}
-	else {
-		outFile.open(getFullFileName(),fstream :: out | fstream :: app);
-		addLine(item);
-	}
+
 	outFile.close();
 
 }
 
+void FileStorage::archive(Item& item) {
+	fstream outFile;
+    ostringstream out;
 
-FileStorage::~FileStorage(void) {
+	outFile.open(getFullFileName(),fstream :: out | fstream :: app);
+	addLine(item);
+
+	outFile.close();
+}
+
+bool  FileStorage::isDone(Item& item) {
+
+	// compare curr time with item event
+
+	// according the api, datetime() is the current atetime
+	if (item.itemDate.isGreate( DateTime() ) ) {
+		return false;
+	}
+	else{
+		return  true;
+	}
+}
+	
+	FileStorage::~FileStorage(void) {
 }
