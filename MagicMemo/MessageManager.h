@@ -49,11 +49,13 @@ private:
 	String^ _allTaskBoxMessage;
 	String^ _inputBoxMessage;
 
+	bool isBoxExtended;
+
 public:
 	MessageManager(void);
 
 	Void generateMessageOutputs(String^);
-	
+
 	//calculate the indexes for text formatting
 	Void calculateAllTaskIndexes();
 
@@ -63,7 +65,8 @@ public:
 
 	Void colorTodayTaskBox(RichTextBox^ taskBox);
 
-	Void colorTextInTaskBox(vector<HIGHLIGHT>* _numberHighlight, 
+	Void colorTextInTaskBox(
+		vector<HIGHLIGHT>* _numberHighlight, 
 		vector<HIGHLIGHT>* _dateHighlight,
 		vector<HIGHLIGHT>* _timeHighlight,
 		vector<HIGHLIGHT>* _eventHighlight, 
@@ -71,6 +74,9 @@ public:
 
 	//Auto-complete collection
 	Void updateAutoCompleteSource(TextBox^ inputBox);
+
+	//increases/decreases the task box size
+	Void toggleTaskBoxSize(RichTextBox^, RichTextBox^);
 
 	String^ toString(vector<RESULT>*);
 

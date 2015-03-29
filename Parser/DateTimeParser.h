@@ -23,10 +23,13 @@ private:
 
 	Item _item;
 	DateTime _dateTime;
-	
+
 	int _day;
 	int _month;
 	int _year;
+	int _endDay;
+	int _endMonth;
+	int _endYear;
 	int _startHour;
 	int _startMinute;
 	int _endHour;
@@ -59,26 +62,43 @@ public:
 
 	//returns the weekday number if a match is found
 	//returns 0 if match is not found
-	bool mapWeekDay(string, int&, int&, int&);
+	int mapWeekDay(string);
 
 	int mapMonth(string);
+
+	//sets the day, month and year from weekday input
+	void setDateFromWeekDay(int weekDayIndex, int& day, int& month, int& year);
+
+	//accounts for "next" when weekday is specified,
+	//by updating the day, month and year
+	void handleNextWeekDay(int& day, int& month, int& year);
 
 	//only for use after operations such as adding 'next' to day
 	//handles days greater than the number of days in the current month
 	void handleDayOverflow(int& day, int& month, int& year);
 
+	//if end day is less than start day, increment by 7
+	void handleImplicitNext(int&, int&, int&, int&, int&, int&);
+
+	//sets the month, sets the day and resets hour
+	void updateHrDayMon(int monthNum, int& hour, int& day, int& month, int& year, int& itemHour);
+
 	// returns true if the string is a date of format day/month{/year}
-	bool isDelimitedDate(string input);
+	bool isDelimitedDate(string);
+
+	//returns true if the string is a possible time
+	bool isPossibleTime(string input);
 
 	//retuns true if m, p, or pm is found
 	//updates the date to 24hr format
 	bool is12Hour(string, int&);
 
+	//updates the day, month and year
+	//year taken as current year if not specified
 	void separateDayMonthYear(string, int&, int&, int&);
 
 	//updates the hour and minute
-	//returns false if invalid time
-	bool separateHourMinute(string, int&, int&);
+	void separateHourMinute(string, int&, int&);
 
 	//verifies that the date and time is valid
 	void verifyAllDateTime();
@@ -86,12 +106,28 @@ public:
 	//throws an out_of_range exception if date is invalid
 	void verifyItemDate(int&, int&, int&);
 
+	//if no start date is set, it is set to today
+	void updateItemStartDate();
+
+	//if endDate fields are empty, set them to startDate
+	void updateItemEndDate();
+
 	//throws an out_of_range exception if time is invalid
 	void verifyItemTime(int&, int&);
 
-	//ensures that the end time is always greater than the start time
-	//throws an out_of_range exception otherwise
-	void verifyStartEndTime(int, int, int&, int&);
+	//ensures that the end date and time is always greater or equal to the start
+	//throws an out_of_range exception otherwise, and resets the offending values
+	void verifyStartEnd(	
+		int startHr, 
+		int startMin, 
+		int& endHr, 
+		int& endMin,
+		int startDay,
+		int startMonth,
+		int startYear,
+		int& endDay,
+		int& endMonth,
+		int& endYear);
 
 	// returns 0 if unsuccessful (or number is 0)
 	// otherwise returns the converted number

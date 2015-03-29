@@ -17,6 +17,7 @@ MessageManager::MessageManager(void) {
 	_todayEventHighlight = new vector<HIGHLIGHT>;
 	_todayCompletedHighlight = new vector<HIGHLIGHT>;
 
+	isBoxExtended = false;
 	_userInput = "";
 	_successMessage = "";
 	_todayTaskBoxMessage = "";
@@ -37,7 +38,7 @@ Void MessageManager::generateMessageOutputs(String^ textFromUser) {
 	clearAllTaskIndexVectors();
 	calculateAllTaskIndexes();
 	_allTaskBoxMessage = toString(_allTaskVector);
-	
+
 	//todayTaskBox
 	clearTodayTaskIndexVectors();
 	calculateTodayTaskIndexes();
@@ -74,7 +75,7 @@ Void MessageManager::calculateAllTaskIndexes() {
 		temp.index = temp.index + temp.length;
 		temp.length = _allTaskVector->at(i).event.length();
 		_allEventHighlight->push_back(temp);
-		
+
 		indexCount = temp.index + temp.length + 1;
 	}
 }
@@ -109,7 +110,7 @@ Void MessageManager::calculateTodayTaskIndexes() {
 		temp.index = temp.index + temp.length;
 		temp.length = _todayTaskVector->at(i).event.length();
 		_todayEventHighlight->push_back(temp);
-		
+
 		indexCount = temp.index + temp.length + 1;
 	}
 }
@@ -122,43 +123,44 @@ Void MessageManager::colorTodayTaskBox(RichTextBox^ todayTaskBox) {
 	colorTextInTaskBox(_todayNumberHighlight, _todayDateHighlight, _todayTimeHighlight, _todayEventHighlight, todayTaskBox);
 }
 
-Void MessageManager::colorTextInTaskBox(vector<HIGHLIGHT>* _numberHighlight, 
-								vector<HIGHLIGHT>* _dateHighlight,
-								vector<HIGHLIGHT>* _timeHighlight,
-								vector<HIGHLIGHT>* _eventHighlight, 
-								RichTextBox^ taskBox) {
+Void MessageManager::colorTextInTaskBox(
+	vector<HIGHLIGHT>* _numberHighlight, 
+	vector<HIGHLIGHT>* _dateHighlight,
+	vector<HIGHLIGHT>* _timeHighlight,
+	vector<HIGHLIGHT>* _eventHighlight, 
+	RichTextBox^ taskBox) {
 
-									//date
-									for(unsigned int i = 0; i < _dateHighlight->size(); i++) {
-										taskBox->Select(_dateHighlight->at(i).index,_dateHighlight->at(i).length);
-										taskBox->SelectionColor = System::Drawing::Color::DarkBlue;
-										taskBox->SelectionFont = gcnew System::Drawing::Font("Cooper", 10, FontStyle::Bold);
-										taskBox->SelectionAlignment = HorizontalAlignment::Center;
-									}
+		//date
+		for(unsigned int i = 0; i < _dateHighlight->size(); i++) {
+			taskBox->Select(_dateHighlight->at(i).index,_dateHighlight->at(i).length);
+			taskBox->SelectionColor = System::Drawing::Color::DarkBlue;
+			taskBox->SelectionFont = gcnew System::Drawing::Font("Cooper", 10, FontStyle::Bold);
+			taskBox->SelectionAlignment = HorizontalAlignment::Center;
+		}
 
-									//number
-									for(unsigned int i = 0; i < _numberHighlight->size(); i++) {
-										taskBox->Select(_numberHighlight->at(i).index, _numberHighlight->at(i).length);
-										taskBox->SelectionColor = System::Drawing::Color::Black;
-										taskBox->SelectionFont = gcnew System::Drawing::Font("Georgia", 11, FontStyle::Italic);
-										taskBox->SelectionAlignment = HorizontalAlignment::Left;
-									}
+		//number
+		for(unsigned int i = 0; i < _numberHighlight->size(); i++) {
+			taskBox->Select(_numberHighlight->at(i).index, _numberHighlight->at(i).length);
+			taskBox->SelectionColor = System::Drawing::Color::Black;
+			taskBox->SelectionFont = gcnew System::Drawing::Font("Georgia", 11, FontStyle::Italic);
+			taskBox->SelectionAlignment = HorizontalAlignment::Left;
+		}
 
-									//time
-									for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
-										taskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
-										taskBox->SelectionColor = System::Drawing::Color::DarkGreen;
-										taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 11, FontStyle::Regular);
-										taskBox->SelectionAlignment = HorizontalAlignment::Left;
-									}
+		//time
+		for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
+			taskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
+			taskBox->SelectionColor = System::Drawing::Color::DarkGreen;
+			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 10, FontStyle::Regular);
+			taskBox->SelectionAlignment = HorizontalAlignment::Left;
+		}
 
-									//event
-									for(unsigned int i = 0; i < _eventHighlight->size(); i++) {
-										taskBox->Select(_eventHighlight->at(i).index, _eventHighlight->at(i).length);
-										taskBox->SelectionColor = System::Drawing::Color::Black;
-										taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 11, FontStyle::Regular);
-										taskBox->SelectionAlignment = HorizontalAlignment::Left;
-									}
+		//event
+		for(unsigned int i = 0; i < _eventHighlight->size(); i++) {
+			taskBox->Select(_eventHighlight->at(i).index, _eventHighlight->at(i).length);
+			taskBox->SelectionColor = System::Drawing::Color::Black;
+			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 11, FontStyle::Regular);
+			taskBox->SelectionAlignment = HorizontalAlignment::Left;
+		}
 }
 
 Void MessageManager::updateAutoCompleteSource(TextBox^ inputBox) {
@@ -167,6 +169,22 @@ Void MessageManager::updateAutoCompleteSource(TextBox^ inputBox) {
 	inputBox->AutoCompleteCustomSource->Add("search hello");
 	inputBox->AutoCompleteCustomSource->Add("search hi");
 
+}
+
+Void MessageManager::toggleTaskBoxSize(RichTextBox^ allTaskBox, RichTextBox^ todayTaskBox) {
+	if(isBoxExtended) {
+		isBoxExtended = false;
+		allTaskBox->Location = System::Drawing::Point(304, 75);
+		allTaskBox->Size = System::Drawing::Size(270, 255);
+		todayTaskBox->Location = System::Drawing::Point(19, 75);
+		todayTaskBox->Size = System::Drawing::Size(270, 255);
+	} else {
+		isBoxExtended = true;
+		allTaskBox->Location = System::Drawing::Point(304, 10);
+		allTaskBox->Size = System::Drawing::Size(270, 325);
+		todayTaskBox->Location = System::Drawing::Point(19, 10);
+		todayTaskBox->Size = System::Drawing::Size(270, 325);
+	}
 }
 
 String^ MessageManager::toString(vector<RESULT>* taskVector) {
