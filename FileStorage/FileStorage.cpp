@@ -107,7 +107,7 @@ void FileStorage::addLine(Item item) {
 
 void FileStorage::addToArchive(Item item) {
 	fstream outFile;
-    outFile.open("backup.txt", fstream :: out | fstream :: app);
+    outFile.open(fileName, fstream :: out | fstream :: app);
 	addLine(item);
 	outFile.close();
 }
