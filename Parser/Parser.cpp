@@ -78,32 +78,31 @@ void Parser::extractUserCommand() {
 
 vector <string> Parser::getFragmentedEvent(){
 	vector<string> outputVec;
-	int i = 0;
+	
 	string wholeEvent = _item.event;
-	size_t spacePos = wholeEvent.find_first_of(" "); 
+	outputVec.push_back(wholeEvent); 
+	size_t spacePos = wholeEvent.find_first_of(" ");
 	
 	while(spacePos != string::npos){
-		outputVec.push_back(wholeEvent.substr(spacePos));
-		wholeEvent = wholeEvent.substr(spacePos);
-		i++;
+		outputVec.push_back(wholeEvent.substr(spacePos+1)); 
+		wholeEvent = wholeEvent.substr(spacePos+1);
 		spacePos = wholeEvent.find_first_of(" ");
 	}
 
-	string colon = ":";
 	int startHour = _item.getHour(_item.eventStartTime[0]);
 	std::string startHr = std::to_string(startHour);
 	string startMin = _item.getMinute(_item.eventStartTime[1]);
-	string startTime = startHr + colon + startMin;
+	string startTime = startHr  + startMin;
 
 	int endHour = _item.getHour(_item.eventEndTime[0]);
 	std::string endHr = std::to_string(endHour);
 	string endMin = _item.getMinute(_item.eventEndTime[1]);
-	string endTime = endHr + colon + endMin;
+	string endTime = endHr + endMin;
 
-	string monthStr = _item.itemDate.getMonth(_item.eventDate[0]);
+    string monthStr = _item.itemDate.getMonth(_item.eventDate[1]);
 	string weekDay;
-    weekDay = _item.itemDate.getWeekDay(_item.eventDate[0], _item.eventDate[1], _item.eventDate[2]);
-	
+	weekDay = _item.itemDate.getWeekDay(_item.eventDate[0], _item.eventDate[1], _item.eventDate[2]);
+
 	//in sequence, the vector contains:
 	//weekday, day, interger month, 
 	//month, year, start time, end time.
@@ -112,32 +111,34 @@ vector <string> Parser::getFragmentedEvent(){
 	}
 
 	if(_item.eventDate[0] != 0){
-    std::string tempStr = std::to_string(_item.eventDate[0]);
-	outputVec.push_back(tempStr);
+		std::string tempStr1 = std::to_string(_item.eventDate[0]);
+		outputVec.push_back(tempStr1);
 	}
 
 	if(_item.eventDate[1] != 0){
-    std::string tempStr = std::to_string(_item.eventDate[1]);
-	outputVec.push_back(tempStr);
+		std::string tempStr2 = std::to_string(_item.eventDate[1]);
+		outputVec.push_back(tempStr2);
 	}
 
-	if(monthStr != ""){
+		if(monthStr != ""){
 	outputVec.push_back(monthStr);
 	}
 
 	if(_item.eventDate[2] != 0){
-    std::string tempStr = std::to_string(_item.eventDate[2]);
-	outputVec.push_back(tempStr);
+		std::string tempStr3 = std::to_string(_item.eventDate[2]);
+		outputVec.push_back(tempStr3);
 	}
-	
+
 	if(startTime != ""){
-	outputVec.push_back(startTime);
+		outputVec.push_back(startTime);
 	}
-	
+
 	if(endTime != ""){
-	outputVec.push_back(endTime);
+		outputVec.push_back(endTime);
 	}
-	
+
+
+
 	return outputVec;
 }
 

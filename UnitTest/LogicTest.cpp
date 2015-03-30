@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <vector>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -71,11 +72,52 @@ public:
 		Assert::AreEqual(expectedEndMinute, item.eventEndTime[1]);
 	}
 
-	TEST_METHOD(isFragmentedEventTest){
-	
+	TEST_METHOD(getFragmentedEventTest){
+		string inputString = "meet friends at school[1/4/2015 17:25 - 19:20";
+		Item item;
+		Parser parse;
+		parse.setStringToParse(inputString);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+
+
+		std::vector<string> testVect = parse.getFragmentedEvent();
+		
+		string expectedOut1 = "meet friends at school";
+		Assert::AreEqual(expectedOut1, testVect[0]);
+		
+		string expectedOut2 = "friends at school";
+		Assert::AreEqual(expectedOut2, testVect[1]);
+		
+		string expectedOut3 = "at school";
+		Assert::AreEqual(expectedOut3, testVect[2]);
+		
+		string expectedOut4 = "school";
+		Assert::AreEqual(expectedOut4, testVect[3]);
+
+        string expectedOut5 = "Wednesday";
+		Assert::AreEqual(expectedOut5, testVect[4]);
+		
+		string expectedOut6 = "1";
+		Assert::AreEqual(expectedOut6, testVect[5]);
+		
+		string expectedOut7 = "4";
+		Assert::AreEqual(expectedOut7, testVect[6]);
+		
+		string expectedOut8 = "Apr";
+		Assert::AreEqual(expectedOut8, testVect[7]);
+		
+		string expectedOut9 = "2015";
+		Assert::AreEqual(expectedOut9, testVect[8]);
+
+		string expectedOut10 = "5:25";
+		Assert::AreEqual(expectedOut10, testVect[9]);
+		
+		string expectedOut11 = "7:20";
+		Assert::AreEqual(expectedOut11, testVect[10]);
+
+		
 	}
-
-
 	};
 
 	TEST_CLASS(DateTimeParserTest) {
