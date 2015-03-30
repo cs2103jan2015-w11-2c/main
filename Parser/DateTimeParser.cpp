@@ -375,8 +375,10 @@ void DateTimeParser::handleDayOverflow(int& day, int& month, int& year) {
 bool DateTimeParser::isDelimitedDate(string input) {
 =======
 void DateTimeParser::handleNextWeekDay(int& day, int& month, int& year) {
-	day += 7;
-	handleDayOverflow(day, month, year);
+	if(day != 0) {
+		day += 7;
+		handleDayOverflow(day, month, year);
+	}
 }
 >>>>>>> f0157052f00b2444b2db2c20b0f5b6cd0263522e:Parser/DateTimeParser.cpp
 
