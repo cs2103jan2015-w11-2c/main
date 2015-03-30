@@ -35,6 +35,12 @@ int Item::getHour(int hour) {
 	}
 }
 
+string Item::getDateDuration() {
+	int startDate = itemDate.rataDieConvert(eventDate[0], eventDate[1], eventDate[2]);
+	int endDate = itemDate.rataDieConvert(eventEndDate[0], eventEndDate[1], eventEndDate[2]);
+	return to_string(endDate - startDate);
+}
+
 string Item::getMinute(int minute) {
 	if(minute == 0) {
 		return "";
@@ -81,12 +87,20 @@ string Item::timeToString() {
 		oss << getMinute(eventStartTime[1]) <<  startTimeOfDay;
 
 		if(eventEndTime[0] != 0) {
-			oss << " - " << getHour(eventEndTime[0]);
+			oss << "-" << getHour(eventEndTime[0]);
 			oss << getMinute(eventEndTime[1]) << endTimeOfDay;
 		}
 		oss << "]";
 
 		return oss.str();
+	}
+}
+
+string Item::durationToString() {
+	if(getDateDuration() != "0") {
+		return ("[+" + getDateDuration() + "]");
+	} else {
+		return "";
 	}
 }
 
