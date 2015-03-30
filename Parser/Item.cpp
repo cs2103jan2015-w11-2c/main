@@ -48,24 +48,6 @@ string Item::getAMPM(int hour) {
 	}
 }
 
-bool Item::isGreate(Item& other) {
-	if     ( this->eventEndTime[0] < other.eventEndTime[0]){
-		return true;
-	}
-	else if (this->eventEndTime[0] > other.eventEndTime[0]){
-		return false;
-	}
-	else if (this->eventEndTime[1] < other.eventEndTime[1]){
-		return  true;
-	}
-	else if (this->eventEndTime[1] > other.eventEndTime[1]){
-		return false;
-	}
-	else{
-		return  true;
-	}
-}
-
 string Item::dateToString() {
 	if((eventDate[0] == 0) && (eventDate[1] == 0) && (eventDate[1] == 0)) {
 		return MESSAGE_UNDATED_TASK;

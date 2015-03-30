@@ -6,7 +6,6 @@
 #include <Windows.h>
 #include "Item.h"
 #include "Parser.h"
-#include "DateTime.h"
 
 using namespace std;
 
@@ -34,7 +33,12 @@ public:
 
 	vector<Item> getAllFileData();
 
+	vector <Item> getArchiveData();
+
 	void addLine(Item);
+
+	// utils
+	void addToArchive(Item);
 
 	bool clearFile();
 
@@ -63,11 +67,6 @@ public:
 
 	//returns the directory of the program
 	string programFilePath();
-
-	// utils
-	void archiveDoneFiles(Item&);
-	void archive(Item&);
-	bool  isDone(Item&);
 
 	~FileStorage(void);
 };

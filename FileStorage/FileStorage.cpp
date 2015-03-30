@@ -55,11 +55,34 @@ vector<Item> FileStorage::getAllFileData() {
 	return tempVector;
 }
 
+vector<Item> FileStorage::getArchiveData() {
+	vector<Item> tempVector;
+	Parser parse;
+	string content;
+
+	ifstream readFile("backup.txt");
+	while(getline(readFile, content)) {
+		parse.setStringToParse(content);
+		parse.extractDateAndTime();
+		Item i = parse.getItem();
+		tempVector.push_back(i);
+	}
+	readFile.close();
+
+	return tempVector;
+}
+
 void FileStorage::addLine(Item item) {
+
 	fstream outFile;
 	ostringstream out;
 	bool setBracket = false;
+	if (fileName==getFullFileName()) {
 	outFile.open(getFullFileName(), fstream::out | fstream::app);
+	}
+	else {
+	outFile.open("backup.txt", fstream::out | fstream::app);
+	}
 	out << item.event;
 
 	if(item.eventDate[0] != 0 && item.eventDate[1] != 0 && item.eventDate[2] != 0) {
@@ -79,6 +102,13 @@ void FileStorage::addLine(Item item) {
 
 	string temp = out.str();
 	outFile << temp << endl;
+	outFile.close();
+}
+
+void FileStorage::addToArchive(Item item) {
+	fstream outFile;
+    outFile.open("backup.txt", fstream :: out | fstream :: app);
+	addLine(item);
 	outFile.close();
 }
 
@@ -170,55 +200,6 @@ string FileStorage::programFilePath() {
 	return string( buffer ).substr( 0, pos);
 }
 
-/*
-	if (isDone(item)){
-		archiveDoneFiles(item);
-	}
-	else{
-		archive(item);
-	}
-*/
-void FileStorage::archiveDoneFiles(Item& item) {
-    
-    fstream outFile;
-    ostringstream out;
-
-    outFile.open("backup.txt", fstream :: out | fstream :: app);
-	
-    out << item.event<<" "<<"["
-	    << item.eventDate[0] << "/" << item.eventDate[1] <<"/" <<item.eventDate[2] <<" "
-		<< item.eventStartTime[0] << item.eventStartTime[1]  << ":"
-		<< item.eventEndTime[0] << item.eventEndTime[1];
-
-    string temp=out.str();
-	outFile<<temp<<endl;
-
-	outFile.close();
-
-}
-
-void FileStorage::archive(Item& item) {
-	fstream outFile;
-    ostringstream out;
-
-	outFile.open(getFullFileName(),fstream :: out | fstream :: app);
-	addLine(item);
-
-	outFile.close();
-}
-
-bool  FileStorage::isDone(Item& item) {
-
-	// compare curr time with item event
-
-	// according the api, datetime() is the current atetime
-	if (item.itemDate.isGreate( DateTime() ) ) {
-		return false;
-	}
-	else{
-		return  true;
-	}
-}
 	
 	FileStorage::~FileStorage(void) {
 }

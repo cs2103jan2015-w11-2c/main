@@ -51,6 +51,5 @@ public:
 
 	bool isValidTime(int, int);
 
-	// customer defined
-	bool isGreate(DateTime& other);
+
 };
