@@ -71,6 +71,11 @@ public:
 		Assert::AreEqual(expectedEndMinute, item.eventEndTime[1]);
 	}
 
+	TEST_METHOD(isFragmentedEventTest){
+	
+	}
+
+
 	};
 
 	TEST_CLASS(DateTimeParserTest) {

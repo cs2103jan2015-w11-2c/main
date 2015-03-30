@@ -1,5 +1,6 @@
 #include "Parser.h"
 #include "easylogging++.h"
+#include <vector>
 
 const string Parser::ERROR_NO_LINE_NUMBER = "No line number specified!";
 const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!";
@@ -77,15 +78,12 @@ void Parser::extractUserCommand() {
 
 vector <string> Parser::getFragmentedEvent(){
 	vector<string> outputVec;
-
-	size_t spacePos;
-	spacePos = _item.event.find_first_not_of("[");
-	string wholeEvent = _item.event.substr(0, spacePos - 1);
 	int i = 0;
-
-	spacePos = wholeEvent.find_first_of(" "); 
-	while(spacePos != string::npos){	 
-		outputVec[i] = wholeEvent.substr(spacePos);
+	string wholeEvent = _item.event;
+	size_t spacePos = wholeEvent.find_first_of(" "); 
+	
+	while(spacePos != string::npos){
+		outputVec.push_back(wholeEvent.substr(spacePos));
 		wholeEvent = wholeEvent.substr(spacePos);
 		i++;
 		spacePos = wholeEvent.find_first_of(" ");
@@ -103,17 +101,42 @@ vector <string> Parser::getFragmentedEvent(){
 	string endTime = endHr + colon + endMin;
 
 	string monthStr = _item.itemDate.getMonth(_item.eventDate[0]);
-
+	string weekDay;
+    weekDay = _item.itemDate.getWeekDay(_item.eventDate[0], _item.eventDate[1], _item.eventDate[2]);
+	
 	//in sequence, the vector contains:
 	//weekday, day, interger month, 
 	//month, year, start time, end time.
-	outputVec[i] = _item.itemDate.getWeekDay(_item.eventDate[0], _item.eventDate[1], _item.eventDate[2]);
-	outputVec[i + 1] = _item.eventDate[0];
-	outputVec[i + 2] = _item.eventDate[1];
-	outputVec[i + 3] = monthStr;
-	outputVec[i + 4] = _item.eventDate[2];
-    outputVec[i + 5] = startTime;
-	outputVec[i + 6] = endTime;
+	if(weekDay != ""){
+		outputVec.push_back(weekDay);
+	}
+
+	if(_item.eventDate[0] != 0){
+    std::string tempStr = std::to_string(_item.eventDate[0]);
+	outputVec.push_back(tempStr);
+	}
+
+	if(_item.eventDate[1] != 0){
+    std::string tempStr = std::to_string(_item.eventDate[1]);
+	outputVec.push_back(tempStr);
+	}
+
+	if(monthStr != ""){
+	outputVec.push_back(monthStr);
+	}
+
+	if(_item.eventDate[2] != 0){
+    std::string tempStr = std::to_string(_item.eventDate[2]);
+	outputVec.push_back(tempStr);
+	}
+	
+	if(startTime != ""){
+	outputVec.push_back(startTime);
+	}
+	
+	if(endTime != ""){
+	outputVec.push_back(endTime);
+	}
 	
 	return outputVec;
 }
