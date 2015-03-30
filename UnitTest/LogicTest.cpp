@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include <vector>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -95,7 +94,7 @@ public:
 		string expectedOut4 = "school";
 		Assert::AreEqual(expectedOut4, testVect[3]);
 
-        string expectedOut5 = "Wednesday";
+		string expectedOut5 = "Wednesday";
 		Assert::AreEqual(expectedOut5, testVect[4]);
 		
 		string expectedOut6 = "1";
@@ -115,9 +114,9 @@ public:
 		
 		string expectedOut11 = "7:20";
 		Assert::AreEqual(expectedOut11, testVect[10]);
-
 		
 	}
+
 	};
 
 	TEST_CLASS(DateTimeParserTest) {
@@ -314,11 +313,11 @@ public:
 			e;
 		}
 
-		int expectedDay = 0;
+		int expectedDay = 1;
 		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
-		int expectedMonth = 0;
+		int expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
-		int expectedYear = 0;
+		int expectedYear = 2015;
 		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
 
 		int expectedStartHour = 2;
@@ -633,42 +632,6 @@ public:
 		int expected = 1;
 		Assert::AreEqual(expected, parse.mapWeekDay(inputMon));
 	}
-	/*
-	//test for next wednesday(while today is wednesday) and month increases by one
-	TEST_METHOD(mapWeekDayTest3) {
-	DateTimeParser parse;
-	string inputWed = "wednesday";
-	string inputWedShort = "wed";
-
-	int _date;
-	int _month;
-	int _year;
-
-	int expectedDay = 1;
-	int expectedMonth = 4;
-	int expectedYear = 2015;
-	parse.mapWeekDay(inputWed, _date, _month, _year);
-
-	bool expectedResult = true; 
-	Assert::AreEqual(expectedDay, _date);
-	Assert::AreEqual(expectedMonth, _month);
-	Assert::AreEqual(expectedYear, _year);
-	Assert::AreEqual(expectedResult,parse.mapWeekDay(inputWed,_date,_month,_year));
-	}
-
-	//test for invalid input string	
-	TEST_METHOD(mapWeekDayTest4) {
-	DateTimeParser parse;
-	string input1 = "today";
-	string input2 = "wronginput";
-	int _day;
-	int _month;
-	int _year;
-	bool expectedResult = false; 
-	Assert::AreEqual(expectedResult,parse.mapWeekDay(input1,_day,_month,_year));
-	Assert::AreEqual(expectedResult,parse.mapWeekDay(input2,_day,_month,_year));
-	}
-	*/
 
 	TEST_METHOD(mapMonthTest){
 		DateTimeParser parse;
@@ -820,14 +783,14 @@ public:
 		string expected = "Wednesday, 18 Mar 2015";
 		Assert::AreEqual(expected, test.dateToString());
 
-		expected = "[10:00 am - 12:00 pm]";
+		expected = "[10-12pm]";
 		Assert::AreEqual(expected, test.timeToString());
 
 		test.eventStartTime[0] = 16;
 		test.eventStartTime[1] = 30;
 		test.eventEndTime[0] = 0;
 		test.eventEndTime[1] = 0;
-		expected = "[4:30 pm]";
+		expected = "[4:30pm]";
 		Assert::AreEqual(expected, test.timeToString());
 
 	}
@@ -850,7 +813,7 @@ public:
 		newItem.colour = 7;
 		newItem.bold = false;
 
-		string expectedString = "some event: Wednesday, 25 Mar 2015 [11:10 am - 12:10 pm]";
+		string expectedString = "some event: Wednesday, 25 Mar 2015 [11:10-12:10pm]";
 		string actualString = newItem.toString();
 
 		Assert::AreEqual(expectedString, actualString);
@@ -895,8 +858,8 @@ public:
 
 		Assert::AreEqual(expectedSize, actualSize);
 
-		string expectedString[2] = {"some event: Wednesday, 25 Mar 2015 [11:10 am - 12:10 pm]",
-			"some event: Friday, 27 Mar 2015 [3:30 am - 6:30 pm]"};
+		string expectedString[2] = {"some event: Wednesday, 25 Mar 2015 [11:10-12:10pm]",
+			"some event: Friday, 27 Mar 2015 [3:30-6:30pm]"};
 
 		string actualString;
 
