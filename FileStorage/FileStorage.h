@@ -16,7 +16,7 @@ private:
 	string fileName;
 	string filePath;
 	string fullFileName;
-	string ArchiveFileName;
+	string archiveFileName;
 
 public:
 	FileStorage(void);
@@ -28,17 +28,18 @@ public:
 	string getFileName();
 
 	string getFileLocation();
-		
+
 	string getFullFileName();
 
 	vector<Item> getAllFileData();
 
 	vector <Item> getArchiveData();
 
-	void addLine(Item);
+	void addLineToFile(Item);
 
-	// utils
-	void addToArchive(Item);
+	void addLineToArchive(Item);
+
+	void addLine(Item, const string&);
 
 	bool clearFile();
 
