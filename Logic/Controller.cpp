@@ -121,7 +121,7 @@ void Controller::generateResults(vector<Item> inputVector) {
 bool Controller::rewriteFile() {
 	_outputFile->clearFile();
 	for (unsigned int i = 0; i < _vectorStore.size(); i++) {
-		_outputFile->addLine(_vectorStore[i]);
+		_outputFile->addLineToFile(_vectorStore[i]);
 	}
 	return true;
 }

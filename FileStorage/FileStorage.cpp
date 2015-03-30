@@ -4,7 +4,7 @@
 FileStorage::FileStorage(void) {
 	fileConfigFileName = "fileConfigurations.txt";
 	defaultFileName = "MagicMemo Task List.txt";
-	ArchiveFileName= "backup.txt";
+	archiveFileName= "backup.txt";
 
 	if(isFileEmpty(fileConfigFileName)) {  //if not initialized
 		initializeFileConfig();
@@ -60,7 +60,7 @@ vector<Item> FileStorage::getArchiveData() {
 	Parser parse;
 	string content;
 
-	ifstream readFile("backup.txt");
+	ifstream readFile(archiveFileName.c_str());
 	while(getline(readFile, content)) {
 		parse.setStringToParse(content);
 		parse.extractDateAndTime();
@@ -72,17 +72,21 @@ vector<Item> FileStorage::getArchiveData() {
 	return tempVector;
 }
 
-void FileStorage::addLine(Item item) {
+void FileStorage::addLineToFile(Item item) {
+	addLine(item, getFullFileName());
+}
 
+void FileStorage::addLineToArchive(Item item) {
+	addLine(item, archiveFileName);
+}
+
+void FileStorage::addLine(Item item, const string& fileName) {
 	fstream outFile;
 	ostringstream out;
 	bool setBracket = false;
-	if (fileName==getFullFileName()) {
-	outFile.open(getFullFileName(), fstream::out | fstream::app);
-	}
-	else {
-	outFile.open("backup.txt", fstream::out | fstream::app);
-	}
+
+	outFile.open(fileName.c_str(), fstream::out | fstream::app);
+
 	out << item.event;
 
 	if(item.eventDate[0] != 0 && item.eventDate[1] != 0 && item.eventDate[2] != 0) {
@@ -105,12 +109,15 @@ void FileStorage::addLine(Item item) {
 	outFile.close();
 }
 
+<<<<<<< HEAD
 void FileStorage::addToArchive(Item item) {
 	fstream outFile;
     outFile.open(fileName, fstream :: out | fstream :: app);
 	addLine(item);
 	outFile.close();
 }
+=======
+>>>>>>> 072b0b08ef50b6af7520cb874a8ca67c8d960e64
 
 bool FileStorage::clearFile() {
 	fstream outFile;
@@ -200,6 +207,6 @@ string FileStorage::programFilePath() {
 	return string( buffer ).substr( 0, pos);
 }
 
-	
-	FileStorage::~FileStorage(void) {
+
+FileStorage::~FileStorage(void) {
 }
