@@ -23,14 +23,26 @@ public:
 	bool bold;
 
 	Item(void);
+
 	~Item(void);
 
 	void initializeItem();
+
 	int getHour(int hour);
+
+	// returns the number of days between start and end date
+	string getDateDuration();
+
 	string getMinute(int minute);
+
 	string getPM(int hour);
+
 	string dateToString();
+
 	string timeToString();
+
+	string durationToString();
+
 	string toString();
 
 	//for logging

@@ -317,8 +317,10 @@ void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, 
 }
 
 void DateTimeParser::handleNextWeekDay(int& day, int& month, int& year) {
-	day += 7;
-	handleDayOverflow(day, month, year);
+	if(day != 0) {
+		day += 7;
+		handleDayOverflow(day, month, year);
+	}
 }
 
 void DateTimeParser::handleDayOverflow(int& day, int& month, int& year) {
