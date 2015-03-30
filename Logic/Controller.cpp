@@ -27,14 +27,7 @@ void Controller::executeCommand(string inputText) {
 	commandData = data.event;
 
 	LOG(INFO) << 	"ITEM Values:";
-	LOG(INFO) <<	data.event;
-	LOG(INFO) <<	data.eventDate[0];
-	LOG(INFO) << 	data.eventDate[1];
-	LOG(INFO) << 	data.eventDate[2];
-	LOG(INFO) << 	data.eventStartTime[0];
-	LOG(INFO) << 	data.eventStartTime[1];
-	LOG(INFO) << 	data.eventEndTime[0];
-	LOG(INFO) << 	data.eventEndTime[1];
+	data.logItemValues();
 
 	if(userCommand == "search") {
 		_isSearch = true;
@@ -338,6 +331,29 @@ void Controller::chronoSort(vector<Item> &vectorStore) {
 			swap(vectorStore[minIndex], vectorStore[i]);
 		}
 	}
+}
+
+void Controller::addToInputBank(const string input) {
+	istringstream iss(input);
+	vector<string>::iterator iter;
+
+	string inputWord = "";
+	while(iss >> inputWord) {
+		bool isFound = false;
+		for(iter = _inputBank.begin(); iter != _inputBank.end(); iter++) {
+			if (*iter == inputWord) {
+				isFound = true;
+				break;
+			}
+		}
+		if (!isFound) {
+			_inputBank.push_back(inputWord);
+		}
+	}
+}
+
+vector<string> Controller::getInputBank() {
+	return _inputBank;
 }
 
 

@@ -86,7 +86,7 @@ void Parser::extractDateAndTime() {
 	if (frontBracketPos != string::npos) {
 		string rawDateTimeChunk = _item.event.substr(frontBracketPos + 1);
 		_item.event = removeSpacePadding(_item.event.substr(0, frontBracketPos));
-		convertStringToLowerCase(rawDateTimeChunk);
+		rawDateTimeChunk = convertStringToLowerCase(rawDateTimeChunk);
 
 		try {
 			_splitDateTime.updateItemDateTime(rawDateTimeChunk, _item);

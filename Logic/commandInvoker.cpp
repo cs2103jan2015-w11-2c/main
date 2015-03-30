@@ -3,8 +3,8 @@
 CommandInvoker::CommandInvoker(void) {
 	_numRedo = 0;
 	_enableUndoFlag = true;
-	_undo = new vector<Command *>;
-	_redo = new vector<Command *>;
+	_undo = new stack<Command *>;
+	_redo = new stack<Command *>;
 }
 
 
@@ -17,13 +17,10 @@ void CommandInvoker::executeCommand(vector<Item> &vectorStore, Command *command,
 
 	if(_enableUndoFlag) {
 		_numRedo = 0;
-		_redo->clear();
-
-		if(_undo->size() >= MAX_UNDO) {
-			_undo->erase(_undo->begin());
+		while(!_redo->empty()) {
+			_redo->pop();
 		}
-
-		_undo->push_back(command);
+		_undo->push(command);
 	}
 	_enableUndoFlag = true;
 
@@ -45,16 +42,13 @@ void CommandInvoker::undo(vector<Item> &vectorStore, string &message) {
 
 	_numRedo++;
 
-	Command *command = _undo->back();
+	Command *command = _undo->top();
 	command->negateAction(vectorStore);
-	message = _undo->back()->getMessage();
+	message = _undo->top()->getMessage();
 	
-	if(_redo->size() >= MAX_UNDO) {
-		_redo->erase(_redo->begin());
-	}
-	_redo->push_back(_undo->back());
+	_redo->push(_undo->top());
 	
-	_undo->pop_back();
+	_undo->pop();
 
 	message = SUCCESS_UNDO + message;
 }
@@ -66,14 +60,11 @@ void CommandInvoker::redo(vector<Item> &vectorStore, string &message) {
 
 	_numRedo--;
 
-	Command *command =_redo->back();
+	Command *command =_redo->top();
 	command->executeAction(vectorStore);
-	message = _redo->back()->getMessage();
+	message = _redo->top()->getMessage();
 	
-	if(_undo->size() >= MAX_REDO) {
-		_undo->erase(_undo->begin());
-	}
-	_undo->push_back(_redo->back());
+	_undo->push(_redo->top());
 	
-	_redo->pop_back();
+	_redo->pop();
 }
