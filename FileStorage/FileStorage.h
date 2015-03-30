@@ -33,7 +33,7 @@ public:
 
 	vector<Item> getAllFileData();
 
-	vector <Item> getArchiveData();
+	vector<Item> getArchiveData();
 
 	void addLineToFile(Item);
 

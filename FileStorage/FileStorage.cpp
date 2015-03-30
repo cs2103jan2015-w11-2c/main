@@ -109,15 +109,6 @@ void FileStorage::addLine(Item item, const string& fileName) {
 	outFile.close();
 }
 
-<<<<<<< HEAD
-void FileStorage::addToArchive(Item item) {
-	fstream outFile;
-    outFile.open(fileName, fstream :: out | fstream :: app);
-	addLine(item);
-	outFile.close();
-}
-=======
->>>>>>> 072b0b08ef50b6af7520cb874a8ca67c8d960e64
 
 bool FileStorage::clearFile() {
 	fstream outFile;
