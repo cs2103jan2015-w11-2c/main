@@ -67,6 +67,14 @@ int DateTime::numDaysInMonth(const int& month, const int& year) {
 	}
 }
 
+int DateTime::rataDieConvert(int day, int month, int year) {
+	if (month < 3) {
+		year--;
+		month += 12;
+	}
+	return (365 * year + year / 4 - year / 100 + year / 400 + (153 * month - 457) / 5 + day - 306);
+}
+
 bool DateTime::isValidDate(int day, int month, int year) {
 	if(year < MIN_YEAR || year > MAX_YEAR) {
 		return false;
@@ -86,4 +94,3 @@ bool DateTime::isValidDate(int day, int month, int year) {
 bool DateTime::isValidTime(int hour, int minute) {
 	return (hour >= 0 && hour <= 24 && minute >= 0 && minute <= 60);
 }
-
