@@ -8,7 +8,7 @@ INITIALIZE_EASYLOGGINGPP
 	Controller::Controller(void) {
 		_isSearch = false;
 		_parser = new Parser;
-		_outputFile = new FileStorage;
+		_outputFile = FileStorage::getInstance();
 		_invoker = new CommandInvoker;
 		initializeVector();
 }
