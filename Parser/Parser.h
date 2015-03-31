@@ -50,8 +50,6 @@ public:
 
 	string convertStringToLowerCase(string inputString);
 
-	vector<string> getFragmentedEvent();
-
 	~Parser(void);
 };
 

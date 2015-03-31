@@ -26,7 +26,6 @@ private:
 	vector<Item> _vectorStore;
 	vector<RESULT> _todayResult;
 	vector<RESULT> _otherResult;
-	vector<string> _inputBank;
 
 
 	//To be passed to the GUI
@@ -103,10 +102,6 @@ public:
 	int compareEarlierThan(const Item, const Item);
 
 	void chronoSort(vector<Item>&);
-
-	void addToInputBank(const string);
-
-	vector<string> getInputBank();
 
 	~Controller(void);
 };
