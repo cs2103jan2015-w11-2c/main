@@ -122,8 +122,8 @@ vector <string> Parser::getFragmentedEvent(){
 	size_t spacePos = wholeEvent.find_first_of(" ");
 
 	while(spacePos != string::npos){
-		outputVec.push_back(wholeEvent.substr(spacePos+1)); 
-		wholeEvent = wholeEvent.substr(spacePos+1);
+		outputVec.push_back(wholeEvent.substr(wholeEvent.find_first_not_of(" ", spacePos+1))); 
+		wholeEvent = wholeEvent.substr(wholeEvent.find_first_not_of(" ", spacePos+1));
 		spacePos = wholeEvent.find_first_of(" ");
 	}
 
@@ -167,11 +167,11 @@ vector <string> Parser::getFragmentedEvent(){
 		outputVec.push_back(tempStr3);
 	}
 
-	if(startTime != ""){
+	if(startTime != "0"){
 		outputVec.push_back(startTime);
 	}
 
-	if(endTime != ""){
+	if(endTime != "0"){
 		outputVec.push_back(endTime);
 	}
 
