@@ -4,11 +4,7 @@
 FileStorage::FileStorage(void) {
 	fileConfigFileName = "fileConfigurations.txt";
 	defaultFileName = "MagicMemo Task List.txt";
-<<<<<<< HEAD
-	archiveFileName= "backup.txt";
-=======
 	archiveFileName = "backup.txt";
->>>>>>> master
 
 	if(isFileEmpty(fileConfigFileName)) {  //if not initialized
 		initializeFileConfig();

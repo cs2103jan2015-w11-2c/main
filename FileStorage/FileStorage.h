@@ -21,10 +21,7 @@ private:
 	FileStorage(void);
 
 public:
-<<<<<<< HEAD
 
-=======
->>>>>>> master
 	static FileStorage* getInstance();
 
 	void setFileName(string);
@@ -41,15 +38,10 @@ public:
 
 	vector<Item> getArchiveData();
 
-<<<<<<< HEAD
-	void addLineToFile(Item);
-
-=======
 	//main text file
 	void addLineToFile(Item);
 
 	//archive file
->>>>>>> master
 	void addLineToArchive(Item);
 
 	void addLine(Item, const string&);
