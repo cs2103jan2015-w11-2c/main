@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <sstream>
-#include "..\EasyLoggingpp\easylogging++.h"
 #include "DateTime.h"
 
 using namespace std;
@@ -13,7 +12,6 @@ public:
 	DateTime itemDate;
 	string event;
 	int eventDate[3];
-	int eventEndDate[3];
 	// 24 hour format, 
 	// hour: 1 - 24 (0 == undefined, 24 == 12 am)
 	// minute: 0 - 59
@@ -23,29 +21,14 @@ public:
 	bool bold;
 
 	Item(void);
-
 	~Item(void);
 
 	void initializeItem();
-
 	int getHour(int hour);
-
-	// returns the number of days between start and end date
-	string getDateDuration();
-
 	string getMinute(int minute);
-
-	string getPM(int hour);
-
+	string getAMPM(int hour);
 	string dateToString();
-
 	string timeToString();
-
-	string durationToString();
-
 	string toString();
-
-	//for logging
-	void logItemValues();
 };
 

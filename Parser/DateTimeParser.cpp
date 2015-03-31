@@ -10,9 +10,6 @@ DateTimeParser::DateTimeParser(void) {
 	_day = 0;
 	_month = 0;
 	_year = 0;
-	_endDay = 0;
-	_endMonth = 0;
-	_endYear = 0;
 	_startHour = 0;
 	_startMinute = 0;
 	_endHour = 0;
@@ -31,9 +28,6 @@ void DateTimeParser::resetDateTime() {
 	_day = 0;
 	_month = 0;
 	_year = 0;
-	_endDay = 0;
-	_endMonth = 0;
-	_endYear = 0;
 	_startHour = 0;
 	_startMinute = 0;
 	_endHour = 0;
@@ -44,9 +38,6 @@ void DateTimeParser::resetItemDateTime() {
 	_item.eventDate[0] = 0;
 	_item.eventDate[1] = 0;
 	_item.eventDate[2] = 0;
-	_item.eventEndDate[0] = 0;
-	_item.eventEndDate[1] = 0;
-	_item.eventEndDate[2] = 0;
 	_item.eventStartTime[0] = 0;
 	_item.eventStartTime[1] = 0;
 	_item.eventEndTime[0] = 0;
@@ -54,6 +45,16 @@ void DateTimeParser::resetItemDateTime() {
 }
 
 void DateTimeParser::updateItemFields() {
+	LOG(INFO) << "Before update";
+
+	LOG(INFO) << _item.eventDate[0];
+	LOG(INFO) << _item.eventDate[1];
+	LOG(INFO) << _item.eventDate[2];
+	LOG(INFO) << _item.eventStartTime[0];
+	LOG(INFO) << _item.eventStartTime[1];
+	LOG(INFO) << _item.eventEndTime[0];
+	LOG(INFO) << _item.eventEndTime[1];
+
 	if(_item.eventDate[0] == 0) {
 		_item.eventDate[0] = _day;
 	}
@@ -62,15 +63,6 @@ void DateTimeParser::updateItemFields() {
 	}
 	if(_item.eventDate[2] == 0) {
 		_item.eventDate[2] = _year;
-	}
-	if(_item.eventEndDate[0] == 0) {
-		_item.eventEndDate[0] = _endDay;
-	}
-	if(_item.eventEndDate[1] == 0) {
-		_item.eventEndDate[1] = _endMonth;
-	}
-	if(_item.eventEndDate[2] == 0) {
-		_item.eventEndDate[2] = _endYear;
 	}
 	if((_item.eventStartTime[0] == 0) || ((_item.eventStartTime[0] + 12) == _startHour)) {
 		_item.eventStartTime[0] = _startHour;
@@ -84,9 +76,15 @@ void DateTimeParser::updateItemFields() {
 	if(_item.eventEndTime[1] == 0) {
 		_item.eventEndTime[1] = _endMinute;
 	}
-
-	LOG(INFO) << "Item values after update:";
-	_item.logItemValues();
+	LOG(INFO) << "After update:";
+	LOG(INFO) << _item.eventDate[0];
+	LOG(INFO) << _item.eventDate[1];
+	LOG(INFO) << _item.eventDate[2];
+	LOG(INFO) << _item.eventStartTime[0];
+	LOG(INFO) << _item.eventStartTime[1];
+	LOG(INFO) << _item.eventEndTime[0];
+	LOG(INFO) << _item.eventEndTime[1];
+	LOG(INFO) << "";
 }
 
 void DateTimeParser::setDate(int day, int month, int year) {
@@ -101,7 +99,7 @@ size_t DateTimeParser::findDateDelimiters(string inputLine) {
 
 void DateTimeParser::calculateDateTime(string input) {
 	istringstream iss(input);
-	string demarcateDateTime[9];
+	string demarcateDateTime[7];
 	int i = 0;
 	while (iss >> demarcateDateTime[i]) {
 		i++;
@@ -117,10 +115,8 @@ void DateTimeParser::calculateDateTime(string input) {
 void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	bool isNextWeek= false;
 	bool hasDash = false;
-	bool isStartTime = true;
-	bool isEndTime = false;
-	bool isStartDate = true;
-	bool isEndDate = false;
+	bool isFirstTimeInstance = true;
+	bool isSecondTimeInstance = false;
 	resetDateTime();
 	resetItemDateTime();
 
@@ -131,80 +127,51 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 		if(isNextWeek && _day == 0) {
 		isNextWeek = false;
 		throw std::out_of_range(ERROR_NO_DAY_SPECIFIED);
-		}
+		}*/
 
 		// throws exception if time is expected but not given
 		if(hasDash && !separateHourMinute(inputArray[i], _endHour, _endMinute)) {
-		hasDash = false;
-		throw std::out_of_range(ERROR_NO_TIME_SPECIFIED);
+			hasDash = false;
+			throw std::out_of_range(ERROR_NO_TIME_SPECIFIED);
 		}
-		*/
 
 		// "next" keyword
 		if((inputArray[i] == "next") || (inputArray[i] == "nex")) {
-			isNextWeek = true;
 			LOG(INFO) << "NEXT";
-			// "-" or "to" keyword
-		} else if((inputArray[i] == "-") || (inputArray[i] == "to")) {
+			isNextWeek = true;
+			// "-" keyword
+		} else if(inputArray[i] == "-") {
 			hasDash = true;
 			LOG(INFO) << "DASH";
-			// weekday (e.g. Friday), start date
-		} else if(isStartDate && mapMonth(inputArray[i]) != 0) {
-			isStartDate = false;
-			isStartTime = true;
-			updateHrDayMon(mapMonth(inputArray[i]), _startHour, _day, _month, _year, _item.eventStartTime[0]);
-			LOG(INFO) << "MONTH";
-		} else if(isStartDate && (mapWeekDay(inputArray[i]) != 0)) {
-			isStartDate = false;
-			setDateFromWeekDay(mapWeekDay(inputArray[i]), _day, _month, _year);
+			// weekday (e.g. Friday)
+		} else if(mapWeekDay(inputArray[i], _day, _month, _year)) {
 			if(isNextWeek) {
-				handleNextWeekDay(_day, _month, _year);
-			}
-			LOG(INFO) << "START WEEKDAY";
-			// date/month/year, start date
-		} else if(isStartDate && isDelimitedDate(inputArray[i])) {
-			isStartDate = false;
-			separateDayMonthYear(inputArray[i], _day, _month, _year);
-			LOG(INFO) << "START DELIMITED DATE";
-		} else if(!isStartDate && mapMonth(inputArray[i]) != 0) {
-			if(isEndTime) {
-				updateHrDayMon(mapMonth(inputArray[i]), _endHour, _endDay, _endMonth, _endYear, _item.eventEndTime[0]);
-			} else {
-				updateHrDayMon(mapMonth(inputArray[i]), _startHour, _endDay, _endMonth, _endYear, _item.eventStartTime[0]);
-			}
-			isEndTime = false;
-			LOG(INFO) << "MONTH";
-			// weekday, end date
-		} else if(!isStartDate && (mapWeekDay(inputArray[i]) != 0)) {
-			setDateFromWeekDay(mapWeekDay(inputArray[i]), _endDay, _endMonth, _endYear);
-			if(isNextWeek) {
-				handleNextWeekDay(_endDay, _endMonth, _endYear);
-				handleImplicitNext(_day, _month, _year, _endDay, _endMonth, _endYear);
-			}
-			LOG(INFO) << "END WEEKDAY";
-			// date/month/year, end date
-		} else if(!isStartDate && isDelimitedDate(inputArray[i])) {
-			separateDayMonthYear(inputArray[i], _endDay, _endMonth, _endYear);
-			LOG(INFO) << "END DELIMITED DATE";
+				_day += 7;
+				handleDayOverflow(_day, _month, _year);
+				isNextWeek = false;
+			} 
+			LOG(INFO) << "WEEKDAY";
+			// date/month/year
+		} else if(isDelimitedDate(inputArray[i])) {
+			LOG(INFO) << "DELIMITED DATE";
 			// start time
-		} else if(isStartTime && isPossibleTime(inputArray[i])) {
-			isStartTime = false;
-			separateHourMinute(inputArray[i], _startHour, _startMinute);
+		} else if(isFirstTimeInstance && separateHourMinute(inputArray[i], _startHour, _startMinute)) {
+			isFirstTimeInstance = false;
 			LOG(INFO) << "START TIME";
 			// end time
-		} else if(!isStartTime && hasDash && isPossibleTime(inputArray[i])) {
-			isEndTime = true;
-			separateHourMinute(inputArray[i], _endHour, _endMinute);
+		} else if(!isFirstTimeInstance && hasDash && separateHourMinute(inputArray[i], _endHour, _endMinute)) {
+			hasDash = false;
+			isSecondTimeInstance = true;
 			LOG(INFO) << "END TIME";
 			// duration entered instead of end time
-		} else if(!isStartTime && !hasDash && (convertStringToInteger(inputArray[i]) > 0)) {
-			isEndTime = true;
+		} else if(!isFirstTimeInstance && !hasDash && (convertStringToInteger(inputArray[i]) > 0)) {
 			int duration = convertStringToInteger(inputArray[i]);
 			_startHour == 24 ? _endHour = 1 : _endHour = _startHour + duration;
 			_endMinute = _startMinute;
+			isSecondTimeInstance = true;
 			LOG(INFO) << "DURATION ADDED FROM START";
 			// "m", "p", or "pm" keywords
-		} else if(!isEndTime && is12Hour(inputArray[i], _startHour)) {
+		} else if(!isSecondTimeInstance && is12Hour(inputArray[i], _startHour)) {
 			LOG(INFO) << "PM OR M, Start Hour";
 		} else if(is12Hour(inputArray[i], _endHour)) {
 			LOG(INFO) << "PM OR M, End Hour";
@@ -223,10 +190,15 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 
 }
 
-int DateTimeParser::mapWeekDay(string weekDay) {
+bool DateTimeParser::mapWeekDay(string weekDay, int& _date, int &_month, int &_year) {
+	int currentMonth= _dateTime.getCurrentMonth();
+	int currentYear = _dateTime.getCurrentYear();
+	int currentDay = _dateTime.getCurrentDay();
 	int weekDayIndex = 0;
+	int currentWeekDayIndex = _dateTime.getIntWeekDay(currentDay, currentMonth, currentYear);
+	int diffInDay;
 
-	std::map<string, int> weekDays;
+	std::map<string,int> weekDays;
 	weekDays["monday"] = 1;
 	weekDays["mon"] = 1;
 	weekDays["tuesday"] = 2;
@@ -244,7 +216,7 @@ int DateTimeParser::mapWeekDay(string weekDay) {
 	weekDays["sunday"] = 7;
 	weekDays["sun"] = 7;
 
-	std::map<string, int>::iterator iter = weekDays.begin(); 
+	std::map<string,int>::iterator iter = weekDays.begin(); 
 	bool isMatch = false;
 	while((iter != weekDays.end()) && (!isMatch)){
 		if(iter->first == weekDay){
@@ -253,11 +225,29 @@ int DateTimeParser::mapWeekDay(string weekDay) {
 		}
 		iter++;
 	}
-	return weekDayIndex;
+
+	if(weekDayIndex == currentWeekDayIndex) {
+		diffInDay = 7;
+	} else {
+		diffInDay = (weekDayIndex - currentWeekDayIndex + 7) % 7;
+	}
+
+	currentDay += diffInDay; 
+
+	handleDayOverflow(currentDay, currentMonth, currentYear);
+
+	if(isMatch) {
+		_month = currentMonth;
+		_year = currentYear;
+		_date = currentDay;
+		return true;
+	} else {
+		return false;
+	}
 }
 
 int DateTimeParser::mapMonth(string inputMonth) {
-	std::map<string, int> month;
+	std::map<string,int> month;
 	month["january"] = 1;
 	month["jan"] = 1;
 	month["february"] = 2;
@@ -285,42 +275,22 @@ int DateTimeParser::mapMonth(string inputMonth) {
 	month["dec"] = 12;
 	month["decem"] = 12;
 
-	int returnValue = 0;
+	int returnValue;
 	bool isFound = false;
-	std::map<string, int>::iterator it = month.begin(); 
+	std::map<string,int>::iterator it = month.begin(); 
+
 	while((it!=month.end()) && (!isFound)){
 		if(it->first == inputMonth){
 			returnValue = it->second;
-			isFound = true;
-		}
+			isFound = true;}
 		it++;
 	}
 
-	return returnValue;
-}
-
-void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, int& year) {
-	day = _dateTime.getCurrentDay();
-	month = _dateTime.getCurrentMonth();
-	year = _dateTime.getCurrentYear();
-	int currentWeekDayIndex = _dateTime.getIntWeekDay(day, month, year);
-
-	int diffInDay;
-	if(weekDayIndex == currentWeekDayIndex) {
-		diffInDay = 7;
+	if (isFound) {
+		return returnValue;
 	} else {
-		diffInDay = (weekDayIndex - currentWeekDayIndex + 7) % 7;
-	}
+		return 0;}
 
-	day += diffInDay; 
-	handleDayOverflow(day, month, year);
-}
-
-void DateTimeParser::handleNextWeekDay(int& day, int& month, int& year) {
-	if(day != 0) {
-		day += 7;
-		handleDayOverflow(day, month, year);
-	}
 }
 
 void DateTimeParser::handleDayOverflow(int& day, int& month, int& year) {
@@ -336,41 +306,22 @@ void DateTimeParser::handleDayOverflow(int& day, int& month, int& year) {
 	}
 }
 
-void DateTimeParser::handleImplicitNext(
-	int& startDay,
-	int& startMonth, 
-	int& startYear,
-	int& endDay,
-	int& endMonth,
-	int& endYear) {
-		if((startDay > endDay) && (startMonth >= endMonth) && (startYear >= endYear)) {
-			endDay += 7;
-			handleDayOverflow(endDay, endMonth, endYear);
-		}
-}
-
-void DateTimeParser::updateHrDayMon(int monthNum, int& hour, int& day, int& month, int& year, int& itemHour) {
-	year = _dateTime.getCurrentYear();
-	day = hour;
-	month = monthNum;
-	hour = 0;
-
-	itemHour = 0;
-}
-
 bool DateTimeParser::isDelimitedDate(string input) {
-	size_t dateDelimiterPos = findDateDelimiters(input);
-	if (dateDelimiterPos == string::npos) {
-		return false;
-	}
-	return true;
-}
 
-bool DateTimeParser::isPossibleTime(string input) {
-	if(isDelimitedDate(input)) {
-		return false;
+	size_t dateDelimiterPos = findDateDelimiters(input);
+
+	if (dateDelimiterPos != string::npos) {
+		separateDayMonthYear(input, _day, _month, _year);
+
+		try {
+			verifyItemDate(_day, _month, _year);
+		} catch (const out_of_range& e) {
+			LOG(ERROR) << "isDelimitedDate Error: " << e.what();
+			clog << e.what();
+		}
+		return true;
 	}
-	return (convertStringToInteger(input) != 0) ? true : false;
+	return false;
 }
 
 bool DateTimeParser::is12Hour(string input, int& hour) {
@@ -396,7 +347,7 @@ void DateTimeParser::separateDayMonthYear(string input, int& day, int& month, in
 	}
 }
 
-void DateTimeParser::separateHourMinute(string hourMinute, int& hour, int& minute) {
+bool DateTimeParser::separateHourMinute(string hourMinute, int& hour, int& minute) {
 	char *intEnd;
 	hour = (int)strtol(hourMinute.c_str(), &intEnd, 10);
 	minute = (int)strtol(intEnd + 1, &intEnd, 10);
@@ -404,26 +355,15 @@ void DateTimeParser::separateHourMinute(string hourMinute, int& hour, int& minut
 	if(*intEnd != 0) {
 		minute = 0;
 	}
+
+	return (hour != 0);
 }
 
 void DateTimeParser::verifyAllDateTime() {
 	verifyItemDate(_item.eventDate[0], _item.eventDate[1], _item.eventDate[2]);
-	verifyItemDate(_item.eventEndDate[0], _item.eventEndDate[1], _item.eventEndDate[2]);
 	verifyItemTime(_item.eventStartTime[0], _item.eventStartTime[1]);
 	verifyItemTime(_item.eventEndTime[0], _item.eventEndTime[1]);
-	updateItemStartDate();
-	updateItemEndDate();
-	verifyStartEnd(
-		_item.eventStartTime[0], 
-		_item.eventStartTime[1], 
-		_item.eventEndTime[0], 
-		_item.eventEndTime[1], 
-		_item.eventDate[0], 
-		_item.eventDate[1], 
-		_item.eventDate[2], 
-		_item.eventEndDate[0], 
-		_item.eventEndDate[1], 
-		_item.eventEndDate[2]);
+	verifyStartEndTime(_item.eventStartTime[0], _item.eventStartTime[1], _item.eventEndTime[0], _item.eventEndTime[1]);
 }
 
 void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
@@ -441,22 +381,6 @@ void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
 	}
 }
 
-void DateTimeParser::updateItemStartDate() {
-	if((_item.eventDate[0] == 0) && (_item.eventDate[1] == 0) && (_item.eventDate[2] == 0)) {
-		_item.eventDate[0] = _dateTime.getCurrentDay();
-		_item.eventDate[1] = _dateTime.getCurrentMonth();
-		_item.eventDate[2] = _dateTime.getCurrentYear();
-	}
-}
-
-void DateTimeParser::updateItemEndDate() {
-	if((_item.eventEndDate[0] == 0) && (_item.eventEndDate[1] == 0) && (_item.eventEndDate[2] == 0)) {
-		_item.eventEndDate[0] = _item.eventDate[0];
-		_item.eventEndDate[1] = _item.eventDate[1];
-		_item.eventEndDate[2] = _item.eventDate[2];
-	}
-}
-
 void DateTimeParser::verifyItemTime(int& hour, int& minute) {
 	if (!_dateTime.isValidTime(hour, minute)) {
 		hour = 0;
@@ -465,56 +389,15 @@ void DateTimeParser::verifyItemTime(int& hour, int& minute) {
 	}
 }
 
-void DateTimeParser::verifyStartEnd(
-	int startHr, 
-	int startMin, 
-	int& endHr, 
-	int& endMin,
-	int startDay,
-	int startMonth,
-	int startYear,
-	int& endDay,
-	int& endMonth,
-	int& endYear) {
-
-		int tempStartHr = (startHr == 24) ? 0 : startHr;
-
-		//end (year, month, day, hour, minute) isLess than start
-		bool isLess[5];
-		isLess[0] = (endYear < startYear);
-		isLess[1] = (endMonth < startMonth);
-		isLess[2] = (endDay < startDay);
-		isLess[3] = (endHr < tempStartHr);
-		isLess[4] = (endMin < startMin);
-
-		//end (year, month, day, hour, minute) is less or equal to start
-		bool isLessEq[5];
-		isLessEq[0] = (endYear <= startYear);
-		isLessEq[1] = (endMonth <= startMonth);
-		isLessEq[2] = (endDay <= startDay);
-		isLessEq[3] = (endHr <= tempStartHr);
-		isLessEq[4] = (endMin <= startMin);
-
-		bool isError = false;
-		if(isLess[0] || (isLessEq[0] && isLess[1]) || (isLessEq[0] && isLessEq[1] && isLess[2])) {
-			endYear = 0;
-			endMonth = 0;
-			endDay = 0;
-			isError = true;
-		}
-
-		if ((isLessEq[0] && isLessEq[1] && isLessEq[2] && isLess[3]) ||
-			(isLessEq[0] && isLessEq[1] && isLessEq[2] && isLessEq[3] && isLess[4])) {
-				endHr = 0;
-				endMin = 0;
-				isError = true;
-		}
-
-		if(isError) {
-			//throw std::out_of_range(ERROR_INVALID_END_TIME);
-		}
+void DateTimeParser::verifyStartEndTime(int startHr, int startMin, int& endHr, int& endMin) {
+	int tempStartHr;
+	startHr == 24 ? tempStartHr = 0 : tempStartHr = startHr;
+	if((endHr < tempStartHr) || ((endHr <= tempStartHr) && (endMin <= startMin))) {
+		endHr = 0;
+		endMin = 0;
+		//throw std::out_of_range(ERROR_INVALID_END_TIME);
+	}
 }
-
 
 int DateTimeParser::convertStringToInteger(string numberString) {
 	char *end;
@@ -527,4 +410,3 @@ DateTimeParser::~DateTimeParser(void) {
 Item DateTimeParser::getItem() {
 	return _item;
 }
-
