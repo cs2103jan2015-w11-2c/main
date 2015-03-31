@@ -26,8 +26,8 @@ class CommandInvoker
 private:
 	int _numRedo;
 	bool _enableUndoFlag;
-	vector<Command *> *_undo;
-	vector<Command *> *_redo;
+	stack<Command *> *_undo;
+	stack<Command *> *_redo;
 public:
 	CommandInvoker(void);
 	~CommandInvoker(void);
