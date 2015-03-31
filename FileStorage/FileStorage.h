@@ -16,9 +16,12 @@ private:
 	string fileName;
 	string filePath;
 	string fullFileName;
+	string archiveFileName;
+	static FileStorage* theOne;
+	FileStorage(void);
 
 public:
-	FileStorage(void);
+	static FileStorage* getInstance();
 
 	void setFileName(string);
 
@@ -27,12 +30,20 @@ public:
 	string getFileName();
 
 	string getFileLocation();
-		
+
 	string getFullFileName();
 
 	vector<Item> getAllFileData();
 
-	void addLine(Item);
+	vector<Item> getArchiveData();
+
+	//main text file
+	void addLineToFile(Item);
+
+	//archive file
+	void addLineToArchive(Item);
+
+	void addLine(Item, const string&);
 
 	bool clearFile();
 
