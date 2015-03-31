@@ -8,7 +8,7 @@ INITIALIZE_EASYLOGGINGPP
 	Controller::Controller(void) {
 		_isSearch = false;
 		_parser = new Parser;
-		_outputFile = new FileStorage;
+		_outputFile = FileStorage::getInstance();
 		_invoker = new CommandInvoker;
 		initializeVector();
 }
@@ -27,14 +27,7 @@ void Controller::executeCommand(string inputText) {
 	commandData = data.event;
 
 	LOG(INFO) << 	"ITEM Values:";
-	LOG(INFO) <<	data.event;
-	LOG(INFO) <<	data.eventDate[0];
-	LOG(INFO) << 	data.eventDate[1];
-	LOG(INFO) << 	data.eventDate[2];
-	LOG(INFO) << 	data.eventStartTime[0];
-	LOG(INFO) << 	data.eventStartTime[1];
-	LOG(INFO) << 	data.eventEndTime[0];
-	LOG(INFO) << 	data.eventEndTime[1];
+	data.logItemValues();
 
 	if(userCommand == "search") {
 		_isSearch = true;
@@ -121,7 +114,7 @@ void Controller::generateResults(vector<Item> inputVector) {
 bool Controller::rewriteFile() {
 	_outputFile->clearFile();
 	for (unsigned int i = 0; i < _vectorStore.size(); i++) {
-		_outputFile->addLine(_vectorStore[i]);
+		_outputFile->addLineToFile(_vectorStore[i]);
 	}
 	return true;
 }
