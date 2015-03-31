@@ -17,3 +17,5 @@
 #include "ITEM.h"
 #include "DateTime.h"
 #include <exception>
+#include <string>
+#include <vector>
