@@ -17,9 +17,12 @@ private:
 	string filePath;
 	string fullFileName;
 	string archiveFileName;
+	static FileStorage* theOne;
+	FileStorage(void);
 
 public:
-	FileStorage(void);
+
+	static FileStorage* getInstance();
 
 	void setFileName(string);
 

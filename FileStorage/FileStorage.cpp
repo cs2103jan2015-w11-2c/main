@@ -14,6 +14,16 @@ FileStorage::FileStorage(void) {
 	fullFileName = getFullFileName();
 }
 
+FileStorage*FileStorage::theOne=nullptr;
+
+FileStorage*FileStorage::getInstance(){
+
+	if(theOne==nullptr) {
+	theOne = new FileStorage();
+	return theOne;
+	}
+}
+
 void FileStorage::setFileName(string newFileName) {
 	fileName = newFileName;
 }
