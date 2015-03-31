@@ -64,6 +64,7 @@ int DateTime::numDaysInMonth(const int& month, const int& year) {
 		return 28;
 	} else {
 		return 31;
+<<<<<<< HEAD:Parser/DateTime.cpp
 	}
 }
 
@@ -78,12 +79,35 @@ int DateTime::rataDieConvert(int day, int month, int year) {
 bool DateTime::isValidDate(int day, int month, int year) {
 	if(year < MIN_YEAR || year > MAX_YEAR) {
 		return false;
+=======
+	}
+}
+
+int DateTime::rataDieConvert(int day, int month, int year) {
+	if (month < 3) {
+		year--;
+		month += 12;
+>>>>>>> master:Parser/DateTime.cpp
+	}
+	return (365 * year + year / 4 - year / 100 + year / 400 + (153 * month - 457) / 5 + day - 306);
+}
+
+<<<<<<< HEAD:Parser/DateTime.cpp
+	if((month <= 0) || (month > 12)) {
+		return false;
+	}
+
+=======
+bool DateTime::isValidDate(int day, int month, int year) {
+	if(year < MIN_YEAR || year > MAX_YEAR) {
+		return false;
 	}
 
 	if((month <= 0) || (month > 12)) {
 		return false;
 	}
 
+>>>>>>> master:Parser/DateTime.cpp
 	if((day <= 0) || (day > numDaysInMonth(month, year))) {
 		return false;
 	}

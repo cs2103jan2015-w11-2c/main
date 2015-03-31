@@ -44,6 +44,13 @@ public:
 	string durationToString();
 
 	string toString();
+<<<<<<< HEAD:Parser/Item.h
+=======
+
+	//for logging
+	void logItemValues();
+};
+>>>>>>> master:Parser/Item.h
 
 	//for logging
 	void logItemValues();
