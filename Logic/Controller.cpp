@@ -20,8 +20,15 @@ void Controller::executeCommand(string inputText) {
 	Item data;
 
 	_parser->setStringToParse(inputText);
-	_parser->extractUserCommand();
+	_parser->extractUserCommand();	
 	_parser->extractDateAndTime();
+
+	if(userCommand == "search") {
+		_isSearch = true;
+	} else {
+		_isSearch = false;
+	}
+
 
 	userCommand = _parser->getUserCommand();
 	data = _parser->getItem();
@@ -33,13 +40,6 @@ void Controller::executeCommand(string inputText) {
 	
 	if(userCommand != "") {
 		addToInputBank(commandData);
-	}
-	
-
-	if(userCommand == "search") {
-		_isSearch = true;
-	} else {
-		_isSearch = false;
 	}
 
 	if (userCommand == "display") {
@@ -198,6 +198,7 @@ void Controller::sortAlphabetical() {
 
 void Controller::search(Item data) {
 	vector<Item> tempVector = _vectorStore;
+	_parser->extractSearchQuery(data);
 
 	SearchItem *searchItemCommand = new SearchItem(data, &_otherResult);
 	_invoker->disableUndo();
