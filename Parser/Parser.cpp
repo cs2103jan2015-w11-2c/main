@@ -130,12 +130,12 @@ vector <string> Parser::getFragmentedEvent(){
 	}
 
 	int startHour = _item.getHour(_item.eventStartTime[0]);
-	std::string startHr = std::to_string(startHour);
+	string startHr = std::to_string(startHour);
 	string startMin = _item.getMinute(_item.eventStartTime[1]);
 	string startTime = startHr  + startMin;
 
 	int endHour = _item.getHour(_item.eventEndTime[0]);
-	std::string endHr = std::to_string(endHour);
+	string endHr = std::to_string(endHour);
 	string endMin = _item.getMinute(_item.eventEndTime[1]);
 	string endTime = endHr + endMin;
 
