@@ -9,6 +9,18 @@
 
 using namespace std;
 
+//Constants
+const string DATE_START_1 = "from";
+const string DATE_START_2 = "on";
+const int DATE_KEYWORDS_SIZE = 52;
+const string DATE_KEYWORDS[]= {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
+						"sunday", "mon", "tue", "tues", "wed", "thur", "thurs", "fri", "sat", "sun",
+						"january", "february", "march", "april", "may", "june", "july",
+						"august", "september", "october", "november", "december",
+						"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", 
+						"oct", "nov", "dec", "today", "floating", "float", "tomorrow", "tom",
+						"from", "on", "to", "-", "next", "nex", "p", "pm", "m"};
+
 class Parser {
 private:
 	static const string ERROR_NO_LINE_NUMBER;
@@ -36,7 +48,15 @@ public:
 	//and stores it in _userCommand
 	void extractUserCommand();
 
-	size_t findFrontBracket(string);
+	//takes input string and keyword
+	//returns the position of the delimiter, string::npos otherwise
+	size_t findDateKeyWord(string, string);
+
+	//returns true if the words after the delimiter are all date/time keywords
+	bool isCorrectDateDelimiter(string inputLine, size_t index);
+
+	//returns true if the word is a possible date/time keyword
+	bool isDateKeyword(string);
 
 	//input format is [_day/_month time(24hrs) at the end of the input
 	//if time is input as 12 hr, input p to specify pm

@@ -91,7 +91,7 @@ namespace UI {
 			// 
 			// commandInputBox
 			// 
-			this->commandInputBox->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::SuggestAppend;
+			this->commandInputBox->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::Append;
 			this->commandInputBox->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
 			this->commandInputBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
