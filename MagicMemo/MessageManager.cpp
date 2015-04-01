@@ -43,6 +43,9 @@ Void MessageManager::generateMessageOutputs(String^ textFromUser) {
 	clearTodayTaskIndexVectors();
 	calculateTodayTaskIndexes();
 	_todayTaskBoxMessage = toString(_todayTaskVector);
+
+	//Textbox size
+	isBoxExtended = magicMemo->isWide();
 }
 
 Void MessageManager::calculateAllTaskIndexes() {

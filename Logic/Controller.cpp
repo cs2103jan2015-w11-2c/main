@@ -66,6 +66,8 @@ void Controller::executeCommand(string inputText) {
 		undo();
 	} else if (userCommand == "redo") {
 		redo();
+	} else if (userCommand == "view") {
+		toggleIsWide();
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
@@ -208,20 +210,12 @@ bool Controller::isSearch() {
 	return _isSearch;
 }
 
+void Controller::toggleIsWide() {
+	_isWide = !_isWide;
+}
+
 bool Controller::isWide() {
 	return _isWide;
-}
-
-void Controller::setIsWide() {
-	if(!_isWide) {
-		_isWide = true;
-	}
-}
-
-void Controller::clearIsWide() {
-	if(_isWide) {
-		_isWide = false;
-	}
 }
 
 void Controller::copy(Item input) {

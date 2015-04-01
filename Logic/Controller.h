@@ -78,11 +78,9 @@ public:
 
 	bool isSearch();
 
+	void toggleIsWide();
+
 	bool isWide();
-
-	void setIsWide();
-
-	void clearIsWide();
 
 	void copy(Item);
 
