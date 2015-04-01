@@ -1,5 +1,5 @@
 #include "MessageManager.h"
-
+//@author A0111951N
 MessageManager::MessageManager(void) {
 	magicMemo = new Controller();
 	_allTaskVector = new vector<RESULT>;
@@ -180,9 +180,12 @@ Void MessageManager::colorTextInTaskBox(
 
 Void MessageManager::updateAutoCompleteSource(TextBox^ inputBox) {
 	inputBox->AutoCompleteCustomSource->Clear();
+	vector<string> autoComplete = magicMemo->getInputBank();
 
-	inputBox->AutoCompleteCustomSource->Add("search hello");
-	inputBox->AutoCompleteCustomSource->Add("search hi");
+	for(unsigned int i = 0; i < autoComplete.size(); i++) {
+		String^ temp = "search " + convertToSystemString(autoComplete[i]);
+		inputBox->AutoCompleteCustomSource->Add(temp);
+	}
 
 }
 

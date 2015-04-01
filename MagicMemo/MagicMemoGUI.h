@@ -1,4 +1,5 @@
 #pragma once
+//@author A0111951N
 #include <vector>
 #include <algorithm>
 #include <string>
@@ -61,6 +62,7 @@ namespace UI {
 		/// </summary>
 		System::ComponentModel::Container ^components;
 
+		//@author generated
 #pragma region Windows Form Designer generated code
 		/// <summary>
 		/// Required method for Designer support - do not modify
@@ -185,6 +187,7 @@ namespace UI {
 		}
 #pragma endregion
 
+//@author A0111951N
 	private:
 		//Get value while typing
 		System::Void commandInputBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {

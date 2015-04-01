@@ -25,6 +25,7 @@ void Item::initializeItem() {
 	bold = false;
 }
 
+//@author A0111951N
 int Item::getHour(int hour) {
 	if(hour == 24) {
 		return 0;
@@ -59,6 +60,7 @@ string Item::getPM(int hour) {
 	}
 }
 
+//@author A0114613U
 string Item::dateToString() {
 	if((eventDate[0] == 0) && (eventDate[1] == 0) && (eventDate[1] == 0)) {
 		return MESSAGE_UNDATED_TASK;
@@ -71,6 +73,7 @@ string Item::dateToString() {
 	}
 }
 
+//@author A0111951N
 string Item::timeToString() {
 	ostringstream oss;
 	string startTimeOfDay = getPM(eventStartTime[0]);

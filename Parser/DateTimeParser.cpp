@@ -1,3 +1,4 @@
+//@author A0111951N
 #include "DateTimeParser.h"
 
 const string DateTimeParser::ERROR_NO_DAY_SPECIFIED = "Invalid input: No day specified after \"next\"";
@@ -223,6 +224,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 
 }
 
+//@author A0114613U
 int DateTimeParser::mapWeekDay(string weekDay) {
 	int weekDayIndex = 0;
 
@@ -299,6 +301,7 @@ int DateTimeParser::mapMonth(string inputMonth) {
 	return returnValue;
 }
 
+//@author A0111951N
 void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, int& year) {
 	day = _dateTime.getCurrentDay();
 	month = _dateTime.getCurrentMonth();

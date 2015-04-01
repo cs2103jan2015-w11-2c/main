@@ -353,20 +353,19 @@ void Controller::chronoSort(vector<Item> &vectorStore) {
 
 void Controller::addToInputBank(const string input) {
 	vector<string> fragEvent = _parser->getFragmentedEvent();
-	istringstream iss(input);
-	vector<string>::iterator iter;
+	vector<string>::iterator iter1;
+	vector<string>::iterator iter2;
 
-	string inputWord = "";
-	while(iss >> inputWord) {
+	for(iter1 = fragEvent.begin(); iter1 != fragEvent.end(); iter1++) {
 		bool isFound = false;
-		for(iter = _inputBank.begin(); iter != _inputBank.end(); iter++) {
-			if (*iter == inputWord) {
+		for(iter2 = _inputBank.begin(); iter2 != _inputBank.end(); iter2++) {
+			if (*iter1 == *iter2) {
 				isFound = true;
 				break;
 			}
 		}
 		if (!isFound) {
-			_inputBank.push_back(inputWord);
+			_inputBank.push_back(*iter1);
 		}
 	}
 }
