@@ -60,13 +60,13 @@ void Controller::executeCommand(string inputText) {
 		edit(data);
 	} else if (userCommand == "rename") {
 		rename(commandData);
-	} else if (userCommand == "move") {
+	} else if (userCommand == "move" || userCommand == "save") {
 		move(commandData);
 	} else if (userCommand == "undo") {
 		undo();
 	} else if (userCommand == "redo") {
 		redo();
-	} else if (userCommand == "view") {
+	} else if (userCommand == "view" || userCommand == "more") {
 		toggleIsWide();
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
@@ -210,32 +210,15 @@ bool Controller::isSearch() {
 	return _isSearch;
 }
 
-<<<<<<< HEAD
+
 void Controller::toggleIsWide() {
 	_isWide = !_isWide;
 }
 
-=======
->>>>>>> e3faa574874c9e5933182f5824b07956abf70bac
 bool Controller::isWide() {
 	return _isWide;
 }
 
-<<<<<<< HEAD
-=======
-void Controller::setIsWide() {
-	if(!_isWide) {
-		_isWide = true;
-	}
-}
-
-void Controller::clearIsWide() {
-	if(_isWide) {
-		_isWide = false;
-	}
-}
-
->>>>>>> e3faa574874c9e5933182f5824b07956abf70bac
 void Controller::copy(Item input) {
 	CopyItem *copyItemCommand = new CopyItem(_parser->getLineOpNumber()[0], input);
 	_invoker->executeCommand(_vectorStore, copyItemCommand, _successMessage);

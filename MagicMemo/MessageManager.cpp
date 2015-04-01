@@ -222,12 +222,10 @@ String^ MessageManager::getInputBoxMessage() {
 	return _inputBoxMessage;
 }
 
-String^ MessageManager::getAllTaskBoxLabel(int& xCoord) {
+String^ MessageManager::getAllTaskBoxLabel() {
 	if(magicMemo->isSearch()) {
-		xCoord = X_COORD_IS_SEARCH;
 		return LABEL_IS_SEARCH;
 	} else {
-		xCoord = X_COORD_ALL_TASKS;
 		return LABEL_ALL_TASKS;
 	}
 }
