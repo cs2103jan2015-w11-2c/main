@@ -9,6 +9,15 @@
 
 using namespace std;
 
+//Constants
+const string DATE_KEYWORDS[]= {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
+						"sunday", "mon", "tue", "tues", "wed", "thur", "thurs", "fri",
+						"january", "february", "march", "april", "may", "june", "july",
+						"august", "september", "october", "november", "december",
+						"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", 
+						"oct", "nov", "dec", "today", "floating", "float", "tomorrow", "tom",
+						"from", "on", "to", "-", "next", "nex", "p", "pm", "m"};
+
 class Parser {
 private:
 	static const string ERROR_NO_LINE_NUMBER;
