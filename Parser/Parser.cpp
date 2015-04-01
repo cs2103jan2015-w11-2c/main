@@ -1,3 +1,4 @@
+//@author A0111951N
 #include "Parser.h"
 #include "easylogging++.h"
 
@@ -75,17 +76,63 @@ void Parser::extractUserCommand() {
 
 }
 
-size_t Parser::findFrontBracket(string inputLine) {
-	return (inputLine.find_last_of("["));
+size_t Parser::findDateKeyWord(string inputLine, string delimiter) {
+	size_t dateStart = (inputLine.rfind(delimiter));
+	string temp;
+	bool isDate = false;
+	if(dateStart != string::npos) {
+		string line = convertStringToLowerCase(inputLine);
+		if(isCorrectDateDelimiter(line, dateStart)) {
+			return dateStart;
+		}
+	}
+
+	return string::npos;
 }
+
+bool Parser::isCorrectDateDelimiter(string inputLine, size_t index) {
+	bool isDate = true;
+	string temp = inputLine.substr(index);
+	size_t spacePos = temp.find_first_of(' ');
+	if(spacePos == string::npos) {
+		return false;
+	}
+	temp = temp.substr(spacePos + 1);
+	
+	istringstream iss(temp);
+	string word;
+	while((iss >> word) && isDate) {
+		if(!isDateKeyword(word)) {
+			isDate = false;
+		}
+	}
+	return isDate;
+}
+
+bool Parser::isDateKeyword(string word) {
+	if(_splitDateTime.convertStringToInteger(word) != 0) {
+		return true;
+	}
+	for(int i = 0; i < DATE_KEYWORDS_SIZE; i++) {
+		if(word == DATE_KEYWORDS[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+
 
 // try - catch to be moved to Controller?
 void Parser::extractDateAndTime() {
-	size_t frontBracketPos = findFrontBracket(_item.event);
+	size_t delimiterIndex = findDateKeyWord(_item.event, DATE_START_1);
+	
+	if(delimiterIndex == string::npos) {
+		delimiterIndex = findDateKeyWord(_item.event, DATE_START_2);
+	}
 
-	if (frontBracketPos != string::npos) {
-		string rawDateTimeChunk = _item.event.substr(frontBracketPos + 1);
-		_item.event = removeSpacePadding(_item.event.substr(0, frontBracketPos));
+	if (delimiterIndex != string::npos) {
+		string rawDateTimeChunk = _item.event.substr(delimiterIndex + 1);
+		_item.event = removeSpacePadding(_item.event.substr(0, delimiterIndex));
 		rawDateTimeChunk = convertStringToLowerCase(rawDateTimeChunk);
 
 		try {
@@ -114,6 +161,8 @@ string Parser::convertStringToLowerCase(string inputString) {
 	return inputString;
 }
 
+
+//@author SHANSHAN
 vector <string> Parser::getFragmentedEvent(){
 	vector<string> outputVec;
 
@@ -122,27 +171,27 @@ vector <string> Parser::getFragmentedEvent(){
 	size_t spacePos = wholeEvent.find_first_of(" ");
 
 	while(spacePos != string::npos){
-		outputVec.push_back(wholeEvent.substr(spacePos+1)); 
-		wholeEvent = wholeEvent.substr(spacePos+1);
+		outputVec.push_back(wholeEvent.substr(wholeEvent.find_first_not_of(" ", spacePos+1))); 
+		wholeEvent = wholeEvent.substr(wholeEvent.find_first_not_of(" ", spacePos+1));
 		spacePos = wholeEvent.find_first_of(" ");
 	}
 
 	int startHour = _item.getHour(_item.eventStartTime[0]);
-	std::string startHr = std::to_string(startHour);
+	string startHr = std::to_string(startHour);
 	string startMin = _item.getMinute(_item.eventStartTime[1]);
 	string startTime = startHr  + startMin;
 
 	int endHour = _item.getHour(_item.eventEndTime[0]);
-	std::string endHr = std::to_string(endHour);
+	string endHr = std::to_string(endHour);
 	string endMin = _item.getMinute(_item.eventEndTime[1]);
 	string endTime = endHr + endMin;
 
-	string monthStr = _item.itemDate.getMonth(_item.eventDate[1]);
+	string monthStr = _item.itemDate.getMonthFull(_item.eventDate[1]);
 	string weekDay;
 	weekDay = _item.itemDate.getWeekDay(_item.eventDate[0], _item.eventDate[1], _item.eventDate[2]);
 
 	//in sequence, the vector contains:
-	//weekday, day, interger month, 
+	//weekday, day, integer month, 
 	//month, year, start time, end time.
 	if(weekDay != ""){
 		outputVec.push_back(weekDay);
@@ -167,11 +216,11 @@ vector <string> Parser::getFragmentedEvent(){
 		outputVec.push_back(tempStr3);
 	}
 
-	if(startTime != ""){
+	if(startTime != "0"){
 		outputVec.push_back(startTime);
 	}
 
-	if(endTime != ""){
+	if(endTime != "0"){
 		outputVec.push_back(endTime);
 	}
 

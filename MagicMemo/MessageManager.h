@@ -22,8 +22,7 @@ ref class MessageManager {
 private:
 	static String^ LABEL_IS_SEARCH = "Search Results";
 	static String^ LABEL_ALL_TASKS = "Other Tasks";
-	static int X_COORD_IS_SEARCH = 377;
-	static int X_COORD_ALL_TASKS = 385;
+
 
 	Controller* magicMemo;
 
@@ -35,12 +34,14 @@ private:
 	vector<HIGHLIGHT>* _allTimeHighlight;
 	vector<HIGHLIGHT>* _allEventHighlight;
 	vector<HIGHLIGHT>* _allCompletedHighlight;
+	vector<HIGHLIGHT>* _allEventSpillOver;
 
 	vector<HIGHLIGHT>* _todayNumberHighlight;
 	vector<HIGHLIGHT>* _todayDateHighlight;
 	vector<HIGHLIGHT>* _todayTimeHighlight;
 	vector<HIGHLIGHT>* _todayEventHighlight;
 	vector<HIGHLIGHT>* _todayCompletedHighlight;
+	vector<HIGHLIGHT>* _todayEventSpillOver;
 
 
 	String^ _userInput;
@@ -50,6 +51,7 @@ private:
 	String^ _inputBoxMessage;
 
 	bool isBoxExtended;
+
 
 public:
 	MessageManager(void);
@@ -88,7 +90,7 @@ public:
 
 	String^ getInputBoxMessage();
 
-	String^ getAllTaskBoxLabel(int&);
+	String^ getAllTaskBoxLabel();
 
 	Void clearAllTaskIndexVectors();
 

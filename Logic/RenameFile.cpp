@@ -29,7 +29,7 @@ public:
 
 	~RenameFile() {
 	}
-
+	//@author A0111951N
 	void executeAction(FileStorage *outputFile) {
 		if(_fileName == "") {
 			_message = ERROR_NO_FILENAME;

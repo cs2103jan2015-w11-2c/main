@@ -1,6 +1,6 @@
 #include "Item.h"
 
-const string Item::MESSAGE_UNDATED_TASK = "Undated";
+const string Item::MESSAGE_UNDATED_TASK = "Floating";
 
 Item::Item() {
 	initializeItem();
@@ -25,6 +25,7 @@ void Item::initializeItem() {
 	bold = false;
 }
 
+//@author A0111951N
 int Item::getHour(int hour) {
 	if(hour == 24) {
 		return 0;
@@ -51,14 +52,25 @@ string Item::getMinute(int minute) {
 	}
 }
 
+string Item::get24HrMinute(int minute) {
+	if(minute == 0) {
+		return "";
+	} else if (minute < 10) {
+		return ("0" + to_string(minute));
+	} else {
+		return (to_string(minute));
+	}
+}
+
 string Item::getPM(int hour) {
 	if (hour >= 12 && hour < 24) {
-		return "pm";
+		return "p";
 	} else {
 		return "";
 	}
 }
 
+//@author A0114613U
 string Item::dateToString() {
 	if((eventDate[0] == 0) && (eventDate[1] == 0) && (eventDate[1] == 0)) {
 		return MESSAGE_UNDATED_TASK;
@@ -71,14 +83,11 @@ string Item::dateToString() {
 	}
 }
 
+//@author A0111951N
 string Item::timeToString() {
 	ostringstream oss;
 	string startTimeOfDay = getPM(eventStartTime[0]);
 	string endTimeOfDay = getPM(eventEndTime[0]);
-
-	if(startTimeOfDay == endTimeOfDay) {
-		startTimeOfDay = "";
-	}
 
 	if(eventStartTime[0] == 0) {
 		return "";
@@ -89,6 +98,22 @@ string Item::timeToString() {
 		if(eventEndTime[0] != 0) {
 			oss << "-" << getHour(eventEndTime[0]);
 			oss << getMinute(eventEndTime[1]) << endTimeOfDay;
+		}
+		oss << "]";
+
+		return oss.str();
+	}
+}
+
+string Item::timeTo24HrString() {
+	ostringstream oss;
+
+	if(eventStartTime[0] == 0) {
+		return "";
+	} else {
+		oss << "[" << getHour(eventStartTime[0]) << get24HrMinute(eventStartTime[1]);;
+		if(eventEndTime[0] != 0) {
+			oss << "-" << getHour(eventEndTime[0]) << get24HrMinute(eventEndTime[1]);
 		}
 		oss << "]";
 
@@ -109,6 +134,7 @@ string Item::toString() {
 	oss << event << ": "<< dateToString() << " " << timeToString();
 	return oss.str();
 }
+
 
 void Item::logItemValues() {
 	LOG(INFO) << event;
