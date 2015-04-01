@@ -6,12 +6,12 @@ const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n"
 INITIALIZE_EASYLOGGINGPP
 
 	Controller::Controller(void) {
-		_isSearch = false;
-		_isWide = false;
 		_parser = new Parser;
 		_outputFile = FileStorage::getInstance();
 		_invoker = new CommandInvoker;
 		initializeVector();
+		_isSearch = false;
+		_isWide = true;
 }
 
 void Controller::executeCommand(string inputText) {
@@ -29,6 +29,12 @@ void Controller::executeCommand(string inputText) {
 
 	LOG(INFO) << 	"ITEM Values:";
 	data.logItemValues();
+
+	
+	if(userCommand != "") {
+		addToInputBank(commandData);
+	}
+	
 
 	if(userCommand == "search") {
 		_isSearch = true;
@@ -204,14 +210,32 @@ bool Controller::isSearch() {
 	return _isSearch;
 }
 
+<<<<<<< HEAD
 void Controller::toggleIsWide() {
 	_isWide = !_isWide;
 }
 
+=======
+>>>>>>> e3faa574874c9e5933182f5824b07956abf70bac
 bool Controller::isWide() {
 	return _isWide;
 }
 
+<<<<<<< HEAD
+=======
+void Controller::setIsWide() {
+	if(!_isWide) {
+		_isWide = true;
+	}
+}
+
+void Controller::clearIsWide() {
+	if(_isWide) {
+		_isWide = false;
+	}
+}
+
+>>>>>>> e3faa574874c9e5933182f5824b07956abf70bac
 void Controller::copy(Item input) {
 	CopyItem *copyItemCommand = new CopyItem(_parser->getLineOpNumber()[0], input);
 	_invoker->executeCommand(_vectorStore, copyItemCommand, _successMessage);
@@ -345,6 +369,7 @@ void Controller::chronoSort(vector<Item> &vectorStore) {
 }
 
 void Controller::addToInputBank(const string input) {
+	vector<string> fragEvent = _parser->getFragmentedEvent();
 	istringstream iss(input);
 	vector<string>::iterator iter;
 

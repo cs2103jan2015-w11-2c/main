@@ -46,6 +46,9 @@ string DateTime::getWeekDay (int day, int month, int year) {
 }
 
 string DateTime::getMonth(const int mon) {
+	if (mon == 0) {
+		return "";
+	}
 	return MONTH[mon-1];
 }
 

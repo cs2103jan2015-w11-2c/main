@@ -37,6 +37,9 @@ private:
 	bool _isSearch;
 	bool _isWide;
 
+	//for option to allow widening of display
+	bool _isWide;
+
 public:
 	Controller(void);
 
