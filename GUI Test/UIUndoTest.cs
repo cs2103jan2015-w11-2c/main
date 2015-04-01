@@ -10,25 +10,27 @@ using Microsoft.VisualStudio.TestTools.UITest.Extension;
 using Keyboard = Microsoft.VisualStudio.TestTools.UITesting.Keyboard;
 
 
-namespace CodedUITestProject1
+namespace GUI_Test
 {
     /// <summary>
     /// Summary description for CodedUITest1
     /// </summary>
     [CodedUITest]
-    public class CodedUITest1
+    public class UIUndoTest
     {
-        public CodedUITest1()
+        public UIUndoTest()
         {
         }
 
         [TestMethod]
-        public void UIAddMethod()
+        public void UIUndoMethod()
         {
             // To generate code for this test, select "Generate Code for Coded UI Test" from the shortcut menu and select one of the menu items.
             // For more information on generated code, see http://go.microsoft.com/fwlink/?LinkId=179463
-            this.UIMap.AddMethod1();
-            this.UIMap.AssertAddMethod();
+            this.UIMap.undoCase1();
+            this.UIMap.AssertUndoCase1();
+            this.UIMap.undoCase2();
+            this.UIMap.AssertUndoCase2();
         }
 
         #region Additional test attributes
