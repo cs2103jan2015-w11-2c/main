@@ -76,17 +76,63 @@ void Parser::extractUserCommand() {
 
 }
 
-size_t Parser::findFrontBracket(string inputLine) {
-	return (inputLine.find_last_of("["));
+size_t Parser::findDateKeyWord(string inputLine, string delimiter) {
+	size_t dateStart = (inputLine.rfind(delimiter));
+	string temp;
+	bool isDate = false;
+	if(dateStart != string::npos) {
+		string line = convertStringToLowerCase(inputLine);
+		if(isCorrectDateDelimiter(line, dateStart)) {
+			return dateStart;
+		}
+	}
+
+	return string::npos;
 }
+
+bool Parser::isCorrectDateDelimiter(string inputLine, size_t index) {
+	bool isDate = true;
+	string temp = inputLine.substr(index);
+	size_t spacePos = temp.find_first_of(' ');
+	if(spacePos == string::npos) {
+		return false;
+	}
+	temp = temp.substr(spacePos + 1);
+	
+	istringstream iss(temp);
+	string word;
+	while((iss >> word) && isDate) {
+		if(!isDateKeyword(word)) {
+			isDate = false;
+		}
+	}
+	return isDate;
+}
+
+bool Parser::isDateKeyword(string word) {
+	if(_splitDateTime.convertStringToInteger(word) != 0) {
+		return true;
+	}
+	for(int i = 0; i < DATE_KEYWORDS_SIZE; i++) {
+		if(word == DATE_KEYWORDS[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+
 
 // try - catch to be moved to Controller?
 void Parser::extractDateAndTime() {
-	size_t frontBracketPos = findFrontBracket(_item.event);
+	size_t delimiterIndex = findDateKeyWord(_item.event, DATE_START_1);
+	
+	if(delimiterIndex == string::npos) {
+		delimiterIndex = findDateKeyWord(_item.event, DATE_START_2);
+	}
 
-	if (frontBracketPos != string::npos) {
-		string rawDateTimeChunk = _item.event.substr(frontBracketPos + 1);
-		_item.event = removeSpacePadding(_item.event.substr(0, frontBracketPos));
+	if (delimiterIndex != string::npos) {
+		string rawDateTimeChunk = _item.event.substr(delimiterIndex + 1);
+		_item.event = removeSpacePadding(_item.event.substr(0, delimiterIndex));
 		rawDateTimeChunk = convertStringToLowerCase(rawDateTimeChunk);
 
 		try {
@@ -114,6 +160,7 @@ string Parser::convertStringToLowerCase(string inputString) {
 	transform(inputString.begin(), inputString.end(), inputString.begin(), ::tolower);
 	return inputString;
 }
+
 
 //@author SHANSHAN
 vector <string> Parser::getFragmentedEvent(){

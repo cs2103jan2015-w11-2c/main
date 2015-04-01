@@ -61,9 +61,11 @@ public:
 	void extractDateTime(string [], int);
 
 	//returns the weekday number if a match is found
-	//returns 0 if match is not found
+	//returns -1 if match is not found
 	int mapWeekDay(string);
 
+	//returns the month number if a match is found
+	//returns -1 if match is not found
 	int mapMonth(string);
 
 	//sets the day, month and year from weekday input

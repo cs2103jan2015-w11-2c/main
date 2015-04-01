@@ -150,12 +150,12 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 			hasDash = true;
 			LOG(INFO) << "DASH";
 			// weekday (e.g. Friday), start date
-		} else if(isStartDate && mapMonth(inputArray[i]) != 0) {
+		} else if(isStartDate && mapMonth(inputArray[i]) != -1) {
 			isStartDate = false;
 			isStartTime = true;
 			updateHrDayMon(mapMonth(inputArray[i]), _startHour, _day, _month, _year, _item.eventStartTime[0]);
 			LOG(INFO) << "MONTH";
-		} else if(isStartDate && (mapWeekDay(inputArray[i]) != 0)) {
+		} else if(isStartDate && (mapWeekDay(inputArray[i]) != -1)) {
 			isStartDate = false;
 			setDateFromWeekDay(mapWeekDay(inputArray[i]), _day, _month, _year);
 			if(isNextWeek) {
@@ -167,7 +167,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 			isStartDate = false;
 			separateDayMonthYear(inputArray[i], _day, _month, _year);
 			LOG(INFO) << "START DELIMITED DATE";
-		} else if(!isStartDate && mapMonth(inputArray[i]) != 0) {
+		} else if(!isStartDate && mapMonth(inputArray[i]) != -1) {
 			if(isEndTime) {
 				updateHrDayMon(mapMonth(inputArray[i]), _endHour, _endDay, _endMonth, _endYear, _item.eventEndTime[0]);
 			} else {
@@ -176,7 +176,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 			isEndTime = false;
 			LOG(INFO) << "MONTH";
 			// weekday, end date
-		} else if(!isStartDate && (mapWeekDay(inputArray[i]) != 0)) {
+		} else if(!isStartDate && (mapWeekDay(inputArray[i]) != -1)) {
 			setDateFromWeekDay(mapWeekDay(inputArray[i]), _endDay, _endMonth, _endYear);
 			if(isNextWeek) {
 				handleNextWeekDay(_endDay, _endMonth, _endYear);
@@ -226,9 +226,10 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 
 //@author A0114613U
 int DateTimeParser::mapWeekDay(string weekDay) {
-	int weekDayIndex = 0;
+	int weekDayIndex = -1;
 
 	std::map<string, int> weekDays;
+	weekDays["today"] = 0;
 	weekDays["monday"] = 1;
 	weekDays["mon"] = 1;
 	weekDays["tuesday"] = 2;
@@ -287,7 +288,7 @@ int DateTimeParser::mapMonth(string inputMonth) {
 	month["dec"] = 12;
 	month["decem"] = 12;
 
-	int returnValue = 0;
+	int returnValue = -1;
 	bool isFound = false;
 	std::map<string, int>::iterator it = month.begin(); 
 	while((it!=month.end()) && (!isFound)){
@@ -301,7 +302,6 @@ int DateTimeParser::mapMonth(string inputMonth) {
 	return returnValue;
 }
 
-//@author A0111951N
 void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, int& year) {
 	day = _dateTime.getCurrentDay();
 	month = _dateTime.getCurrentMonth();
@@ -309,7 +309,9 @@ void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, 
 	int currentWeekDayIndex = _dateTime.getIntWeekDay(day, month, year);
 
 	int diffInDay;
-	if(weekDayIndex == currentWeekDayIndex) {
+	if(weekDayIndex == 0) {
+		diffInDay = 0;
+	} else if(weekDayIndex == currentWeekDayIndex) {
 		diffInDay = 7;
 	} else {
 		diffInDay = (weekDayIndex - currentWeekDayIndex + 7) % 7;
@@ -319,6 +321,7 @@ void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, 
 	handleDayOverflow(day, month, year);
 }
 
+//@author A0111951N
 void DateTimeParser::handleNextWeekDay(int& day, int& month, int& year) {
 	if(day != 0) {
 		day += 7;
