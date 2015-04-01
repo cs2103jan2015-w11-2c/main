@@ -7,6 +7,7 @@ INITIALIZE_EASYLOGGINGPP
 
 	Controller::Controller(void) {
 		_isSearch = false;
+		_isWide = false;
 		_parser = new Parser;
 		_outputFile = FileStorage::getInstance();
 		_invoker = new CommandInvoker;
@@ -59,6 +60,8 @@ void Controller::executeCommand(string inputText) {
 		undo();
 	} else if (userCommand == "redo") {
 		redo();
+	} else if (userCommand == "view") {
+		toggleIsWide();
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
@@ -199,6 +202,14 @@ void Controller::search(Item data) {
 
 bool Controller::isSearch() {
 	return _isSearch;
+}
+
+void Controller::toggleIsWide() {
+	_isWide = !_isWide;
+}
+
+bool Controller::isWide() {
+	return _isWide;
 }
 
 void Controller::copy(Item input) {

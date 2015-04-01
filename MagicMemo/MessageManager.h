@@ -51,6 +51,7 @@ private:
 
 	bool isBoxExtended;
 
+
 public:
 	MessageManager(void);
 
