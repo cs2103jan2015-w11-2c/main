@@ -444,6 +444,22 @@ namespace CodedUITestProject1
             Assert.AreEqual(this.AssertRedoMethodExpectedValues.UIAllTaskBoxEditText, uIAllTaskBoxEdit.Text);
         }
         
+        /// <summary>
+        /// RecordedMethod1 - Use 'RecordedMethod1Params' to pass parameters into this method.
+        /// </summary>
+        public void RecordedMethod1()
+        {
+            #region Variable Declarations
+            WinEdit uICommandInputBoxEdit = this.UIMagicMemoGUIWindow.UICommandInputBoxWindow.UICommandInputBoxEdit;
+            #endregion
+
+            // Type 'add kk[fri 13' in 'commandInputBox' text box
+            uICommandInputBoxEdit.Text = this.RecordedMethod1Params.UICommandInputBoxEditText;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit, this.RecordedMethod1Params.UICommandInputBoxEditSendKeys, ModifierKeys.None);
+        }
+        
         #region Properties
         public virtual AddMethod1Params AddMethod1Params
         {
@@ -613,6 +629,18 @@ namespace CodedUITestProject1
             }
         }
         
+        public virtual RecordedMethod1Params RecordedMethod1Params
+        {
+            get
+            {
+                if ((this.mRecordedMethod1Params == null))
+                {
+                    this.mRecordedMethod1Params = new RecordedMethod1Params();
+                }
+                return this.mRecordedMethod1Params;
+            }
+        }
+        
         public UIMagicMemoGUIWindow UIMagicMemoGUIWindow
         {
             get
@@ -654,6 +682,8 @@ namespace CodedUITestProject1
         private UndoMethodParams mUndoMethodParams;
         
         private AssertRedoMethodExpectedValues mAssertRedoMethodExpectedValues;
+        
+        private RecordedMethod1Params mRecordedMethod1Params;
         
         private UIMagicMemoGUIWindow mUIMagicMemoGUIWindow;
         #endregion
@@ -1189,6 +1219,26 @@ namespace CodedUITestProject1
         /// Verify that the 'Text' property of 'allTaskBox' text box equals 'Sunday, 5 Apr 2015        ///1. [10] event        ///        ///'
         /// </summary>
         public string UIAllTaskBoxEditText = "Sunday, 5 Apr 2015\r1. [10] event\r\r";
+        #endregion
+    }
+    
+    /// <summary>
+    /// Parameters to be passed into 'RecordedMethod1'
+    /// </summary>
+    [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
+    public class RecordedMethod1Params
+    {
+        
+        #region Fields
+        /// <summary>
+        /// Type 'add kk[fri 13' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText = "add kk[fri 13";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys = "{Enter}";
         #endregion
     }
     

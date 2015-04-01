@@ -11,7 +11,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Parser", "Parser\Parser.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logic", "Logic\Logic.vcxproj", "{61C77A61-61C8-4DE5-8D56-53AECE2F16B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodedUITestProject1", "CodedUITestProject1\CodedUITestProject1.csproj", "{3803D5B8-8316-489C-8D52-C20519D100A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUITest", "CodedUITestProject1\GUITest.csproj", "{3803D5B8-8316-489C-8D52-C20519D100A8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagicMemoLoadTest", "WebAndLoadTestProject1\MagicMemoLoadTest.csproj", "{1F1F8ED7-6B50-42DD-BA2F-5C619CBF33B0}"
 EndProject
