@@ -3,6 +3,7 @@
 #include <sstream>
 #include <exception>
 #include <algorithm>
+#include <map>
 #include "Item.h"
 #include "DateTimeParser.h"
 
