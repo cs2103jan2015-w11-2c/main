@@ -34,12 +34,14 @@ private:
 	vector<HIGHLIGHT>* _allTimeHighlight;
 	vector<HIGHLIGHT>* _allEventHighlight;
 	vector<HIGHLIGHT>* _allCompletedHighlight;
+	vector<HIGHLIGHT>* _allEventSpillOver;
 
 	vector<HIGHLIGHT>* _todayNumberHighlight;
 	vector<HIGHLIGHT>* _todayDateHighlight;
 	vector<HIGHLIGHT>* _todayTimeHighlight;
 	vector<HIGHLIGHT>* _todayEventHighlight;
 	vector<HIGHLIGHT>* _todayCompletedHighlight;
+	vector<HIGHLIGHT>* _todayEventSpillOver;
 
 
 	String^ _userInput;
