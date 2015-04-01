@@ -35,6 +35,7 @@ private:
 
 	//for search function, to check tell UI to change the heading to "Search Results"
 	bool _isSearch;
+	bool _isWide;
 
 	//for option to allow widening of display
 	bool _isWide;
@@ -78,11 +79,9 @@ public:
 
 	bool isSearch();
 
+	void toggleIsWide();
+
 	bool isWide();
-
-	void setIsWide();
-
-	void clearIsWide();
 
 	void copy(Item);
 
