@@ -1,3 +1,4 @@
+//@author A0111951N
 #include "Parser.h"
 #include "easylogging++.h"
 
@@ -114,6 +115,7 @@ string Parser::convertStringToLowerCase(string inputString) {
 	return inputString;
 }
 
+//@author SHANSHAN
 vector <string> Parser::getFragmentedEvent(){
 	vector<string> outputVec;
 
@@ -122,8 +124,8 @@ vector <string> Parser::getFragmentedEvent(){
 	size_t spacePos = wholeEvent.find_first_of(" ");
 
 	while(spacePos != string::npos){
-		outputVec.push_back(wholeEvent.substr(spacePos+1)); 
-		wholeEvent = wholeEvent.substr(spacePos+1);
+		outputVec.push_back(wholeEvent.substr(wholeEvent.find_first_not_of(" ", spacePos+1))); 
+		wholeEvent = wholeEvent.substr(wholeEvent.find_first_not_of(" ", spacePos+1));
 		spacePos = wholeEvent.find_first_of(" ");
 	}
 
@@ -137,12 +139,12 @@ vector <string> Parser::getFragmentedEvent(){
 	string endMin = _item.getMinute(_item.eventEndTime[1]);
 	string endTime = endHr + endMin;
 
-	string monthStr = _item.itemDate.getMonth(_item.eventDate[1]);
+	string monthStr = _item.itemDate.getMonthFull(_item.eventDate[1]);
 	string weekDay;
 	weekDay = _item.itemDate.getWeekDay(_item.eventDate[0], _item.eventDate[1], _item.eventDate[2]);
 
 	//in sequence, the vector contains:
-	//weekday, day, interger month, 
+	//weekday, day, integer month, 
 	//month, year, start time, end time.
 	if(weekDay != ""){
 		outputVec.push_back(weekDay);
@@ -167,11 +169,11 @@ vector <string> Parser::getFragmentedEvent(){
 		outputVec.push_back(tempStr3);
 	}
 
-	if(startTime != ""){
+	if(startTime != "0"){
 		outputVec.push_back(startTime);
 	}
 
-	if(endTime != ""){
+	if(endTime != "0"){
 		outputVec.push_back(endTime);
 	}
 
