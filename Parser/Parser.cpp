@@ -116,9 +116,6 @@ string Parser::convertStringToLowerCase(string inputString) {
 
 vector <string> Parser::getFragmentedEvent(){
 	vector<string> outputVec;
-	map<string, string> monthMap;
-
-	initializeMonthMap(monthMap);
 
 	string wholeEvent = _item.event;
 	outputVec.push_back(wholeEvent); 
@@ -179,60 +176,6 @@ vector <string> Parser::getFragmentedEvent(){
 	}
 
 	return outputVec;
-}
-
-void Parser::initializeMonthMap(map<string, string> &monthMap) {
-	monthMap["Jan"] = "January";
-	monthMap["Feb"] = "Febuary";
-	monthMap["Mar"] = "March";
-	monthMap["Apr"] = "April";
-	monthMap["May"] = "May";
-	monthMap["Jun"] = "June";
-	monthMap["Jul"] = "July";
-	monthMap["Aug"] = "August";
-	monthMap["Sep"] = "September";
-	monthMap["Oct"] = "October";
-	monthMap["Nov"] = "November";
-	monthMap["Dec"] = "December";
-}
-
-bool Parser::checkIsUndated(const Item data) {
-	for (int i = 0; i < 3; i++) {
-		if (data.eventDate[i] != 0) {
-			return false;
-		}
-	}
-	for (int i = 0; i < 3; i++) {
-		if (data.eventDate[i] != 0) {
-			return false;
-		}
-	}
-	return true;
-}
-
-bool Parser::checkIsUntimed(const Item data) {
-	for (int i = 0; i < 2; i++) {
-		if (data.eventStartTime[i] != 0) {
-			return false;
-		}
-	}
-	for (int i = 0; i < 2; i++) {
-		if (data.eventEndTime[i] != 0) {
-			return false;
-		}
-	}
-	return true;
-}
-
-void Parser::extractSearchQuery(Item &data) {
-	bool isUndated = checkIsUndated(data);
-	bool isUntimed = checkIsUntimed(data);
-	
-	if (isUndated && isUntimed) {
-		Item temp;
-		DateTimeParser dateTimeParser;
-		dateTimeParser.updateItemDateTime(data.event, temp);
-	}
 }
 
 Parser::~Parser(void) {

@@ -20,15 +20,8 @@ void Controller::executeCommand(string inputText) {
 	Item data;
 
 	_parser->setStringToParse(inputText);
-	_parser->extractUserCommand();	
+	_parser->extractUserCommand();
 	_parser->extractDateAndTime();
-
-	if(userCommand == "search") {
-		_isSearch = true;
-	} else {
-		_isSearch = false;
-	}
-
 
 	userCommand = _parser->getUserCommand();
 	data = _parser->getItem();
@@ -40,6 +33,13 @@ void Controller::executeCommand(string inputText) {
 	
 	if(userCommand != "") {
 		addToInputBank(commandData);
+	}
+	
+
+	if(userCommand == "search") {
+		_isSearch = true;
+	} else {
+		_isSearch = false;
 	}
 
 	if (userCommand == "display") {
@@ -66,8 +66,6 @@ void Controller::executeCommand(string inputText) {
 		undo();
 	} else if (userCommand == "redo") {
 		redo();
-	} else if (userCommand == "view") {
-		toggleIsWide();
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
@@ -200,7 +198,6 @@ void Controller::sortAlphabetical() {
 
 void Controller::search(Item data) {
 	vector<Item> tempVector = _vectorStore;
-	_parser->extractSearchQuery(data);
 
 	SearchItem *searchItemCommand = new SearchItem(data, &_otherResult);
 	_invoker->disableUndo();
@@ -211,19 +208,10 @@ bool Controller::isSearch() {
 	return _isSearch;
 }
 
-<<<<<<< HEAD
-void Controller::toggleIsWide() {
-	_isWide = !_isWide;
-}
-
-=======
->>>>>>> e3faa574874c9e5933182f5824b07956abf70bac
 bool Controller::isWide() {
 	return _isWide;
 }
 
-<<<<<<< HEAD
-=======
 void Controller::setIsWide() {
 	if(!_isWide) {
 		_isWide = true;
@@ -236,7 +224,6 @@ void Controller::clearIsWide() {
 	}
 }
 
->>>>>>> e3faa574874c9e5933182f5824b07956abf70bac
 void Controller::copy(Item input) {
 	CopyItem *copyItemCommand = new CopyItem(_parser->getLineOpNumber()[0], input);
 	_invoker->executeCommand(_vectorStore, copyItemCommand, _successMessage);

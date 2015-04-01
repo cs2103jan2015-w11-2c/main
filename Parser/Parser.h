@@ -53,14 +53,6 @@ public:
 
 	vector<string> getFragmentedEvent();
 
-	void initializeMonthMap(map<string, string> &);
-
-	bool checkIsUndated(const Item);
-
-	bool checkIsUntimed(const Item);
-
-	void extractSearchQuery(Item &); 
-
 	~Parser(void);
 };
 

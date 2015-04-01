@@ -244,8 +244,7 @@ namespace UI {
 			allTaskBoxLabel->Text = magicManager->getAllTaskBoxLabel(xCoord);
 			allTaskBoxLabel->Location = System::Drawing::Point(xCoord, 51);
 
-			
-			magicManager->toggleTaskBoxSize(allTaskBox, todayTaskBox);
+			//magicManager->toggleTaskBoxSize(allTaskBox, todayTaskBox);
 
 			allTaskBox->Text = magicManager->getAllTaskBoxMessage();
 			todayTaskBox->Text = magicManager->getTodayTaskBoxMessage();
