@@ -111,7 +111,7 @@ public:
 
 	void chronoSort(vector<Item>&);
 
-	void addToInputBank(const string);
+	void addToInputBank();
 
 	vector<string> getInputBank();
 

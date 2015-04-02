@@ -13,6 +13,7 @@ class Parser {
 private:
 	static const string ERROR_NO_LINE_NUMBER;
 	static const string ERROR_INVALID_LINE_NUMBER;
+	static const string STRING_FLOATING;
 
 	Item _item;
 	DateTimeParser _splitDateTime;
@@ -52,6 +53,10 @@ public:
 	string convertStringToLowerCase(string inputString);
 
 	vector<string> getFragmentedEvent();
+
+	bool checkIsFloating(const Item);
+
+	void extractSearchQuery(Item &);
 
 	~Parser(void);
 };

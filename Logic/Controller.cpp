@@ -32,7 +32,7 @@ void Controller::executeCommand(string inputText) {
 
 	
 	if(userCommand != "") {
-		addToInputBank(commandData);
+		addToInputBank();
 	}
 	
 
@@ -201,6 +201,8 @@ void Controller::sortAlphabetical() {
 void Controller::search(Item data) {
 	vector<Item> tempVector = _vectorStore;
 
+	_parser->extractSearchQuery(data);
+
 	SearchItem *searchItemCommand = new SearchItem(data, &_otherResult);
 	_invoker->disableUndo();
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
@@ -350,22 +352,22 @@ void Controller::chronoSort(vector<Item> &vectorStore) {
 	}
 }
 
-void Controller::addToInputBank(const string input) {
+void Controller::addToInputBank() {
 	vector<string> fragEvent = _parser->getFragmentedEvent();
-	istringstream iss(input);
-	vector<string>::iterator iter;
+	vector<string>::iterator fragIter;
+	vector<string>::iterator bankIter;
 
 	string inputWord = "";
-	while(iss >> inputWord) {
+	for (fragIter = fragEvent.begin(); fragIter != fragEvent.end(); fragIter++) { 
 		bool isFound = false;
-		for(iter = _inputBank.begin(); iter != _inputBank.end(); iter++) {
-			if (*iter == inputWord) {
+		for(bankIter = _inputBank.begin(); bankIter != _inputBank.end(); bankIter++) {
+			if (*bankIter == *fragIter) {
 				isFound = true;
 				break;
 			}
 		}
 		if (!isFound) {
-			_inputBank.push_back(inputWord);
+			_inputBank.push_back(*fragIter);
 		}
 	}
 }

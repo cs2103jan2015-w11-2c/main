@@ -3,6 +3,7 @@
 
 const string Parser::ERROR_NO_LINE_NUMBER = "No line number specified!";
 const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!";
+const string Parser::STRING_FLOATING = "floating";
 
 Parser::Parser() {
 	_userCommand = "";
@@ -176,6 +177,46 @@ vector <string> Parser::getFragmentedEvent(){
 	}
 
 	return outputVec;
+}
+
+bool Parser::checkIsFloating(const Item item) {
+	for (int i = 0; i < 3; i++) {
+		if (item.eventDate[i] != 0) {
+			return false;
+		}
+	}
+	for (int i = 0; i < 3; i++) {
+		if (item.eventEndDate[i] != 0) {
+			return false;
+		}
+	}
+	for (int i = 0; i < 2; i++) {
+		if (item.eventStartTime[i] != 0) {
+			return false;
+		}
+	}
+	for (int i = 0; i < 2; i++) {
+		if (item.eventEndTime[i] != 0) {
+			return false;
+		}
+	}
+}
+
+void Parser::extractSearchQuery(Item &item) {
+	Item temp = item;
+
+	if(checkIsFloating(temp)) {
+		DateTimeParser dateTimeParser;
+
+		string itemEvent = temp.event;
+		transform(itemEvent.begin(), itemEvent.end(), itemEvent.begin(), ::tolower);
+		if (itemEvent != STRING_FLOATING) {
+			dateTimeParser.updateItemDateTime(temp.event, temp);
+		} else {
+			temp.initializeItem();
+		}
+		item = temp;
+	}
 }
 
 Parser::~Parser(void) {
