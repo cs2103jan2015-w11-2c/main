@@ -68,8 +68,6 @@ void Controller::executeCommand(string inputText) {
 		redo();
 	} else if (userCommand == "view" || userCommand == "more") {
 		toggleIsWide();
-	} else if (userCommand == "minimize") {
-		setSuccessMessage("minimize");
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
