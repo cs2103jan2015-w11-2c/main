@@ -79,10 +79,13 @@ void Parser::extractUserCommand() {
 size_t Parser::findDateKeyWord(string inputLine, string delimiter) {
 	size_t dateStart = (inputLine.rfind(delimiter));
 	string temp;
-	bool isDate = false;
 	if(dateStart != string::npos) {
 		string line = convertStringToLowerCase(inputLine);
-		if(isCorrectDateDelimiter(line, dateStart)) {
+		if(inputLine[--dateStart] == 'm') { //if mon or monday
+			string temp = inputLine.substr(0, dateStart);
+			dateStart = temp.rfind(delimiter);
+		}
+		if((dateStart != string::npos) && isCorrectDateDelimiter(line, dateStart)) {
 			return dateStart;
 		}
 	}
