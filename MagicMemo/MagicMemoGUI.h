@@ -135,12 +135,12 @@ namespace UI {
 				| System::Windows::Forms::AnchorStyles::Left) 
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->programHeading->AutoSize = true;
-			this->programHeading->Font = (gcnew System::Drawing::Font(L"AR DELANEY", 35.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
+			this->programHeading->Font = (gcnew System::Drawing::Font(L"Cooper Black", 32.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->programHeading->ForeColor = System::Drawing::Color::DarkBlue;
-			this->programHeading->Location = System::Drawing::Point(140, -2);
+			this->programHeading->Location = System::Drawing::Point(141, -2);
 			this->programHeading->Name = L"programHeading";
-			this->programHeading->Size = System::Drawing::Size(303, 57);
+			this->programHeading->Size = System::Drawing::Size(286, 49);
 			this->programHeading->TabIndex = 6;
 			this->programHeading->Text = L"Magic Memo";
 			// 
@@ -165,7 +165,7 @@ namespace UI {
 			// 
 			this->successMessageLabel->Font = (gcnew System::Drawing::Font(L"Franklin Gothic Demi", 12, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->successMessageLabel->Location = System::Drawing::Point(20, 335);
+			this->successMessageLabel->Location = System::Drawing::Point(18, 335);
 			this->successMessageLabel->Name = L"successMessageLabel";
 			this->successMessageLabel->Size = System::Drawing::Size(197, 21);
 			this->successMessageLabel->TabIndex = 8;
