@@ -1,17 +1,29 @@
 #include "Controller.h"
+
+#include "easylogging++.h"
+#define ELPP_THREAD_SAFE
+#define ELPP_DISABLE_LOGS
 #include "easylogging++.h"
 
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
 
-INITIALIZE_EASYLOGGINGPP
+INITIALIZE_EASYLOGGINGPP;
 
-	Controller::Controller(void) {
-		_parser = new Parser;
-		_outputFile = FileStorage::getInstance();
-		_invoker = new CommandInvoker;
-		initializeVector();
-		_isSearch = false;
-		_isWide = true;
+Controller::Controller(void) {
+	// Load configuration from file
+	el::Configurations conf("logging.conf");
+	// Reconfigure single logger
+	el::Loggers::reconfigureLogger("default", conf);
+	// Actually reconfigure all loggers instead
+	el::Loggers::reconfigureAllLoggers(conf);
+	// Now all the loggers will use configuration from file
+
+	_parser = new Parser;
+	_outputFile = FileStorage::getInstance();
+	_invoker = new CommandInvoker;
+	initializeVector();
+	_isSearch = false;
+	_isWide = true;
 }
 
 void Controller::executeCommand(string inputText) {
@@ -26,10 +38,6 @@ void Controller::executeCommand(string inputText) {
 	userCommand = _parser->getUserCommand();
 	data = _parser->getItem();
 	commandData = data.event;
-
-	LOG(INFO) << 	"ITEM Values:";
-	data.logItemValues();
-
 
 	if(userCommand != "") {
 		addToInputBank(commandData);

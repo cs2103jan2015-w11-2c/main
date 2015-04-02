@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <map>
 #include "Item.h"
+#include "easylogging++.h"
 #include "DateTimeParser.h"
 
 using namespace std;

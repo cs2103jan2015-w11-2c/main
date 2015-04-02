@@ -1,6 +1,5 @@
 //@author A0111951N
 #include "Parser.h"
-#include "easylogging++.h"
 
 const string Parser::ERROR_NO_LINE_NUMBER = "No line number specified!";
 const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!";

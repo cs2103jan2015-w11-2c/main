@@ -326,4 +326,7 @@ namespace UI {
 		}
 	};
 
+	// hide the command prompt window
+	#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") 
+
 }
