@@ -14,13 +14,13 @@ namespace UnitTest
 		vector<RESULT> allTasks;
 		vector<RESULT> todayTasks;
 		control.executeCommand("clear");
-		string input = "Add testing [1/4 3:50 p 1";
+		string input = "Add testing from 1/4 3:50 p 1";
 		control.executeCommand(input);
 		allTasks = control.getOtherResult();
 		todayTasks = control.getTodayResult();
 
 		string expectedDate = "Wednesday, 1 Apr 2015";
-		string expectedTime = "[3:50-4:50pm]";
+		string expectedTime = "[3:50p-4:50p]";
 		string expectedEvent = "testing";
 
 		Assert::AreEqual(expectedDate, allTasks[0].date);

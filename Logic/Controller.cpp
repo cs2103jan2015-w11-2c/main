@@ -60,13 +60,13 @@ void Controller::executeCommand(string inputText) {
 		edit(data);
 	} else if (userCommand == "rename") {
 		rename(commandData);
-	} else if (userCommand == "move") {
+	} else if (userCommand == "move" || userCommand == "save") {
 		move(commandData);
 	} else if (userCommand == "undo") {
 		undo();
 	} else if (userCommand == "redo") {
 		redo();
-	} else if (userCommand == "view") {
+	} else if (userCommand == "view" || userCommand == "more") {
 		toggleIsWide();
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
@@ -354,20 +354,19 @@ void Controller::chronoSort(vector<Item> &vectorStore) {
 
 void Controller::addToInputBank() {
 	vector<string> fragEvent = _parser->getFragmentedEvent();
-	vector<string>::iterator fragIter;
-	vector<string>::iterator bankIter;
+	vector<string>::iterator iter1;
+	vector<string>::iterator iter2;
 
-	string inputWord = "";
-	for (fragIter = fragEvent.begin(); fragIter != fragEvent.end(); fragIter++) { 
+	for(iter1 = fragEvent.begin(); iter1 != fragEvent.end(); iter1++) {
 		bool isFound = false;
-		for(bankIter = _inputBank.begin(); bankIter != _inputBank.end(); bankIter++) {
-			if (*bankIter == *fragIter) {
+		for(iter2 = _inputBank.begin(); iter2 != _inputBank.end(); iter2++) {
+			if (*iter1 == *iter2) {
 				isFound = true;
 				break;
 			}
 		}
 		if (!isFound) {
-			_inputBank.push_back(*fragIter);
+			_inputBank.push_back(*iter1);
 		}
 	}
 }

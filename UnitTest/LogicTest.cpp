@@ -44,7 +44,7 @@ public:
 	}
 
 	TEST_METHOD(extractDateAndTimeTest) {
-		string inputString = "testing [23/4 4:0 - 6:0";
+		string inputString = "testing from 23/4 4:0 - 6:0";
 		Item item;
 		Parser parse;
 		parse.setStringToParse(inputString);
@@ -72,7 +72,7 @@ public:
 	}
 
 	TEST_METHOD(getFragmentedEventTest){
-		string inputString = "meet friends at school[1/4/2015 17:25 - 19:20";
+		string inputString = "meet friends at school from 1/4/2015 17:25 - 19:20";
 		Item item;
 		Parser parse;
 		parse.setStringToParse(inputString);
@@ -103,7 +103,7 @@ public:
 		string expectedOut7 = "4";
 		Assert::AreEqual(expectedOut7, testVect[6]);
 		
-		string expectedOut8 = "Apr";
+		string expectedOut8 = "April";
 		Assert::AreEqual(expectedOut8, testVect[7]);
 		
 		string expectedOut9 = "2015";
@@ -313,7 +313,7 @@ public:
 			e;
 		}
 
-		int expectedDay = 1;
+		int expectedDay = 2;
 		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
 		int expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
@@ -716,9 +716,9 @@ public:
 		DateTimeParser parse;
 		string test1= "friday";
 		string test2= "lastMonth";
-		int expectedZero = 0;
-		Assert::AreEqual(expectedZero,parse.mapMonth(test1));
-		Assert::AreEqual(expectedZero,parse.mapMonth(test2));
+		int expected = -1;
+		Assert::AreEqual(expected,parse.mapMonth(test1));
+		Assert::AreEqual(expected,parse.mapMonth(test2));
 	}
 
 	};
@@ -751,7 +751,7 @@ public:
 	TEST_METHOD(getCurrentMonthTest) {
 		DateTime dateTest;
 
-		int expected = 3;
+		int expected = 4;
 		Assert::AreEqual(expected, dateTest.getCurrentMonth());
 	}
 
@@ -783,14 +783,14 @@ public:
 		string expected = "Wednesday, 18 Mar 2015";
 		Assert::AreEqual(expected, test.dateToString());
 
-		expected = "[10-12pm]";
+		expected = "[10-12p]";
 		Assert::AreEqual(expected, test.timeToString());
 
 		test.eventStartTime[0] = 16;
 		test.eventStartTime[1] = 30;
 		test.eventEndTime[0] = 0;
 		test.eventEndTime[1] = 0;
-		expected = "[4:30pm]";
+		expected = "[4:30p]";
 		Assert::AreEqual(expected, test.timeToString());
 
 	}
@@ -813,7 +813,7 @@ public:
 		newItem.colour = 7;
 		newItem.bold = false;
 
-		string expectedString = "some event: Wednesday, 25 Mar 2015 [11:10-12:10pm]";
+		string expectedString = "some event: Wednesday, 25 Mar 2015 [11:10-12:10p]";
 		string actualString = newItem.toString();
 
 		Assert::AreEqual(expectedString, actualString);
@@ -858,8 +858,8 @@ public:
 
 		Assert::AreEqual(expectedSize, actualSize);
 
-		string expectedString[2] = {"some event: Wednesday, 25 Mar 2015 [11:10-12:10pm]",
-			"some event: Friday, 27 Mar 2015 [3:30-6:30pm]"};
+		string expectedString[2] = {"some event: Wednesday, 25 Mar 2015 [11:10-12:10p]",
+			"some event: Friday, 27 Mar 2015 [3:30-6:30p]"};
 
 		string actualString;
 

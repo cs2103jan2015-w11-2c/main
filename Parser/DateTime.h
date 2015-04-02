@@ -11,6 +11,8 @@ const int MIN_YEAR = 2000;
 const int MAX_YEAR = 3000;
 const string WEEKDAY[]={"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 const string MONTH[]={"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+const string MONTH_FULL[]={"January", "February", "March", "April", "May", "June", "July", 
+						"August",	"September", "October", "November", "December"};
 
 class DateTime {
 
@@ -41,7 +43,11 @@ public:
 	// Sunday, Monday, .... Saturday
 	string getWeekDay (int, int, int);
 
+	// returns the month name in short form
 	string getMonth(const int);
+	
+	// returns the month name in long form
+	string getMonthFull(const int);
 
 	bool isLeapYear (int);
 
