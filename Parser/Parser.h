@@ -12,7 +12,7 @@ using namespace std;
 //Constants
 const string DATE_START_1 = "from";
 const string DATE_START_2 = "on";
-const int DATE_KEYWORDS_SIZE = 52;
+const int DATE_KEYWORDS_SIZE = 54;
 const string DATE_KEYWORDS[]= {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
 						"sunday", "mon", "tue", "tues", "wed", "thur", "thurs", "fri", "sat", "sun",
 						"january", "february", "march", "april", "may", "june", "july",
