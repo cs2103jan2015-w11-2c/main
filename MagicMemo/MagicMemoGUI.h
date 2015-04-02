@@ -7,6 +7,9 @@
 #include "Controller.h"
 #include "MessageManager.h"
 
+#pragma once
+#include <Windows.h>
+#pragma comment(lib, "user32.lib")
 
 using namespace std;
 
@@ -187,6 +190,7 @@ namespace UI {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->ClientSize = System::Drawing::Size(590, 391);
 			this->Controls->Add(this->todayTaskBox);
 			this->Controls->Add(this->successMessageLabel);
@@ -196,6 +200,7 @@ namespace UI {
 			this->Controls->Add(this->commandInputBox);
 			this->Controls->Add(this->todayTaskBoxLabel);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+			this->MaximizeBox = false;
 			this->Name = L"MagicMemoGUI";
 			this->Text = L"MagicMemoGUI";
 			this->Load += gcnew System::EventHandler(this, &MagicMemoGUI::MagicMemoGUI_Load);
@@ -205,7 +210,7 @@ namespace UI {
 		}
 #pragma endregion
 
-//@author A0111951N
+		//@author A0111951N
 	private:
 		//Get value while typing
 		System::Void commandInputBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
@@ -287,7 +292,24 @@ namespace UI {
 				Application::Exit();
 			}
 		}
+	
+		
+	protected:
+		// Restore window from minimized when Ctrl + M is pressed
+		virtual void OnHandleCreated(EventArgs^ e) override {
+			__super::OnHandleCreated(e);
+			RegisterHotKey((HWND)this->Handle.ToPointer(), 1, 
+				MOD_CONTROL, (UINT)Keys::M); 
+		}
 
+	protected:
+		virtual void WndProc(Message% m) override {
+			if (m.Msg == WM_HOTKEY && m.WParam.ToInt32() == 1) {
+				this->WindowState = FormWindowState::Normal;
+				this->BringToFront();
+			}
+			__super::WndProc(m);
+		}
 	};
 
 }
