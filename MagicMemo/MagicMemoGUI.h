@@ -225,15 +225,21 @@ namespace UI {
 				magicManager->updateAutoCompleteSource(commandInputBox);
 			}
 
-			// Ctrl + Z
+			// Minimize via Ctrl + Q or Ctrl + W
+			if ((e->KeyData == (Keys::Control | Keys::Q)) || (e->KeyData == (Keys::Control | Keys::W))) {
+				WindowState = FormWindowState::Minimized;
+			} 
+
+			// Undo via Ctrl + Z
 			if (e->KeyData == (Keys::Control | Keys::Z)) {
 				setGuiText("undo");
 			}   
 
-			// Ctrl + R
+			// Redo via Ctrl + R
 			if (e->KeyData == (Keys::Control | Keys::R)) {
 				setGuiText("redo");
 			}
+
 		}
 
 	private: 

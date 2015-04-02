@@ -30,11 +30,11 @@ void Controller::executeCommand(string inputText) {
 	LOG(INFO) << 	"ITEM Values:";
 	data.logItemValues();
 
-	
+
 	if(userCommand != "") {
 		addToInputBank(commandData);
 	}
-	
+
 
 	if(userCommand == "search") {
 		_isSearch = true;
@@ -68,6 +68,8 @@ void Controller::executeCommand(string inputText) {
 		redo();
 	} else if (userCommand == "view" || userCommand == "more") {
 		toggleIsWide();
+	} else if (userCommand == "minimize") {
+		setSuccessMessage("minimize");
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
