@@ -76,7 +76,7 @@ public:
 
 	void sortAlphabetical();
 
-	void search(Item);
+	void search(Item, string);
 
 	bool isSearch();
 

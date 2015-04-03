@@ -1,6 +1,5 @@
 //@author A0111951N
 #include "Parser.h"
-#include "easylogging++.h"
 
 const string Parser::ERROR_NO_LINE_NUMBER = "No line number specified!";
 const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!";
@@ -255,21 +254,6 @@ bool Parser::checkIsFloating(const Item item) {
 	return true;
 }
 
-bool Parser::checkIsToday(const Item item) {
-	DateTime dateTime;
-
-	if (dateTime.getCurrentDay() != item.eventDate[0]) {
-		return false;
-	}
-	if (dateTime.getCurrentMonth() != item.eventDate[1]) {
-		return false;
-	}
-	if (dateTime.getCurrentYear() != item.eventDate[2]) {
-		return false;
-	}
-	return true;
-}
-
 void Parser::clearStartAndEndDate(Item &item) {
 	for (int i = 0; i < 3; i++) {
 		item.eventDate[i] = 0;
@@ -287,11 +271,14 @@ void Parser::extractSearchQuery(Item &item) {
 
 		string itemEvent = temp.event;
 		if (itemEvent != STRING_FLOATING) {
+			itemEvent = convertStringToLowerCase(itemEvent);
 			dateTimeParser.updateItemDateTime(itemEvent, temp);
-			if (checkIsToday(temp)) {
-				clearStartAndEndDate(temp);
-			} else {
+			
+			if (dateTimeParser.getUpdateDateFlag() || dateTimeParser.getUpdateTimeFlag()) {
 				temp.event = "";
+			}
+			if (!dateTimeParser.getUpdateDateFlag()) {
+				clearStartAndEndDate(temp);
 			}
 		} else {
 			temp.initializeItem();

@@ -1,41 +1,52 @@
 #include "Controller.h"
+
+#include "easylogging++.h"
+#define ELPP_THREAD_SAFE
+#define ELPP_DISABLE_LOGS
 #include "easylogging++.h"
 
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
 
-INITIALIZE_EASYLOGGINGPP
+INITIALIZE_EASYLOGGINGPP;
 
-	Controller::Controller(void) {
-		_parser = new Parser;
-		_outputFile = FileStorage::getInstance();
-		_invoker = new CommandInvoker;
-		initializeVector();
-		_isSearch = false;
-		_isWide = true;
-		_is12HourFormat = true;
+
+Controller::Controller(void) {
+	// Load configuration from file
+	el::Configurations conf("logging.conf");
+	// Reconfigure single logger
+	el::Loggers::reconfigureLogger("default", conf);
+	// Actually reconfigure all loggers instead
+	el::Loggers::reconfigureAllLoggers(conf);
+	// Now all the loggers will use configuration from file
+
+	_parser = new Parser;
+	_outputFile = FileStorage::getInstance();
+	_invoker = new CommandInvoker;
+	initializeVector();
+	_isSearch = false;
+	_isWide = true;
 }
 
 void Controller::executeCommand(string inputText) {
 	string userCommand = "";
 	string commandData = "";
+	string searchQuery = "";
 	Item data;
 
 	_parser->setStringToParse(inputText);
 	_parser->extractUserCommand();
+
+	searchQuery = _parser->getItem().event;
 	_parser->extractDateAndTime();
 
 	userCommand = _parser->getUserCommand();
 	data = _parser->getItem();
 	commandData = data.event;
 
-	LOG(INFO) << 	"ITEM Values:";
-	data.logItemValues();
-
-	
 	if(userCommand != "") {
 		addToInputBank();
 	}
-	
+
 
 	if(userCommand == "search") {
 		_isSearch = true;
@@ -54,7 +65,7 @@ void Controller::executeCommand(string inputText) {
 	} else if (userCommand == "sort") {
 		sortAlphabetical();
 	} else if (userCommand == "search") {
-		search(data);
+		search(data, searchQuery);
 	} else if (userCommand == "copy") {
 		copy(data);
 	} else if (userCommand == "edit") {
@@ -203,12 +214,12 @@ void Controller::sortAlphabetical() {
 	generateResults(_vectorStore);
 }
 
-void Controller::search(Item data) {
+void Controller::search(Item data, string message) {
 	vector<Item> tempVector = _vectorStore;
 
 	_parser->extractSearchQuery(data);
 
-	SearchItem *searchItemCommand = new SearchItem(data, &_otherResult);
+	SearchItem *searchItemCommand = new SearchItem(data, message, &_otherResult);
 	_invoker->disableUndo();
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
 }

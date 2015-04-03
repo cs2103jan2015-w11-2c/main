@@ -6,7 +6,6 @@
 #include <algorithm>
 #include "Item.h"
 #include "DateTime.h"
-#include "..\EasyLoggingpp\easylogging++.h"
 using namespace std;
 
 //updateItemDateTime takes in the ITEM to be updated
@@ -34,6 +33,9 @@ private:
 	int _startMinute;
 	int _endHour;
 	int _endMinute;
+
+	bool _updateDateFlag;
+	bool _updateTimeFlag;
 
 public:
 	DateTimeParser(void);
@@ -140,5 +142,8 @@ public:
 	//For unit testing
 	Item getItem();
 
+	bool getUpdateDateFlag();
+
+	bool getUpdateTimeFlag();
 };
 

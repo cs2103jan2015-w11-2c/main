@@ -27,9 +27,9 @@ public:
 	SearchItem() {
 		_message = "";
 	}
-	SearchItem(const Item input, vector<RESULT> *otherResult) {
+	SearchItem(const Item input, const string message, vector<RESULT> *otherResult) {
 		_input = input;
-		_message = "";
+		_message = message;
 		_otherResult = otherResult;
 	}
 
@@ -191,12 +191,13 @@ public:
 
 		char buffer[1000];
 		if (vectorStore.size() == 0) {
-			sprintf_s(buffer, ERROR_SEARCH_ITEM_NOT_FOUND.c_str(), _input.toString().c_str());
+			sprintf_s(buffer, ERROR_SEARCH_ITEM_NOT_FOUND.c_str(), _message.c_str());
 		}
 		else {
-			sprintf_s(buffer, SUCCESS_SEARCH.c_str(), _input.toString().c_str());
+			sprintf_s(buffer, SUCCESS_SEARCH.c_str(), _message.c_str());
 		}
 		_message = buffer;
+		
 	}
 
 	string getMessage() {

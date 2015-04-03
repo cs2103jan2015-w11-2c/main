@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <map>
 #include "Item.h"
+#include "../EasyLoggingpp/easylogging++.h"
 #include "DateTimeParser.h"
 
 using namespace std;
@@ -75,8 +76,6 @@ public:
 	vector<string> getFragmentedEvent();
 
 	bool checkIsFloating(const Item);
-
-	bool checkIsToday(const Item);
 
 	void clearStartAndEndDate(Item &);
 
