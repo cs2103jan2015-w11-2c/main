@@ -57,13 +57,15 @@ namespace UI {
 	private: System::Windows::Forms::RichTextBox^  allTaskBox;
 	private: System::Windows::Forms::Label^  successMessageLabel;
 
+	private: System::ComponentModel::IContainer^  components;
+
 
 
 	private:
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+
 
 		//@author generated
 #pragma region Windows Form Designer generated code
@@ -202,7 +204,7 @@ namespace UI {
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->MaximizeBox = false;
 			this->Name = L"MagicMemoGUI";
-			this->Text = L"MagicMemoGUI";
+			this->Text = L"Magic Memo";
 			this->Load += gcnew System::EventHandler(this, &MagicMemoGUI::MagicMemoGUI_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -225,15 +227,27 @@ namespace UI {
 				magicManager->updateAutoCompleteSource(commandInputBox);
 			}
 
-			// Ctrl + Z
+			// Minimize via Ctrl + W
+			if (e->KeyData == (Keys::Control | Keys::W)) {
+				WindowState = FormWindowState::Minimized;
+			} 
+
+			// Exit via Ctrl + Q
+			if (e->KeyData == (Keys::Control | Keys::Q)) {
+			MessageBox::Show("Good bye!");
+				Application::Exit();
+			}
+
+			// Undo via Ctrl + Z
 			if (e->KeyData == (Keys::Control | Keys::Z)) {
 				setGuiText("undo");
 			}   
 
-			// Ctrl + R
+			// Redo via Ctrl + R
 			if (e->KeyData == (Keys::Control | Keys::R)) {
 				setGuiText("redo");
 			}
+
 		}
 
 	private: 
@@ -311,5 +325,8 @@ namespace UI {
 			__super::WndProc(m);
 		}
 	};
+
+	// hide the command prompt window
+	#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") 
 
 }

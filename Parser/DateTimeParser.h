@@ -6,7 +6,6 @@
 #include <algorithm>
 #include "Item.h"
 #include "DateTime.h"
-#include "..\EasyLoggingpp\easylogging++.h"
 using namespace std;
 
 //updateItemDateTime takes in the ITEM to be updated
