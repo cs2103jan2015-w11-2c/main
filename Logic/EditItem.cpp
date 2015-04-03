@@ -74,6 +74,7 @@ public:
 				_input.toString().c_str());
 			_message=buffer;
 			_editedItem = vectorStore[_lineNumber - 1];
+
 			if (_input.event == "") {
 				if (!isFloatingDate()) {
 					for (int i = 0; i < 3; i++) {
