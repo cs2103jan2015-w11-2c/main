@@ -139,8 +139,5 @@ public:
 	//For unit testing
 	Item getItem();
 
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> master
+

@@ -189,11 +189,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 			// date/month/year, end date
 		} else if(!isStartDate && isDelimitedDate(inputArray[i])) {
 			separateDayMonthYear(inputArray[i], _endDay, _endMonth, _endYear);
-<<<<<<< HEAD
-			LOG(INFO) << "END DELIMITED DATE";
-=======
 			LOG(DEBUG) << "END DELIMITED DATE";
->>>>>>> master
 			// start time
 		} else if(isStartTime && isPossibleTime(inputArray[i])) {
 			isStartTime = false;
@@ -328,10 +324,7 @@ void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, 
 	handleDayOverflow(day, month, year);
 }
 
-<<<<<<< HEAD
-=======
 //@author A0111951N
->>>>>>> master
 void DateTimeParser::handleNextWeekDay(int& day, int& month, int& year) {
 	if(day != 0) {
 		day += 7;
