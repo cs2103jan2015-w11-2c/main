@@ -100,7 +100,7 @@ vector<string> FileStorage::getInputBankData() {
 		for(iter= tempVector2.begin(); iter != tempVector2.end(); iter++)
 		sentence = *iter;
 		tempVector.push_back(sentence);
-	}
+	     }
 	readFile.close();
 
 	return tempVector;
@@ -124,7 +124,7 @@ void FileStorage::addLineToInputBank(string input) {
 	outFile.open(inputBankFileName.c_str(), fstream ::out |fstream ::app);
 	for(iter = tempVector.begin(); iter != tempVector.end(); iter++) {
 		out << *iter; 
-	}
+	   }
 	string temp = out.str();
 	outFile << temp << endl;
 	outFile.close();
