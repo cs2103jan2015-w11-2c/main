@@ -252,6 +252,31 @@ bool Parser::checkIsFloating(const Item item) {
 			return false;
 		}
 	}
+	return true;
+}
+
+bool Parser::checkIsToday(const Item item) {
+	DateTime dateTime;
+
+	if (dateTime.getCurrentDay() != item.eventDate[0]) {
+		return false;
+	}
+	if (dateTime.getCurrentMonth() != item.eventDate[1]) {
+		return false;
+	}
+	if (dateTime.getCurrentYear() != item.eventDate[2]) {
+		return false;
+	}
+	return true;
+}
+
+void Parser::clearStartAndEndDate(Item &item) {
+	for (int i = 0; i < 3; i++) {
+		item.eventDate[i] = 0;
+	}
+	for (int i = 0; i < 3; i++) {
+		item.eventEndDate[i] = 0;
+	}
 }
 
 void Parser::extractSearchQuery(Item &item) {
@@ -261,9 +286,13 @@ void Parser::extractSearchQuery(Item &item) {
 		DateTimeParser dateTimeParser;
 
 		string itemEvent = temp.event;
-		transform(itemEvent.begin(), itemEvent.end(), itemEvent.begin(), ::tolower);
 		if (itemEvent != STRING_FLOATING) {
-			dateTimeParser.updateItemDateTime(temp.event, temp);
+			dateTimeParser.updateItemDateTime(itemEvent, temp);
+			if (checkIsToday(temp)) {
+				clearStartAndEndDate(temp);
+			} else {
+				temp.event = "";
+			}
 		} else {
 			temp.initializeItem();
 		}

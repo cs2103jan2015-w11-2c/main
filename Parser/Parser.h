@@ -76,6 +76,10 @@ public:
 
 	bool checkIsFloating(const Item);
 
+	bool checkIsToday(const Item);
+
+	void clearStartAndEndDate(Item &);
+
 	void extractSearchQuery(Item &);
 
 	~Parser(void);

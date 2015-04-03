@@ -149,6 +149,11 @@ public:
 				return false;
 			}
 		}
+		for (int i = 0; i < 3; i++) {
+			if(input.eventEndDate[i] != 0 && item.eventEndDate[i] != input.eventEndDate[i]) {
+				return false;
+			}
+		}
 		for (int i = 0; i < 2; i++) {
 			if(input.eventStartTime[i] != 0 && item.eventStartTime[i] != input.eventStartTime[i]) {
 				return false;

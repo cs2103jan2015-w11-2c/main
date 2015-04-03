@@ -12,6 +12,7 @@ INITIALIZE_EASYLOGGINGPP
 		initializeVector();
 		_isSearch = false;
 		_isWide = true;
+		_is12HourFormat = true;
 }
 
 void Controller::executeCommand(string inputText) {
@@ -68,6 +69,10 @@ void Controller::executeCommand(string inputText) {
 		redo();
 	} else if (userCommand == "view" || userCommand == "more") {
 		toggleIsWide();
+	} else if (userCommand == "12") {
+		setClockTo12Hour();
+	} else if (userCommand == "24") {
+		setClockTo24Hour();
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
@@ -105,7 +110,7 @@ void Controller::generateResults(vector<Item> inputVector) {
 
 		temp.lineNumber = to_string(i + 1) + ".";
 		temp.date = inputVector[i].dateToString();
-		temp.time = inputVector[i].timeToString();
+		_is12HourFormat ? temp.time = inputVector[i].timeToString() : temp.time = inputVector[i].timeTo24HrString();
 		temp.event = inputVector[i].event;
 		if (inputVector[i].eventDate[0] == newDateTime.getCurrentDay() &&
 			inputVector[i].eventDate[1] == newDateTime.getCurrentMonth() &&
@@ -375,6 +380,13 @@ vector<string> Controller::getInputBank() {
 	return _inputBank;
 }
 
+void Controller::setClockTo12Hour() {
+	_is12HourFormat = true;
+}
+
+void Controller::setClockTo24Hour() {
+	_is12HourFormat = false;
+}
 
 Controller::~Controller(void) {
 }
