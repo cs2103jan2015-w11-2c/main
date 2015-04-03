@@ -7,6 +7,8 @@ FileStorage::FileStorage(void) {
 	defaultFileName = "MagicMemo Task List.txt";
 	archiveFileName = "backup.txt";
 	inputBankFileName = "InputBank.txt";
+	optionFileName = "Options.txt";
+	autoCompleteFileName = "Suggestion.txt";
 
 	if(isFileEmpty(fileConfigFileName)) {  //if not initialized
 		initializeFileConfig();
@@ -106,6 +108,21 @@ vector<string> FileStorage::getInputBankData() {
 	return tempVector;
 }
 
+vector<string> FileStorage::getAutoCompleteFileData() {
+	vector<string> tempVector;
+	Item item;
+	string content;
+
+	ifstream readFile(autoCompleteFileName.c_str());
+	while(getline(readFile, content)) {
+		string s = item.event;
+		tempVector.push_back(s);
+	}
+	readFile.close();
+
+	return tempVector;
+}
+
 void FileStorage::addLineToFile(Item item) {
 	addLine(item, getFullFileName());
 }
@@ -128,6 +145,16 @@ void FileStorage::addLineToInputBank(string input) {
 	string temp = out.str();
 	outFile << temp << endl;
 	outFile.close();
+}
+
+void FileStorage::addLineToAutoCompleteFile(string) {
+     Item item;
+	 fstream outFile;
+
+	 outFile.open(autoCompleteFileName.c_str(), fstream::out |fstream ::app);
+	 string s = item.event;//auto suggest the event description/name
+     outFile << s <<endl;
+	 outFile.close();
 }
 
 //@author A0111951N
@@ -164,6 +191,13 @@ void FileStorage::addLine(Item item, const string& fileName) {
 bool FileStorage::clearFile() {
 	fstream outFile;
 	outFile.open(getFullFileName(), fstream::out | fstream::trunc);
+	outFile.close();
+	return true;
+}
+
+bool FileStorage::clearAutoCompleteFile() {
+	fstream outFile;
+	outFile.open(autoCompleteFileName.c_str(), fstream::out | fstream::trunc);
 	outFile.close();
 	return true;
 }

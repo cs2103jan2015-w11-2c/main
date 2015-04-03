@@ -18,6 +18,8 @@ private:
 	string fullFileName;
 	string archiveFileName;
 	string inputBankFileName;
+	string optionFileName;
+	string autoCompleteFileName;
 	static FileStorage* theOne;
 	FileStorage(void);
 
@@ -41,18 +43,29 @@ public:
 
 	vector<string> getInputBankData();
 
+	vector<string> getAutoCompleteFileData();
+
 	//main text file
 	void addLineToFile(Item);
 
 	//archive file
 	void addLineToArchive(Item);
 	
-	//inputBank File
+	//inputBank file
 	void addLineToInputBank(string);
+
+	//auto-complete file
+	void addLineToAutoCompleteFile(string); 
+
+	//option file
+	void addLineToOptions(string);
 
 	void addLine(Item, const string&);
 
 	bool clearFile();
+	
+	//clear auto-complete file
+	bool clearAutoCompleteFile();
 
 	//returns false if new filename already exists
 	bool changeFileName(string newFileName); 

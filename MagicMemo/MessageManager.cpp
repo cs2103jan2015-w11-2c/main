@@ -175,10 +175,7 @@ Void MessageManager::colorTextInTaskBox(
 			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 11, FontStyle::Regular);
 			taskBox->SelectionAlignment = HorizontalAlignment::Left;
 		}
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 }
 
 Void MessageManager::updateAutoCompleteSource(TextBox^ inputBox) {

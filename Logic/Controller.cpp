@@ -9,6 +9,7 @@ const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n"
 
 INITIALIZE_EASYLOGGINGPP;
 
+
 Controller::Controller(void) {
 	// Load configuration from file
 	el::Configurations conf("logging.conf");
@@ -29,10 +30,13 @@ Controller::Controller(void) {
 void Controller::executeCommand(string inputText) {
 	string userCommand = "";
 	string commandData = "";
+	string searchQuery = "";
 	Item data;
 
 	_parser->setStringToParse(inputText);
 	_parser->extractUserCommand();
+
+	searchQuery = _parser->getItem().event;
 	_parser->extractDateAndTime();
 
 	userCommand = _parser->getUserCommand();
@@ -40,7 +44,7 @@ void Controller::executeCommand(string inputText) {
 	commandData = data.event;
 
 	if(userCommand != "") {
-		addToInputBank(commandData);
+		addToInputBank();
 	}
 
 
@@ -61,7 +65,7 @@ void Controller::executeCommand(string inputText) {
 	} else if (userCommand == "sort") {
 		sortAlphabetical();
 	} else if (userCommand == "search") {
-		search(data);
+		search(data, searchQuery);
 	} else if (userCommand == "copy") {
 		copy(data);
 	} else if (userCommand == "edit") {
@@ -76,6 +80,10 @@ void Controller::executeCommand(string inputText) {
 		redo();
 	} else if (userCommand == "view" || userCommand == "more") {
 		toggleIsWide();
+	} else if (userCommand == "12") {
+		setClockTo12Hour();
+	} else if (userCommand == "24") {
+		setClockTo24Hour();
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
@@ -113,7 +121,7 @@ void Controller::generateResults(vector<Item> inputVector) {
 
 		temp.lineNumber = to_string(i + 1) + ".";
 		temp.date = inputVector[i].dateToString();
-		temp.time = inputVector[i].timeToString();
+		_is12HourFormat ? temp.time = inputVector[i].timeToString() : temp.time = inputVector[i].timeTo24HrString();
 		temp.event = inputVector[i].event;
 		if (inputVector[i].eventDate[0] == newDateTime.getCurrentDay() &&
 			inputVector[i].eventDate[1] == newDateTime.getCurrentMonth() &&
@@ -206,10 +214,12 @@ void Controller::sortAlphabetical() {
 	generateResults(_vectorStore);
 }
 
-void Controller::search(Item data) {
+void Controller::search(Item data, string message) {
 	vector<Item> tempVector = _vectorStore;
 
-	SearchItem *searchItemCommand = new SearchItem(data, &_otherResult);
+	_parser->extractSearchQuery(data);
+
+	SearchItem *searchItemCommand = new SearchItem(data, message, &_otherResult);
 	_invoker->disableUndo();
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
 }
@@ -217,7 +227,6 @@ void Controller::search(Item data) {
 bool Controller::isSearch() {
 	return _isSearch;
 }
-
 
 void Controller::toggleIsWide() {
 	_isWide = !_isWide;
@@ -359,7 +368,7 @@ void Controller::chronoSort(vector<Item> &vectorStore) {
 	}
 }
 
-void Controller::addToInputBank(const string input) {
+void Controller::addToInputBank() {
 	vector<string> fragEvent = _parser->getFragmentedEvent();
 	vector<string>::iterator iter1;
 	vector<string>::iterator iter2;
@@ -382,6 +391,13 @@ vector<string> Controller::getInputBank() {
 	return _inputBank;
 }
 
+void Controller::setClockTo12Hour() {
+	_is12HourFormat = true;
+}
+
+void Controller::setClockTo24Hour() {
+	_is12HourFormat = false;
+}
 
 Controller::~Controller(void) {
 }

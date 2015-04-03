@@ -22,6 +22,8 @@ DateTimeParser::DateTimeParser(void) {
 	_startMinute = 0;
 	_endHour = 0;
 	_endMinute = 0;
+	_updateDateFlag = false;
+	_updateTimeFlag = false;
 }
 
 
@@ -259,6 +261,12 @@ int DateTimeParser::mapWeekDay(string weekDay) {
 		}
 		iter++;
 	}
+
+	if(weekDayIndex == -1) {
+		_updateDateFlag = false;
+	} else {
+		_updateDateFlag = true;
+	}
 	return weekDayIndex;
 }
 
@@ -400,6 +408,12 @@ void DateTimeParser::separateDayMonthYear(string input, int& day, int& month, in
 	month = (int)strtol(intEnd + 1, &intEnd, 10);
 	year = (int)strtol(intEnd + 1, &intEnd, 10);
 
+	if (day != 0 || month!= 0) {
+		_updateDateFlag = true;
+	} else {
+		_updateDateFlag = false;
+	}
+
 	if((*intEnd != 0) || (year == 0)) {
 		year = _dateTime.getCurrentYear();
 	}
@@ -409,6 +423,12 @@ void DateTimeParser::separateHourMinute(string hourMinute, int& hour, int& minut
 	char *intEnd;
 	hour = (int)strtol(hourMinute.c_str(), &intEnd, 10);
 	minute = (int)strtol(intEnd + 1, &intEnd, 10);
+
+	if (hour != 0 || hour!= 0) {
+		_updateTimeFlag = true;
+	} else {
+		_updateTimeFlag = false;
+	}
 
 	if(*intEnd != 0) {
 		minute = 0;
@@ -534,4 +554,12 @@ DateTimeParser::~DateTimeParser(void) {
 
 Item DateTimeParser::getItem() {
 	return _item;
+}
+
+bool DateTimeParser::getUpdateDateFlag() {
+	return _updateDateFlag;
+}
+
+bool DateTimeParser::getUpdateTimeFlag() {
+	return _updateTimeFlag;
 }
