@@ -8,7 +8,7 @@
 
 const int initialMinEditDist = -1;
 const int powerSearchLowThreshold = 1;
-const int powerSearchHighThreshold = 3;
+const int powerSearchHighThreshold = 1;
 
 using namespace std;
 

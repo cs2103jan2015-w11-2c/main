@@ -1,5 +1,5 @@
 #include "MessageManager.h"
-
+//@author A0111951N
 MessageManager::MessageManager(void) {
 	magicMemo = new Controller();
 	_allTaskVector = new vector<RESULT>;
@@ -10,12 +10,14 @@ MessageManager::MessageManager(void) {
 	_allTimeHighlight = new vector<HIGHLIGHT>;
 	_allEventHighlight = new vector<HIGHLIGHT>;
 	_allCompletedHighlight = new vector<HIGHLIGHT>;
+	_allEventSpillOver = new vector<HIGHLIGHT>;
 
 	_todayNumberHighlight = new vector<HIGHLIGHT>;
 	_todayDateHighlight = new vector<HIGHLIGHT>;
 	_todayTimeHighlight = new vector<HIGHLIGHT>;
 	_todayEventHighlight = new vector<HIGHLIGHT>;
 	_todayCompletedHighlight = new vector<HIGHLIGHT>;
+	_todayEventSpillOver = new vector<HIGHLIGHT>;
 
 	isBoxExtended = false;
 	_userInput = "";
@@ -43,6 +45,9 @@ Void MessageManager::generateMessageOutputs(String^ textFromUser) {
 	clearTodayTaskIndexVectors();
 	calculateTodayTaskIndexes();
 	_todayTaskBoxMessage = toString(_todayTaskVector);
+
+	//Textbox size
+	isBoxExtended = magicMemo->isWide();
 }
 
 Void MessageManager::calculateAllTaskIndexes() {
@@ -59,7 +64,7 @@ Void MessageManager::calculateAllTaskIndexes() {
 			indexCount = indexCount + temp.length + 1;
 			prevDate = _allTaskVector->at(i).date;
 		}
-
+		int numberPos = indexCount;
 		temp.index = indexCount;
 		temp.length = _allTaskVector->at(i).lineNumber.length();
 		_allNumberHighlight->push_back(temp);
@@ -77,6 +82,13 @@ Void MessageManager::calculateAllTaskIndexes() {
 		_allEventHighlight->push_back(temp);
 
 		indexCount = temp.index + temp.length + 1;
+
+		if((temp.index + temp.length - numberPos) > 10) {
+			int oldIndex = temp.index;
+			temp.index = numberPos + 10;
+			temp.length = temp.length + oldIndex - temp.index;
+			_allEventSpillOver->push_back(temp);
+		}
 	}
 }
 
@@ -129,6 +141,8 @@ Void MessageManager::colorTextInTaskBox(
 	vector<HIGHLIGHT>* _timeHighlight,
 	vector<HIGHLIGHT>* _eventHighlight, 
 	RichTextBox^ taskBox) {
+		taskBox->SelectAll();
+		taskBox->SelectionHangingIndent = 20;
 
 		//date
 		for(unsigned int i = 0; i < _dateHighlight->size(); i++) {
@@ -161,13 +175,20 @@ Void MessageManager::colorTextInTaskBox(
 			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 11, FontStyle::Regular);
 			taskBox->SelectionAlignment = HorizontalAlignment::Left;
 		}
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 }
 
 Void MessageManager::updateAutoCompleteSource(TextBox^ inputBox) {
 	inputBox->AutoCompleteCustomSource->Clear();
+	vector<string> autoComplete = magicMemo->getInputBank();
 
-	inputBox->AutoCompleteCustomSource->Add("search hello");
-	inputBox->AutoCompleteCustomSource->Add("search hi");
+	for(unsigned int i = 0; i < autoComplete.size(); i++) {
+		String^ temp = "search " + convertToSystemString(autoComplete[i]);
+		inputBox->AutoCompleteCustomSource->Add(temp);
+	}
 
 }
 
@@ -219,12 +240,10 @@ String^ MessageManager::getInputBoxMessage() {
 	return _inputBoxMessage;
 }
 
-String^ MessageManager::getAllTaskBoxLabel(int& xCoord) {
+String^ MessageManager::getAllTaskBoxLabel() {
 	if(magicMemo->isSearch()) {
-		xCoord = X_COORD_IS_SEARCH;
 		return LABEL_IS_SEARCH;
 	} else {
-		xCoord = X_COORD_ALL_TASKS;
 		return LABEL_ALL_TASKS;
 	}
 }

@@ -1,4 +1,6 @@
+//@author A0111951N
 #include "DateTimeParser.h"
+#include "..\EasyLoggingpp\easylogging++.h"
 
 const string DateTimeParser::ERROR_NO_DAY_SPECIFIED = "Invalid input: No day specified after \"next\"";
 const string DateTimeParser::ERROR_NO_TIME_SPECIFIED = "Invalid input: Time expected after \"-\"";
@@ -7,6 +9,9 @@ const string DateTimeParser::ERROR_INVALID_TIME_INPUT = "Invalid time input!";
 const string DateTimeParser::ERROR_INVALID_END_TIME = "Invalid end time: end time must be greater than start time";
 
 DateTimeParser::DateTimeParser(void) {
+	// Load configuration from file
+	el::Configurations conf("logging.conf");
+
 	_day = 0;
 	_month = 0;
 	_year = 0;
@@ -85,7 +90,7 @@ void DateTimeParser::updateItemFields() {
 		_item.eventEndTime[1] = _endMinute;
 	}
 
-	LOG(INFO) << "Item values after update:";
+	LOG(DEBUG) << "Item values after update:";
 	_item.logItemValues();
 }
 
@@ -125,7 +130,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	resetItemDateTime();
 
 	for(int i = 0; i < arrSize; i++) {
-		LOG(INFO) << "Starting to extract DateTime, round: " << i;
+		LOG(DEBUG) << "Starting to extract DateTime, round: " << i;
 		/*
 		// throws exception if weekday is expected but not given
 		if(isNextWeek && _day == 0) {
@@ -142,73 +147,77 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 		// "next" keyword
 		if((inputArray[i] == "next") || (inputArray[i] == "nex")) {
 			isNextWeek = true;
-			LOG(INFO) << "NEXT";
+			LOG(DEBUG) << "NEXT";
 			// "-" or "to" keyword
 		} else if((inputArray[i] == "-") || (inputArray[i] == "to")) {
 			hasDash = true;
-			LOG(INFO) << "DASH";
+			LOG(DEBUG) << "DASH";
 			// weekday (e.g. Friday), start date
-		} else if(isStartDate && mapMonth(inputArray[i]) != 0) {
+		} else if(isStartDate && mapMonth(inputArray[i]) != -1) {
 			isStartDate = false;
 			isStartTime = true;
 			updateHrDayMon(mapMonth(inputArray[i]), _startHour, _day, _month, _year, _item.eventStartTime[0]);
-			LOG(INFO) << "MONTH";
-		} else if(isStartDate && (mapWeekDay(inputArray[i]) != 0)) {
+			LOG(DEBUG) << "MONTH";
+		} else if(isStartDate && (mapWeekDay(inputArray[i]) != -1)) {
 			isStartDate = false;
 			setDateFromWeekDay(mapWeekDay(inputArray[i]), _day, _month, _year);
 			if(isNextWeek) {
 				handleNextWeekDay(_day, _month, _year);
 			}
-			LOG(INFO) << "START WEEKDAY";
+			LOG(DEBUG) << "START WEEKDAY";
 			// date/month/year, start date
 		} else if(isStartDate && isDelimitedDate(inputArray[i])) {
 			isStartDate = false;
 			separateDayMonthYear(inputArray[i], _day, _month, _year);
-			LOG(INFO) << "START DELIMITED DATE";
-		} else if(!isStartDate && mapMonth(inputArray[i]) != 0) {
+			LOG(DEBUG) << "START DELIMITED DATE";
+		} else if(!isStartDate && mapMonth(inputArray[i]) != -1) {
 			if(isEndTime) {
 				updateHrDayMon(mapMonth(inputArray[i]), _endHour, _endDay, _endMonth, _endYear, _item.eventEndTime[0]);
 			} else {
 				updateHrDayMon(mapMonth(inputArray[i]), _startHour, _endDay, _endMonth, _endYear, _item.eventStartTime[0]);
 			}
 			isEndTime = false;
-			LOG(INFO) << "MONTH";
+			LOG(DEBUG) << "MONTH";
 			// weekday, end date
-		} else if(!isStartDate && (mapWeekDay(inputArray[i]) != 0)) {
+		} else if(!isStartDate && (mapWeekDay(inputArray[i]) != -1)) {
 			setDateFromWeekDay(mapWeekDay(inputArray[i]), _endDay, _endMonth, _endYear);
 			if(isNextWeek) {
 				handleNextWeekDay(_endDay, _endMonth, _endYear);
 				handleImplicitNext(_day, _month, _year, _endDay, _endMonth, _endYear);
 			}
-			LOG(INFO) << "END WEEKDAY";
+			LOG(DEBUG) << "END WEEKDAY";
 			// date/month/year, end date
 		} else if(!isStartDate && isDelimitedDate(inputArray[i])) {
 			separateDayMonthYear(inputArray[i], _endDay, _endMonth, _endYear);
+<<<<<<< HEAD
 			LOG(INFO) << "END DELIMITED DATE";
+=======
+			LOG(DEBUG) << "END DELIMITED DATE";
+>>>>>>> master
 			// start time
 		} else if(isStartTime && isPossibleTime(inputArray[i])) {
 			isStartTime = false;
 			separateHourMinute(inputArray[i], _startHour, _startMinute);
-			LOG(INFO) << "START TIME";
+			LOG(DEBUG) << "START TIME";
 			// end time
 		} else if(!isStartTime && hasDash && isPossibleTime(inputArray[i])) {
 			isEndTime = true;
 			separateHourMinute(inputArray[i], _endHour, _endMinute);
-			LOG(INFO) << "END TIME";
+			LOG(DEBUG) << "END TIME";
 			// duration entered instead of end time
 		} else if(!isStartTime && !hasDash && (convertStringToInteger(inputArray[i]) > 0)) {
 			isEndTime = true;
 			int duration = convertStringToInteger(inputArray[i]);
 			_startHour == 24 ? _endHour = 1 : _endHour = _startHour + duration;
 			_endMinute = _startMinute;
-			LOG(INFO) << "DURATION ADDED FROM START";
+			LOG(DEBUG) << "DURATION ADDED FROM START";
 			// "m", "p", or "pm" keywords
 		} else if(!isEndTime && is12Hour(inputArray[i], _startHour)) {
-			LOG(INFO) << "PM OR M, Start Hour";
+			LOG(DEBUG) << "PM OR M, Start Hour";
 		} else if(is12Hour(inputArray[i], _endHour)) {
-			LOG(INFO) << "PM OR M, End Hour";
+			LOG(DEBUG) << "PM OR M, End Hour";
 		}
-		LOG(INFO) << "********************************************";
+		LOG(DEBUG) << "********************************************";
 
 		//try {
 		/*} catch(exception &e) {
@@ -222,10 +231,12 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 
 }
 
+//@author A0114613U
 int DateTimeParser::mapWeekDay(string weekDay) {
-	int weekDayIndex = 0;
+	int weekDayIndex = -1;
 
 	std::map<string, int> weekDays;
+	weekDays["today"] = 0;
 	weekDays["monday"] = 1;
 	weekDays["mon"] = 1;
 	weekDays["tuesday"] = 2;
@@ -284,7 +295,7 @@ int DateTimeParser::mapMonth(string inputMonth) {
 	month["dec"] = 12;
 	month["decem"] = 12;
 
-	int returnValue = 0;
+	int returnValue = -1;
 	bool isFound = false;
 	std::map<string, int>::iterator it = month.begin(); 
 	while((it!=month.end()) && (!isFound)){
@@ -305,7 +316,9 @@ void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, 
 	int currentWeekDayIndex = _dateTime.getIntWeekDay(day, month, year);
 
 	int diffInDay;
-	if(weekDayIndex == currentWeekDayIndex) {
+	if(weekDayIndex == 0) {
+		diffInDay = 0;
+	} else if(weekDayIndex == currentWeekDayIndex) {
 		diffInDay = 7;
 	} else {
 		diffInDay = (weekDayIndex - currentWeekDayIndex + 7) % 7;
@@ -315,6 +328,10 @@ void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, 
 	handleDayOverflow(day, month, year);
 }
 
+<<<<<<< HEAD
+=======
+//@author A0111951N
+>>>>>>> master
 void DateTimeParser::handleNextWeekDay(int& day, int& month, int& year) {
 	if(day != 0) {
 		day += 7;

@@ -17,6 +17,7 @@ private:
 	string filePath;
 	string fullFileName;
 	string archiveFileName;
+	string inputBankFileName;
 	static FileStorage* theOne;
 	FileStorage(void);
 
@@ -38,11 +39,16 @@ public:
 
 	vector<Item> getArchiveData();
 
+	vector<string> getInputBankData();
+
 	//main text file
 	void addLineToFile(Item);
 
 	//archive file
 	void addLineToArchive(Item);
+	
+	//inputBank File
+	void addLineToInputBank(string);
 
 	void addLine(Item, const string&);
 
@@ -63,13 +69,13 @@ public:
 	bool isFileEmpty(string);
 
 	//get pre-set filepath and filename from config file
-	void getFileConfigInfo();
+	void getFileConfigDEBUG();
 
 	//initializes the filename and filepath if not previously set
 	void initializeFileConfig();
 
 	//update any filepath or filename changes into config file
-	void updateFileConfigInfo();
+	void updateFileConfigDEBUG();
 
 	//returns the directory of the program
 	string programFilePath();

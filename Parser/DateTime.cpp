@@ -1,4 +1,5 @@
 #include "DateTime.h"
+//@author A0111951N
 
 DateTime::DateTime() {
 	_now = time(0);
@@ -46,7 +47,17 @@ string DateTime::getWeekDay (int day, int month, int year) {
 }
 
 string DateTime::getMonth(const int mon) {
+	if (mon == 0) {
+		return "";
+	}
 	return MONTH[mon-1];
+}
+
+string DateTime::getMonthFull(const int mon) {
+	if (mon == 0) {
+		return "";
+	}
+	return MONTH_FULL[mon-1];
 }
 
 bool DateTime::isLeapYear (int year) {
@@ -67,6 +78,7 @@ int DateTime::numDaysInMonth(const int& month, const int& year) {
 	}
 }
 
+//@author chansen (Stack Overflow)
 int DateTime::rataDieConvert(int day, int month, int year) {
 	if (month < 3) {
 		year--;
@@ -75,6 +87,7 @@ int DateTime::rataDieConvert(int day, int month, int year) {
 	return (365 * year + year / 4 - year / 100 + year / 400 + (153 * month - 457) / 5 + day - 306);
 }
 
+//@author A0111951N
 bool DateTime::isValidDate(int day, int month, int year) {
 	if(year < MIN_YEAR || year > MAX_YEAR) {
 		return false;

@@ -35,11 +35,15 @@ public:
 
 	string getMinute(int minute);
 
+	string get24HrMinute(int minute);
+
 	string getPM(int hour);
 
 	string dateToString();
 
 	string timeToString();
+
+	string timeTo24HrString();
 
 	string durationToString();
 
