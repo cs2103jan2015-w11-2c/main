@@ -17,6 +17,7 @@ private:
 	string filePath;
 	string fullFileName;
 	string archiveFileName;
+	string inputBankFileName;
 	static FileStorage* theOne;
 	FileStorage(void);
 
@@ -37,11 +38,16 @@ public:
 
 	vector<Item> getArchiveData();
 
+	vector<string> getInputBankData();
+
 	//main text file
 	void addLineToFile(Item);
 
 	//archive file
 	void addLineToArchive(Item);
+	
+	//inputBank File
+	void addLineToInputBank(string);
 
 	void addLine(Item, const string&);
 

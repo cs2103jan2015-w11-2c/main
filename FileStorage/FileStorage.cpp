@@ -5,6 +5,7 @@ FileStorage::FileStorage(void) {
 	fileConfigFileName = "fileConfigurations.txt";
 	defaultFileName = "MagicMemo Task List.txt";
 	archiveFileName = "backup.txt";
+	inputBankFileName = "InputBank.txt";
 
 	if(isFileEmpty(fileConfigFileName)) {  //if not initialized
 		initializeFileConfig();
@@ -14,7 +15,7 @@ FileStorage::FileStorage(void) {
 	fullFileName = getFullFileName();
 }
 
-//@author YIWEI
+//@author A0115452N
 FileStorage*FileStorage::theOne=nullptr;
 
 FileStorage*FileStorage::getInstance(){
@@ -85,12 +86,47 @@ vector<Item> FileStorage::getArchiveData() {
 	return tempVector;
 }
 
+vector<string> FileStorage::getInputBankData() {
+	Parser parse;
+	vector<string> tempVector;
+	vector<string> tempVector2=parse.getFragmentedEvent();
+	vector<string>::iterator iter;
+	string content;
+	string sentence;
+
+	ifstream readFile(inputBankFileName.c_str());
+	while(getline(readFile, content)) {
+		for(iter= tempVector2.begin(); iter != tempVector2.end(); iter++)
+		sentence = *iter;
+		tempVector.push_back(sentence);
+	}
+	readFile.close();
+
+	return tempVector;
+}
+
 void FileStorage::addLineToFile(Item item) {
 	addLine(item, getFullFileName());
 }
 
 void FileStorage::addLineToArchive(Item item) {
 	addLine(item, archiveFileName);
+}
+
+void FileStorage::addLineToInputBank(string input) {
+    Parser parse;
+	vector<string>::iterator iter;
+	vector<string> tempVector = parse.getFragmentedEvent();
+	fstream outFile;
+    ostringstream out;
+	
+	outFile.open(inputBankFileName.c_str(), fstream ::out |fstream ::app);
+	for(iter = tempVector.begin(); iter != tempVector.end(); iter++) {
+		out << *iter; 
+	}
+	string temp = out.str();
+	outFile << temp << endl;
+	outFile.close();
 }
 
 //@author A0111951N

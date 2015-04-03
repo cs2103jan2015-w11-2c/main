@@ -67,8 +67,6 @@ public:
 	//returns -1 if match is not found
 	int mapMonth(string);
 
-<<<<<<< HEAD:Parser/DateTimeParser.h
-=======
 	//sets the day, month and year from weekday input
 	void setDateFromWeekDay(int weekDayIndex, int& day, int& month, int& year);
 
@@ -76,20 +74,16 @@ public:
 	//by updating the day, month and year
 	void handleNextWeekDay(int& day, int& month, int& year);
 
->>>>>>> f0157052f00b2444b2db2c20b0f5b6cd0263522e:Parser/DateTimeParser.h
 	//only for use after operations such as adding 'next' to day
 	//handles days greater than the number of days in the current month
 	void handleDayOverflow(int& day, int& month, int& year);
 
-<<<<<<< HEAD:Parser/DateTimeParser.h
-=======
 	//if end day is less than start day, increment by 7
 	void handleImplicitNext(int&, int&, int&, int&, int&, int&);
 
 	//sets the month, sets the day and resets hour
 	void updateHrDayMon(int monthNum, int& hour, int& day, int& month, int& year, int& itemHour);
 
->>>>>>> f0157052f00b2444b2db2c20b0f5b6cd0263522e:Parser/DateTimeParser.h
 	// returns true if the string is a date of format day/month{/year}
 	bool isDelimitedDate(string);
 
@@ -146,4 +140,3 @@ public:
 	Item getItem();
 
 };
-

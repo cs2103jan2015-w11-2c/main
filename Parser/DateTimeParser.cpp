@@ -137,7 +137,6 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 		isNextWeek = false;
 		throw std::out_of_range(ERROR_NO_DAY_SPECIFIED);
 		}
-
 		// throws exception if time is expected but not given
 		if(hasDash && !separateHourMinute(inputArray[i], _endHour, _endMinute)) {
 		hasDash = false;
@@ -147,25 +146,6 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 
 		// "next" keyword
 		if((inputArray[i] == "next") || (inputArray[i] == "nex")) {
-<<<<<<< HEAD:Parser/DateTimeParser.cpp
-			LOG(INFO) << "NEXT";
-			isNextWeek = true;
-			// "-" keyword
-		} else if(inputArray[i] == "-") {
-			hasDash = true;
-			LOG(INFO) << "DASH";
-			// weekday (e.g. Friday)
-		} else if(mapWeekDay(inputArray[i], _day, _month, _year)) {
-			if(isNextWeek) {
-				_day += 7;
-				handleDayOverflow(_day, _month, _year);
-				isNextWeek = false;
-			} 
-			LOG(INFO) << "WEEKDAY";
-			// date/month/year
-		} else if(isDelimitedDate(inputArray[i])) {
-			LOG(INFO) << "DELIMITED DATE";
-=======
 			isNextWeek = true;
 			LOG(DEBUG) << "NEXT";
 			// "-" or "to" keyword
@@ -209,12 +189,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 			// date/month/year, end date
 		} else if(!isStartDate && isDelimitedDate(inputArray[i])) {
 			separateDayMonthYear(inputArray[i], _endDay, _endMonth, _endYear);
-<<<<<<< HEAD
-			LOG(INFO) << "END DELIMITED DATE";
->>>>>>> f0157052f00b2444b2db2c20b0f5b6cd0263522e:Parser/DateTimeParser.cpp
-=======
 			LOG(DEBUG) << "END DELIMITED DATE";
->>>>>>> 6efbd84c585847fed33676e8ef78a1f3fe556a51
 			// start time
 		} else if(isStartTime && isPossibleTime(inputArray[i])) {
 			isStartTime = false;
@@ -284,29 +259,7 @@ int DateTimeParser::mapWeekDay(string weekDay) {
 		}
 		iter++;
 	}
-<<<<<<< HEAD:Parser/DateTimeParser.cpp
-
-	if(weekDayIndex == currentWeekDayIndex) {
-		diffInDay = 7;
-	} else {
-		diffInDay = (weekDayIndex - currentWeekDayIndex + 7) % 7;
-	}
-
-	currentDay += diffInDay; 
-
-	handleDayOverflow(currentDay, currentMonth, currentYear);
-
-	if(isMatch) {
-		_month = currentMonth;
-		_year = currentYear;
-		_date = currentDay;
-		return true;
-	} else {
-		return false;
-	}
-=======
 	return weekDayIndex;
->>>>>>> f0157052f00b2444b2db2c20b0f5b6cd0263522e:Parser/DateTimeParser.cpp
 }
 
 int DateTimeParser::mapMonth(string inputMonth) {
@@ -371,33 +324,13 @@ void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, 
 	handleDayOverflow(day, month, year);
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD:Parser/DateTimeParser.cpp
-void DateTimeParser::handleDayOverflow(int& day, int& month, int& year) {
-	if((day > 31) && (month == 12)) {
-		day -= 31;
-		month = 1;
-		year++;
-	}
-
-	if(day > _dateTime.numDaysInMonth(month, year)) {
-		day -= _dateTime.numDaysInMonth(month, year);
-		month++;
-	}
-}
-
-bool DateTimeParser::isDelimitedDate(string input) {
-=======
-=======
 //@author A0111951N
->>>>>>> 6efbd84c585847fed33676e8ef78a1f3fe556a51
 void DateTimeParser::handleNextWeekDay(int& day, int& month, int& year) {
 	if(day != 0) {
 		day += 7;
 		handleDayOverflow(day, month, year);
 	}
 }
->>>>>>> f0157052f00b2444b2db2c20b0f5b6cd0263522e:Parser/DateTimeParser.cpp
 
 void DateTimeParser::handleDayOverflow(int& day, int& month, int& year) {
 	if((day > 31) && (month == 12)) {
@@ -602,4 +535,3 @@ DateTimeParser::~DateTimeParser(void) {
 Item DateTimeParser::getItem() {
 	return _item;
 }
-
