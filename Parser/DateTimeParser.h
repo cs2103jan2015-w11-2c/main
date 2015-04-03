@@ -6,7 +6,6 @@
 #include <algorithm>
 #include "Item.h"
 #include "DateTime.h"
-#include "..\EasyLoggingpp\easylogging++.h"
 using namespace std;
 
 //updateItemDateTime takes in the ITEM to be updated
@@ -61,9 +60,11 @@ public:
 	void extractDateTime(string [], int);
 
 	//returns the weekday number if a match is found
-	//returns 0 if match is not found
+	//returns -1 if match is not found
 	int mapWeekDay(string);
 
+	//returns the month number if a match is found
+	//returns -1 if match is not found
 	int mapMonth(string);
 
 <<<<<<< HEAD:Parser/DateTimeParser.h

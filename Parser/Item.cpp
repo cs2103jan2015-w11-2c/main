@@ -1,6 +1,6 @@
 #include "Item.h"
 
-const string Item::MESSAGE_UNDATED_TASK = "Undated";
+const string Item::MESSAGE_UNDATED_TASK = "Floating";
 
 Item::Item() {
 	initializeItem();
@@ -10,6 +10,9 @@ Item::~Item() {
 }
 
 void Item::initializeItem() {
+	// Load configuration from file
+	el::Configurations conf("logging.conf");
+
 	event = "";
 	eventDate[0] = 0;
 	eventDate[1] = 0;
@@ -25,6 +28,7 @@ void Item::initializeItem() {
 	bold = false;
 }
 
+//@author A0111951N
 int Item::getHour(int hour) {
 	if(hour == 24) {
 		return 0;
@@ -51,14 +55,25 @@ string Item::getMinute(int minute) {
 	}
 }
 
+string Item::get24HrMinute(int minute) {
+	if(minute == 0) {
+		return "";
+	} else if (minute < 10) {
+		return ("0" + to_string(minute));
+	} else {
+		return (to_string(minute));
+	}
+}
+
 string Item::getPM(int hour) {
 	if (hour >= 12 && hour < 24) {
-		return "pm";
+		return "p";
 	} else {
 		return "";
 	}
 }
 
+//@author A0114613U
 string Item::dateToString() {
 	if((eventDate[0] == 0) && (eventDate[1] == 0) && (eventDate[1] == 0)) {
 		return MESSAGE_UNDATED_TASK;
@@ -71,14 +86,11 @@ string Item::dateToString() {
 	}
 }
 
+//@author A0111951N
 string Item::timeToString() {
 	ostringstream oss;
 	string startTimeOfDay = getPM(eventStartTime[0]);
 	string endTimeOfDay = getPM(eventEndTime[0]);
-
-	if(startTimeOfDay == endTimeOfDay) {
-		startTimeOfDay = "";
-	}
 
 	if(eventStartTime[0] == 0) {
 		return "";
@@ -89,6 +101,22 @@ string Item::timeToString() {
 		if(eventEndTime[0] != 0) {
 			oss << "-" << getHour(eventEndTime[0]);
 			oss << getMinute(eventEndTime[1]) << endTimeOfDay;
+		}
+		oss << "]";
+
+		return oss.str();
+	}
+}
+
+string Item::timeTo24HrString() {
+	ostringstream oss;
+
+	if(eventStartTime[0] == 0) {
+		return "";
+	} else {
+		oss << "[" << getHour(eventStartTime[0]) << get24HrMinute(eventStartTime[1]);;
+		if(eventEndTime[0] != 0) {
+			oss << "-" << getHour(eventEndTime[0]) << get24HrMinute(eventEndTime[1]);
 		}
 		oss << "]";
 
@@ -110,16 +138,17 @@ string Item::toString() {
 	return oss.str();
 }
 
+
 void Item::logItemValues() {
-	LOG(INFO) << event;
-	LOG(INFO) << eventDate[0];
-	LOG(INFO) << eventDate[1];
-	LOG(INFO) << eventDate[2];
-	LOG(INFO) << eventEndDate[0];
-	LOG(INFO) << eventEndDate[1];
-	LOG(INFO) << eventEndDate[2];
-	LOG(INFO) << eventStartTime[0];
-	LOG(INFO) << eventStartTime[1];
-	LOG(INFO) << eventEndTime[0];
-	LOG(INFO) << eventEndTime[1];
+	LOG(DEBUG) << event;
+	LOG(DEBUG) << eventDate[0];
+	LOG(DEBUG) << eventDate[1];
+	LOG(DEBUG) << eventDate[2];
+	LOG(DEBUG) << eventEndDate[0];
+	LOG(DEBUG) << eventEndDate[1];
+	LOG(DEBUG) << eventEndDate[2];
+	LOG(DEBUG) << eventStartTime[0];
+	LOG(DEBUG) << eventStartTime[1];
+	LOG(DEBUG) << eventEndTime[0];
+	LOG(DEBUG) << eventEndTime[1];
 }

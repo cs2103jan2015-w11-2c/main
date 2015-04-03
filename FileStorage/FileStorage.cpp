@@ -1,4 +1,5 @@
 #include "FileStorage.h"
+//@author A0111951N
 
 FileStorage::FileStorage(void) {
 	fileConfigFileName = "fileConfigurations.txt";
@@ -9,10 +10,11 @@ FileStorage::FileStorage(void) {
 		initializeFileConfig();
 	}
 
-	getFileConfigInfo();
+	getFileConfigDEBUG();
 	fullFileName = getFullFileName();
 }
 
+//@author YIWEI
 FileStorage*FileStorage::theOne=nullptr;
 
 FileStorage*FileStorage::getInstance(){
@@ -23,6 +25,7 @@ FileStorage*FileStorage::getInstance(){
 	}
 }
 
+//@author A0111951N
 void FileStorage::setFileName(string newFileName) {
 	fileName = newFileName;
 }
@@ -64,6 +67,7 @@ vector<Item> FileStorage::getAllFileData() {
 	return tempVector;
 }
 
+//@author A0115452N
 vector<Item> FileStorage::getArchiveData() {
 	vector<Item> tempVector;
 	Parser parse;
@@ -89,6 +93,7 @@ void FileStorage::addLineToArchive(Item item) {
 	addLine(item, archiveFileName);
 }
 
+//@author A0111951N
 void FileStorage::addLine(Item item, const string& fileName) {
 	fstream outFile;
 	ostringstream out;
@@ -99,13 +104,13 @@ void FileStorage::addLine(Item item, const string& fileName) {
 	out << item.event;
 
 	if(item.eventDate[0] != 0 && item.eventDate[1] != 0 && item.eventDate[2] != 0) {
-		out << " [" <<item.eventDate[0] << "/" << item.eventDate[1] << "/" << item.eventDate[2];
+		out << " from " <<item.eventDate[0] << "/" << item.eventDate[1] << "/" << item.eventDate[2];
 		setBracket = true;
 	}
 
 	if(item.eventStartTime[0] != 0) {
 		if(!setBracket) {
-			out << "[";
+			out << "from ";
 		}
 		out << " " << item.eventStartTime[0] << ":" << item.eventStartTime[1];
 	}
@@ -132,7 +137,7 @@ bool FileStorage::changeFileName(string newFileName) {
 	string oldFileName = getFullFileName();
 	setFileName(newFileName);
 	rename(oldFileName.c_str(), getFullFileName().c_str());
-	updateFileConfigInfo();
+	updateFileConfigDEBUG();
 	return true;
 }
 
@@ -153,19 +158,19 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 
 	rename(getFullFileName().c_str(), newFullFileName.c_str());
 	setFilePath(newFilePath);
-	updateFileConfigInfo();
+	updateFileConfigDEBUG();
 	return true;
 }
 
 bool FileStorage::directoryExists(const string& dirName) {
 	DWORD ftyp = GetFileAttributesA(dirName.c_str());
 	if (ftyp == INVALID_FILE_ATTRIBUTES)
-		return false;  //something is wrong with path!
+		return false;  // wrong path!
 
 	if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
-		return true;   // this is a directory!
+		return true;   // valid directory!
 
-	return false;    // this is not a directory!
+	return false;    // invalid directory!
 }
 
 bool FileStorage::isFileEmpty(string file) {
@@ -178,7 +183,7 @@ bool FileStorage::isFileEmpty(string file) {
 	return false;
 }
 
-void FileStorage::getFileConfigInfo() {
+void FileStorage::getFileConfigDEBUG() {
 	ifstream inFile(fileConfigFileName.c_str());
 	getline(inFile, fileName);
 	getline(inFile, filePath);
@@ -189,10 +194,10 @@ void FileStorage::getFileConfigInfo() {
 void FileStorage::initializeFileConfig() {
 	setFileName(defaultFileName);
 	setFilePath(programFilePath());
-	updateFileConfigInfo();
+	updateFileConfigDEBUG();
 }
 
-void FileStorage::updateFileConfigInfo() {
+void FileStorage::updateFileConfigDEBUG() {
 	ofstream outFile(fileConfigFileName.c_str());
 	outFile << fileName << endl;
 	outFile << filePath << endl;

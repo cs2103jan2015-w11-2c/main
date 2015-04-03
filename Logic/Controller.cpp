@@ -1,16 +1,29 @@
 #include "Controller.h"
+
+#include "easylogging++.h"
+#define ELPP_THREAD_SAFE
+#define ELPP_DISABLE_LOGS
 #include "easylogging++.h"
 
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
 
-INITIALIZE_EASYLOGGINGPP
+INITIALIZE_EASYLOGGINGPP;
 
-	Controller::Controller(void) {
-		_isSearch = false;
-		_parser = new Parser;
-		_outputFile = FileStorage::getInstance();
-		_invoker = new CommandInvoker;
-		initializeVector();
+Controller::Controller(void) {
+	// Load configuration from file
+	el::Configurations conf("logging.conf");
+	// Reconfigure single logger
+	el::Loggers::reconfigureLogger("default", conf);
+	// Actually reconfigure all loggers instead
+	el::Loggers::reconfigureAllLoggers(conf);
+	// Now all the loggers will use configuration from file
+
+	_parser = new Parser;
+	_outputFile = FileStorage::getInstance();
+	_invoker = new CommandInvoker;
+	initializeVector();
+	_isSearch = false;
+	_isWide = true;
 }
 
 void Controller::executeCommand(string inputText) {
@@ -26,8 +39,10 @@ void Controller::executeCommand(string inputText) {
 	data = _parser->getItem();
 	commandData = data.event;
 
-	LOG(INFO) << 	"ITEM Values:";
-	data.logItemValues();
+	if(userCommand != "") {
+		addToInputBank(commandData);
+	}
+
 
 	if(userCommand == "search") {
 		_isSearch = true;
@@ -53,12 +68,14 @@ void Controller::executeCommand(string inputText) {
 		edit(data);
 	} else if (userCommand == "rename") {
 		rename(commandData);
-	} else if (userCommand == "move") {
+	} else if (userCommand == "move" || userCommand == "save") {
 		move(commandData);
 	} else if (userCommand == "undo") {
 		undo();
 	} else if (userCommand == "redo") {
 		redo();
+	} else if (userCommand == "view" || userCommand == "more") {
+		toggleIsWide();
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
@@ -201,6 +218,15 @@ bool Controller::isSearch() {
 	return _isSearch;
 }
 
+
+void Controller::toggleIsWide() {
+	_isWide = !_isWide;
+}
+
+bool Controller::isWide() {
+	return _isWide;
+}
+
 void Controller::copy(Item input) {
 	CopyItem *copyItemCommand = new CopyItem(_parser->getLineOpNumber()[0], input);
 	_invoker->executeCommand(_vectorStore, copyItemCommand, _successMessage);
@@ -334,20 +360,20 @@ void Controller::chronoSort(vector<Item> &vectorStore) {
 }
 
 void Controller::addToInputBank(const string input) {
-	istringstream iss(input);
-	vector<string>::iterator iter;
+	vector<string> fragEvent = _parser->getFragmentedEvent();
+	vector<string>::iterator iter1;
+	vector<string>::iterator iter2;
 
-	string inputWord = "";
-	while(iss >> inputWord) {
+	for(iter1 = fragEvent.begin(); iter1 != fragEvent.end(); iter1++) {
 		bool isFound = false;
-		for(iter = _inputBank.begin(); iter != _inputBank.end(); iter++) {
-			if (*iter == inputWord) {
+		for(iter2 = _inputBank.begin(); iter2 != _inputBank.end(); iter2++) {
+			if (*iter1 == *iter2) {
 				isFound = true;
 				break;
 			}
 		}
 		if (!isFound) {
-			_inputBank.push_back(inputWord);
+			_inputBank.push_back(*iter1);
 		}
 	}
 }

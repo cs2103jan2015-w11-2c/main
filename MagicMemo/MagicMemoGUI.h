@@ -1,4 +1,5 @@
 #pragma once
+//@author A0111951N
 #include <vector>
 #include <algorithm>
 #include <string>
@@ -6,6 +7,9 @@
 #include "Controller.h"
 #include "MessageManager.h"
 
+#pragma once
+#include <Windows.h>
+#pragma comment(lib, "user32.lib")
 
 using namespace std;
 
@@ -53,14 +57,17 @@ namespace UI {
 	private: System::Windows::Forms::RichTextBox^  allTaskBox;
 	private: System::Windows::Forms::Label^  successMessageLabel;
 
+	private: System::ComponentModel::IContainer^  components;
+
 
 
 	private:
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
 
+
+		//@author generated
 #pragma region Windows Form Designer generated code
 		/// <summary>
 		/// Required method for Designer support - do not modify
@@ -78,6 +85,9 @@ namespace UI {
 			// 
 			// todayTaskBoxLabel
 			// 
+			this->todayTaskBoxLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
 			this->todayTaskBoxLabel->AutoSize = true;
 			this->todayTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12.75F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
@@ -89,7 +99,10 @@ namespace UI {
 			// 
 			// commandInputBox
 			// 
-			this->commandInputBox->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::SuggestAppend;
+			this->commandInputBox->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->commandInputBox->AutoCompleteMode = System::Windows::Forms::AutoCompleteMode::Append;
 			this->commandInputBox->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
 			this->commandInputBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
@@ -104,17 +117,23 @@ namespace UI {
 			// 
 			// allTaskBoxLabel
 			// 
-			this->allTaskBoxLabel->AutoSize = true;
+			this->allTaskBoxLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
 			this->allTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12.75F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->allTaskBoxLabel->Location = System::Drawing::Point(387, 51);
+			this->allTaskBoxLabel->Location = System::Drawing::Point(359, 51);
 			this->allTaskBoxLabel->Name = L"allTaskBoxLabel";
-			this->allTaskBoxLabel->Size = System::Drawing::Size(108, 20);
+			this->allTaskBoxLabel->Size = System::Drawing::Size(168, 20);
 			this->allTaskBoxLabel->TabIndex = 5;
 			this->allTaskBoxLabel->Text = L"Other Tasks";
+			this->allTaskBoxLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// programHeading
 			// 
+			this->programHeading->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
 			this->programHeading->AutoSize = true;
 			this->programHeading->Font = (gcnew System::Drawing::Font(L"AR DELANEY", 35.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
@@ -127,6 +146,9 @@ namespace UI {
 			// 
 			// allTaskBox
 			// 
+			this->allTaskBox->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
 			this->allTaskBox->BackColor = System::Drawing::Color::White;
 			this->allTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
@@ -141,7 +163,6 @@ namespace UI {
 			// 
 			// successMessageLabel
 			// 
-			this->successMessageLabel->AutoSize = true;
 			this->successMessageLabel->Font = (gcnew System::Drawing::Font(L"Franklin Gothic Demi", 12, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
 			this->successMessageLabel->Location = System::Drawing::Point(20, 335);
@@ -152,6 +173,9 @@ namespace UI {
 			// 
 			// todayTaskBox
 			// 
+			this->todayTaskBox->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
 			this->todayTaskBox->BackColor = System::Drawing::Color::White;
 			this->todayTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
@@ -168,6 +192,7 @@ namespace UI {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->ClientSize = System::Drawing::Size(590, 391);
 			this->Controls->Add(this->todayTaskBox);
 			this->Controls->Add(this->successMessageLabel);
@@ -177,8 +202,9 @@ namespace UI {
 			this->Controls->Add(this->commandInputBox);
 			this->Controls->Add(this->todayTaskBoxLabel);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+			this->MaximizeBox = false;
 			this->Name = L"MagicMemoGUI";
-			this->Text = L"MagicMemoGUI";
+			this->Text = L"Magic Memo";
 			this->Load += gcnew System::EventHandler(this, &MagicMemoGUI::MagicMemoGUI_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -186,6 +212,7 @@ namespace UI {
 		}
 #pragma endregion
 
+		//@author A0111951N
 	private:
 		//Get value while typing
 		System::Void commandInputBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
@@ -200,15 +227,27 @@ namespace UI {
 				magicManager->updateAutoCompleteSource(commandInputBox);
 			}
 
-			// Ctrl + Z
+			// Minimize via Ctrl + W
+			if (e->KeyData == (Keys::Control | Keys::W)) {
+				WindowState = FormWindowState::Minimized;
+			} 
+
+			// Exit via Ctrl + Q
+			if (e->KeyData == (Keys::Control | Keys::Q)) {
+			MessageBox::Show("Good bye!");
+				Application::Exit();
+			}
+
+			// Undo via Ctrl + Z
 			if (e->KeyData == (Keys::Control | Keys::Z)) {
 				setGuiText("undo");
 			}   
 
-			// Ctrl + R
+			// Redo via Ctrl + R
 			if (e->KeyData == (Keys::Control | Keys::R)) {
 				setGuiText("redo");
 			}
+
 		}
 
 	private: 
@@ -240,11 +279,10 @@ namespace UI {
 			String^ successMessage = magicManager->getSuccessMessage();
 			successMessageLabel->Text = successMessage;
 
-			int xCoord;
-			allTaskBoxLabel->Text = magicManager->getAllTaskBoxLabel(xCoord);
-			allTaskBoxLabel->Location = System::Drawing::Point(xCoord, 51);
+			allTaskBoxLabel->Text = magicManager->getAllTaskBoxLabel();
+			//allTaskBoxLabel->Location = System::Drawing::Point(xCoord, 51);
 
-			//magicManager->toggleTaskBoxSize(allTaskBox, todayTaskBox);
+			magicManager->toggleTaskBoxSize(allTaskBox, todayTaskBox);
 
 			allTaskBox->Text = magicManager->getAllTaskBoxMessage();
 			todayTaskBox->Text = magicManager->getTodayTaskBoxMessage();
@@ -268,7 +306,27 @@ namespace UI {
 				Application::Exit();
 			}
 		}
+	
+		
+	protected:
+		// Restore window from minimized when Ctrl + M is pressed
+		virtual void OnHandleCreated(EventArgs^ e) override {
+			__super::OnHandleCreated(e);
+			RegisterHotKey((HWND)this->Handle.ToPointer(), 1, 
+				MOD_CONTROL, (UINT)Keys::M); 
+		}
 
+	protected:
+		virtual void WndProc(Message% m) override {
+			if (m.Msg == WM_HOTKEY && m.WParam.ToInt32() == 1) {
+				this->WindowState = FormWindowState::Normal;
+				this->BringToFront();
+			}
+			__super::WndProc(m);
+		}
 	};
+
+	// hide the command prompt window
+	#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") 
 
 }
