@@ -127,6 +127,21 @@ vector<string> FileStorage::getAutoCompleteFileData() {
 	return tempVector;
 }
 
+vector<string> FileStorage::getOptionFileData() {
+	vector<string> tempVector;
+	DateTimeParser parse;
+	string content;
+
+	ifstream readFile(optionFileName.c_str());
+	while(getline(readFile, content)) {
+	
+		
+	}
+	readFile.close();
+
+	return tempVector;
+}
+
 void FileStorage::addLineToFile(Item item) {
 	addLine(item, getFullFileName());
 }
