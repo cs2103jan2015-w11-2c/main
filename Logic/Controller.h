@@ -80,6 +80,8 @@ public:
 
 	long getTimePos(const int [3], const int [2]);
 
+	bool checkDateIsUnset(const int [3]);
+
 	bool checkIsClash(const Item, const Item);
 
 	bool checkIsDeadline(const Item);
@@ -88,7 +90,7 @@ public:
 
 	bool checkIsFloating(const Item);
 
-	void generateResults(vector<Item>);
+	void generateResults(const vector<Item>);
 
 	bool rewriteFile();
 
