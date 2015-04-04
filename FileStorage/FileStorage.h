@@ -51,16 +51,16 @@ public:
 	//archive file
 	void addLineToArchive(Item);
 	
+	void addLine(Item, const string&);
+
 	//inputBank file
-	void addLineToInputBank(string);
+	void addLineToInputBank();
 
 	//auto-complete file
 	void addLineToAutoCompleteFile(string); 
 
 	//option file
-	void addLineToOptions(string);
-
-	void addLine(Item, const string&);
+	void addLineToOptions();
 
 	bool clearFile();
 	

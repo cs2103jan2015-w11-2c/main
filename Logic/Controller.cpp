@@ -220,7 +220,6 @@ void Controller::generateResults(vector<Item> inputVector) {
 		temp.lineNumber = to_string(i + 1) + ".";
 		temp.date = inputVector[i].dateToString();
 		_is12HourFormat ? temp.time = inputVector[i].timeToString() : temp.time = inputVector[i].timeTo24HrString();
-
 		temp.endDate = inputVector[i].endDateToString();
 		temp.event = inputVector[i].event;
 		temp.isExpired = checkIsExpired(inputVector[i]);

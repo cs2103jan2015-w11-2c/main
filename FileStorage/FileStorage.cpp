@@ -1,7 +1,6 @@
 #include "FileStorage.h"
 //@author A0111951N
 
-
 FileStorage::FileStorage(void) {
 	fileConfigFileName = "fileConfigurations.txt";
 	defaultFileName = "MagicMemo Task List.txt";
@@ -89,6 +88,7 @@ vector<Item> FileStorage::getArchiveData() {
 	return tempVector;
 }
 
+
 vector<string> FileStorage::getInputBankData() {
 	Parser parse;
 	vector<string> tempVector;
@@ -112,10 +112,14 @@ vector<string> FileStorage::getAutoCompleteFileData() {
 	vector<string> tempVector;
 	Item item;
 	string content;
+	Parser parse;
 
 	ifstream readFile(autoCompleteFileName.c_str());
 	while(getline(readFile, content)) {
-		string s = item.event;
+		parse.setStringToParse(content);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		string s = item.toString();
 		tempVector.push_back(s);
 	}
 	readFile.close();
@@ -131,33 +135,6 @@ void FileStorage::addLineToArchive(Item item) {
 	addLine(item, archiveFileName);
 }
 
-void FileStorage::addLineToInputBank(string input) {
-    Parser parse;
-	vector<string>::iterator iter;
-	vector<string> tempVector = parse.getFragmentedEvent();
-	fstream outFile;
-    ostringstream out;
-	
-	outFile.open(inputBankFileName.c_str(), fstream ::out |fstream ::app);
-	for(iter = tempVector.begin(); iter != tempVector.end(); iter++) {
-		out << *iter; 
-	   }
-	string temp = out.str();
-	outFile << temp << endl;
-	outFile.close();
-}
-
-void FileStorage::addLineToAutoCompleteFile(string) {
-    Item item;
-    fstream outFile;
-
-	outFile.open(autoCompleteFileName.c_str(), fstream::out |fstream ::app);
-	string s = item.event;//auto suggest the event description/name
-    outFile << s <<endl;
-	outFile.close();
-}
-
-//@author A0111951N
 void FileStorage::addLine(Item item, const string& fileName) {
 	fstream outFile;
 	ostringstream out;
@@ -187,7 +164,61 @@ void FileStorage::addLine(Item item, const string& fileName) {
 	outFile.close();
 }
 
+void FileStorage::addLineToInputBank() {
+    Parser parse;
+	vector<string>::iterator iter;
+	vector<string> tempVector = parse.getFragmentedEvent();
+	fstream outFile;
+    ostringstream out;
+	
+	outFile.open(inputBankFileName.c_str(), fstream ::out |fstream ::app);
+	for(iter = tempVector.begin(); iter != tempVector.end(); iter++) {
+		out << *iter; 
+	   }
+	string temp = out.str();
+	outFile << temp << endl;
+	outFile.close();
+}
 
+void FileStorage::addLineToAutoCompleteFile(string s) {
+    fstream outFile;
+	ostringstream out;
+	Item item;
+	bool setBracket = false;
+
+	outFile.open(autoCompleteFileName.c_str(), fstream::out | fstream::app);
+
+	out << item.event;
+
+	if(item.eventDate[0] != 0 && item.eventDate[1] != 0 && item.eventDate[2] != 0) {
+		out << " from " <<item.eventDate[0] << "/" << item.eventDate[1] << "/" << item.eventDate[2];
+		setBracket = true;
+	}
+
+	if(item.eventStartTime[0] != 0) {
+		if(!setBracket) {
+			out << "from ";
+		}
+		out << " " << item.eventStartTime[0] << ":" << item.eventStartTime[1];
+	}
+	if(item.eventEndTime[0] !=  0) {
+		out << " - " << item.eventEndTime[0] << ":" << item.eventEndTime[1];
+	}
+
+	s = out.str();
+	outFile << s << endl;
+	outFile.close();
+}
+
+void FileStorage::addLineToOptions () {
+	fstream outFile;
+	outFile.open(optionFileName.c_str(), fstream::out |fstream ::app);
+	DateTimeParser parse;
+
+	outFile.close();
+}
+
+//@author A0111951N
 bool FileStorage::clearFile() {
 	fstream outFile;
 	outFile.open(getFullFileName(), fstream::out | fstream::trunc);
@@ -262,6 +293,7 @@ void FileStorage::getFileConfigDEBUG() {
 	getline(inFile, fileName);
 	getline(inFile, filePath);
 	inFile.close();
+
 }
 
 void FileStorage::initializeFileConfig() {

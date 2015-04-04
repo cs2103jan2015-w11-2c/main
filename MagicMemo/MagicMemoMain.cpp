@@ -8,7 +8,7 @@ int main(array<String^>^ argv) {
 	Application::EnableVisualStyles(); 
 	Application::SetCompatibleTextRenderingDefault(false);
 
-	UI::MagicMemoGUI mainWindow; 
+	MagicMemo::MagicMemoGUI mainWindow; 
 	Application::Run(%mainWindow); 
 
 	return 0;

@@ -55,11 +55,6 @@ public:
 
 	int numDaysInMonth(const int& month, const int& year);
 
-	// uses the Rata Die system to convert the date to a base year
-	// 1 Jan 0001 for conversions to get day difference between 2 dates
-	// author: chansen @ Stack Overflow
-	int rataDieConvert(int day, int month, int year);
-
 	bool isValidDate(int, int, int);
 
 	bool isValidTime(int, int);
