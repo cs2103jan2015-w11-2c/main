@@ -1,5 +1,5 @@
 #include "FileStorage.h"
-//@author A0111951N
+//@author A0115452N
 
 FileStorage::FileStorage(void) {
 	fileConfigFileName = "fileConfigurations.txt";
@@ -17,12 +17,10 @@ FileStorage::FileStorage(void) {
 	fullFileName = getFullFileName();
 }
 
-//@author A0115452N
 FileStorage*FileStorage::theOne=nullptr;
 
 FileStorage*FileStorage::getInstance(){
-
-	if(theOne==nullptr) {
+	if(theOne == nullptr) {
 	theOne = new FileStorage();
 	return theOne;
 	}
@@ -88,18 +86,17 @@ vector<Item> FileStorage::getArchiveData() {
 	return tempVector;
 }
 
-
 vector<string> FileStorage::getInputBankData() {
 	Parser parse;
 	vector<string> tempVector;
-	vector<string> tempVector2=parse.getFragmentedEvent();
+	vector<string> tempVector2 = parse.getFragmentedEvent();
 	vector<string>::iterator iter;
 	string content;
 	string sentence;
 
 	ifstream readFile(inputBankFileName.c_str());
 	while(getline(readFile, content)) {
-		for(iter= tempVector2.begin(); iter != tempVector2.end(); iter++)
+		for(iter = tempVector2.begin(); iter != tempVector2.end(); iter++)
 		sentence = *iter;
 		tempVector.push_back(sentence);
 	     }
@@ -233,7 +230,6 @@ void FileStorage::addLineToOptions () {
 	outFile.close();
 }
 
-//@author A0111951N
 bool FileStorage::clearFile() {
 	fstream outFile;
 	outFile.open(getFullFileName(), fstream::out | fstream::trunc);
@@ -241,7 +237,6 @@ bool FileStorage::clearFile() {
 	return true;
 }
 
-//@author A0115452N
 bool FileStorage::clearAutoCompleteFile() {
 	fstream outFile;
 	outFile.open(autoCompleteFileName.c_str(), fstream::out | fstream::trunc);
@@ -332,9 +327,9 @@ string FileStorage::programFilePath() {
 }
 
 //@author A0115452N
-void FileStorage::restoreFileInfo () {
+void FileStorage::restoreFileInfo() {
     ifstream inFile(fileConfigFileName.c_str ());
-	initializeFileConfig ();
+	initializeFileConfig();
 	getline(inFile, fileName);
 	getline(inFile, filePath);
 	inFile.close();
