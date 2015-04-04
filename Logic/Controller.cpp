@@ -56,7 +56,7 @@ void Controller::executeCommand(string inputText) {
 		_isSearch = false;
 	}
 
-	if(userCommand == "help") {
+	if((userCommand == "help") || (userCommand == "?")) {
 		_isHelp = true;
 	} else {
 		_isHelp = false;
@@ -92,7 +92,7 @@ void Controller::executeCommand(string inputText) {
 		setClockTo12Hour();
 	} else if (userCommand == "24") {
 		setClockTo24Hour();
-	} else if (userCommand == "help") {
+	} else if (userCommand == "help" || userCommand == "?") {
 		getHelp();
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");

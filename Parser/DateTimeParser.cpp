@@ -259,11 +259,8 @@ int DateTimeParser::mapWeekDay(string weekDay) {
 		iter++;
 	}
 
-	if(weekDayIndex == -1) {
-		_updateDateFlag = false;
-	} else {
-		_updateDateFlag = true;
-	}
+	_updateDateFlag = (weekDayIndex == -1) ? false : true;
+
 	return weekDayIndex;
 }
 
@@ -421,15 +418,11 @@ void DateTimeParser::separateHourMinute(string hourMinute, int& hour, int& minut
 	hour = (int)strtol(hourMinute.c_str(), &intEnd, 10);
 	minute = (int)strtol(intEnd + 1, &intEnd, 10);
 
-	if (hour != 0 || hour!= 0) {
-		_updateTimeFlag = true;
-	} else {
-		_updateTimeFlag = false;
-	}
-
 	if(*intEnd != 0) {
 		minute = 0;
 	}
+
+	_updateTimeFlag = (hour != 0 || minute != 0) ? true : false;
 }
 
 void DateTimeParser::verifyAllDateTime() {
@@ -522,9 +515,13 @@ void DateTimeParser::verifyStartEnd(
 
 		if ((isLessEq[0] && isLessEq[1] && isLessEq[2] && isLess[3]) ||
 			(isLessEq[0] && isLessEq[1] && isLessEq[2] && isLessEq[3] && isLess[4])) {
-				endHr = 0;
-				endMin = 0;
-				isError = true;
+				if((startHr < 12) && ((endHr + 12) < 24) && (endHr != 0)) {
+					endHr += 12;
+				} else {
+					endHr = 0;
+					endMin = 0;
+					isError = true;
+				}
 		}
 
 		if(isError) {
