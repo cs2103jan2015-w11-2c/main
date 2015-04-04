@@ -81,7 +81,7 @@ size_t Parser::findDateKeyWord(string inputLine, string delimiter) {
 	string temp;
 	if(dateStart != string::npos) {
 		string line = convertStringToLowerCase(inputLine);
-		if(inputLine[--dateStart] == 'm') { //if mon or monday
+		if(inputLine[--dateStart] == 'm' || inputLine[--dateStart] == 'M') { //if mon or monday
 			string temp = inputLine.substr(0, dateStart);
 			dateStart = temp.rfind(delimiter);
 		}
@@ -135,7 +135,7 @@ void Parser::extractDateAndTime() {
 
 	if (delimiterIndex != string::npos) {
 		string rawDateTimeChunk = _item.event.substr(delimiterIndex + 1);
-		_item.event = removeSpacePadding(_item.event.substr(0, delimiterIndex));
+		_item.event = removeSpacePadding(_item.event.substr(0, delimiterIndex + 1));
 		rawDateTimeChunk = convertStringToLowerCase(rawDateTimeChunk);
 
 		try {

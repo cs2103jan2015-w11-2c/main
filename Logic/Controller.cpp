@@ -25,6 +25,8 @@ Controller::Controller(void) {
 	initializeVector();
 	_isSearch = false;
 	_isWide = true;
+	_isHelp = false;
+	_is12HourFormat = true;
 }
 
 void Controller::executeCommand(string inputText) {
@@ -52,6 +54,12 @@ void Controller::executeCommand(string inputText) {
 		_isSearch = true;
 	} else {
 		_isSearch = false;
+	}
+
+	if((userCommand == "help") || (userCommand == "?")) {
+		_isHelp = true;
+	} else {
+		_isHelp = false;
 	}
 
 	if (userCommand == "display") {
@@ -84,6 +92,8 @@ void Controller::executeCommand(string inputText) {
 		setClockTo12Hour();
 	} else if (userCommand == "24") {
 		setClockTo24Hour();
+	} else if (userCommand == "help" || userCommand == "?") {
+		getHelp();
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
@@ -197,9 +207,35 @@ bool Controller::checkIsExpired(const Item item) {
 	return false;
 }
 
+bool Controller::checkIsFloating(const Item item) {
+	for (int i = 0; i < 3; i++) {
+		if (item.eventDate[i] != 0) {
+			return false;
+		}
+	}
+	for (int i = 0; i < 3; i++) {
+		if (item.eventEndDate[i] != 0) {
+			return false;
+		}
+	}
+	for (int i = 0; i < 2; i++) {
+		if (item.eventStartTime[i] != 0) {
+			return false;
+		}
+	}
+	for (int i = 0; i < 2; i++) {
+		if (item.eventEndTime[i] != 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
 void Controller::generateResults(vector<Item> inputVector) {
 	vector<RESULT> todayResult;
 	vector<RESULT> otherResult;
+	vector<RESULT> floatResult;
+	vector<RESULT> deadlineResult;
 	bool isClashed = false;
 	DateTime newDateTime;
 
@@ -223,7 +259,13 @@ void Controller::generateResults(vector<Item> inputVector) {
 		temp.endDate = inputVector[i].endDateToString();
 		temp.event = inputVector[i].event;
 		temp.isExpired = checkIsExpired(inputVector[i]);
-		if ((inputVector[i].eventDate[0] == newDateTime.getCurrentDay() ||
+		if (checkIsFloating(inputVector[i])) {
+			floatResult.push_back(temp);
+		} else if (temp.isDeadline) {
+			temp.endDate = inputVector[i].startDateToString();
+			temp.date = DEADLINE_HEADER;
+			deadlineResult.push_back(temp);
+		} else if ((inputVector[i].eventDate[0] == newDateTime.getCurrentDay() ||
 			inputVector[i].eventDate[0] == newDateTime.getCurrentDay() + 1) &&
 			inputVector[i].eventDate[1] == newDateTime.getCurrentMonth() &&
 			inputVector[i].eventDate[2] == newDateTime.getCurrentYear()) {
@@ -232,6 +274,9 @@ void Controller::generateResults(vector<Item> inputVector) {
 			otherResult.push_back(temp);
 		}
 	}
+
+	otherResult.insert(otherResult.begin(), deadlineResult.begin(), deadlineResult.end());
+	otherResult.insert(otherResult.begin(), floatResult.begin(), floatResult.end());
 	_todayResult = todayResult;
 	_otherResult = otherResult;
 
@@ -337,6 +382,10 @@ bool Controller::isWide() {
 	return _isWide;
 }
 
+bool Controller::isHelp() {
+	return _isHelp;
+}
+
 void Controller::copy(Item input) {
 	CopyItem *copyItemCommand = new CopyItem(_parser->getLineOpNumber()[0], input);
 	_invoker->executeCommand(_vectorStore, copyItemCommand, _successMessage);
@@ -403,17 +452,18 @@ void Controller::redo() {
 	generateResults(_vectorStore);
 }
 
-string Controller::getHelp() {
-	ostringstream oss;
-	oss << "Command:		Program execution:\n";
-	oss << "add xxx		(line xxx is added to the text file with a line number)\n";
-	oss << "delete #		(the line with the corresponding # is deleted)\n";
-	oss << "display		(all data in the file is displayed)\n";
-	oss << "clear			(all data in the file is deleted)\n";
-	oss << "sort			(all data in the file sorted alphabetically)\n";
-	oss << "search xxx		(all lines with xxx displayed)\n";
-	oss << "exit			(program quits)\n";
-	return oss.str();
+void Controller::getHelp() {
+	vector<RESULT> otherResult;
+
+	for (int i = 0; i < NUM_HELP_COMMANDS; i++) {
+		RESULT temp;
+
+		temp.date = HELP_COMMANDS[i];
+		temp.event = "    " + HELP_DESCRIPTION[i];
+
+		otherResult.push_back(temp);
+	}
+	_otherResult = otherResult;
 }
 
 vector<RESULT> Controller::getTodayResult() {
@@ -494,10 +544,12 @@ vector<string> Controller::getInputBank() {
 
 void Controller::setClockTo12Hour() {
 	_is12HourFormat = true;
+	generateResults(_vectorStore);
 }
 
 void Controller::setClockTo24Hour() {
 	_is12HourFormat = false;
+	generateResults(_vectorStore);
 }
 
 Controller::~Controller(void) {

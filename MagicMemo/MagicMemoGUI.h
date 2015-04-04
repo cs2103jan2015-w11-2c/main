@@ -95,7 +95,11 @@ namespace MagicMemo {
 			this->todayTaskBoxLabel->AutoSize = true;
 			this->todayTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12.75F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+<<<<<<< HEAD
 			this->todayTaskBoxLabel->Location = System::Drawing::Point(77, 45);
+=======
+			this->todayTaskBoxLabel->Location = System::Drawing::Point(76, 45);
+>>>>>>> master
 			this->todayTaskBoxLabel->Name = L"todayTaskBoxLabel";
 			this->todayTaskBoxLabel->Size = System::Drawing::Size(147, 20);
 			this->todayTaskBoxLabel->TabIndex = 0;
@@ -110,9 +114,9 @@ namespace MagicMemo {
 			this->commandInputBox->AutoCompleteSource = System::Windows::Forms::AutoCompleteSource::CustomSource;
 			this->commandInputBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->commandInputBox->Location = System::Drawing::Point(19, 358);
+			this->commandInputBox->Location = System::Drawing::Point(16, 358);
 			this->commandInputBox->Name = L"commandInputBox";
-			this->commandInputBox->Size = System::Drawing::Size(555, 22);
+			this->commandInputBox->Size = System::Drawing::Size(562, 22);
 			this->commandInputBox->TabIndex = 1;
 			this->commandInputBox->Text = L"Enter text here:";
 			this->commandInputBox->UseWaitCursor = true;
@@ -126,7 +130,11 @@ namespace MagicMemo {
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->allTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12.75F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+<<<<<<< HEAD
 			this->allTaskBoxLabel->Location = System::Drawing::Point(374, 45);
+=======
+			this->allTaskBoxLabel->Location = System::Drawing::Point(352, 45);
+>>>>>>> master
 			this->allTaskBoxLabel->Name = L"allTaskBoxLabel";
 			this->allTaskBoxLabel->Size = System::Drawing::Size(168, 20);
 			this->allTaskBoxLabel->TabIndex = 5;
@@ -304,7 +312,6 @@ namespace MagicMemo {
 			successMessageLabel->Text = successMessage;
 
 			allTaskBoxLabel->Text = magicManager->getAllTaskBoxLabel();
-			//allTaskBoxLabel->Location = System::Drawing::Point(xCoord, 51);
 
 			magicManager->toggleTaskBoxSize(allTaskBox, todayTaskBox, pictureBox);
 

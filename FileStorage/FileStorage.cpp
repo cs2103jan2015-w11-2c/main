@@ -150,6 +150,7 @@ void FileStorage::addLineToArchive(Item item) {
 	addLine(item, archiveFileName);
 }
 
+<<<<<<< HEAD
 void FileStorage::addLine(Item item, const string& fileName) {
 	fstream outFile;
 	ostringstream out;
@@ -180,6 +181,10 @@ void FileStorage::addLine(Item item, const string& fileName) {
 }
 
 void FileStorage::addLineToInputBank() {
+=======
+<<<<<<< HEAD
+void FileStorage::addLineToInputBank(string input) {
+>>>>>>> master
     Parser parse;
 	vector<string>::iterator iter;
 	vector<string> tempVector = parse.getFragmentedEvent();
@@ -195,8 +200,16 @@ void FileStorage::addLineToInputBank() {
 	outFile.close();
 }
 
+<<<<<<< HEAD
 void FileStorage::addLineToAutoCompleteFile(string s) {
     fstream outFile;
+=======
+//@author A0111951N
+=======
+>>>>>>> 554a4c20a58e9de79de5ae2ada8025b08ac4161a
+void FileStorage::addLine(Item item, const string& fileName) {
+	fstream outFile;
+>>>>>>> master
 	ostringstream out;
 	Item item;
 	bool setBracket = false;
@@ -225,6 +238,7 @@ void FileStorage::addLineToAutoCompleteFile(string s) {
 	outFile.close();
 }
 
+<<<<<<< HEAD
 void FileStorage::addLineToOptions () {
 	fstream outFile;
 	outFile.open(optionFileName.c_str(), fstream::out |fstream ::app);
@@ -233,6 +247,8 @@ void FileStorage::addLineToOptions () {
 	outFile.close();
 }
 
+=======
+>>>>>>> master
 //@author A0111951N
 bool FileStorage::clearFile() {
 	fstream outFile;

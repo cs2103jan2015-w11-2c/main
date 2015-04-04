@@ -54,6 +54,13 @@ Void MessageManager::calculateAllTaskIndexes() {
 	int indexCount = 0;
 	for(unsigned int i = 0; i < _allTaskVector->size(); i++) {
 		HIGHLIGHT temp;
+		if(_allTaskVector->at(i).isExpired) {
+			temp.special = "expired";
+		} else if(_allTaskVector->at(i).isClash) {
+			temp.special = "clash";
+		} else {
+			temp.special = "";
+		}
 
 		if(_allTaskVector->at(i).date != prevDate) {
 			temp.index = indexCount;
@@ -172,7 +179,27 @@ Void MessageManager::colorTextInTaskBox(
 		//time
 		for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
 			taskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
-			taskBox->SelectionColor = System::Drawing::Color::DarkGreen;
+			if(_timeHighlight->at(i).special == "expired") {
+				taskBox->SelectionColor = System::Drawing::Color::Red;
+			} else if(_timeHighlight->at(i).special == "clash") {
+				taskBox->SelectionColor = System::Drawing::Color::DarkOrange;
+			} else {
+				taskBox->SelectionColor = System::Drawing::Color::DarkGreen;
+			}
+			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 10, FontStyle::Regular);
+			taskBox->SelectionAlignment = HorizontalAlignment::Left;
+		}
+
+		//end date
+		for(unsigned int i = 0; i < _endDateHighlight->size(); i++) {
+			taskBox->Select(_endDateHighlight->at(i).index, _endDateHighlight->at(i).length);
+			if(_timeHighlight->at(i).special == "clash") {
+				taskBox->SelectionColor = System::Drawing::Color::Orange;
+			} else if(_timeHighlight->at(i).special == "expired") {
+				taskBox->SelectionColor = System::Drawing::Color::Crimson;
+			} else {
+				taskBox->SelectionColor = System::Drawing::Color::Brown;
+			}
 			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 10, FontStyle::Regular);
 			taskBox->SelectionAlignment = HorizontalAlignment::Left;
 		}
@@ -273,6 +300,8 @@ String^ MessageManager::getInputBoxMessage() {
 String^ MessageManager::getAllTaskBoxLabel() {
 	if(magicMemo->isSearch()) {
 		return LABEL_IS_SEARCH;
+	} else if(magicMemo->isHelp()) {
+		return LABEL_IS_HELP;
 	} else {
 		return LABEL_ALL_TASKS;
 	}
