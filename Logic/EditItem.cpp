@@ -13,20 +13,53 @@ private:
 	Item _input;
 	string _message;
 	Item _editedItem;
+	bool _eventHasChanged;
+	bool _timeHasChanged;
+	bool _dateHasChanged;
 
 public:
 	EditItem() {
 		_lineNumber = 0;
 		_message = "";
+		_eventHasChanged = false;
+		_timeHasChanged = false;
+		_dateHasChanged = false;
 	}
 
 	EditItem(int lineNumber, Item input) {
 		_lineNumber = lineNumber;
 		_input = input;
 		_message = "";
+		_eventHasChanged = false;
+		_timeHasChanged = false;
+		_dateHasChanged = false;
 	}
 
 	~EditItem() {
+	}
+
+	bool isFloatingDate() {
+		for (int i = 0; i < 3; i++) {
+			if (_input.eventDate[i] != 0) {
+				return false;
+			}
+			if (_input.eventEndDate[i] !=	0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	bool isFloatingTime() {
+		for (int i = 0; i < 2; i++) {
+			if (_input.eventStartTime[i] != 0) {
+				return false;
+			}
+			if (_input.eventStartTime[i] !=	0) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	void executeAction(vector<Item> &vectorStore) {
@@ -41,7 +74,41 @@ public:
 				_input.toString().c_str());
 			_message=buffer;
 			_editedItem = vectorStore[_lineNumber - 1];
-			vectorStore[_lineNumber - 1] = _input;
+
+			if (_input.event == "") {
+				if (!isFloatingDate()) {
+					for (int i = 0; i < 3; i++) {
+						vectorStore[_lineNumber-1].eventDate[i] = _input.eventDate[i];
+						vectorStore[_lineNumber-1].eventEndDate[i] = _input.eventEndDate[i];
+						_dateHasChanged = true;
+					}
+				}
+				if (!isFloatingTime()) {
+					for (int i = 0; i < 1; i++) {
+						vectorStore[_lineNumber-1].eventStartTime[i] = _input.eventStartTime[i];
+						vectorStore[_lineNumber-1].eventEndTime[i] = _input.eventEndTime[i];
+						_timeHasChanged = true;
+					}
+				}
+			} else {
+				vectorStore[_lineNumber - 1].event = _input.event;
+				_eventHasChanged = true;
+
+				if (!isFloatingDate()) {
+					for (int i = 0; i < 3; i++) {
+						vectorStore[_lineNumber-1].eventDate[i] = _input.eventDate[i];
+						vectorStore[_lineNumber-1].eventEndDate[i] = _input.eventEndDate[i];
+						_dateHasChanged = true;
+					}
+				}
+				if (!isFloatingTime()) {
+					for (int i = 0; i < 1; i++) {
+						vectorStore[_lineNumber-1].eventStartTime[i] = _input.eventStartTime[i];
+						vectorStore[_lineNumber-1].eventEndTime[i] = _input.eventEndTime[i];
+						_timeHasChanged = true;
+					}
+				}
+			}
 		}
 	}
 
@@ -51,22 +118,31 @@ public:
 	}
 
 	bool isMatch(const Item item1, const Item item2) {
-		if (item1.event != item2.event) {
+		if (_eventHasChanged && item1.event != item2.event) {
 			return false;
 		}
-		for (int i = 0; i < 3; i++) {
-			if (item1.eventDate[i] != item2.eventDate[i]) {
-				return false;
+		if (_dateHasChanged) {
+			for (int i = 0; i < 3; i++) {
+				if (item1.eventDate[i] != item2.eventDate[i]) {
+					return false;
+				}
+			}
+			for (int i = 0; i < 3; i++) {
+				if (item1.eventEndDate[i] != item2.eventEndDate[i]) {
+					return false;
+				}
 			}
 		}
-		for (int i = 0; i < 2; i++) {
-			if (item1.eventStartTime[i] != item2.eventStartTime[i]) {
-				return false;
+		if (_timeHasChanged) {
+			for (int i = 0; i < 2; i++) {
+				if (item1.eventStartTime[i] != item2.eventStartTime[i]) {
+					return false;
+				}
 			}
-		}
-		for (int i = 0; i < 2; i++) {
-			if (item1.eventEndTime[i] != item2.eventEndTime[i]) {
-				return false;
+			for (int i = 0; i < 2; i++) {
+				if (item1.eventEndTime[i] != item2.eventEndTime[i]) {
+					return false;
+				}
 			}
 		}
 		if (item1.colour != item2.colour) {

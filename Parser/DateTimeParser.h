@@ -34,6 +34,9 @@ private:
 	int _endHour;
 	int _endMinute;
 
+	bool _updateDateFlag;
+	bool _updateTimeFlag;
+
 public:
 	DateTimeParser(void);
 
@@ -139,5 +142,8 @@ public:
 	//For unit testing
 	Item getItem();
 
+	bool getUpdateDateFlag();
+
+	bool getUpdateTimeFlag();
 };
 

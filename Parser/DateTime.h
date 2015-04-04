@@ -29,6 +29,8 @@ public:
 
 	int getCurrentYear();
 
+	int getCurrentIntWeekDay();
+
 	string getCurrentWeekDay();
 
 	int getCurrentMinute();
