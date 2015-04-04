@@ -206,19 +206,27 @@ Void MessageManager::updateAutoCompleteSource(TextBox^ inputBox) {
 
 }
 
-Void MessageManager::toggleTaskBoxSize(RichTextBox^ allTaskBox, RichTextBox^ todayTaskBox) {
+Void MessageManager::toggleTaskBoxSize(RichTextBox^ allTaskBox, RichTextBox^ todayTaskBox, PictureBox^ pictureBox) {
 	if(isBoxExtended) {
 		isBoxExtended = false;
-		allTaskBox->Location = System::Drawing::Point(304, 75);
-		allTaskBox->Size = System::Drawing::Size(270, 255);
-		todayTaskBox->Location = System::Drawing::Point(19, 75);
-		todayTaskBox->Size = System::Drawing::Size(270, 255);
+		allTaskBox->Location = System::Drawing::Point(315, 75);
+		allTaskBox->Size = System::Drawing::Size(260, 255);
+		todayTaskBox->Location = System::Drawing::Point(16, 75);
+		todayTaskBox->Size = System::Drawing::Size(260, 255);
+
+		pictureBox->Location = System::Drawing::Point(13, 67);
+		pictureBox->Size = System::Drawing::Size(565, 265);
+		pictureBox->Image = System::Drawing::Image::FromFile("resources//notebookShort.png");
 	} else {
 		isBoxExtended = true;
-		allTaskBox->Location = System::Drawing::Point(304, 10);
-		allTaskBox->Size = System::Drawing::Size(270, 325);
-		todayTaskBox->Location = System::Drawing::Point(19, 10);
-		todayTaskBox->Size = System::Drawing::Size(270, 325);
+		allTaskBox->Location = System::Drawing::Point(315, 22);
+		allTaskBox->Size = System::Drawing::Size(260, 310);
+		todayTaskBox->Location = System::Drawing::Point(16, 22);
+		todayTaskBox->Size = System::Drawing::Size(260, 310);
+
+		pictureBox->Location = System::Drawing::Point(13, 12);
+		pictureBox->Size = System::Drawing::Size(565, 323);
+		pictureBox->Image = System::Drawing::Image::FromFile("resources//notebookTall.png");
 	}
 }
 

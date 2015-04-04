@@ -79,7 +79,7 @@ public:
 	Void updateAutoCompleteSource(TextBox^ inputBox);
 
 	//increases/decreases the task box size
-	Void toggleTaskBoxSize(RichTextBox^, RichTextBox^);
+	Void toggleTaskBoxSize(RichTextBox^, RichTextBox^, PictureBox^);
 
 	String^ toString(vector<RESULT>*);
 
