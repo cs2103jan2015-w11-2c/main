@@ -45,6 +45,8 @@ public:
 
 	vector<string> getAutoCompleteFileData();
 
+	vector<string> getOptionFileData();
+
 	//main text file
 	void addLineToFile(Item);
 

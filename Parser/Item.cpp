@@ -39,8 +39,6 @@ int Item::getHour(int hour) {
 	}
 }
 
-<<<<<<< HEAD
-=======
 string Item::get24HrHour(int hour) {
 	if (hour == 24) {
 		return "00";
@@ -51,7 +49,6 @@ string Item::get24HrHour(int hour) {
 	}
 }
 
->>>>>>> master
 string Item::getMinute(int minute) {
 	if(minute == 0) {
 		return "";
@@ -100,15 +97,9 @@ string Item::startDateToString() {
 }
 
 string Item::endDateToString() {
-<<<<<<< HEAD
-	if((eventEndDate[0] == 0) && (eventEndDate[1] == 0) && (eventEndDate[1] == 0)) {
-		return "";
-	} else {
-=======
 	if (eventEndDate[0] == 0 && eventEndDate[1] == 0 && eventEndDate[2] == 0) {
 		return "";
 	}
->>>>>>> master
 		ostringstream oss;
 		oss << "[" << eventEndDate[0] << "/" << eventEndDate[1] << "/" << eventEndDate[2] << "]";
 		return oss.str();
