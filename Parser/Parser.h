@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <map>
 #include "Item.h"
+#include "../EasyLoggingpp/easylogging++.h"
 #include "DateTimeParser.h"
 
 using namespace std;
@@ -12,7 +13,7 @@ using namespace std;
 //Constants
 const string DATE_START_1 = "from";
 const string DATE_START_2 = "on";
-const int DATE_KEYWORDS_SIZE = 52;
+const int DATE_KEYWORDS_SIZE = 54;
 const string DATE_KEYWORDS[]= {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
 						"sunday", "mon", "tue", "tues", "wed", "thur", "thurs", "fri", "sat", "sun",
 						"january", "february", "march", "april", "may", "june", "july",
@@ -25,6 +26,7 @@ class Parser {
 private:
 	static const string ERROR_NO_LINE_NUMBER;
 	static const string ERROR_INVALID_LINE_NUMBER;
+	static const string STRING_FLOATING;
 
 	Item _item;
 	DateTimeParser _splitDateTime;
@@ -73,6 +75,11 @@ public:
 
 	vector<string> getFragmentedEvent();
 
+	bool checkIsFloating(const Item);
+
+	void clearStartAndEndDate(Item &);
+
+	void extractSearchQuery(Item &);
+
 	~Parser(void);
 };
-

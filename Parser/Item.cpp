@@ -83,6 +83,16 @@ string Item::dateToString() {
 	}
 }
 
+string Item::endDateToString() {
+	if((eventEndDate[0] == 0) && (eventEndDate[1] == 0) && (eventEndDate[1] == 0)) {
+		return MESSAGE_UNDATED_TASK;
+	} else {
+		ostringstream oss;
+		oss << eventEndDate[0] << "/" << eventEndDate[1] << "/" << eventEndDate[2];
+		return oss.str();
+	}
+}
+
 //@author A0111951N
 string Item::timeToString() {
 	ostringstream oss;
