@@ -93,6 +93,9 @@ public:
 	//returns the directory of the program
 	string programFilePath();
 
+	//restore the filename and filepath in case if the user forgot the new filename and filepath
+	void restoreFileInfo();
+
 	~FileStorage(void);
 };
 

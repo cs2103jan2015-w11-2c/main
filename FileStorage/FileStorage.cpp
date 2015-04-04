@@ -148,13 +148,13 @@ void FileStorage::addLineToInputBank(string input) {
 }
 
 void FileStorage::addLineToAutoCompleteFile(string) {
-     Item item;
-	 fstream outFile;
+    Item item;
+    fstream outFile;
 
-	 outFile.open(autoCompleteFileName.c_str(), fstream::out |fstream ::app);
-	 string s = item.event;//auto suggest the event description/name
-     outFile << s <<endl;
-	 outFile.close();
+	outFile.open(autoCompleteFileName.c_str(), fstream::out |fstream ::app);
+	string s = item.event;//auto suggest the event description/name
+    outFile << s <<endl;
+	outFile.close();
 }
 
 //@author A0111951N
@@ -195,6 +195,7 @@ bool FileStorage::clearFile() {
 	return true;
 }
 
+//@author A0115452N
 bool FileStorage::clearAutoCompleteFile() {
 	fstream outFile;
 	outFile.open(autoCompleteFileName.c_str(), fstream::out | fstream::trunc);
@@ -202,6 +203,7 @@ bool FileStorage::clearAutoCompleteFile() {
 	return true;
 }
 
+//@author A0111951N
 bool FileStorage::changeFileName(string newFileName) {
 	if(fileExists(newFileName)) {
 		return false;
@@ -260,7 +262,6 @@ void FileStorage::getFileConfigDEBUG() {
 	getline(inFile, fileName);
 	getline(inFile, filePath);
 	inFile.close();
-
 }
 
 void FileStorage::initializeFileConfig() {
@@ -283,6 +284,14 @@ string FileStorage::programFilePath() {
 	return string( buffer ).substr( 0, pos);
 }
 
+//@author A0115452N
+void FileStorage::restoreFileInfo () {
+    ifstream inFile(fileConfigFileName.c_str ());
+	initializeFileConfig ();
+	getline(inFile, fileName);
+	getline(inFile, filePath);
+	inFile.close();
+}
 
 FileStorage::~FileStorage(void) {
 }

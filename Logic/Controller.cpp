@@ -220,10 +220,8 @@ void Controller::generateResults(vector<Item> inputVector) {
 		temp.lineNumber = to_string(i + 1) + ".";
 		temp.date = inputVector[i].dateToString();
 		_is12HourFormat ? temp.time = inputVector[i].timeToString() : temp.time = inputVector[i].timeTo24HrString();
-<<<<<<< HEAD
-=======
+
 		temp.endDate = inputVector[i].endDateToString();
->>>>>>> master
 		temp.event = inputVector[i].event;
 		temp.isExpired = checkIsExpired(inputVector[i]);
 		if ((inputVector[i].eventDate[0] == newDateTime.getCurrentDay() ||
@@ -498,13 +496,6 @@ vector<string> Controller::getInputBank() {
 void Controller::setClockTo12Hour() {
 	_is12HourFormat = true;
 }
-<<<<<<< HEAD
-=======
-
-void Controller::setClockTo24Hour() {
-	_is12HourFormat = false;
-}
->>>>>>> master
 
 void Controller::setClockTo24Hour() {
 	_is12HourFormat = false;
