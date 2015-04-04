@@ -1,6 +1,5 @@
 #include "FileStorage.h"
 //@author A0111951N
-
 FileStorage::FileStorage(void) {
 	fileConfigFileName = "fileConfigurations.txt";
 	defaultFileName = "MagicMemo Task List.txt";
@@ -10,7 +9,7 @@ FileStorage::FileStorage(void) {
 		initializeFileConfig();
 	}
 
-	getFileConfigDEBUG();
+	getFileConfigInfo();
 	fullFileName = getFullFileName();
 }
 
@@ -137,7 +136,7 @@ bool FileStorage::changeFileName(string newFileName) {
 	string oldFileName = getFullFileName();
 	setFileName(newFileName);
 	rename(oldFileName.c_str(), getFullFileName().c_str());
-	updateFileConfigDEBUG();
+	updateFileConfigInfo();
 	return true;
 }
 
@@ -158,7 +157,7 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 
 	rename(getFullFileName().c_str(), newFullFileName.c_str());
 	setFilePath(newFilePath);
-	updateFileConfigDEBUG();
+	updateFileConfigInfo();
 	return true;
 }
 
@@ -183,7 +182,7 @@ bool FileStorage::isFileEmpty(string file) {
 	return false;
 }
 
-void FileStorage::getFileConfigDEBUG() {
+void FileStorage::getFileConfigInfo() {
 	ifstream inFile(fileConfigFileName.c_str());
 	getline(inFile, fileName);
 	getline(inFile, filePath);
@@ -194,10 +193,10 @@ void FileStorage::getFileConfigDEBUG() {
 void FileStorage::initializeFileConfig() {
 	setFileName(defaultFileName);
 	setFilePath(programFilePath());
-	updateFileConfigDEBUG();
+	updateFileConfigInfo();
 }
 
-void FileStorage::updateFileConfigDEBUG() {
+void FileStorage::updateFileConfigInfo() {
 	ofstream outFile(fileConfigFileName.c_str());
 	outFile << fileName << endl;
 	outFile << filePath << endl;

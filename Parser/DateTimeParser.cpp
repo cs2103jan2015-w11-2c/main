@@ -1,6 +1,5 @@
 //@author A0111951N
 #include "DateTimeParser.h"
-#include "..\EasyLoggingpp\easylogging++.h"
 
 const string DateTimeParser::ERROR_NO_DAY_SPECIFIED = "Invalid input: No day specified after \"next\"";
 const string DateTimeParser::ERROR_NO_TIME_SPECIFIED = "Invalid input: Time expected after \"-\"";
@@ -9,9 +8,6 @@ const string DateTimeParser::ERROR_INVALID_TIME_INPUT = "Invalid time input!";
 const string DateTimeParser::ERROR_INVALID_END_TIME = "Invalid end time: end time must be greater than start time";
 
 DateTimeParser::DateTimeParser(void) {
-	// Load configuration from file
-	el::Configurations conf("logging.conf");
-
 	_day = 0;
 	_month = 0;
 	_year = 0;
@@ -90,7 +86,7 @@ void DateTimeParser::updateItemFields() {
 		_item.eventEndTime[1] = _endMinute;
 	}
 
-	LOG(DEBUG) << "Item values after update:";
+	LOG(INFO) << "Item values after update:";
 	_item.logItemValues();
 }
 
@@ -130,7 +126,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	resetItemDateTime();
 
 	for(int i = 0; i < arrSize; i++) {
-		LOG(DEBUG) << "Starting to extract DateTime, round: " << i;
+		LOG(INFO) << "Starting to extract DateTime, round: " << i;
 		/*
 		// throws exception if weekday is expected but not given
 		if(isNextWeek && _day == 0) {
@@ -148,29 +144,29 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 		// "next" keyword
 		if((inputArray[i] == "next") || (inputArray[i] == "nex")) {
 			isNextWeek = true;
-			LOG(DEBUG) << "NEXT";
+			LOG(INFO) << "NEXT";
 			// "-" or "to" keyword
 		} else if((inputArray[i] == "-") || (inputArray[i] == "to")) {
 			hasDash = true;
-			LOG(DEBUG) << "DASH";
+			LOG(INFO) << "DASH";
 			// weekday (e.g. Friday), start date
 		} else if(isStartDate && mapMonth(inputArray[i]) != -1) {
 			isStartDate = false;
 			isStartTime = true;
 			updateHrDayMon(mapMonth(inputArray[i]), _startHour, _day, _month, _year, _item.eventStartTime[0]);
-			LOG(DEBUG) << "MONTH";
+			LOG(INFO) << "MONTH";
 		} else if(isStartDate && (mapWeekDay(inputArray[i]) != -1)) {
 			isStartDate = false;
 			setDateFromWeekDay(mapWeekDay(inputArray[i]), _day, _month, _year);
 			if(isNextWeek) {
 				handleNextWeekDay(_day, _month, _year);
 			}
-			LOG(DEBUG) << "START WEEKDAY";
+			LOG(INFO) << "START WEEKDAY";
 			// date/month/year, start date
 		} else if(isStartDate && isDelimitedDate(inputArray[i])) {
 			isStartDate = false;
 			separateDayMonthYear(inputArray[i], _day, _month, _year);
-			LOG(DEBUG) << "START DELIMITED DATE";
+			LOG(INFO) << "START DELIMITED DATE";
 		} else if(!isStartDate && mapMonth(inputArray[i]) != -1) {
 			if(isEndTime) {
 				updateHrDayMon(mapMonth(inputArray[i]), _endHour, _endDay, _endMonth, _endYear, _item.eventEndTime[0]);
@@ -178,7 +174,7 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 				updateHrDayMon(mapMonth(inputArray[i]), _startHour, _endDay, _endMonth, _endYear, _item.eventStartTime[0]);
 			}
 			isEndTime = false;
-			LOG(DEBUG) << "MONTH";
+			LOG(INFO) << "MONTH";
 			// weekday, end date
 		} else if(!isStartDate && (mapWeekDay(inputArray[i]) != -1)) {
 			setDateFromWeekDay(mapWeekDay(inputArray[i]), _endDay, _endMonth, _endYear);
@@ -186,35 +182,35 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 				handleNextWeekDay(_endDay, _endMonth, _endYear);
 				handleImplicitNext(_day, _month, _year, _endDay, _endMonth, _endYear);
 			}
-			LOG(DEBUG) << "END WEEKDAY";
+			LOG(INFO) << "END WEEKDAY";
 			// date/month/year, end date
 		} else if(!isStartDate && isDelimitedDate(inputArray[i])) {
 			separateDayMonthYear(inputArray[i], _endDay, _endMonth, _endYear);
-			LOG(DEBUG) << "END DELIMITED DATE";
+			LOG(INFO) << "END DELIMITED DATE";
 			// start time
 		} else if(isStartTime && isPossibleTime(inputArray[i])) {
 			isStartTime = false;
 			separateHourMinute(inputArray[i], _startHour, _startMinute);
-			LOG(DEBUG) << "START TIME";
+			LOG(INFO) << "START TIME";
 			// end time
 		} else if(!isStartTime && hasDash && isPossibleTime(inputArray[i])) {
 			isEndTime = true;
 			separateHourMinute(inputArray[i], _endHour, _endMinute);
-			LOG(DEBUG) << "END TIME";
+			LOG(INFO) << "END TIME";
 			// duration entered instead of end time
 		} else if(!isStartTime && !hasDash && (convertStringToInteger(inputArray[i]) > 0)) {
 			isEndTime = true;
 			int duration = convertStringToInteger(inputArray[i]);
 			_startHour == 24 ? _endHour = 1 : _endHour = _startHour + duration;
 			_endMinute = _startMinute;
-			LOG(DEBUG) << "DURATION ADDED FROM START";
+			LOG(INFO) << "DURATION ADDED FROM START";
 			// "m", "p", or "pm" keywords
 		} else if(!isEndTime && is12Hour(inputArray[i], _startHour)) {
-			LOG(DEBUG) << "PM OR M, Start Hour";
+			LOG(INFO) << "PM OR M, Start Hour";
 		} else if(is12Hour(inputArray[i], _endHour)) {
-			LOG(DEBUG) << "PM OR M, End Hour";
+			LOG(INFO) << "PM OR M, End Hour";
 		}
-		LOG(DEBUG) << "********************************************";
+		LOG(INFO) << "********************************************";
 
 		//try {
 		/*} catch(exception &e) {
