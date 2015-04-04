@@ -1,5 +1,6 @@
 //@author A0111951N
 #include "Parser.h"
+#include "easylogging++.h"
 
 const string Parser::ERROR_NO_LINE_NUMBER = "No line number specified!";
 const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!";
@@ -78,13 +79,10 @@ void Parser::extractUserCommand() {
 size_t Parser::findDateKeyWord(string inputLine, string delimiter) {
 	size_t dateStart = (inputLine.rfind(delimiter));
 	string temp;
+	bool isDate = false;
 	if(dateStart != string::npos) {
 		string line = convertStringToLowerCase(inputLine);
-		if(inputLine[--dateStart] == 'm') { //if mon or monday
-			string temp = inputLine.substr(0, dateStart);
-			dateStart = temp.rfind(delimiter);
-		}
-		if((dateStart != string::npos) && isCorrectDateDelimiter(line, dateStart)) {
+		if(isCorrectDateDelimiter(line, dateStart)) {
 			return dateStart;
 		}
 	}

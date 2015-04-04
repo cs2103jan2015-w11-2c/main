@@ -62,13 +62,13 @@ public:
 	bool isFileEmpty(string);
 
 	//get pre-set filepath and filename from config file
-	void getFileConfigDEBUG();
+	void getFileConfigInfo();
 
 	//initializes the filename and filepath if not previously set
 	void initializeFileConfig();
 
 	//update any filepath or filename changes into config file
-	void updateFileConfigDEBUG();
+	void updateFileConfigInfo();
 
 	//returns the directory of the program
 	string programFilePath();
