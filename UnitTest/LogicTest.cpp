@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-
+//parser.cpp test
 namespace UnitTest {
 	TEST_CLASS(ParserTest) {
 public:
@@ -81,40 +81,145 @@ public:
 
 
 		std::vector<string> testVect = parse.getFragmentedEvent();
-		
+
 		string expectedOut1 = "meet friends at school";
 		Assert::AreEqual(expectedOut1, testVect[0]);
-		
+
 		string expectedOut2 = "friends at school";
 		Assert::AreEqual(expectedOut2, testVect[1]);
-		
+
 		string expectedOut3 = "at school";
 		Assert::AreEqual(expectedOut3, testVect[2]);
-		
+
 		string expectedOut4 = "school";
 		Assert::AreEqual(expectedOut4, testVect[3]);
 
 		string expectedOut5 = "Wednesday";
 		Assert::AreEqual(expectedOut5, testVect[4]);
-		
+
 		string expectedOut6 = "1";
 		Assert::AreEqual(expectedOut6, testVect[5]);
-		
+
 		string expectedOut7 = "4";
 		Assert::AreEqual(expectedOut7, testVect[6]);
-		
+
 		string expectedOut8 = "April";
 		Assert::AreEqual(expectedOut8, testVect[7]);
-		
+
 		string expectedOut9 = "2015";
 		Assert::AreEqual(expectedOut9, testVect[8]);
 
 		string expectedOut10 = "5:25";
 		Assert::AreEqual(expectedOut10, testVect[9]);
-		
+
 		string expectedOut11 = "7:20";
 		Assert::AreEqual(expectedOut11, testVect[10]);
-		
+
+	}
+
+	TEST_METHOD(isDateKeywordTest) {
+		Parser parse;
+
+		bool isExpectedBool = true;	
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("tuesday"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("mon"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("on"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("from"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("-"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("today"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("tomorrow"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("next"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("pm"));
+
+	}
+
+	TEST_METHOD(checkIsFloatingTest) {
+		string inputString1 = "meet friends on 1/4/2015 17:25 - 19:20";
+		Item item;
+		Parser parse;
+		parse.setStringToParse(inputString1);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		bool isExpectedFloating = false;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+
+		string inputString2 = "meet friends on 1/4 17:25 - 19:20";
+		parse.setStringToParse(inputString2);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		isExpectedFloating = false;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+
+		string inputString3 = "meet friends on 5/4 17:25";
+		parse.setStringToParse(inputString3);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		isExpectedFloating = false;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+
+		string inputString4 = "meet friends on 1/4";
+		parse.setStringToParse(inputString4);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		isExpectedFloating = false;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+
+		string inputString5 = "meet friends on saturday 19";
+		parse.setStringToParse(inputString5);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		isExpectedFloating = false;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+
+		string inputString6 = "meet friends on /4 17:25";
+		parse.setStringToParse(inputString6);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		isExpectedFloating = true;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+
+		string inputString7 = "meet friends";
+		parse.setStringToParse(inputString7);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		isExpectedFloating = true;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+
+		string inputString8 = "meet friends 17:25 - 19";
+		parse.setStringToParse(inputString8);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		isExpectedFloating = true;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+
+	}
+
+	TEST_METHOD(clearStartAndEndDateTest){
+		string inputString1 = "meet friends from 1/4/2015 - 5/4/2015";
+		Item item;
+		Parser parse;
+		parse.setStringToParse(inputString1);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		parse.clearStartAndEndDate(item);
+		for (int i = 0; i < 3; i++) {
+			Assert::AreEqual(0,item.eventDate[i]);
+			Assert::AreEqual(0,item.eventEndDate[i]);
+		}
+
+		string inputString2 = "meet friends from sun - 17/4";
+		parse.setStringToParse(inputString2);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		parse.clearStartAndEndDate(item);
+		for (int i = 0; i < 3; i++) {
+			Assert::AreEqual(0,item.eventDate[i]);
+			Assert::AreEqual(0,item.eventEndDate[i]);
+		}
+	}
+
+	TEST_METHOD(extractSearchQueryTest){
+		//to be entered later
 	}
 
 	};
@@ -719,6 +824,102 @@ public:
 		int expected = -1;
 		Assert::AreEqual(expected,parse.mapMonth(test1));
 		Assert::AreEqual(expected,parse.mapMonth(test2));
+	}
+	TEST_METHOD(setDateFromWeekDayTest) {
+		DateTimeParser parse;
+		int day;
+		int month;
+		int year;
+		//test for a weekday on the same week
+		int expectedDay = 5;
+		int expectedMonth = 4;
+		int expectedYear = 2015;
+		parse.setDateFromWeekDay(7, day, month, year);
+		Assert::AreEqual(expectedDay,day);
+		Assert::AreEqual(expectedMonth,month);
+		Assert::AreEqual(expectedYear,year);
+
+		//test for a weekday on the next week
+		expectedDay = 9;
+		expectedMonth = 4;
+		expectedYear = 2015;
+		parse.setDateFromWeekDay(4, day, month, year);
+		Assert::AreEqual(expectedDay,day);
+		Assert::AreEqual(expectedMonth,month);
+		Assert::AreEqual(expectedYear,year);
+	}
+
+	TEST_METHOD(handleDayOverflowTest) {
+		DateTimeParser parse;
+		//test for the case where month increment by 1, when the month has 30 days
+		int day = 33;
+		int month = 4;
+		int year =2015;
+		int expectedDay = 3;
+		int expectedMonth = 5;
+		int expectedYear = 2015;
+		parse.handleDayOverflow(day, month, year);
+		Assert::AreEqual(expectedDay,day);
+		Assert::AreEqual(expectedMonth,month);
+		Assert::AreEqual(expectedYear,year);
+
+		//test for the case where month increment by 1,when the month has 31 days
+		day = 35;
+		month = 7;
+		year =2015;
+		expectedDay = 4;
+		expectedMonth = 8;
+		expectedYear = 2015;
+		parse.handleDayOverflow(day, month, year);
+		Assert::AreEqual(expectedDay,day);
+		Assert::AreEqual(expectedMonth,month);
+		Assert::AreEqual(expectedYear,year);
+		
+		//test for the case when it's Feburary in leap year
+	    day = 30;
+		month = 2;
+		year = 2016;
+		expectedDay = 1;
+		expectedMonth = 3;
+		expectedYear = 2016;
+		parse.handleDayOverflow(day, month, year);
+		Assert::AreEqual(expectedDay,day);
+		Assert::AreEqual(expectedMonth,month);
+		Assert::AreEqual(expectedYear,year);
+
+		//test for the case when it's Feburary in non-leap-year
+	    day = 30;
+		month = 2;
+		year = 2015;
+		expectedDay = 2;
+		expectedMonth = 3;
+		expectedYear = 2015;
+		parse.handleDayOverflow(day, month, year);
+		Assert::AreEqual(expectedDay,day);
+		Assert::AreEqual(expectedMonth,month);
+		Assert::AreEqual(expectedYear,year);
+
+        //test for the case where year increment by 1
+	    day = 35;
+		month = 12;
+		year =2015;
+		expectedDay = 4;
+		expectedMonth = 1;
+		expectedYear = 2016;
+		parse.handleDayOverflow(day, month, year);
+		Assert::AreEqual(expectedDay,day);
+		Assert::AreEqual(expectedMonth,month);
+		Assert::AreEqual(expectedYear,year);
+
+	}
+	TEST_METHOD(handleImplicitNextTest) {
+		DateTimeParser parse;
+		int startDay,
+	int startMonth, 
+	int startYear,
+	int endDay,
+	int endMonth,
+	int endYear
 	}
 
 	};

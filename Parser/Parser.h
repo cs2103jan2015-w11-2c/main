@@ -19,7 +19,7 @@ const string DATE_KEYWORDS[]= {"monday", "tuesday", "wednesday", "thursday", "fr
 						"january", "february", "march", "april", "may", "june", "july",
 						"august", "september", "october", "november", "december",
 						"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", 
-						"oct", "nov", "dec", "today", "floating", "float", "tomorrow", "tom",
+						"oct", "nov", "dec", "today", "floating", "float", "tomorrow", "tom","tmr",
 						"from", "on", "to", "-", "next", "nex", "p", "pm", "m"};
 
 class Parser {
