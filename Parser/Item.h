@@ -30,11 +30,15 @@ public:
 
 	int getHour(int hour);
 
+	string get24HrHour(int hour);
+
 	string getMinute(int minute);
 
 	string get24HrMinute(int minute);
 
 	string getPM(int hour);
+
+	string startDateToString();
 
 	string endDateToString();
 
