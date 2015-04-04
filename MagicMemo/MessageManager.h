@@ -16,11 +16,14 @@ using namespace System::Drawing;
 struct HIGHLIGHT {
 	int index;
 	int length;
+	//clash or expired
+	string special;
 };
 
 ref class MessageManager {
 private:
 	static String^ LABEL_IS_SEARCH = "Search Results";
+	static String^ LABEL_IS_HELP = "Help";
 	static String^ LABEL_ALL_TASKS = "Other Tasks";
 
 

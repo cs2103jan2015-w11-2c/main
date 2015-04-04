@@ -137,6 +137,8 @@ public:
 
 	void redo();
 
+	//command stored in date field
+	//description stored in event field
 	void getHelp();
 
 	vector<RESULT> getTodayResult();
