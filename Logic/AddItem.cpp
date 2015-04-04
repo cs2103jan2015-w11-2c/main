@@ -40,7 +40,7 @@ public:
 		vectorStore.push_back(_input);
 
 		char buffer[1000];
-		sprintf_s(buffer, SUCCESS_ADDED.c_str(), _input.toString().c_str());
+		sprintf_s(buffer, SUCCESS_ADDED.c_str(), _input.event.c_str());
 		_message = buffer;
 	}
 
