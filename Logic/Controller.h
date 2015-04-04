@@ -39,6 +39,8 @@ private:
 	//for option to allow widening of display
 	bool _isWide;
 
+	bool _is12HourFormat;
+
 public:
 	Controller(void);
 
@@ -53,6 +55,14 @@ public:
 	void setSuccessMessage(string);
 
 	void initializeVector();
+
+	long getTimePos(const int [3], const int [2]);
+
+	bool checkIsClash(const Item, const Item);
+
+	bool checkIsDeadline(const Item);
+
+	bool checkIsExpired(const Item);
 
 	void generateResults(vector<Item>);
 
@@ -74,7 +84,7 @@ public:
 
 	void sortAlphabetical();
 
-	void search(Item);
+	void search(Item, string);
 
 	bool isSearch();
 
@@ -111,9 +121,13 @@ public:
 
 	void chronoSort(vector<Item>&);
 
-	void addToInputBank(const string);
+	void addToInputBank();
 
 	vector<string> getInputBank();
+
+	void setClockTo12Hour();
+
+	void setClockTo24Hour();
 
 	~Controller(void);
 };

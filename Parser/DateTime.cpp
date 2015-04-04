@@ -18,6 +18,10 @@ int DateTime::getCurrentYear() {
 	return (1900 + _today.tm_year);
 }
 
+int DateTime::getCurrentIntWeekDay() {
+	return _today.tm_wday;
+}
+
 string DateTime::getCurrentWeekDay() {
 	return (WEEKDAY[_today.tm_wday]);
 }

@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <map>
 #include "Item.h"
-#include "easylogging++.h"
+#include "../EasyLoggingpp/easylogging++.h"
 #include "DateTimeParser.h"
 
 using namespace std;
@@ -26,6 +26,7 @@ class Parser {
 private:
 	static const string ERROR_NO_LINE_NUMBER;
 	static const string ERROR_INVALID_LINE_NUMBER;
+	static const string STRING_FLOATING;
 
 	Item _item;
 	DateTimeParser _splitDateTime;
@@ -73,6 +74,12 @@ public:
 	string convertStringToLowerCase(string inputString);
 
 	vector<string> getFragmentedEvent();
+
+	bool checkIsFloating(const Item);
+
+	void clearStartAndEndDate(Item &);
+
+	void extractSearchQuery(Item &);
 
 	~Parser(void);
 };
