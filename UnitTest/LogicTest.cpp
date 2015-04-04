@@ -226,158 +226,47 @@ public:
 
 	TEST_CLASS(DateTimeParserTest) {
 public:
-	TEST_METHOD(separateDayMonthYearTest) {
+	/* boundary test for end time less than start time */
+	TEST_METHOD(updateItemDateTest) {
+		string inputString = "12/3/15 6 p - 5:59 p";
+		Item item;
 		DateTimeParser parse;
-		int expected;
-		int day;
-		int month;
-		int year;
-
-		parse.separateDayMonthYear("12/04/15", day, month, year);
-
-		expected = 12;
-		Assert::AreEqual(expected, day);
-		expected = 4;
-		Assert::AreEqual(expected, month);
-		expected = 15;
-		Assert::AreEqual(expected, year);
-
-
-		parse.separateDayMonthYear("22_05", day, month, year);
-		expected = 22;
-		Assert::AreEqual(expected, day);
-		expected = 5;
-		Assert::AreEqual(expected, month);
-		expected = 2015;
-		Assert::AreEqual(expected, year);
-
-
-	}
-
-	TEST_METHOD(separateHourMinuteTest) {
-		DateTimeParser parse;
-		int expected;
-		int hour;
-		int minute;
-
-		parse.separateHourMinute("2:30", hour, minute);
-
-		expected = 2;
-		Assert::AreEqual(expected, hour);
-		expected = 30;
-		Assert::AreEqual(expected, minute);
-
-		parse.separateHourMinute("4", hour, minute);
-
-		expected = 4;
-		Assert::AreEqual(expected, hour);
-		expected = 0;
-		Assert::AreEqual(expected, minute);
-
-	}
-
-	TEST_METHOD(VerifyItemTimeTest) {
-		DateTimeParser parse;
-		int expected;
-		int day = 20;
-		int month = 3;
-		int year = 15;
-
-		parse.verifyItemDate(day, month, year);
-
-		expected = 20;
-		Assert::AreEqual(expected, day);
-		expected = 3;
-		Assert::AreEqual(expected, month);
-		expected = 2015;
-		Assert::AreEqual(expected, year);
-
-		day = 0;
-		month = 13;
-		year = 15;
 
 		try {
-			parse.verifyItemDate(day, month, year);
-		} catch (const out_of_range& e) {
-			e;
-		}
-		expected = 0;
-		Assert::AreEqual(expected, day);
-		expected = 0;
-		Assert::AreEqual(expected, month);
-		expected = 0;
-		Assert::AreEqual(expected, year);
-	}
-
-	TEST_METHOD(VerifyItemDateTest) {
-		DateTimeParser parse;
-		int expected;
-		int hour = 26;
-		int minute = 67;
-
-		try {
-			parse.verifyItemTime(hour, minute);
-		} catch (const out_of_range& e) {
+			parse.updateItemDateTime(inputString, item);
+		} catch (const out_of_range& e) {	
 			e;
 		}
 
-		expected = 0;
-		Assert::AreEqual(expected, hour);
-		expected = 0;
-		Assert::AreEqual(expected, minute);
+		int expectedDay = 12;
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = 3;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
 
+		int expectedStartHour = 18;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+
+		int expectedEndHour = 0;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 	}
 
-	/* boundary condition, end time 1 minute less than start time */
-	TEST_METHOD(VerifyStartEndTimeTest) {
-		DateTimeParser parse;
-		int expected;
+	TEST_METHOD(resetDateTimeTest) {}
 
-		int startHour = 14;
-		int startMinute = 0;
-		int endHour = 13;
-		int endMinute = 59;
+	TEST_METHOD(resetItemDateTimeTest) {}
 
-		int startDay = 12;
-		int startMonth = 4;
-		int startYear = 2015;
-		int endDay = 12;
-		int endMonth = 4;
-		int endYear = 2015;
+	TEST_METHOD(updateItemFieldsTest) {}
 
-		try {
-			parse.verifyStartEnd(
-				startHour,
-				startMinute, 
-				endHour, 
-				endMinute,
-				startDay,
-				startMonth,
-				startYear,
-				endDay,
-				endMonth,
-				endYear);
-		} catch (const out_of_range& e) {
-			e;
-		}
+	TEST_METHOD(setDateTest) {}
 
-		expected = 0;
-		Assert::AreEqual(expected, endHour);
-		expected = 0;
-		Assert::AreEqual(expected, endMinute);
+	TEST_METHOD(findDtaeDelimetersTest) {}
 
-	}
-
-	TEST_METHOD(is12HourTest) {
-		DateTimeParser parse;
-		int expected;
-		int hour = 3;
-
-		parse.is12Hour("pm", hour);
-
-		expected = 15;
-		Assert::AreEqual(expected, hour);
-	}
+	TEST_METHOD(calculateDateTimeTest) {}
 
 	TEST_METHOD(extractDateTimeTest1) {
 		string inputArray[] = {"12/3/2015"}; 
@@ -673,38 +562,6 @@ public:
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 	}
 
-
-
-	/* boundary test for end time less than start time */
-	TEST_METHOD(updateItemDateTest) {
-		string inputString = "12/3/15 6 p - 5:59 p";
-		Item item;
-		DateTimeParser parse;
-
-		try {
-			parse.updateItemDateTime(inputString, item);
-		} catch (const out_of_range& e) {	
-			e;
-		}
-
-		int expectedDay = 12;
-		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
-		int expectedMonth = 3;
-		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
-		int expectedYear = 2015;
-		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
-
-		int expectedStartHour = 18;
-		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
-		int expectedStartMinute = 0;
-		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
-
-		int expectedEndHour = 0;
-		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
-		int expectedEndMinute = 0;
-		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
-	}
-
 	TEST_METHOD(mapWeekDayTest1) {
 		DateTimeParser parse;
 		string inputThu = "thursday";
@@ -825,6 +682,8 @@ public:
 		Assert::AreEqual(expected,parse.mapMonth(test1));
 		Assert::AreEqual(expected,parse.mapMonth(test2));
 	}
+
+
 	TEST_METHOD(setDateFromWeekDayTest) {
 		DateTimeParser parse;
 		int day;
@@ -848,6 +707,23 @@ public:
 		Assert::AreEqual(expectedMonth,month);
 		Assert::AreEqual(expectedYear,year);
 	}
+
+
+	TEST_METHOD(handleNextWeekDayTest) {
+		DateTimeParser parse;
+		int day = 20;
+		int month = 4;
+		int year = 2015;
+		int expectedDay = 27;
+		int expectedMonth = 4;
+		int expectedYear = 2015;
+
+		parse.handleNextWeekDay(day, month, year);
+		Assert::AreEqual(expectedDay,day);
+		Assert::AreEqual(expectedMonth,month);
+		Assert::AreEqual(expectedYear,year);
+	}
+
 
 	TEST_METHOD(handleDayOverflowTest) {
 		DateTimeParser parse;
@@ -874,9 +750,9 @@ public:
 		Assert::AreEqual(expectedDay,day);
 		Assert::AreEqual(expectedMonth,month);
 		Assert::AreEqual(expectedYear,year);
-		
+
 		//test for the case when it's Feburary in leap year
-	    day = 30;
+		day = 30;
 		month = 2;
 		year = 2016;
 		expectedDay = 1;
@@ -888,7 +764,7 @@ public:
 		Assert::AreEqual(expectedYear,year);
 
 		//test for the case when it's Feburary in non-leap-year
-	    day = 30;
+		day = 30;
 		month = 2;
 		year = 2015;
 		expectedDay = 2;
@@ -899,8 +775,8 @@ public:
 		Assert::AreEqual(expectedMonth,month);
 		Assert::AreEqual(expectedYear,year);
 
-        //test for the case where year increment by 1
-	    day = 35;
+		//test for the case where year increment by 1
+		day = 35;
 		month = 12;
 		year =2015;
 		expectedDay = 4;
@@ -914,12 +790,277 @@ public:
 	}
 	TEST_METHOD(handleImplicitNextTest) {
 		DateTimeParser parse;
-		int startDay,
-	int startMonth, 
-	int startYear,
-	int endDay,
-	int endMonth,
-	int endYear
+		int startDay = 18;
+		int startMonth = 4 ; 
+		int startYear = 2015;
+		int endDay = 15;
+		int endMonth = 4;
+		int endYear = 2015;
+
+		int expectedEndDay = 22;
+		int expectedEndMonth = 4;
+		int expectedEndYear = 2015;
+		parse.handleImplicitNext(startDay, startMonth, startYear, endDay, endMonth, endYear);
+		Assert::AreEqual(expectedEndDay, endDay);
+		Assert::AreEqual(expectedEndMonth, endMonth);
+		Assert::AreEqual(expectedEndYear, endYear);
+
+		startDay = 31;
+		startMonth = 4 ; 
+		startYear = 2015;
+		endDay = 27;
+		endMonth = 4;
+		endYear = 2015;
+
+		expectedEndDay = 4;
+		expectedEndMonth = 5;
+		expectedEndYear = 2015;
+		parse.handleImplicitNext(startDay, startMonth, startYear, endDay, endMonth, endYear);
+		Assert::AreEqual(expectedEndDay, endDay);
+		Assert::AreEqual(expectedEndMonth, endMonth);
+		Assert::AreEqual(expectedEndYear, endYear);
+
+	}
+
+	TEST_METHOD(updateHrDayMonTest) {
+		DateTimeParser parse;
+		int monthNum = 4;
+		int hour = 7;
+		int day;
+		int month;
+		int year;
+		int itemHour;
+		int expectedHour = 0;
+		int expectedDay = 7;
+		int expectedMonth = 4;
+		int expectedYear = 2015;
+		int expectedItemHour = 0;
+
+		parse.updateHrDayMon(monthNum, hour, day, month, year, itemHour);
+		Assert::AreEqual(expectedHour, hour);
+		Assert::AreEqual(expectedDay, day);
+		Assert::AreEqual(expectedMonth, month);
+		Assert::AreEqual(expectedYear, year);
+		Assert::AreEqual(expectedItemHour, itemHour);
+
+	}
+
+	TEST_METHOD(isDelimitedDateTest) {
+		DateTimeParser parse;
+		bool isExpectedDelimited = true;
+		string input = "have lunch with Ann on 19/4/2015";
+		parse.isDelimitedDate(input);
+		Assert::AreEqual(isExpectedDelimited, parse.isDelimitedDate(input));
+
+
+		isExpectedDelimited = true;
+		input = "have lunch with Ann on 25/5";
+		parse.isDelimitedDate(input);
+		Assert::AreEqual(isExpectedDelimited, parse.isDelimitedDate(input));
+
+		isExpectedDelimited = false;
+		input = "have lunch with Ann";
+		parse.isDelimitedDate(input);
+		Assert::AreEqual(isExpectedDelimited, parse.isDelimitedDate(input));
+
+
+		isExpectedDelimited = false;
+		input = "have lunch with Ann on sunday";
+		parse.isDelimitedDate(input);
+		Assert::AreEqual(isExpectedDelimited, parse.isDelimitedDate(input));
+	}
+
+	TEST_METHOD(isPossibleTimeTest) {
+		DateTimeParser parse;
+		bool isExpectedPossible = true;
+		string input = "19:00 - 20:00";
+		parse.isDelimitedDate(input);
+		Assert::AreEqual(isExpectedPossible, parse.isPossibleTime(input));
+
+		isExpectedPossible = true;
+		input = "5p";
+		parse.isDelimitedDate(input);
+		Assert::AreEqual(isExpectedPossible, parse.isPossibleTime(input));
+
+		isExpectedPossible = false;
+		input = "dinner";
+		parse.isDelimitedDate(input);
+		Assert::AreEqual(isExpectedPossible, parse.isPossibleTime(input));
+
+		isExpectedPossible = false;
+		input = "sunday morning 7:00";
+		parse.isDelimitedDate(input);
+		Assert::AreEqual(isExpectedPossible, parse.isPossibleTime(input));
+	}
+
+	
+	TEST_METHOD(is12HourTest) {
+		DateTimeParser parse;
+		int expected;
+		int hour = 3;
+
+		parse.is12Hour("pm", hour);
+
+		expected = 15;
+		Assert::AreEqual(expected, hour);
+	}
+
+
+	TEST_METHOD(separateDayMonthYearTest) {
+		DateTimeParser parse;
+		int expected;
+		int day;
+		int month;
+		int year;
+
+		parse.separateDayMonthYear("12/04/15", day, month, year);
+
+		expected = 12;
+		Assert::AreEqual(expected, day);
+		expected = 4;
+		Assert::AreEqual(expected, month);
+		expected = 15;
+		Assert::AreEqual(expected, year);
+
+
+		parse.separateDayMonthYear("22_05", day, month, year);
+		expected = 22;
+		Assert::AreEqual(expected, day);
+		expected = 5;
+		Assert::AreEqual(expected, month);
+		expected = 2015;
+		Assert::AreEqual(expected, year);
+
+
+	}
+
+	TEST_METHOD(separateHourMinuteTest) {
+		DateTimeParser parse;
+		int expected;
+		int hour;
+		int minute;
+
+		parse.separateHourMinute("2:30", hour, minute);
+
+		expected = 2;
+		Assert::AreEqual(expected, hour);
+		expected = 30;
+		Assert::AreEqual(expected, minute);
+
+		parse.separateHourMinute("4", hour, minute);
+
+		expected = 4;
+		Assert::AreEqual(expected, hour);
+		expected = 0;
+		Assert::AreEqual(expected, minute);
+
+	}
+
+	TEST_METHOD(VerifyAllDateTimeTest) {
+	}
+
+	TEST_METHOD(VerifyItemTimeTest) {
+		DateTimeParser parse;
+		int expected;
+		int day = 20;
+		int month = 3;
+		int year = 15;
+
+		parse.verifyItemDate(day, month, year);
+
+		expected = 20;
+		Assert::AreEqual(expected, day);
+		expected = 3;
+		Assert::AreEqual(expected, month);
+		expected = 2015;
+		Assert::AreEqual(expected, year);
+
+		day = 0;
+		month = 13;
+		year = 15;
+
+		try {
+			parse.verifyItemDate(day, month, year);
+		} catch (const out_of_range& e) {
+			e;
+		}
+		expected = 0;
+		Assert::AreEqual(expected, day);
+		expected = 0;
+		Assert::AreEqual(expected, month);
+		expected = 0;
+		Assert::AreEqual(expected, year);
+	}
+
+	TEST_METHOD(VerifyItemStartDateTest) {}
+
+	TEST_METHOD(VerifyItemDateTest) {
+		DateTimeParser parse;
+		int expected;
+		int hour = 26;
+		int minute = 67;
+
+		try {
+			parse.verifyItemTime(hour, minute);
+		} catch (const out_of_range& e) {
+			e;
+		}
+
+		expected = 0;
+		Assert::AreEqual(expected, hour);
+		expected = 0;
+		Assert::AreEqual(expected, minute);
+
+	}
+
+	/* boundary condition, end time 1 minute less than start time */
+	TEST_METHOD(VerifyStartEndTimeTest) {
+		DateTimeParser parse;
+		int expected;
+
+		int startHour = 14;
+		int startMinute = 0;
+		int endHour = 13;
+		int endMinute = 59;
+
+		int startDay = 12;
+		int startMonth = 4;
+		int startYear = 2015;
+		int endDay = 12;
+		int endMonth = 4;
+		int endYear = 2015;
+
+		try {
+			parse.verifyStartEnd(
+				startHour,
+				startMinute, 
+				endHour, 
+				endMinute,
+				startDay,
+				startMonth,
+				startYear,
+				endDay,
+				endMonth,
+				endYear);
+		} catch (const out_of_range& e) {
+			e;
+		}
+
+		expected = 0;
+		Assert::AreEqual(expected, endHour);
+		expected = 0;
+		Assert::AreEqual(expected, endMinute);
+
+	}
+
+
+
+
+	
+
+
+	TEST_METHOD(getWeekDayTest) {
+
 	}
 
 	};
