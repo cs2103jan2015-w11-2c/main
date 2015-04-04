@@ -39,12 +39,6 @@ int Item::getHour(int hour) {
 	}
 }
 
-string Item::getDateDuration() {
-	int startDate = itemDate.rataDieConvert(eventDate[0], eventDate[1], eventDate[2]);
-	int endDate = itemDate.rataDieConvert(eventEndDate[0], eventEndDate[1], eventEndDate[2]);
-	return to_string(endDate - startDate);
-}
-
 string Item::getMinute(int minute) {
 	if(minute == 0) {
 		return "";
@@ -88,7 +82,7 @@ string Item::dateToString() {
 
 string Item::endDateToString() {
 	if((eventEndDate[0] == 0) && (eventEndDate[1] == 0) && (eventEndDate[1] == 0)) {
-		return MESSAGE_UNDATED_TASK;
+		return "";
 	} else {
 		ostringstream oss;
 		oss << eventEndDate[0] << "/" << eventEndDate[1] << "/" << eventEndDate[2];
@@ -131,14 +125,6 @@ string Item::timeTo24HrString() {
 		oss << "]";
 
 		return oss.str();
-	}
-}
-
-string Item::durationToString() {
-	if(getDateDuration() != "0") {
-		return ("[+" + getDateDuration() + "]");
-	} else {
-		return "";
 	}
 }
 

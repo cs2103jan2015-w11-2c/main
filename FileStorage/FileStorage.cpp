@@ -14,7 +14,7 @@ FileStorage::FileStorage(void) {
 	fullFileName = getFullFileName();
 }
 
-//@author YIWEI
+//@author A0115452N
 FileStorage*FileStorage::theOne=nullptr;
 
 FileStorage*FileStorage::getInstance(){
@@ -93,7 +93,6 @@ void FileStorage::addLineToArchive(Item item) {
 	addLine(item, archiveFileName);
 }
 
-//@author A0111951N
 void FileStorage::addLine(Item item, const string& fileName) {
 	fstream outFile;
 	ostringstream out;
@@ -123,6 +122,7 @@ void FileStorage::addLine(Item item, const string& fileName) {
 	outFile.close();
 }
 
+//@author A0111951N
 bool FileStorage::clearFile() {
 	fstream outFile;
 	outFile.open(getFullFileName(), fstream::out | fstream::trunc);

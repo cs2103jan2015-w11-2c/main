@@ -442,7 +442,6 @@ void DateTimeParser::verifyAllDateTime() {
 	verifyItemTime(_item.eventStartTime[0], _item.eventStartTime[1]);
 	verifyItemTime(_item.eventEndTime[0], _item.eventEndTime[1]);
 	updateItemStartDate();
-	updateItemEndDate();
 	verifyStartEnd(
 		_item.eventStartTime[0], 
 		_item.eventStartTime[1], 
@@ -476,14 +475,6 @@ void DateTimeParser::updateItemStartDate() {
 		_item.eventDate[0] = _dateTime.getCurrentDay();
 		_item.eventDate[1] = _dateTime.getCurrentMonth();
 		_item.eventDate[2] = _dateTime.getCurrentYear();
-	}
-}
-
-void DateTimeParser::updateItemEndDate() {
-	if((_item.eventEndDate[0] == 0) && (_item.eventEndDate[1] == 0) && (_item.eventEndDate[2] == 0)) {
-		_item.eventEndDate[0] = _item.eventDate[0];
-		_item.eventEndDate[1] = _item.eventDate[1];
-		_item.eventEndDate[2] = _item.eventDate[2];
 	}
 }
 

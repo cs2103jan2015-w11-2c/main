@@ -30,9 +30,6 @@ public:
 
 	int getHour(int hour);
 
-	// returns the number of days between start and end date
-	string getDateDuration();
-
 	string getMinute(int minute);
 
 	string get24HrMinute(int minute);
@@ -46,8 +43,6 @@ public:
 	string timeToString();
 
 	string timeTo24HrString();
-
-	string durationToString();
 
 	string toString();
 
