@@ -252,6 +252,45 @@ bool Parser::checkIsFloating(const Item item) {
 		}
 	}
 	return true;
+<<<<<<< HEAD
+=======
+}
+
+void Parser::clearStartAndEndDate(Item &item) {
+	for (int i = 0; i < 3; i++) {
+		item.eventDate[i] = 0;
+	}
+	for (int i = 0; i < 3; i++) {
+		item.eventEndDate[i] = 0;
+	}
+}
+
+void Parser::extractSearchQuery(Item &item) {
+	Item temp = item;
+
+	if(checkIsFloating(temp)) {
+		DateTimeParser dateTimeParser;
+
+		string itemEvent = temp.event;
+		if (itemEvent != STRING_FLOATING) {
+			itemEvent = convertStringToLowerCase(itemEvent);
+			dateTimeParser.updateItemDateTime(itemEvent, temp);
+			
+			if (dateTimeParser.getUpdateDateFlag() || dateTimeParser.getUpdateTimeFlag()) {
+				temp.event = "";
+			}
+			if (!dateTimeParser.getUpdateDateFlag()) {
+				clearStartAndEndDate(temp);
+			}
+		} else {
+			temp.initializeItem();
+		}
+		item = temp;
+	}
+}
+
+Parser::~Parser(void) {
+>>>>>>> master
 }
 
 void Parser::clearStartAndEndDate(Item &item) {

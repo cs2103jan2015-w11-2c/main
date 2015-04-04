@@ -111,19 +111,123 @@ void Controller::initializeVector() {
 	_vectorStore = _outputFile->getAllFileData();
 }
 
+long Controller::getTimePos(const int date[3], const int time[2]) {
+	long timePos = 0;
+
+	timePos += date[2];
+	timePos *= 12;
+	timePos += date[1];
+	timePos *= 31;
+	timePos += date[0];
+	timePos *= 24;
+	timePos += time[1];
+	timePos *= 60;
+	timePos += time[0];
+
+	return timePos;
+}
+
+bool Controller::checkIsClash(const Item item1, const Item item2) {
+	long startTimePos1 = getTimePos(item1.eventDate, item1.eventStartTime);
+	long endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventEndTime);
+	long startTimePos2 = getTimePos(item2.eventDate, item2.eventStartTime);
+	long endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
+	bool isDeadline1 = checkIsDeadline(item1);
+	bool isDeadline2 = checkIsDeadline(item2);
+	
+	if (isDeadline1 && isDeadline2) {
+		if (startTimePos1 != startTimePos2) {
+			return false;
+		}
+		return true;
+	} else if (isDeadline1) {
+		if (startTimePos1 <= startTimePos2 || startTimePos1 >= endTimePos2) {
+			return false;
+		} 
+		return true;
+	} else if (isDeadline2) {
+		if (startTimePos2 <= startTimePos1 || startTimePos2 >= endTimePos1) {
+			return false;
+		} 
+		return true;
+	}
+
+	if (endTimePos2 <= startTimePos1) {
+		return false;
+	}
+	if (endTimePos1 <= startTimePos2) {
+		return false;
+	}
+	return true;
+}
+
+bool Controller::checkIsDeadline(const Item item) {
+	for (int i = 0; i < 2; i++) {
+		if (item.eventEndTime[i] != 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool Controller::checkIsExpired(const Item item) {
+	DateTime dateTime;
+
+	if (item.eventDate[2] < dateTime.getCurrentYear()) {
+		return true;
+	} else if (item.eventDate[2] == dateTime.getCurrentYear()) {
+		if (item.eventDate[1] < dateTime.getCurrentMonth()) {
+			return true;
+		} else if (item.eventDate[1] == dateTime.getCurrentMonth()) {
+			if (item.eventDate[0] < dateTime.getCurrentDay()) {
+				return true;
+			} else if (item.eventDate[0] == dateTime.getCurrentDay()) {
+				if (item.eventStartTime[0] < dateTime.getCurrentHour()) {
+					return true;
+				} else if (item.eventStartTime[0] == dateTime.getCurrentHour()) {
+					if (item.eventStartTime[1] < dateTime.getCurrentMinute()) {
+						return true;
+					} else if (item.eventStartTime[1] == dateTime.getCurrentMinute()) {
+						return false;
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
 void Controller::generateResults(vector<Item> inputVector) {
 	vector<RESULT> todayResult;
 	vector<RESULT> otherResult;
+	bool isClashed = false;
 	DateTime newDateTime;
 
 	for (unsigned int i = 0; i < inputVector.size(); i++) {
 		RESULT temp;
 
+		temp.isDeadline = checkIsDeadline(inputVector[i]);
+		if (i < inputVector.size() - 1) {
+			bool willClash = checkIsClash(inputVector[i], inputVector[i + 1]);
+			if (isClashed || willClash) {
+				temp.isClash = true;
+			} else {
+				temp.isClash = false;
+			}
+			isClashed = willClash;
+		} 
+
 		temp.lineNumber = to_string(i + 1) + ".";
 		temp.date = inputVector[i].dateToString();
 		_is12HourFormat ? temp.time = inputVector[i].timeToString() : temp.time = inputVector[i].timeTo24HrString();
+<<<<<<< HEAD
+=======
+		temp.endDate = inputVector[i].endDateToString();
+>>>>>>> master
 		temp.event = inputVector[i].event;
-		if (inputVector[i].eventDate[0] == newDateTime.getCurrentDay() &&
+		temp.isExpired = checkIsExpired(inputVector[i]);
+		if ((inputVector[i].eventDate[0] == newDateTime.getCurrentDay() ||
+			inputVector[i].eventDate[0] == newDateTime.getCurrentDay() + 1) &&
 			inputVector[i].eventDate[1] == newDateTime.getCurrentMonth() &&
 			inputVector[i].eventDate[2] == newDateTime.getCurrentYear()) {
 				todayResult.push_back(temp);
@@ -394,6 +498,13 @@ vector<string> Controller::getInputBank() {
 void Controller::setClockTo12Hour() {
 	_is12HourFormat = true;
 }
+<<<<<<< HEAD
+=======
+
+void Controller::setClockTo24Hour() {
+	_is12HourFormat = false;
+}
+>>>>>>> master
 
 void Controller::setClockTo24Hour() {
 	_is12HourFormat = false;

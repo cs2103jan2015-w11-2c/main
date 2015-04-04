@@ -78,6 +78,14 @@ public:
 	bool checkIsFloating(const Item);
 
 	void clearStartAndEndDate(Item &);
+<<<<<<< HEAD
+=======
+
+	void extractSearchQuery(Item &);
+
+	~Parser(void);
+};
+>>>>>>> master
 
 	void extractSearchQuery(Item &);
 

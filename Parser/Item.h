@@ -39,6 +39,8 @@ public:
 
 	string getPM(int hour);
 
+	string endDateToString();
+
 	string dateToString();
 
 	string timeToString();

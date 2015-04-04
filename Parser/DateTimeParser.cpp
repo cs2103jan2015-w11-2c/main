@@ -554,6 +554,12 @@ DateTimeParser::~DateTimeParser(void) {
 
 Item DateTimeParser::getItem() {
 	return _item;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+}
+=======
+>>>>>>> master
 }
 
 bool DateTimeParser::getUpdateDateFlag() {
@@ -562,4 +568,10 @@ bool DateTimeParser::getUpdateDateFlag() {
 
 bool DateTimeParser::getUpdateTimeFlag() {
 	return _updateTimeFlag;
+<<<<<<< HEAD
 }
+=======
+}
+
+>>>>>>> bb588612d8c5fc8e5a0020ec020b685752abd22e
+>>>>>>> master

@@ -56,6 +56,14 @@ public:
 
 	void initializeVector();
 
+	long getTimePos(const int [3], const int [2]);
+
+	bool checkIsClash(const Item, const Item);
+
+	bool checkIsDeadline(const Item);
+
+	bool checkIsExpired(const Item);
+
 	void generateResults(vector<Item>);
 
 	bool rewriteFile();
