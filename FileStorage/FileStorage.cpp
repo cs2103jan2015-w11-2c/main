@@ -113,6 +113,7 @@ void FileStorage::addLineToArchive(Item item) {
 	addLine(item, archiveFileName);
 }
 
+<<<<<<< HEAD
 void FileStorage::addLineToInputBank(string input) {
     Parser parse;
 	vector<string>::iterator iter;
@@ -130,6 +131,8 @@ void FileStorage::addLineToInputBank(string input) {
 }
 
 //@author A0111951N
+=======
+>>>>>>> 554a4c20a58e9de79de5ae2ada8025b08ac4161a
 void FileStorage::addLine(Item item, const string& fileName) {
 	fstream outFile;
 	ostringstream out;
@@ -159,6 +162,7 @@ void FileStorage::addLine(Item item, const string& fileName) {
 	outFile.close();
 }
 
+//@author A0111951N
 bool FileStorage::clearFile() {
 	fstream outFile;
 	outFile.open(getFullFileName(), fstream::out | fstream::trunc);

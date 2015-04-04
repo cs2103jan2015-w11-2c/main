@@ -11,6 +11,26 @@
 
 using namespace std;
 
+static const int NUM_HELP_COMMANDS = 7; 
+
+static const string HELP_COMMANDS[] = {"add xxx", 
+	"delete #", 
+	"display", 
+	"clear", 
+	"sort", 
+	"search xxx",
+	"exit"};
+
+static const string HELP_DESCRIPTION[] = {"line xxx is added to the text file with a line number",
+	"the line with the corresponding # is deleted",
+	"all data in the file is displayed",
+	"all data in the file is deleted",
+	"all data in the file is sorted alphabetically",
+	"all lines with xxx is displayed",
+	"program quits"};
+
+static const string DEADLINE_HEADER = "Deadline Events";
+
 class Controller {
 private:
 	static const string SUCCESS_FILENAME_CHANGED;
@@ -39,6 +59,8 @@ private:
 	//for option to allow widening of display
 	bool _isWide;
 
+	bool _isHelp;
+
 	bool _is12HourFormat;
 
 public:
@@ -63,6 +85,8 @@ public:
 	bool checkIsDeadline(const Item);
 
 	bool checkIsExpired(const Item);
+
+	bool checkIsFloating(const Item);
 
 	void generateResults(vector<Item>);
 
@@ -92,6 +116,8 @@ public:
 
 	bool isWide();
 
+	bool isHelp();
+
 	void copy(Item);
 
 	void edit(Item);
@@ -109,7 +135,9 @@ public:
 
 	void redo();
 
-	string getHelp();
+	//command stored in date field
+	//description stored in event field
+	void getHelp();
 
 	vector<RESULT> getTodayResult();
 

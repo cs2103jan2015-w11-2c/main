@@ -39,10 +39,14 @@ int Item::getHour(int hour) {
 	}
 }
 
-string Item::getDateDuration() {
-	int startDate = itemDate.rataDieConvert(eventDate[0], eventDate[1], eventDate[2]);
-	int endDate = itemDate.rataDieConvert(eventEndDate[0], eventEndDate[1], eventEndDate[2]);
-	return to_string(endDate - startDate);
+string Item::get24HrHour(int hour) {
+	if (hour == 24) {
+		return "00";
+	} else if (hour < 10) {
+		return "0" + to_string(hour);
+	} else {
+		return to_string(hour);
+	}
 }
 
 string Item::getMinute(int minute) {
@@ -57,7 +61,7 @@ string Item::getMinute(int minute) {
 
 string Item::get24HrMinute(int minute) {
 	if(minute == 0) {
-		return "";
+		return "00";
 	} else if (minute < 10) {
 		return ("0" + to_string(minute));
 	} else {
@@ -86,14 +90,19 @@ string Item::dateToString() {
 	}
 }
 
-string Item::endDateToString() {
-	if((eventEndDate[0] == 0) && (eventEndDate[1] == 0) && (eventEndDate[1] == 0)) {
-		return MESSAGE_UNDATED_TASK;
-	} else {
-		ostringstream oss;
-		oss << eventEndDate[0] << "/" << eventEndDate[1] << "/" << eventEndDate[2];
+string Item::startDateToString() {
+	ostringstream oss;
+		oss << "[" << eventDate[0] << "/" << eventDate[1] << "/" << eventDate[2] << "]";
 		return oss.str();
+}
+
+string Item::endDateToString() {
+	if (eventEndDate[0] == 0 && eventEndDate[1] == 0 && eventEndDate[2] == 0) {
+		return "";
 	}
+		ostringstream oss;
+		oss << "[" << eventEndDate[0] << "/" << eventEndDate[1] << "/" << eventEndDate[2] << "]";
+		return oss.str();
 }
 
 //@author A0111951N
@@ -124,21 +133,13 @@ string Item::timeTo24HrString() {
 	if(eventStartTime[0] == 0) {
 		return "";
 	} else {
-		oss << "[" << getHour(eventStartTime[0]) << get24HrMinute(eventStartTime[1]);;
+		oss << "[" << get24HrHour(eventStartTime[0]) << get24HrMinute(eventStartTime[1]);;
 		if(eventEndTime[0] != 0) {
-			oss << "-" << getHour(eventEndTime[0]) << get24HrMinute(eventEndTime[1]);
+			oss << "-" << get24HrHour(eventEndTime[0]) << get24HrMinute(eventEndTime[1]);
 		}
 		oss << "]";
 
 		return oss.str();
-	}
-}
-
-string Item::durationToString() {
-	if(getDateDuration() != "0") {
-		return ("[+" + getDateDuration() + "]");
-	} else {
-		return "";
 	}
 }
 
