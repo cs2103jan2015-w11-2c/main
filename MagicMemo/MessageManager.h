@@ -31,17 +31,17 @@ private:
 
 	vector<HIGHLIGHT>* _allNumberHighlight;
 	vector<HIGHLIGHT>* _allDateHighlight;
+	vector<HIGHLIGHT>* _allEndDateHighlight;
 	vector<HIGHLIGHT>* _allTimeHighlight;
 	vector<HIGHLIGHT>* _allEventHighlight;
 	vector<HIGHLIGHT>* _allCompletedHighlight;
-	vector<HIGHLIGHT>* _allEventSpillOver;
 
 	vector<HIGHLIGHT>* _todayNumberHighlight;
 	vector<HIGHLIGHT>* _todayDateHighlight;
+	vector<HIGHLIGHT>* _todayEndDateHighlight;
 	vector<HIGHLIGHT>* _todayTimeHighlight;
 	vector<HIGHLIGHT>* _todayEventHighlight;
 	vector<HIGHLIGHT>* _todayCompletedHighlight;
-	vector<HIGHLIGHT>* _todayEventSpillOver;
 
 
 	String^ _userInput;
@@ -71,6 +71,7 @@ public:
 		vector<HIGHLIGHT>* _numberHighlight, 
 		vector<HIGHLIGHT>* _dateHighlight,
 		vector<HIGHLIGHT>* _timeHighlight,
+		vector<HIGHLIGHT>* _endDateHighlight,
 		vector<HIGHLIGHT>* _eventHighlight, 
 		RichTextBox^ taskBox);
 
@@ -78,7 +79,7 @@ public:
 	Void updateAutoCompleteSource(TextBox^ inputBox);
 
 	//increases/decreases the task box size
-	Void toggleTaskBoxSize(RichTextBox^, RichTextBox^);
+	Void toggleTaskBoxSize(RichTextBox^, RichTextBox^, PictureBox^);
 
 	String^ toString(vector<RESULT>*);
 

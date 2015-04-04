@@ -114,9 +114,6 @@ public:
 	//if no start date is set, it is set to today
 	void updateItemStartDate();
 
-	//if endDate fields are empty, set them to startDate
-	void updateItemEndDate();
-
 	//throws an out_of_range exception if time is invalid
 	void verifyItemTime(int&, int&);
 
