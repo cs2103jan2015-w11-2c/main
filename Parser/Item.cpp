@@ -21,8 +21,6 @@ void Item::initializeItem() {
 	eventStartTime[1] = 0;
 	eventEndTime[0] = 0;
 	eventEndTime[1] = 0;
-	colour = 0;
-	bold = false;
 }
 
 //@author A0111951N
