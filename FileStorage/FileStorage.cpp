@@ -21,8 +21,8 @@ FileStorage*FileStorage::theOne=nullptr;
 FileStorage*FileStorage::getInstance(){
 
 	if(theOne==nullptr) {
-	theOne = new FileStorage();
-	return theOne;
+		theOne = new FileStorage();
+		return theOne;
 	}
 }
 
@@ -136,7 +136,8 @@ void FileStorage::addLineToInputBank(string input) {
 void FileStorage::addLine(Item item, const string& fileName) {
 	fstream outFile;
 	ostringstream out;
-	bool setBracket = false;
+	bool setFrom = false;
+	bool setTo = false;
 
 	outFile.open(fileName.c_str(), fstream::out | fstream::app);
 
@@ -144,17 +145,26 @@ void FileStorage::addLine(Item item, const string& fileName) {
 
 	if(item.eventDate[0] != 0 && item.eventDate[1] != 0 && item.eventDate[2] != 0) {
 		out << " from " <<item.eventDate[0] << "/" << item.eventDate[1] << "/" << item.eventDate[2];
-		setBracket = true;
+		setFrom = true;
 	}
 
 	if(item.eventStartTime[0] != 0) {
-		if(!setBracket) {
+		if(!setFrom) {
 			out << "from ";
 		}
 		out << " " << item.eventStartTime[0] << ":" << item.eventStartTime[1];
 	}
+
+	if(item.eventEndDate[0] != 0 && item.eventEndDate[1] != 0 && item.eventEndDate[2] != 0) {
+		out << " to " <<item.eventEndDate[0] << "/" << item.eventEndDate[1] << "/" << item.eventEndDate[2];
+		setTo = true;
+	}
+
 	if(item.eventEndTime[0] !=  0) {
-		out << " - " << item.eventEndTime[0] << ":" << item.eventEndTime[1];
+		if(!setTo) {
+			out << " to ";
+		}
+		out << " " << item.eventEndTime[0] << ":" << item.eventEndTime[1];
 	}
 
 	string temp = out.str();

@@ -247,7 +247,7 @@ bool Controller::checkIsExpired(const Item item) {
 					} else if (item.eventStartTime[0] == dateTime.getCurrentHour()) {
 						if (item.eventStartTime[1] < dateTime.getCurrentMinute()) {
 							return true;
-						} else if (item.eventStartTime[1] == dateTime.getCurrentMinute()) {
+						} else {
 							return false;
 						}
 					}
@@ -269,7 +269,7 @@ bool Controller::checkIsExpired(const Item item) {
 					} else if (item.eventEndTime[0] == dateTime.getCurrentHour()) {
 						if (item.eventEndTime[1] < dateTime.getCurrentMinute()) {
 							return true;
-						} else if (item.eventEndTime[1] == dateTime.getCurrentMinute()) {
+						} else {
 							return false;
 						}
 					}
@@ -277,15 +277,15 @@ bool Controller::checkIsExpired(const Item item) {
 			}
 		}
 	} else if (item.eventEndTime[0] == 0 && item.eventEndTime[1] == 0){
-		if (item.eventDate[2] < dateTime.getCurrentYear()) {
+		if (item.eventEndDate[2] < dateTime.getCurrentYear()) {
 			return true;
-		} else if (item.eventDate[2] == dateTime.getCurrentYear()) {
-			if (item.eventDate[1] < dateTime.getCurrentMonth()) {
+		} else if (item.eventEndDate[2] == dateTime.getCurrentYear()) {
+			if (item.eventEndDate[1] < dateTime.getCurrentMonth()) {
 				return true;
-			} else if (item.eventDate[1] == dateTime.getCurrentMonth()) {
-				if (item.eventDate[0] < dateTime.getCurrentDay()) {
+			} else if (item.eventEndDate[1] == dateTime.getCurrentMonth()) {
+				if (item.eventEndDate[0] < dateTime.getCurrentDay()) {
 					return true;
-				} else if (item.eventDate[0] == dateTime.getCurrentDay()) {
+				} else {
 					return false;
 				}
 			}
@@ -305,7 +305,7 @@ bool Controller::checkIsExpired(const Item item) {
 					} else if (item.eventEndTime[0] == dateTime.getCurrentHour()) {
 						if (item.eventEndTime[1] < dateTime.getCurrentMinute()) {
 							return true;
-						} else if (item.eventEndTime[1] == dateTime.getCurrentMinute()) {
+						} else {
 							return false;
 						}
 					}
