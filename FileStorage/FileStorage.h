@@ -45,7 +45,7 @@ public:
 
 	vector<string> getAutoCompleteFileData();
 
-	vector<string> getOptionFileData();
+	vector<bool> getOptionFileData();
 
 	//main text file
 	void addLineToFile(Item);
@@ -56,13 +56,13 @@ public:
 	void addLine(Item, const string&);
 
 	//inputBank file
-	void addLineToInputBank();
+	void addLineToInputBankFile(string);
 
 	//auto-complete file
 	void addLineToAutoCompleteFile(string); 
 
 	//option file
-	void addLineToOptions();
+	void addLineToOptions(string);
 
 	bool clearFile();
 	
@@ -84,13 +84,13 @@ public:
 	bool isFileEmpty(string);
 
 	//get pre-set filepath and filename from config file
-	void getFileConfigDEBUG();
+	void getFileConfig();
 
 	//initializes the filename and filepath if not previously set
 	void initializeFileConfig();
 
 	//update any filepath or filename changes into config file
-	void updateFileConfigDEBUG();
+	void updateFileConfig();
 
 	//returns the directory of the program
 	string programFilePath();

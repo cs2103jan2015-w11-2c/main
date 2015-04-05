@@ -1,5 +1,5 @@
 #include "FileStorage.h"
-//@author A0111951N
+//@author A0115452N
 
 FileStorage::FileStorage(void) {
 	fileConfigFileName = "fileConfigurations.txt";
@@ -13,16 +13,15 @@ FileStorage::FileStorage(void) {
 		initializeFileConfig();
 	}
 
-	getFileConfigDEBUG();
+	getFileConfig();
 	fullFileName = getFullFileName();
 }
 
-//@author A0115452N
 FileStorage*FileStorage::theOne=nullptr;
 
 FileStorage*FileStorage::getInstance(){
 
-	if(theOne==nullptr) {
+	if(theOne == nullptr) {
 	theOne = new FileStorage();
 	return theOne;
 	}
@@ -90,19 +89,15 @@ vector<Item> FileStorage::getArchiveData() {
 
 
 vector<string> FileStorage::getInputBankData() {
-	Parser parse;
 	vector<string> tempVector;
-	vector<string> tempVector2=parse.getFragmentedEvent();
-	vector<string>::iterator iter;
+	Item item;
 	string content;
-	string sentence;
 
 	ifstream readFile(inputBankFileName.c_str());
 	while(getline(readFile, content)) {
-		for(iter= tempVector2.begin(); iter != tempVector2.end(); iter++)
-		sentence = *iter;
-		tempVector.push_back(sentence);
-	     }
+		string s = item.event;
+		tempVector.push_back(s);
+    }
 	readFile.close();
 
 	return tempVector;
@@ -112,13 +107,9 @@ vector<string> FileStorage::getAutoCompleteFileData() {
 	vector<string> tempVector;
 	Item item;
 	string content;
-	Parser parse;
 
 	ifstream readFile(autoCompleteFileName.c_str());
 	while(getline(readFile, content)) {
-		parse.setStringToParse(content);
-		parse.extractDateAndTime();
-		item = parse.getItem();
 		string s = item.toString();
 		tempVector.push_back(s);
 	}
@@ -127,19 +118,19 @@ vector<string> FileStorage::getAutoCompleteFileData() {
 	return tempVector;
 }
 
-vector<string> FileStorage::getOptionFileData() {
-	vector<string> tempVector;
-	DateTimeParser parse;
+vector<bool> FileStorage::getOptionFileData() {
+	vector<bool> boolVector;
 	string content;
+	Item item;
 
 	ifstream readFile(optionFileName.c_str());
 	while(getline(readFile, content)) {
-	
-		
+	boolVector[0] = item.dateToString;
+
 	}
 	readFile.close();
 
-	return tempVector;
+	return boolVector;
 }
 
 void FileStorage::addLineToFile(Item item) {
@@ -179,57 +170,39 @@ void FileStorage::addLine(Item item, const string& fileName) {
 	outFile.close();
 }
 
-void FileStorage::addLineToInputBank() {
-    Parser parse;
-	vector<string>::iterator iter;
-	vector<string> tempVector = parse.getFragmentedEvent();
+void FileStorage::addLineToInputBankFile(string s) {
 	fstream outFile;
-    ostringstream out;
-	
-	outFile.open(inputBankFileName.c_str(), fstream ::out |fstream ::app);
-	for(iter = tempVector.begin(); iter != tempVector.end(); iter++) {
-		out << *iter; 
-	   }
-	string temp = out.str();
-	outFile << temp << endl;
+	Item item;
+
+	outFile.open(inputBankFileName.c_str(), fstream ::out | fstream ::app);
+    s = item.event;
+
+	outFile << s << endl;
 	outFile.close();
 }
 
 void FileStorage::addLineToAutoCompleteFile(string s) {
 	fstream outFile;
-	ostringstream out;
 	Item item;
-	bool setBracket = false;
 
 	outFile.open(autoCompleteFileName.c_str(), fstream::out | fstream::app);
+    s = item.toString();
 
-	out << item.event;
-
-	if(item.eventDate[0] != 0 && item.eventDate[1] != 0 && item.eventDate[2] != 0) {
-		out << " from " <<item.eventDate[0] << "/" << item.eventDate[1] << "/" << item.eventDate[2];
-		setBracket = true;
-	}
-
-	if(item.eventStartTime[0] != 0) {
-		if(!setBracket) {
-			out << "from ";
-		}
-		out << " " << item.eventStartTime[0] << ":" << item.eventStartTime[1];
-	}
-	if(item.eventEndTime[0] !=  0) {
-		out << " - " << item.eventEndTime[0] << ":" << item.eventEndTime[1];
-	}
-
-	s = out.str();
 	outFile << s << endl;
 	outFile.close();
 }
 
-void FileStorage::addLineToOptions () {
+void FileStorage::addLineToOptions(string s) {
 	fstream outFile;
-	outFile.open(optionFileName.c_str(), fstream::out |fstream ::app);
-	DateTimeParser parse;
+	ostringstream out;
+	Item item;
 
+	outFile.open(optionFileName.c_str(), fstream::out |fstream ::app);
+	out << item.event;
+	out << "from" << item.dateToString() << " " << item.timeToString();
+
+	string temp = out.str();
+	outFile << temp <<endl;
 	outFile.close();
 }
 
@@ -257,7 +230,7 @@ bool FileStorage::changeFileName(string newFileName) {
 	string oldFileName = getFullFileName();
 	setFileName(newFileName);
 	rename(oldFileName.c_str(), getFullFileName().c_str());
-	updateFileConfigDEBUG();
+	updateFileConfig();
 	return true;
 }
 
@@ -278,7 +251,7 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 
 	rename(getFullFileName().c_str(), newFullFileName.c_str());
 	setFilePath(newFilePath);
-	updateFileConfigDEBUG();
+	updateFileConfig();
 	return true;
 }
 
@@ -303,7 +276,7 @@ bool FileStorage::isFileEmpty(string file) {
 	return false;
 }
 
-void FileStorage::getFileConfigDEBUG() {
+void FileStorage::getFileConfig() {
 	ifstream inFile(fileConfigFileName.c_str());
 	getline(inFile, fileName);
 	getline(inFile, filePath);
@@ -314,10 +287,10 @@ void FileStorage::getFileConfigDEBUG() {
 void FileStorage::initializeFileConfig() {
 	setFileName(defaultFileName);
 	setFilePath(programFilePath());
-	updateFileConfigDEBUG();
+	updateFileConfig();
 }
 
-void FileStorage::updateFileConfigDEBUG() {
+void FileStorage::updateFileConfig() {
 	ofstream outFile(fileConfigFileName.c_str());
 	outFile << fileName << endl;
 	outFile << filePath << endl;
@@ -333,11 +306,9 @@ string FileStorage::programFilePath() {
 
 //@author A0115452N
 void FileStorage::restoreFileInfo () {
-    ifstream inFile(fileConfigFileName.c_str ());
-	initializeFileConfig ();
-	getline(inFile, fileName);
-	getline(inFile, filePath);
-	inFile.close();
+    rename(defaultFileName.c_str(), getFullFileName().c_str());
+    string filePath=programFilePath();
+	changeFileLocation(filePath);
 }
 
 FileStorage::~FileStorage(void) {
