@@ -1,4 +1,5 @@
 #include "FileStorage.h"
+
 //@author A0115452N
 
 FileStorage::FileStorage(void) {
@@ -13,7 +14,7 @@ FileStorage::FileStorage(void) {
 		initializeFileConfig();
 	}
 
-	getFileConfig();
+	getFileConfigInfo();
 	fullFileName = getFullFileName();
 }
 
@@ -245,7 +246,9 @@ bool FileStorage::changeFileName(string newFileName) {
 	string oldFileName = getFullFileName();
 	setFileName(newFileName);
 	rename(oldFileName.c_str(), getFullFileName().c_str());
-	updateFileConfig();
+
+	updateFileConfigInfo();
+
 	return true;
 }
 
@@ -266,7 +269,9 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 
 	rename(getFullFileName().c_str(), newFullFileName.c_str());
 	setFilePath(newFilePath);
-	updateFileConfig();
+
+	updateFileConfigInfo();
+
 	return true;
 }
 
@@ -291,7 +296,8 @@ bool FileStorage::isFileEmpty(string file) {
 	return false;
 }
 
-void FileStorage::getFileConfig() {
+
+void FileStorage::getFileConfigInfo() {
 	ifstream inFile(fileConfigFileName.c_str());
 	getline(inFile, fileName);
 	getline(inFile, filePath);
@@ -302,10 +308,11 @@ void FileStorage::getFileConfig() {
 void FileStorage::initializeFileConfig() {
 	setFileName(defaultFileName);
 	setFilePath(programFilePath());
-	updateFileConfig();
+
+	updateFileConfigInfo();
 }
 
-void FileStorage::updateFileConfig() {
+void FileStorage::updateFileConfigInfo() {
 	ofstream outFile(fileConfigFileName.c_str());
 	outFile << fileName << endl;
 	outFile << filePath << endl;

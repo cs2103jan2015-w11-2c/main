@@ -10,9 +10,6 @@ Item::~Item() {
 }
 
 void Item::initializeItem() {
-	// Load configuration from file
-	el::Configurations conf("logging.conf");
-
 	event = "";
 	eventDate[0] = 0;
 	eventDate[1] = 0;
@@ -149,15 +146,15 @@ string Item::toString() {
 
 
 void Item::logItemValues() {
-	LOG(DEBUG) << event;
-	LOG(DEBUG) << eventDate[0];
-	LOG(DEBUG) << eventDate[1];
-	LOG(DEBUG) << eventDate[2];
-	LOG(DEBUG) << eventEndDate[0];
-	LOG(DEBUG) << eventEndDate[1];
-	LOG(DEBUG) << eventEndDate[2];
-	LOG(DEBUG) << eventStartTime[0];
-	LOG(DEBUG) << eventStartTime[1];
-	LOG(DEBUG) << eventEndTime[0];
-	LOG(DEBUG) << eventEndTime[1];
+	LOG(INFO) << event;
+	LOG(INFO) << eventDate[0];
+	LOG(INFO) << eventDate[1];
+	LOG(INFO) << eventDate[2];
+	LOG(INFO) << eventEndDate[0];
+	LOG(INFO) << eventEndDate[1];
+	LOG(INFO) << eventEndDate[2];
+	LOG(INFO) << eventStartTime[0];
+	LOG(INFO) << eventStartTime[1];
+	LOG(INFO) << eventEndTime[0];
+	LOG(INFO) << eventEndTime[1];
 }
