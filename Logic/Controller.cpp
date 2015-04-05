@@ -137,11 +137,44 @@ long Controller::getTimePos(const int date[3], const int time[2]) {
 	return timePos;
 }
 
+bool Controller::checkDateIsUnset(const int date[3]) {
+	for (int i = 0; i < 3; i++) {
+		if (date[i] != 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
 bool Controller::checkIsClash(const Item item1, const Item item2) {
 	long startTimePos1 = getTimePos(item1.eventDate, item1.eventStartTime);
-	long endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventEndTime);
+	long endTimePos1;
+	if (!checkDateIsUnset(item1.eventDate) && checkDateIsUnset(item1.eventEndDate)) {
+		Item temp;
+		temp.eventEndDate[0] = item1.eventDate[0];
+		temp.eventEndDate[1] = item1.eventDate[1];
+		temp.eventEndDate[2] = item1.eventDate[2];
+		temp.eventEndTime[0] = item1.eventEndTime[0];
+		temp.eventEndTime[1] = item1.eventEndTime[1];
+		endTimePos1 =  getTimePos(temp.eventEndDate, temp.eventEndTime);
+	} else {
+		endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventEndTime);
+	}
+	
 	long startTimePos2 = getTimePos(item2.eventDate, item2.eventStartTime);
-	long endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
+	long endTimePos2;
+	if (!checkDateIsUnset(item2.eventDate) && checkDateIsUnset(item2.eventEndDate)) {
+		Item temp;
+		temp.eventEndDate[0] = item2.eventDate[0];
+		temp.eventEndDate[1] = item2.eventDate[1];
+		temp.eventEndDate[2] = item2.eventDate[2];
+		temp.eventEndTime[0] = item2.eventEndTime[0];
+		temp.eventEndTime[1] = item2.eventEndTime[1];
+		endTimePos2 =  getTimePos(temp.eventEndDate, temp.eventEndTime);
+	} else {
+		endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
+	}
+	
 	bool isDeadline1 = checkIsDeadline(item1);
 	bool isDeadline2 = checkIsDeadline(item2);
 	
@@ -172,33 +205,109 @@ bool Controller::checkIsClash(const Item item1, const Item item2) {
 }
 
 bool Controller::checkIsDeadline(const Item item) {
+	for (int i = 0; i < 3; i++) {
+		if (item.eventEndDate[i] != 0) {
+			return false;
+		}
+	}
 	for (int i = 0; i < 2; i++) {
 		if (item.eventEndTime[i] != 0) {
 			return false;
 		}
 	}
-	return true;
+	bool isDeadline = false;
+	for (int i = 0; !isDeadline && i < 3; i++) {
+		if (item.eventDate[i] != 0) {
+			isDeadline = true;
+		}
+	}
+	for (int i = 0; !isDeadline && i < 2; i++) {
+		if (item.eventStartTime[i] != 0) {
+			isDeadline = true;
+		}
+	}
+	return isDeadline;
 }
 
 bool Controller::checkIsExpired(const Item item) {
 	DateTime dateTime;
 
-	if (item.eventDate[2] < dateTime.getCurrentYear()) {
-		return true;
-	} else if (item.eventDate[2] == dateTime.getCurrentYear()) {
-		if (item.eventDate[1] < dateTime.getCurrentMonth()) {
+	if (checkIsDeadline(item)) {
+		if (item.eventDate[2] < dateTime.getCurrentYear()) {
 			return true;
-		} else if (item.eventDate[1] == dateTime.getCurrentMonth()) {
-			if (item.eventDate[0] < dateTime.getCurrentDay()) {
+		} else if (item.eventDate[2] == dateTime.getCurrentYear()) {
+			if (item.eventDate[1] < dateTime.getCurrentMonth()) {
 				return true;
-			} else if (item.eventDate[0] == dateTime.getCurrentDay()) {
-				if (item.eventStartTime[0] < dateTime.getCurrentHour()) {
+			} else if (item.eventDate[1] == dateTime.getCurrentMonth()) {
+				if (item.eventDate[0] < dateTime.getCurrentDay()) {
 					return true;
-				} else if (item.eventStartTime[0] == dateTime.getCurrentHour()) {
-					if (item.eventStartTime[1] < dateTime.getCurrentMinute()) {
+				} else if (item.eventDate[0] == dateTime.getCurrentDay()) {
+					if (item.eventStartTime[0] < dateTime.getCurrentHour()) {
 						return true;
-					} else if (item.eventStartTime[1] == dateTime.getCurrentMinute()) {
-						return false;
+					} else if (item.eventStartTime[0] == dateTime.getCurrentHour()) {
+						if (item.eventStartTime[1] < dateTime.getCurrentMinute()) {
+							return true;
+						} else {
+							return false;
+						}
+					}
+				}
+			}
+		}
+	} else if (checkDateIsUnset(item.eventEndDate)){
+		if (item.eventDate[2] < dateTime.getCurrentYear()) {
+			return true;
+		} else if (item.eventDate[2] == dateTime.getCurrentYear()) {
+			if (item.eventDate[1] < dateTime.getCurrentMonth()) {
+				return true;
+			} else if (item.eventDate[1] == dateTime.getCurrentMonth()) {
+				if (item.eventDate[0] < dateTime.getCurrentDay()) {
+					return true;
+				} else if (item.eventDate[0] == dateTime.getCurrentDay()) {
+					if (item.eventEndTime[0] < dateTime.getCurrentHour()) {
+						return true;
+					} else if (item.eventEndTime[0] == dateTime.getCurrentHour()) {
+						if (item.eventEndTime[1] < dateTime.getCurrentMinute()) {
+							return true;
+						} else {
+							return false;
+						}
+					}
+				}
+			}
+		}
+	} else if (item.eventEndTime[0] == 0 && item.eventEndTime[1] == 0){
+		if (item.eventEndDate[2] < dateTime.getCurrentYear()) {
+			return true;
+		} else if (item.eventEndDate[2] == dateTime.getCurrentYear()) {
+			if (item.eventEndDate[1] < dateTime.getCurrentMonth()) {
+				return true;
+			} else if (item.eventEndDate[1] == dateTime.getCurrentMonth()) {
+				if (item.eventEndDate[0] < dateTime.getCurrentDay()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+	} else {
+		if (item.eventEndDate[2] < dateTime.getCurrentYear()) {
+			return true;
+		} else if (item.eventEndDate[2] == dateTime.getCurrentYear()) {
+			if (item.eventEndDate[1] < dateTime.getCurrentMonth()) {
+				return true;
+			} else if (item.eventEndDate[1] == dateTime.getCurrentMonth()) {
+				if (item.eventEndDate[0] < dateTime.getCurrentDay()) {
+					return true;
+				} else if (item.eventEndDate[0] == dateTime.getCurrentDay()) {
+					if (item.eventEndTime[0] < dateTime.getCurrentHour()) {
+						return true;
+					} else if (item.eventEndTime[0] == dateTime.getCurrentHour()) {
+						if (item.eventEndTime[1] < dateTime.getCurrentMinute()) {
+							return true;
+						} else {
+							return false;
+						}
 					}
 				}
 			}
@@ -231,12 +340,14 @@ bool Controller::checkIsFloating(const Item item) {
 	return true;
 }
 
-void Controller::generateResults(vector<Item> inputVector) {
+void Controller::generateResults(const vector<Item> vectorStore) {
+	vector<Item> inputVector = vectorStore;
 	vector<RESULT> todayResult;
 	vector<RESULT> otherResult;
 	vector<RESULT> floatResult;
 	vector<RESULT> deadlineResult;
 	bool isClashed = false;
+	bool willClash = false;
 	DateTime newDateTime;
 
 	for (unsigned int i = 0; i < inputVector.size(); i++) {
@@ -244,21 +355,25 @@ void Controller::generateResults(vector<Item> inputVector) {
 
 		temp.isDeadline = checkIsDeadline(inputVector[i]);
 		if (i < inputVector.size() - 1) {
-			bool willClash = checkIsClash(inputVector[i], inputVector[i + 1]);
-			if (isClashed || willClash) {
-				temp.isClash = true;
-			} else {
-				temp.isClash = false;
-			}
+			willClash = checkIsClash(inputVector[i], inputVector[i + 1]);
 			isClashed = willClash;
 		} 
+		if (isClashed || willClash) {
+			temp.isClash = true;
+		} else {
+			temp.isClash = false;
+		}
 
 		temp.lineNumber = to_string(i + 1) + ".";
 		temp.date = inputVector[i].dateToString();
 		_is12HourFormat ? temp.time = inputVector[i].timeToString() : temp.time = inputVector[i].timeTo24HrString();
 		temp.endDate = inputVector[i].endDateToString();
 		temp.event = inputVector[i].event;
-		temp.isExpired = checkIsExpired(inputVector[i]);
+		if(!checkIsFloating(inputVector[i])) {
+			temp.isExpired = checkIsExpired(inputVector[i]);
+		} else {
+			temp.isExpired = false;
+		}
 		if (checkIsFloating(inputVector[i])) {
 			floatResult.push_back(temp);
 		} else if (temp.isDeadline) {

@@ -1412,8 +1412,6 @@ public:
 		test.eventStartTime[1] = 0;
 		test.eventEndTime[0] = 12;
 		test.eventEndTime[1] = 0;
-		test.colour = 0;
-		test.bold = false;
 
 		string expected = "Wednesday, 18 Mar 2015";
 		Assert::AreEqual(expected, test.dateToString());
@@ -1445,8 +1443,6 @@ public:
 		newItem.eventStartTime[1] = 10;
 		newItem.eventEndTime[0] = 12;
 		newItem.eventEndTime[1] = 10;
-		newItem.colour = 7;
-		newItem.bold = false;
 
 		string expectedString = "some event: Wednesday, 25 Mar 2015 [11:10-12:10p]";
 		string actualString = newItem.toString();
@@ -1468,8 +1464,6 @@ public:
 		newItem.eventStartTime[1] = 10;
 		newItem.eventEndTime[0] = 12;
 		newItem.eventEndTime[1] = 10;
-		newItem.colour = 7;
-		newItem.bold = false;
 
 		AddItem *addItem = new AddItem(newItem);
 		invoker->executeCommand(testVector, addItem, message);
@@ -1482,8 +1476,6 @@ public:
 		newItem.eventStartTime[1] = 30;
 		newItem.eventEndTime[0] = 18;
 		newItem.eventEndTime[1] = 30;
-		newItem.colour = 7;
-		newItem.bold = false;
 
 		AddItem *addItem2 = new AddItem(newItem);
 		invoker->executeCommand(testVector, addItem2, message);
@@ -1522,8 +1514,6 @@ public:
 		newItem.eventStartTime[1] = 10;
 		newItem.eventEndTime[0] = 12;
 		newItem.eventEndTime[1] = 10;
-		newItem.colour = 7;
-		newItem.bold = false;
 
 		AddItem *addItem = new AddItem(newItem);
 		invoker->executeCommand(testVector, addItem, message);

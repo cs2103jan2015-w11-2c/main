@@ -22,8 +22,6 @@ public:
 		_input.eventStartTime[1] = 0;
 		_input.eventEndTime[0] = 0;
 		_input.eventEndTime[1] = 0;
-		_input.colour = 7; 
-		_input.bold = false;
 
 		_message = "";
 	}
@@ -66,12 +64,6 @@ public:
 			if (item1.eventEndTime[i] != item2.eventEndTime[i]) {
 				return false;
 			}
-		}
-		if (item1.colour != item2.colour) {
-			return false;
-		}
-		if (item1.bold != item2.bold) {
-			return false;
 		}
 		return true;
 	}
