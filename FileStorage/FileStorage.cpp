@@ -115,14 +115,17 @@ vector<string> FileStorage::getAutoCompleteFileData() {
 }
 
 vector<bool> FileStorage::getOptionFileData() {
-	vector<bool> boolVector;
+	vector<bool> boolVector (2);
 	string content;
 	bool is12 = true;
 	bool isWide = true;
 	ifstream readFile(optionFileName.c_str());
 	while(getline(readFile, content)) {
-	    boolVector[0] = true;
-		boolVector[1] = true;
+	    for(int i = 0; i < boolVector.size(); i++) {
+		boolVector[0] = is12;
+		boolVector[1] = isWide;
+	    boolVector.push_back(i);    
+	}
 	}
 	readFile.close();
 
@@ -171,7 +174,7 @@ void FileStorage::addLineToInputBankFile(vector<string> input) {
 	vector<string> ::iterator iter;
 
 	outFile.open(inputBankFileName.c_str(), fstream ::out | fstream ::app);
-	for (iter = input.begin(); iter !=input.end(); iter++) {
+	for (iter = input.begin(); iter != input.end(); iter++) {
     outFile << *iter << endl;
 	}
 	outFile.close();
