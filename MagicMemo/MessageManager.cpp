@@ -196,7 +196,7 @@ Void MessageManager::colorTextInTaskBox(
 			if(_timeHighlight->at(i).special == "clash") {
 				taskBox->SelectionColor = System::Drawing::Color::Orange;
 			} else if(_timeHighlight->at(i).special == "expired") {
-				taskBox->SelectionColor = System::Drawing::Color::Crimson;
+				taskBox->SelectionColor = System::Drawing::Color::Red;
 			} else {
 				taskBox->SelectionColor = System::Drawing::Color::Brown;
 			}
@@ -215,7 +215,13 @@ Void MessageManager::colorTextInTaskBox(
 		//event
 		for(unsigned int i = 0; i < _eventHighlight->size(); i++) {
 			taskBox->Select(_eventHighlight->at(i).index, _eventHighlight->at(i).length);
-			taskBox->SelectionColor = System::Drawing::Color::Black;
+			if(_timeHighlight->at(i).special == "clash") {
+				taskBox->SelectionColor = System::Drawing::Color::Orange;
+			} else if(_timeHighlight->at(i).special == "expired") {
+				taskBox->SelectionColor = System::Drawing::Color::Red;
+			} else {
+				taskBox->SelectionColor = System::Drawing::Color::Black;
+			}
 			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 11, FontStyle::Regular);
 			taskBox->SelectionAlignment = HorizontalAlignment::Left;
 		}
