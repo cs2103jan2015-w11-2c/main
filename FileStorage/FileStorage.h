@@ -56,7 +56,7 @@ public:
 	void addLine(Item, const string&);
 
 	//inputBank file
-	void addLineToInputBankFile(string);
+	void addLineToInputBankFile(vector<string>);
 
 	//auto-complete file
 	void addLineToAutoCompleteFile(string); 

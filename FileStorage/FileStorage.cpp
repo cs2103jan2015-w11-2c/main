@@ -166,11 +166,14 @@ void FileStorage::addLine(Item item, const string& fileName) {
 	outFile.close();
 }
 
-void FileStorage::addLineToInputBankFile(string input) {
+void FileStorage::addLineToInputBankFile(vector<string> input) {
 	fstream outFile;
+	vector<string> ::iterator iter;
 
 	outFile.open(inputBankFileName.c_str(), fstream ::out | fstream ::app);
-	outFile << input << endl;
+	for (iter = input.begin(); iter !=input.end(); iter++) {
+    outFile << *iter << endl;
+	}
 	outFile.close();
 }
 
