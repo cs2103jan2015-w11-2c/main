@@ -90,13 +90,11 @@ vector<Item> FileStorage::getArchiveData() {
 
 vector<string> FileStorage::getInputBankData() {
 	vector<string> tempVector;
-	Item item;
 	string content;
 
 	ifstream readFile(inputBankFileName.c_str());
 	while(getline(readFile, content)) {
-		string s = item.event;
-		tempVector.push_back(s);
+		tempVector.push_back(content);
     }
 	readFile.close();
 
@@ -105,13 +103,11 @@ vector<string> FileStorage::getInputBankData() {
 
 vector<string> FileStorage::getAutoCompleteFileData() {
 	vector<string> tempVector;
-	Item item;
 	string content;
 
 	ifstream readFile(autoCompleteFileName.c_str());
 	while(getline(readFile, content)) {
-		string s = item.toString();
-		tempVector.push_back(s);
+		tempVector.push_back(content);
 	}
 	readFile.close();
 
@@ -121,12 +117,12 @@ vector<string> FileStorage::getAutoCompleteFileData() {
 vector<bool> FileStorage::getOptionFileData() {
 	vector<bool> boolVector;
 	string content;
-	Item item;
-
+	bool is12 = true;
+	bool isWide = true;
 	ifstream readFile(optionFileName.c_str());
 	while(getline(readFile, content)) {
-	boolVector[0] = item.dateToString;
-
+	    boolVector[0] = true;
+		boolVector[1] = true;
 	}
 	readFile.close();
 
@@ -170,39 +166,43 @@ void FileStorage::addLine(Item item, const string& fileName) {
 	outFile.close();
 }
 
-void FileStorage::addLineToInputBankFile(string s) {
+void FileStorage::addLineToInputBankFile(string input) {
 	fstream outFile;
-	Item item;
 
 	outFile.open(inputBankFileName.c_str(), fstream ::out | fstream ::app);
-    s = item.event;
-
-	outFile << s << endl;
+	outFile << input << endl;
 	outFile.close();
 }
 
 void FileStorage::addLineToAutoCompleteFile(string s) {
 	fstream outFile;
-	Item item;
 
 	outFile.open(autoCompleteFileName.c_str(), fstream::out | fstream::app);
-    s = item.toString();
-
 	outFile << s << endl;
 	outFile.close();
 }
 
-void FileStorage::addLineToOptions(string s) {
+void FileStorage::addLineToOptions(string input) {
 	fstream outFile;
 	ostringstream out;
-	Item item;
-
+	bool is12Hr = true;
+	bool isWide = true;
+	
 	outFile.open(optionFileName.c_str(), fstream::out |fstream ::app);
-	out << item.event;
-	out << "from" << item.dateToString() << " " << item.timeToString();
-
+	if (is12Hr) {
+	    out << true;
+	}
+	else {
+		out << false;
+	}
+    if (isWide) {
+        out << true;
+	}
+	else {
+		out << false;
+	}
 	string temp = out.str();
-	outFile << temp <<endl;
+	outFile << temp<< endl;
 	outFile.close();
 }
 
