@@ -11,15 +11,16 @@ using namespace std;
 
 class FileStorage {
 private:
-	string fileConfigFileName;
-	string defaultFileName;
-	string fileName;
-	string filePath;
-	string fullFileName;
-	string archiveFileName;
-	string inputBankFileName;
-	string optionFileName;
-	string autoCompleteFileName;
+	string _fileConfigFileName;
+	string _defaultFileName;
+	string _fileName;
+	string _filePath;
+	string _fullFileName;
+	string _archiveFileName;
+	string _optionFileName;
+	string _autoCompleteFileName;
+	bool _is12Hr;
+	bool _isWide;
 	static FileStorage* theOne;
 	FileStorage(void);
 
@@ -41,10 +42,12 @@ public:
 
 	vector<Item> getArchiveData();
 
-	vector<string> getInputBankData();
-
+	//returns a vector of auto-complete bank data
 	vector<string> getAutoCompleteFileData();
 
+	//returns an options vector:
+	//first element - is12Hr;
+	//second element - isWide;
 	vector<bool> getOptionFileData();
 
 	//main text file
@@ -53,16 +56,18 @@ public:
 	//archive file
 	void addLineToArchive(Item);
 	
+	//general method
 	void addLine(Item, const string&);
-
-	//inputBank file
-	void addLineToInputBankFile(vector<string>);
 
 	//auto-complete file
 	void addLineToAutoCompleteFile(string); 
 
-	//option file
-	void addLineToOptions(string);
+	void saveIs12Hr(bool);
+
+	void saveIs12Wide(bool);
+
+	//update options file
+	void updateOptionsFile();
 
 	bool clearFile();
 	
@@ -86,18 +91,16 @@ public:
 	//get pre-set filepath and filename from config file
 	void getFileConfigInfo();
 
-
 	//initializes the filename and filepath if not previously set
 	void initializeFileConfig();
 
 	//update any filepath or filename changes into config file
 	void updateFileConfigInfo();
 
-
 	//returns the directory of the program
-	string programFilePath();
+	string getProgramFilePath();
 
-	//restore the filename and filepath in case if the user forgot the new filename and filepath
+	//restore the default filename and filepath
 	void restoreFileInfo();
 
 	~FileStorage(void);

@@ -540,7 +540,7 @@ void Controller::rename(string newFileName) {
 }
 
 void Controller::move(string newFileLocation) {
-	MoveFileLocation *moveFileCommand = new MoveFileLocation;
+	MoveFileLocation *moveFileCommand = new MoveFileLocation(newFileLocation);
 	_invoker->executeCommand(_outputFile, moveFileCommand, _successMessage);
 }
 

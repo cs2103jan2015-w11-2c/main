@@ -1,21 +1,22 @@
 #include "FileStorage.h"
 
 //@author A0115452N
-
 FileStorage::FileStorage(void) {
-	fileConfigFileName = "fileConfigurations.txt";
-	defaultFileName = "MagicMemo Task List.txt";
-	archiveFileName = "backup.txt";
-	inputBankFileName = "InputBank.txt";
-	optionFileName = "Options.txt";
-	autoCompleteFileName = "Suggestion.txt";
+	_fileConfigFileName = "FileConfigurations.txt";
+	_defaultFileName = "MagicMemo Task List.txt";
+	_archiveFileName = "Backup.txt";
+	_optionFileName = "Options.txt";
+	_autoCompleteFileName = "Auto-complete.txt";
 
-	if(isFileEmpty(fileConfigFileName)) {  //if not initialized
+	_is12Hr = true;
+	_isWide = false;
+
+	if(isFileEmpty(_fileConfigFileName)) {  //if not initialized
 		initializeFileConfig();
 	}
 
 	getFileConfigInfo();
-	fullFileName = getFullFileName();
+	_fullFileName = getFullFileName();
 }
 
 FileStorage*FileStorage::theOne=nullptr;
@@ -27,28 +28,27 @@ FileStorage*FileStorage::getInstance() {
 	}
 }
 
-//@author A0111951N
 void FileStorage::setFileName(string newFileName) {
-	fileName = newFileName;
+	_fileName = newFileName;
 }
 
 void FileStorage::setFilePath(string newFilePath) {
-	filePath = newFilePath;
+	_filePath = newFilePath;
 }
 
 string FileStorage::getFileName() {
-	return fileName;
+	return _fileName;
 }
 
 string FileStorage::getFileLocation() {
-	return filePath;
+	return _filePath;
 }
 
 string FileStorage::getFullFileName() {
-	if(filePath == "") {
-		return fileName;
+	if(_filePath == "") {
+		return _fileName;
 	} else {
-		return (filePath + "\\" + fileName);
+		return (_filePath + "\\" + _fileName);
 	}
 }
 
@@ -69,13 +69,12 @@ vector<Item> FileStorage::getAllFileData() {
 	return tempVector;
 }
 
-//@author A0115452N
 vector<Item> FileStorage::getArchiveData() {
 	vector<Item> tempVector;
 	Parser parse;
 	string content;
 
-	ifstream readFile(archiveFileName.c_str());
+	ifstream readFile(_archiveFileName.c_str());
 	while(getline(readFile, content)) {
 		parse.setStringToParse(content);
 		parse.extractDateAndTime();
@@ -87,25 +86,11 @@ vector<Item> FileStorage::getArchiveData() {
 	return tempVector;
 }
 
-
-vector<string> FileStorage::getInputBankData() {
-	vector<string> tempVector;
-	string content;
-
-	ifstream readFile(inputBankFileName.c_str());
-	while(getline(readFile, content)) {
-		tempVector.push_back(content);
-    }
-	readFile.close();
-
-	return tempVector;
-}
-
 vector<string> FileStorage::getAutoCompleteFileData() {
 	vector<string> tempVector;
 	string content;
 
-	ifstream readFile(autoCompleteFileName.c_str());
+	ifstream readFile(_autoCompleteFileName.c_str());
 	while(getline(readFile, content)) {
 		tempVector.push_back(content);
 	}
@@ -115,17 +100,15 @@ vector<string> FileStorage::getAutoCompleteFileData() {
 }
 
 vector<bool> FileStorage::getOptionFileData() {
-	vector<bool> boolVector (2);
-	string content;
-	bool is12 = true;
-	bool isWide = true;
-	ifstream readFile(optionFileName.c_str());
-	while(getline(readFile, content)) {
-	    for(int i = 0; i < boolVector.size(); i++) {
-		boolVector[0] = is12;
-		boolVector[1] = isWide;
-	    boolVector.push_back(i);    
+	if(isFileEmpty(_optionFileName)) {
+		updateOptionsFile();
 	}
+
+	vector<bool> boolVector;
+	bool content;
+	ifstream readFile(_optionFileName.c_str());
+	while(readFile >> content) {
+		boolVector.push_back(content);    
 	}
 	readFile.close();
 
@@ -137,7 +120,7 @@ void FileStorage::addLineToFile(Item item) {
 }
 
 void FileStorage::addLineToArchive(Item item) {
-	addLine(item, archiveFileName);
+	addLine(item, _archiveFileName);
 }
 
 void FileStorage::addLine(Item item, const string& fileName) {
@@ -179,50 +162,32 @@ void FileStorage::addLine(Item item, const string& fileName) {
 	outFile.close();
 }
 
-void FileStorage::addLineToInputBankFile(vector<string> input) {
-	fstream outFile;
-	vector<string> ::iterator iter;
-
-	outFile.open(inputBankFileName.c_str(), fstream ::out | fstream ::app);
-	for (iter = input.begin(); iter != input.end(); iter++) {
-    outFile << *iter << endl;
-	}
-	outFile.close();
-}
 
 void FileStorage::addLineToAutoCompleteFile(string s) {
 	fstream outFile;
 
-	outFile.open(autoCompleteFileName.c_str(), fstream::out | fstream::app);
+	outFile.open(_autoCompleteFileName.c_str(), fstream::out | fstream::app);
 	outFile << s << endl;
 	outFile.close();
 }
 
-void FileStorage::addLineToOptions(string input) {
-	fstream outFile;
-	ostringstream out;
-	bool is12Hr = true;
-	bool isWide = true;
-	
-	outFile.open(optionFileName.c_str(), fstream::out |fstream ::app);
-	if (is12Hr) {
-	    out << true;
-	}
-	else {
-		out << false;
-	}
-    if (isWide) {
-        out << true;
-	}
-	else {
-		out << false;
-	}
-	string temp = out.str();
-	outFile << temp<< endl;
+void FileStorage::saveIs12Hr(bool is12Hr) {
+	_is12Hr = is12Hr;
+	updateOptionsFile();
+}
+
+void FileStorage::saveIs12Wide(bool isWide) {
+	_isWide = isWide;
+	updateOptionsFile();
+}
+
+void FileStorage::updateOptionsFile() {
+	ofstream outFile(_optionFileName.c_str());
+	outFile << _is12Hr << endl;
+	outFile << _isWide << endl;
 	outFile.close();
 }
 
-//@author A0111951N
 bool FileStorage::clearFile() {
 	fstream outFile;
 	outFile.open(getFullFileName(), fstream::out | fstream::trunc);
@@ -230,10 +195,9 @@ bool FileStorage::clearFile() {
 	return true;
 }
 
-//@author A0115452N
 bool FileStorage::clearAutoCompleteFile() {
 	fstream outFile;
-	outFile.open(autoCompleteFileName.c_str(), fstream::out | fstream::trunc);
+	outFile.open(_autoCompleteFileName.c_str(), fstream::out | fstream::trunc);
 	outFile.close();
 	return true;
 }
@@ -261,7 +225,7 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 		return false;
 	}
 
-	string newFullFileName = newFilePath + "\\" + fileName;
+	string newFullFileName = newFilePath + "\\" + _fileName;
 
 	if(fileExists(newFullFileName)) {
 		return false;
@@ -298,28 +262,28 @@ bool FileStorage::isFileEmpty(string file) {
 
 
 void FileStorage::getFileConfigInfo() {
-	ifstream inFile(fileConfigFileName.c_str());
-	getline(inFile, fileName);
-	getline(inFile, filePath);
+	ifstream inFile(_fileConfigFileName.c_str());
+	getline(inFile, _fileName);
+	getline(inFile, _filePath);
 	inFile.close();
 
 }
 
 void FileStorage::initializeFileConfig() {
-	setFileName(defaultFileName);
-	setFilePath(programFilePath());
+	setFileName(_defaultFileName);
+	setFilePath(getProgramFilePath());
 
 	updateFileConfigInfo();
 }
 
 void FileStorage::updateFileConfigInfo() {
-	ofstream outFile(fileConfigFileName.c_str());
-	outFile << fileName << endl;
-	outFile << filePath << endl;
+	ofstream outFile(_fileConfigFileName.c_str());
+	outFile << _fileName << endl;
+	outFile << _filePath << endl;
 	outFile.close();
 }
 
-string FileStorage::programFilePath() {
+string FileStorage::getProgramFilePath() {
 	char buffer[MAX_PATH];
 	GetModuleFileName( NULL, buffer, MAX_PATH );
 	string::size_type pos = string( buffer ).find_last_of( "\\/" );
@@ -328,9 +292,8 @@ string FileStorage::programFilePath() {
 
 //@author A0115452N
 void FileStorage::restoreFileInfo () {
-    rename(defaultFileName.c_str(), getFullFileName().c_str());
-    string filePath=programFilePath();
-	changeFileLocation(filePath);
+	changeFileName(_defaultFileName.c_str());
+	changeFileLocation(getProgramFilePath());
 }
 
 FileStorage::~FileStorage(void) {
