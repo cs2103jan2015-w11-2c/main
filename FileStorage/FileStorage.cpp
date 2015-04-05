@@ -20,7 +20,10 @@ FileStorage::FileStorage(void) {
 FileStorage*FileStorage::theOne=nullptr;
 
 FileStorage*FileStorage::getInstance(){
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3dd3561fbea8dd1c78eb590b69bc71ae1362e4b3
 	if(theOne == nullptr) {
 	theOne = new FileStorage();
 	return theOne;
@@ -87,15 +90,26 @@ vector<Item> FileStorage::getArchiveData() {
 	return tempVector;
 }
 
-
 vector<string> FileStorage::getInputBankData() {
 	vector<string> tempVector;
+<<<<<<< HEAD
+=======
+	vector<string> tempVector2 = parse.getFragmentedEvent();
+	vector<string>::iterator iter;
+>>>>>>> 3dd3561fbea8dd1c78eb590b69bc71ae1362e4b3
 	string content;
 
 	ifstream readFile(inputBankFileName.c_str());
 	while(getline(readFile, content)) {
+<<<<<<< HEAD
 		tempVector.push_back(content);
     }
+=======
+		for(iter = tempVector2.begin(); iter != tempVector2.end(); iter++)
+		sentence = *iter;
+		tempVector.push_back(sentence);
+	     }
+>>>>>>> 3dd3561fbea8dd1c78eb590b69bc71ae1362e4b3
 	readFile.close();
 
 	return tempVector;
@@ -206,7 +220,6 @@ void FileStorage::addLineToOptions(string input) {
 	outFile.close();
 }
 
-//@author A0111951N
 bool FileStorage::clearFile() {
 	fstream outFile;
 	outFile.open(getFullFileName(), fstream::out | fstream::trunc);
@@ -214,7 +227,6 @@ bool FileStorage::clearFile() {
 	return true;
 }
 
-//@author A0115452N
 bool FileStorage::clearAutoCompleteFile() {
 	fstream outFile;
 	outFile.open(autoCompleteFileName.c_str(), fstream::out | fstream::trunc);
@@ -305,10 +317,19 @@ string FileStorage::programFilePath() {
 }
 
 //@author A0115452N
+<<<<<<< HEAD
 void FileStorage::restoreFileInfo () {
     rename(defaultFileName.c_str(), getFullFileName().c_str());
     string filePath=programFilePath();
 	changeFileLocation(filePath);
+=======
+void FileStorage::restoreFileInfo() {
+    ifstream inFile(fileConfigFileName.c_str ());
+	initializeFileConfig();
+	getline(inFile, fileName);
+	getline(inFile, filePath);
+	inFile.close();
+>>>>>>> 3dd3561fbea8dd1c78eb590b69bc71ae1362e4b3
 }
 
 FileStorage::~FileStorage(void) {
