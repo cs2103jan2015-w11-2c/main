@@ -81,12 +81,6 @@ public:
 				return false;
 			}
 		}
-		if (item1.colour != item2.colour) {
-			return false;
-		}
-		if (item1.bold != item2.bold) {
-			return false;
-		}
 		return true;
 	}
 
