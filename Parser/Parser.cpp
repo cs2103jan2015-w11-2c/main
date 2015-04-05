@@ -77,14 +77,13 @@ void Parser::extractUserCommand() {
 }
 
 size_t Parser::findDateKeyWord(string inputLine, string delimiter) {
-	size_t dateStart = inputLine.rfind(delimiter);
+	string line = convertStringToLowerCase(inputLine);
+	size_t dateStart = line.rfind(delimiter);
 	string temp;
 	if(dateStart != string::npos) {
-		string line = convertStringToLowerCase(inputLine);
-		if(line[--dateStart] == 'm') { //if mon or monday
-			string temp = inputLine.substr(0, dateStart);
+		if(line[(dateStart - 1)] == 'm') { //if mon or monday
+			string temp = line.substr(0, dateStart);
 			dateStart = temp.rfind(delimiter);
-			dateStart--;
 		}
 		if((dateStart != string::npos) && isCorrectDateDelimiter(line, dateStart)) {
 			return dateStart;
@@ -102,7 +101,7 @@ bool Parser::isCorrectDateDelimiter(string inputLine, size_t index) {
 		return false;
 	}
 	temp = temp.substr(spacePos + 1);
-	
+
 	istringstream iss(temp);
 	string word;
 	while((iss >> word) && isDate) {
@@ -129,14 +128,14 @@ bool Parser::isDateKeyword(string word) {
 // try - catch to be moved to Controller?
 void Parser::extractDateAndTime() {
 	size_t delimiterIndex = findDateKeyWord(_item.event, DATE_START_1);
-	
+
 	if(delimiterIndex == string::npos) {
 		delimiterIndex = findDateKeyWord(_item.event, DATE_START_2);
 	}
 
 	if (delimiterIndex != string::npos) {
-		string rawDateTimeChunk = _item.event.substr(delimiterIndex + 1);
-		_item.event = removeSpacePadding(_item.event.substr(0, delimiterIndex + 1));
+		string rawDateTimeChunk = _item.event.substr(delimiterIndex);
+		_item.event = removeSpacePadding(_item.event.substr(0, delimiterIndex));
 		rawDateTimeChunk = convertStringToLowerCase(rawDateTimeChunk);
 
 		try {
@@ -166,7 +165,7 @@ string Parser::convertStringToLowerCase(string inputString) {
 }
 
 
-//@author SHANSHAN
+//@author A0114613U
 vector <string> Parser::getFragmentedEvent(){
 	vector<string> outputVec;
 
@@ -274,7 +273,7 @@ void Parser::extractSearchQuery(Item &item) {
 		if (itemEvent != STRING_FLOATING) {
 			itemEvent = convertStringToLowerCase(itemEvent);
 			dateTimeParser.updateItemDateTime(itemEvent, temp);
-			
+
 			if (dateTimeParser.getUpdateDateFlag() || dateTimeParser.getUpdateTimeFlag()) {
 				temp.event = "";
 			}
