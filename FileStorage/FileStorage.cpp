@@ -19,17 +19,10 @@ FileStorage::FileStorage(void) {
 
 FileStorage*FileStorage::theOne=nullptr;
 
-FileStorage*FileStorage::getInstance(){
-
-<<<<<<< HEAD
-	if(theOne == nullptr) {
-	theOne = new FileStorage();
-	return theOne;
-=======
+FileStorage*FileStorage::getInstance() {
 	if(theOne==nullptr) {
 		theOne = new FileStorage();
 		return theOne;
->>>>>>> master
 	}
 }
 
