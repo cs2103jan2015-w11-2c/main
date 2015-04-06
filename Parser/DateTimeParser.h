@@ -38,6 +38,7 @@ private:
 
 	bool _updateDateFlag;
 	bool _updateTimeFlag;
+	bool _isFloating;
 
 public:
 	DateTimeParser(void);
@@ -65,6 +66,7 @@ public:
 	void extractDateTime(string [], int);
 
 	//returns the weekday number if a match is found
+	//returns 0 for today, -2 for tomorrow and -3 for floating 
 	//returns -1 if match is not found
 	int mapWeekDay(string);
 
@@ -73,6 +75,7 @@ public:
 	int mapMonth(string);
 
 	//sets the day, month and year from weekday input
+	//-2 takesn as tomorrow, -3 as floating
 	void setDateFromWeekDay(int weekDayIndex, int& day, int& month, int& year);
 
 	//accounts for "next" when weekday is specified,
@@ -95,6 +98,11 @@ public:
 	//returns true if the string is a possible time
 	bool isPossibleTime(string input);
 
+	//retuns true if m, or pis found
+	//updates the date to 24hr format
+	bool is12Hour(char, int&);
+
+	//overloaded function
 	//retuns true if m, p, or pm is found
 	//updates the date to 24hr format
 	bool is12Hour(string, int&);
@@ -113,6 +121,7 @@ public:
 	void verifyItemDate(int&, int&, int&);
 
 	//if no start date is set, it is set to today
+	//unless the date is implicitly specified as "floating"
 	void updateItemStartDate();
 
 	//throws an out_of_range exception if time is invalid

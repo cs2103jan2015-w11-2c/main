@@ -49,7 +49,6 @@ void Controller::executeCommand(string inputText) {
 		addToInputBank();
 	}
 
-
 	if(userCommand == "search") {
 		_isSearch = true;
 	} else {
