@@ -24,7 +24,7 @@ public:
 		string output = parse.getUserCommand();
 		Assert::AreEqual(expectedOutput, output);
 
-		parse.setStringToParse("adit task1 have lunch on tues");
+		parse.setStringToParse("edit task1 have lunch on tues");
 		parse.extractUserCommand();
 		expectedOutput = "edit";
 		output = parse.getUserCommand();
@@ -63,16 +63,16 @@ public:
 		Assert::AreEqual(expected, parse.getUserCommand());
 	}
 	
-	/* fails the test
+	// fails the test
 	TEST_METHOD(findDateKeyWordTest) {
 		Parser parse;
-		string input = "call John on tuesday";
-		size_t expectedPos = input.rfind("on");
-		string delimiter = "on";
+		string input = "call John from tuesday";
+		size_t expectedPos = input.rfind("from");
+		string delimiter = "from";
 		Assert::AreEqual(expectedPos, parse.findDateKeyWord(input, delimiter));
 
 	}
-	*/
+	
 	
 	//author A0114613U
 	TEST_METHOD(isCorrectDateDelimiterTest) {
@@ -459,7 +459,7 @@ public:
 		/*test for the boundary case when the input dateTimestring is empty*/
 		input = ""; 
 		parse.calculateDateTime(input);
-		expectedDate = 5;
+		expectedDate = 6;
 		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
 		expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
@@ -507,7 +507,7 @@ public:
 			e;
 		}
 
-		int expectedDay = 2;
+		int expectedDay = 6;
 		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
 		int expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
@@ -666,14 +666,14 @@ public:
 		} catch (const out_of_range& e) {	
 			e;
 		}
-		int expectedDay = 10;
+		int expectedDay = 17;
 		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
 		int expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
 		int expectedYear = 2015;
 		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
 
-		int expectedEndDay = 15;
+		int expectedEndDay = 22;
 		Assert::AreEqual(expectedEndDay, parse.getItem().eventEndDate[0]);
 		int expectedEndMonth = 4;
 		Assert::AreEqual(expectedEndMonth, parse.getItem().eventEndDate[1]);
@@ -744,11 +744,11 @@ public:
 		int expectedYear = 2015;
 		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
 
-		int expectedEndDay = 24;
+		int expectedEndDay = 0;
 		Assert::AreEqual(expectedEndDay, parse.getItem().eventEndDate[0]);
-		int expectedEndMonth = 3;
+		int expectedEndMonth = 0;
 		Assert::AreEqual(expectedEndMonth, parse.getItem().eventEndDate[1]);
-		int expectedEndYear = 2015;
+		int expectedEndYear = 0;
 		Assert::AreEqual(expectedEndYear, parse.getItem().eventEndDate[2]);
 
 		int expectedStartHour = 18;
@@ -913,7 +913,7 @@ public:
 		int month;
 		int year;
 		/*test for a weekday on the same week*/
-		int expectedDay = 5;
+		int expectedDay = 12;
 		int expectedMonth = 4;
 		int expectedYear = 2015;
 		parse.setDateFromWeekDay(7, day, month, year);
@@ -1274,7 +1274,7 @@ public:
 		/*boundary case where all of day/month/year are zeros*/
 		parse.resetItemDateTime();
 		parse.updateItemStartDate();
-		expectedEventDate0 = 5; 
+		expectedEventDate0 = 6; 
 		expectedEventDate1 = 4; 
 		expectedEventDate2 = 2015; 
 		Assert::AreEqual(expectedEventDate0, parse.getItem().eventDate[0]);

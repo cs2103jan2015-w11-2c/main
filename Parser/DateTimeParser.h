@@ -20,6 +20,7 @@ private:
 	static const string ERROR_INVALID_DATE_INPUT;
 	static const string ERROR_INVALID_TIME_INPUT;
 	static const string ERROR_INVALID_END_TIME;
+	static const int NUM_DATE;
 
 	Item _item;
 	DateTime _dateTime;
@@ -37,6 +38,7 @@ private:
 
 	bool _updateDateFlag;
 	bool _updateTimeFlag;
+	bool _isDateChangedFromFloat;
 
 public:
 	DateTimeParser(void);
@@ -143,5 +145,7 @@ public:
 	bool getUpdateDateFlag();
 
 	bool getUpdateTimeFlag();
+
+	bool getIsDateUpdatedFromFloat();
 };
 

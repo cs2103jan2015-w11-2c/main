@@ -119,6 +119,14 @@ void Controller::setSuccessMessage(string message) {
 
 void Controller::initializeVector() {
 	_vectorStore = _outputFile->getAllFileData();
+	_inputBank = _outputFile->getAutoCompleteFileData();
+}
+
+void Controller::initializeOptions() {
+	vector<bool> options = _outputFile->getOptionFileData();
+
+	_is12HourFormat = options[0];
+	_isWide = options[1];
 }
 
 long Controller::getTimePos(const int date[3], const int time[2]) {
@@ -491,6 +499,7 @@ bool Controller::isSearch() {
 
 void Controller::toggleIsWide() {
 	_isWide = !_isWide;
+	_outputFile->saveIsWide(_isWide);
 }
 
 bool Controller::isWide() {
@@ -540,7 +549,7 @@ void Controller::rename(string newFileName) {
 }
 
 void Controller::move(string newFileLocation) {
-	MoveFileLocation *moveFileCommand = new MoveFileLocation;
+	MoveFileLocation *moveFileCommand = new MoveFileLocation(newFileLocation);
 	_invoker->executeCommand(_outputFile, moveFileCommand, _successMessage);
 }
 
@@ -649,6 +658,7 @@ void Controller::addToInputBank() {
 		}
 		if (!isFound) {
 			_inputBank.push_back(*iter1);
+			_outputFile->addLineToAutoCompleteFile(*iter1);
 		}
 	}
 }
@@ -660,11 +670,13 @@ vector<string> Controller::getInputBank() {
 void Controller::setClockTo12Hour() {
 	_is12HourFormat = true;
 	generateResults(_vectorStore);
+	_outputFile->saveIs12Hr(_is12HourFormat);
 }
 
 void Controller::setClockTo24Hour() {
 	_is12HourFormat = false;
 	generateResults(_vectorStore);
+	_outputFile->saveIs12Hr(_is12HourFormat);
 }
 
 Controller::~Controller(void) {

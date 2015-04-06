@@ -204,6 +204,14 @@ Void MessageManager::colorTextInTaskBox(
 			taskBox->SelectionAlignment = HorizontalAlignment::Left;
 		}
 
+		//end date
+		for(unsigned int i = 0; i < _endDateHighlight->size(); i++) {
+			taskBox->Select(_endDateHighlight->at(i).index, _endDateHighlight->at(i).length);
+			taskBox->SelectionColor = System::Drawing::Color::DarkGreen;
+			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 10, FontStyle::Regular);
+			taskBox->SelectionAlignment = HorizontalAlignment::Left;
+		}
+
 		//event
 		for(unsigned int i = 0; i < _eventHighlight->size(); i++) {
 			taskBox->Select(_eventHighlight->at(i).index, _eventHighlight->at(i).length);

@@ -1,51 +1,54 @@
 #include "FileStorage.h"
-//@author A0111951N
-FileStorage::FileStorage(void) {
-	fileConfigFileName = "fileConfigurations.txt";
-	defaultFileName = "MagicMemo Task List.txt";
-	archiveFileName = "backup.txt";
 
-	if(isFileEmpty(fileConfigFileName)) {  //if not initialized
+//@author A0115452N
+FileStorage::FileStorage(void) {
+	_fileConfigFileName = "FileConfigurations.txt";
+	_defaultFileName = "MagicMemo Task List.txt";
+	_archiveFileName = "Backup.txt";
+	_optionFileName = "Options.txt";
+	_autoCompleteFileName = "Auto-complete.txt";
+
+	_is12Hr = true;
+	_isWide = false;
+
+	if(isFileEmpty(_fileConfigFileName)) {  //if not initialized
 		initializeFileConfig();
 	}
 
 	getFileConfigInfo();
-	fullFileName = getFullFileName();
+	_fullFileName = getFullFileName();
 }
 
-//@author A0115452N
 FileStorage*FileStorage::theOne=nullptr;
 
-FileStorage*FileStorage::getInstance(){
-
+FileStorage*FileStorage::getInstance() {
 	if(theOne==nullptr) {
 		theOne = new FileStorage();
 		return theOne;
 	}
 }
 
-//@author A0111951N
 void FileStorage::setFileName(string newFileName) {
-	fileName = newFileName;
+	_fileName = newFileName;
 }
 
 void FileStorage::setFilePath(string newFilePath) {
-	filePath = newFilePath;
+	_filePath = newFilePath;
 }
 
 string FileStorage::getFileName() {
-	return fileName;
+	return _fileName;
 }
 
 string FileStorage::getFileLocation() {
-	return filePath;
+	return _filePath;
 }
 
 string FileStorage::getFullFileName() {
-	if(filePath == "") {
-		return fileName;
+	if(_filePath == "") {
+		return _fileName;
 	} else {
-		return (filePath + "\\" + fileName);
+		return (_filePath + "\\" + _fileName);
 	}
 }
 
@@ -66,13 +69,12 @@ vector<Item> FileStorage::getAllFileData() {
 	return tempVector;
 }
 
-//@author A0115452N
 vector<Item> FileStorage::getArchiveData() {
 	vector<Item> tempVector;
 	Parser parse;
 	string content;
 
-	ifstream readFile(archiveFileName.c_str());
+	ifstream readFile(_archiveFileName.c_str());
 	while(getline(readFile, content)) {
 		parse.setStringToParse(content);
 		parse.extractDateAndTime();
@@ -84,12 +86,41 @@ vector<Item> FileStorage::getArchiveData() {
 	return tempVector;
 }
 
+vector<string> FileStorage::getAutoCompleteFileData() {
+	vector<string> tempVector;
+	string content;
+
+	ifstream readFile(_autoCompleteFileName.c_str());
+	while(getline(readFile, content)) {
+		tempVector.push_back(content);
+	}
+	readFile.close();
+
+	return tempVector;
+}
+
+vector<bool> FileStorage::getOptionFileData() {
+	if(isFileEmpty(_optionFileName)) {
+		updateOptionsFile();
+	}
+
+	vector<bool> boolVector;
+	bool content;
+	ifstream readFile(_optionFileName.c_str());
+	while(readFile >> content) {
+		boolVector.push_back(content);    
+	}
+	readFile.close();
+
+	return boolVector;
+}
+
 void FileStorage::addLineToFile(Item item) {
 	addLine(item, getFullFileName());
 }
 
 void FileStorage::addLineToArchive(Item item) {
-	addLine(item, archiveFileName);
+	addLine(item, _archiveFileName);
 }
 
 void FileStorage::addLine(Item item, const string& fileName) {
@@ -131,7 +162,32 @@ void FileStorage::addLine(Item item, const string& fileName) {
 	outFile.close();
 }
 
-//@author A0111951N
+
+void FileStorage::addLineToAutoCompleteFile(string s) {
+	fstream outFile;
+
+	outFile.open(_autoCompleteFileName.c_str(), fstream::out | fstream::app);
+	outFile << s << endl;
+	outFile.close();
+}
+
+void FileStorage::saveIs12Hr(bool is12Hr) {
+	_is12Hr = is12Hr;
+	updateOptionsFile();
+}
+
+void FileStorage::saveIsWide(bool isWide) {
+	_isWide = isWide;
+	updateOptionsFile();
+}
+
+void FileStorage::updateOptionsFile() {
+	ofstream outFile(_optionFileName.c_str());
+	outFile << _is12Hr << endl;
+	outFile << _isWide << endl;
+	outFile.close();
+}
+
 bool FileStorage::clearFile() {
 	fstream outFile;
 	outFile.open(getFullFileName(), fstream::out | fstream::trunc);
@@ -139,6 +195,14 @@ bool FileStorage::clearFile() {
 	return true;
 }
 
+bool FileStorage::clearAutoCompleteFile() {
+	fstream outFile;
+	outFile.open(_autoCompleteFileName.c_str(), fstream::out | fstream::trunc);
+	outFile.close();
+	return true;
+}
+
+//@author A0111951N
 bool FileStorage::changeFileName(string newFileName) {
 	if(fileExists(newFileName)) {
 		return false;
@@ -146,7 +210,9 @@ bool FileStorage::changeFileName(string newFileName) {
 	string oldFileName = getFullFileName();
 	setFileName(newFileName);
 	rename(oldFileName.c_str(), getFullFileName().c_str());
+
 	updateFileConfigInfo();
+
 	return true;
 }
 
@@ -159,7 +225,7 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 		return false;
 	}
 
-	string newFullFileName = newFilePath + "\\" + fileName;
+	string newFullFileName = newFilePath + "\\" + _fileName;
 
 	if(fileExists(newFullFileName)) {
 		return false;
@@ -167,7 +233,9 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 
 	rename(getFullFileName().c_str(), newFullFileName.c_str());
 	setFilePath(newFilePath);
+
 	updateFileConfigInfo();
+
 	return true;
 }
 
@@ -192,32 +260,40 @@ bool FileStorage::isFileEmpty(string file) {
 	return false;
 }
 
+
 void FileStorage::getFileConfigInfo() {
-	ifstream inFile(fileConfigFileName.c_str());
-	getline(inFile, fileName);
-	getline(inFile, filePath);
+	ifstream inFile(_fileConfigFileName.c_str());
+	getline(inFile, _fileName);
+	getline(inFile, _filePath);
 	inFile.close();
 
 }
 
 void FileStorage::initializeFileConfig() {
-	setFileName(defaultFileName);
-	setFilePath(programFilePath());
+	setFileName(_defaultFileName);
+	setFilePath(getProgramFilePath());
+
 	updateFileConfigInfo();
 }
 
 void FileStorage::updateFileConfigInfo() {
-	ofstream outFile(fileConfigFileName.c_str());
-	outFile << fileName << endl;
-	outFile << filePath << endl;
+	ofstream outFile(_fileConfigFileName.c_str());
+	outFile << _fileName << endl;
+	outFile << _filePath << endl;
 	outFile.close();
 }
 
-string FileStorage::programFilePath() {
+string FileStorage::getProgramFilePath() {
 	char buffer[MAX_PATH];
 	GetModuleFileName( NULL, buffer, MAX_PATH );
 	string::size_type pos = string( buffer ).find_last_of( "\\/" );
 	return string( buffer ).substr( 0, pos);
+}
+
+//@author A0115452N
+void FileStorage::restoreFileInfo () {
+	changeFileName(_defaultFileName.c_str());
+	changeFileLocation(getProgramFilePath());
 }
 
 FileStorage::~FileStorage(void) {

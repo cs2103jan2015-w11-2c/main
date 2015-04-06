@@ -11,16 +11,21 @@ using namespace std;
 
 class FileStorage {
 private:
-	string fileConfigFileName;
-	string defaultFileName;
-	string fileName;
-	string filePath;
-	string fullFileName;
-	string archiveFileName;
+	string _fileConfigFileName;
+	string _defaultFileName;
+	string _fileName;
+	string _filePath;
+	string _fullFileName;
+	string _archiveFileName;
+	string _optionFileName;
+	string _autoCompleteFileName;
+	bool _is12Hr;
+	bool _isWide;
 	static FileStorage* theOne;
 	FileStorage(void);
 
 public:
+
 	static FileStorage* getInstance();
 
 	void setFileName(string);
@@ -37,15 +42,37 @@ public:
 
 	vector<Item> getArchiveData();
 
+	//returns a vector of auto-complete bank data
+	vector<string> getAutoCompleteFileData();
+
+	//returns an options vector:
+	//first element - is12Hr;
+	//second element - isWide;
+	vector<bool> getOptionFileData();
+
 	//main text file
 	void addLineToFile(Item);
 
 	//archive file
 	void addLineToArchive(Item);
-
+	
+	//general method
 	void addLine(Item, const string&);
 
+	//auto-complete file
+	void addLineToAutoCompleteFile(string); 
+
+	void saveIs12Hr(bool);
+
+	void saveIsWide(bool);
+
+	//update options file
+	void updateOptionsFile();
+
 	bool clearFile();
+	
+	//clear auto-complete file
+	bool clearAutoCompleteFile();
 
 	//returns false if new filename already exists
 	bool changeFileName(string newFileName); 
@@ -71,7 +98,10 @@ public:
 	void updateFileConfigInfo();
 
 	//returns the directory of the program
-	string programFilePath();
+	string getProgramFilePath();
+
+	//restore the default filename and filepath
+	void restoreFileInfo();
 
 	~FileStorage(void);
 };

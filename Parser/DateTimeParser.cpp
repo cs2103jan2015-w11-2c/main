@@ -6,6 +6,7 @@ const string DateTimeParser::ERROR_NO_TIME_SPECIFIED = "Invalid input: Time expe
 const string DateTimeParser::ERROR_INVALID_DATE_INPUT = "Invalid date input!";
 const string DateTimeParser::ERROR_INVALID_TIME_INPUT = "Invalid time input!";
 const string DateTimeParser::ERROR_INVALID_END_TIME = "Invalid end time: end time must be greater than start time";
+const int DateTimeParser::NUM_DATE = 10;
 
 DateTimeParser::DateTimeParser(void) {
 	_day = 0;
@@ -20,6 +21,7 @@ DateTimeParser::DateTimeParser(void) {
 	_endMinute = 0;
 	_updateDateFlag = false;
 	_updateTimeFlag = false;
+	_isDateChangedFromFloat = false;
 }
 
 
@@ -57,22 +59,29 @@ void DateTimeParser::resetItemDateTime() {
 }
 
 void DateTimeParser::updateItemFields() {
+	_isDateChangedFromFloat = false;
 	if(_item.eventDate[0] == 0) {
+		_isDateChangedFromFloat = true;
 		_item.eventDate[0] = _day;
 	}
 	if(_item.eventDate[1] == 0) {
+		_isDateChangedFromFloat = true;
 		_item.eventDate[1] = _month;
 	}
 	if(_item.eventDate[2] == 0) {
+		_isDateChangedFromFloat = true;
 		_item.eventDate[2] = _year;
 	}
 	if(_item.eventEndDate[0] == 0) {
+		_isDateChangedFromFloat = true;
 		_item.eventEndDate[0] = _endDay;
 	}
 	if(_item.eventEndDate[1] == 0) {
+		_isDateChangedFromFloat = true;
 		_item.eventEndDate[1] = _endMonth;
 	}
 	if(_item.eventEndDate[2] == 0) {
+		_isDateChangedFromFloat = true;
 		_item.eventEndDate[2] = _endYear;
 	}
 	if((_item.eventStartTime[0] == 0) || ((_item.eventStartTime[0] + 12) == _startHour)) {
@@ -104,7 +113,7 @@ size_t DateTimeParser::findDateDelimiters(string inputLine) {
 
 void DateTimeParser::calculateDateTime(string input) {
 	istringstream iss(input);
-	string demarcateDateTime[9];
+	string demarcateDateTime[NUM_DATE];
 	int i = 0;
 	while (iss >> demarcateDateTime[i]) {
 		i++;
@@ -549,3 +558,6 @@ bool DateTimeParser::getUpdateTimeFlag() {
 	return _updateTimeFlag;
 }
 
+bool DateTimeParser::getIsDateUpdatedFromFloat() {
+	return _isDateChangedFromFloat;
+}
