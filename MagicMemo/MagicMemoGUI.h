@@ -13,6 +13,12 @@
 
 using namespace std;
 
+// interval to check for deadlines/events 
+// TICK_MIN * TICK_SEC * TICK_MS
+static const int TICK_MIN = 1;
+static const int TICK_SEC = 10;
+static const int TICK_MS = 1000;
+
 namespace MagicMemo {
 
 	using namespace System;
@@ -27,7 +33,7 @@ namespace MagicMemo {
 	/// </summary>
 	public ref class MagicMemoGUI : public System::Windows::Forms::Form {
 	private:
-		MessageManager^ magicManager;
+		static MessageManager^ magicManager;
 
 	public:
 		MagicMemoGUI(void) {
@@ -291,8 +297,26 @@ namespace MagicMemo {
 		}
 
 	private: 
+		// Initializes the timer
 		System::Void MagicMemoGUI_Load(System::Object^  sender, System::EventArgs^  e) {
+			//Timer^ MyTimer = gcnew Timer;
+			//MyTimer->Tick += gcnew EventHandler(popupDeadlines);
+			//MyTimer->Interval = (TICK_MIN * TICK_SEC * TICK_MS);
+			//MyTimer->Start();
 		}
+		/*
+	private:
+		// Displays events
+		static void popupDeadlines(System::Object^  sender, System::EventArgs^  e) {
+			magicManager->generateMessageOutputs("display");
+			MessageBox::Show(
+				"Message 1\nMessage 2\nMessage3", 
+				"Title", 
+				MessageBoxButtons::OK, 
+				MessageBoxIcon::Asterisk, 
+				MessageBoxDefaultButton::Button1, 
+				MessageBoxOptions::DefaultDesktopOnly);
+		}*/
 
 	private:
 		// Sets success message and fills task boxes
