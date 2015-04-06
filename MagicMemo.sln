@@ -11,7 +11,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Parser", "Parser\Parser.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Logic", "Logic\Logic.vcxproj", "{61C77A61-61C8-4DE5-8D56-53AECE2F16B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUITest", "GUITest\GUITest.csproj", "{011D161B-274B-4E23-AB04-63BA0BB473C2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F0DA5C36-D64D-4686-90A2-CD9B39C24439}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,16 +76,6 @@ Global
 		{61C77A61-61C8-4DE5-8D56-53AECE2F16B8}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{61C77A61-61C8-4DE5-8D56-53AECE2F16B8}.Release|Win32.ActiveCfg = Release|Win32
 		{61C77A61-61C8-4DE5-8D56-53AECE2F16B8}.Release|Win32.Build.0 = Release|Win32
-		{011D161B-274B-4E23-AB04-63BA0BB473C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{011D161B-274B-4E23-AB04-63BA0BB473C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{011D161B-274B-4E23-AB04-63BA0BB473C2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{011D161B-274B-4E23-AB04-63BA0BB473C2}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{011D161B-274B-4E23-AB04-63BA0BB473C2}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{011D161B-274B-4E23-AB04-63BA0BB473C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{011D161B-274B-4E23-AB04-63BA0BB473C2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{011D161B-274B-4E23-AB04-63BA0BB473C2}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{011D161B-274B-4E23-AB04-63BA0BB473C2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{011D161B-274B-4E23-AB04-63BA0BB473C2}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
