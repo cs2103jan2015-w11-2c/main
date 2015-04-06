@@ -274,7 +274,8 @@ void Parser::extractSearchQuery(Item &item) {
 			itemEvent = convertStringToLowerCase(itemEvent);
 			dateTimeParser.updateItemDateTime(itemEvent, temp);
 
-			if (dateTimeParser.getUpdateDateFlag() || dateTimeParser.getUpdateTimeFlag()) {
+			if (!dateTimeParser.getIsDateUpdatedFromFloat() &&
+				(dateTimeParser.getUpdateDateFlag() || dateTimeParser.getUpdateTimeFlag())) {
 				temp.event = "";
 			}
 			if (!dateTimeParser.getUpdateDateFlag()) {
