@@ -64,7 +64,7 @@ public:
 
 	void saveIs12Hr(bool);
 
-	void saveIs12Wide(bool);
+	void saveIsWide(bool);
 
 	//update options file
 	void updateOptionsFile();

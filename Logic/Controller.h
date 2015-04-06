@@ -76,6 +76,8 @@ public:
 
 	void setSuccessMessage(string);
 
+	void initializeOptions();
+
 	void initializeVector();
 
 	long getTimePos(const int [3], const int [2]);

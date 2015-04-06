@@ -176,7 +176,7 @@ void FileStorage::saveIs12Hr(bool is12Hr) {
 	updateOptionsFile();
 }
 
-void FileStorage::saveIs12Wide(bool isWide) {
+void FileStorage::saveIsWide(bool isWide) {
 	_isWide = isWide;
 	updateOptionsFile();
 }
