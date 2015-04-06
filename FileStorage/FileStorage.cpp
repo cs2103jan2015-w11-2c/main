@@ -291,9 +291,15 @@ string FileStorage::getProgramFilePath() {
 }
 
 //@author A0115452N
-void FileStorage::restoreFileInfo () {
-	changeFileName(_defaultFileName.c_str());
-	changeFileLocation(getProgramFilePath());
+bool FileStorage::restoreFileInfo() {
+    changeFileName(_defaultFileName.c_str());
+	if (_fileName == getFullFileName()) {
+		return false;
+	} 
+	else {
+		changeFileLocation(getProgramFilePath());
+	} 
+	return true;
 }
 
 FileStorage::~FileStorage(void) {
