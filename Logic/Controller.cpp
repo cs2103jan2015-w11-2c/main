@@ -441,6 +441,7 @@ int Controller::getLineNumberForOperation() {
 			return 0;
 		}
 	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
 		LOG(ERROR) << "getLinenumberForOperation() throws: " << e.what();
 		clog << e.what();
 		return 0;

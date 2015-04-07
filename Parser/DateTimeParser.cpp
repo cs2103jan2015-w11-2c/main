@@ -476,7 +476,6 @@ void DateTimeParser::verifyItemTime(int& hour, int& minute) {
 	if (!_dateTime.isValidTime(hour, minute)) {
 		hour = 0;
 		minute = 0;
-		//throw std::out_of_range(ERROR_INVALID_TIME_INPUT);
 	}
 }
 
