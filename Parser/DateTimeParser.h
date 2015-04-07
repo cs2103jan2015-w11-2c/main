@@ -39,6 +39,7 @@ private:
 	bool _updateDateFlag;
 	bool _updateTimeFlag;
 	bool _isFloating;
+	bool _isDateChangedFromFloat;
 
 public:
 	DateTimeParser(void);
@@ -153,5 +154,7 @@ public:
 	bool getUpdateDateFlag();
 
 	bool getUpdateTimeFlag();
+
+	bool getIsDateUpdatedFromFloat();
 };
 
