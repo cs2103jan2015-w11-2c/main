@@ -125,8 +125,48 @@ namespace UnitTest
 	
 	}
 
-		
-		
+		TEST_METHOD(compareEarlierThanTest) {
+	    Controller control;
+		Parser parse;
+		Item item1, item2;
+		Item item3, item4;
+		Item item5, item6;
 
+		string input1 = "event on 5/5 9am";
+		string input2 = "stuff on 5/5 11am";
+		parse.setStringToParse(input1);
+		parse.extractDateAndTime();
+		item1 = parse.getItem();
+		parse.setStringToParse(input2);
+		parse.extractDateAndTime();
+		item2 = parse.getItem();
+
+		int isExpected = -1;
+		Assert::AreEqual(isExpected, control.compareEarlierThan(item1, item2));
+	 
+		string input3 = "event on 5/5/2015 9am";
+		string input4 = "stuff on 5/5/2015 9am";
+		parse.setStringToParse(input3);
+		parse.extractDateAndTime();
+		item3 = parse.getItem();
+		parse.setStringToParse(input4);
+		parse.extractDateAndTime();
+		item4 = parse.getItem();
+
+		isExpected = 0;
+		Assert::AreEqual(isExpected, control.compareEarlierThan(item3, item4));
+
+		string input5 = "event on 6/5 9am";
+		string input6 = "stuff on 5/5 11am";
+		parse.setStringToParse(input5);
+		parse.extractDateAndTime();
+		item5 = parse.getItem();
+		parse.setStringToParse(input6);
+		parse.extractDateAndTime();
+		item6 = parse.getItem();
+
+		isExpected = 1;
+		Assert::AreEqual(isExpected, control.compareEarlierThan(item5, item6));
+	}
 	};
 }
