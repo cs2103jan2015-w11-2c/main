@@ -6,7 +6,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 namespace UnitTest {
 	TEST_CLASS(ParserTest) {
 public:
-    //@author A0114613U
+	//@author A0114613U
 	TEST_METHOD(setStringToParseTest) {
 		Parser parse;
 		string input = "Add dinner with friends today";
@@ -14,6 +14,10 @@ public:
 		string expected = "Add dinner with friends today";
 		Assert::AreEqual(expected, parse.getItem().event);
 
+		input = " ";
+		parse.setStringToParse(input);
+		expected = " ";
+		Assert::AreEqual(expected, parse.getItem().event);
 	}
 
 	TEST_METHOD(getUserCommandTest) {
@@ -27,6 +31,18 @@ public:
 		parse.setStringToParse("edit task1 have lunch on tues");
 		parse.extractUserCommand();
 		expectedOutput = "edit";
+		output = parse.getUserCommand();
+		Assert::AreEqual(expectedOutput, output);
+
+		parse.setStringToParse("display");
+		parse.extractUserCommand();
+		expectedOutput = "display";
+		output = parse.getUserCommand();
+		Assert::AreEqual(expectedOutput, output);
+
+		parse.setStringToParse("add task1 have lunch on tues");
+		parse.extractUserCommand();
+		expectedOutput = "add";
 		output = parse.getUserCommand();
 		Assert::AreEqual(expectedOutput, output);
 	}
@@ -62,7 +78,7 @@ public:
 		parse.extractUserCommand();
 		Assert::AreEqual(expected, parse.getUserCommand());
 	}
-	
+
 	// fails the test
 	TEST_METHOD(findDateKeyWordTest) {
 		Parser parse;
@@ -72,8 +88,8 @@ public:
 		Assert::AreEqual(expectedPos, parse.findDateKeyWord(input, delimiter));
 
 	}
-	
-	
+
+
 	//author A0114613U
 	TEST_METHOD(isCorrectDateDelimiterTest) {
 		Parser parse;
@@ -85,6 +101,11 @@ public:
 		input = "meet John from wed 17:00";
 		pos = input.rfind("from");
 		isExpectedDel = true;
+		Assert::AreEqual(isExpectedDel,parse.isCorrectDateDelimiter(input,pos));
+
+		input = "meet John for good friday 17:00";
+		pos = input.rfind("for");
+		isExpectedDel = false;
 		Assert::AreEqual(isExpectedDel,parse.isCorrectDateDelimiter(input,pos));
 
 	}
@@ -160,11 +181,19 @@ public:
 		input = "Some Capital lettERS";
 		expected = "some capital letters";
 		Assert::AreEqual(expected, parse.convertStringToLowerCase(input));
+
+		input = " ";
+		expected = " ";
+		Assert::AreEqual(expected, parse.convertStringToLowerCase(input));
+
+		input = "all small letters";
+		expected = "all small letters";
+		Assert::AreEqual(expected, parse.convertStringToLowerCase(input));
 	}
 
 
 
-	TEST_METHOD(getFragmentedEventTest){
+	TEST_METHOD(getFragmentedEventTest1){
 		string inputString = "meet friends at school from 1/4/2015 17:25 - 19:20";
 		Item item;
 		Parser parse;
@@ -207,6 +236,43 @@ public:
 
 		string expectedOut11 = "7:20";
 		Assert::AreEqual(expectedOut11, testVect[10]);
+
+	}
+
+	TEST_METHOD(getFragmentedEventTest2){
+		string inputString = "attend lecture on 10/4 16 ";
+		Item item;
+		Parser parse;
+		parse.setStringToParse(inputString);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+
+
+		std::vector<string> testVect = parse.getFragmentedEvent();
+
+		string expectedOut1 = "attend lecture";
+		Assert::AreEqual(expectedOut1, testVect[0]);
+
+		string expectedOut2 = "lecture";
+		Assert::AreEqual(expectedOut2, testVect[1]);
+
+		string expectedOut3 = "Friday";
+		Assert::AreEqual(expectedOut3, testVect[2]);
+
+		string expectedOut4 = "10";
+		Assert::AreEqual(expectedOut4, testVect[3]);
+
+		string expectedOut5 = "4";
+		Assert::AreEqual(expectedOut5, testVect[4]);
+
+		string expectedOut6 = "April";
+		Assert::AreEqual(expectedOut6, testVect[5]);
+
+		string expectedOut7 = "2015";
+		Assert::AreEqual(expectedOut7, testVect[6]);
+
+		string expectedOut8 = "4";
+		Assert::AreEqual(expectedOut8, testVect[7]);
 
 	}
 
@@ -338,7 +404,7 @@ public:
 		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 	}
-	
+
 	//@author A0114613U	
 	/*TEST_METHOD(resetDateTimeTest) {
 	DateTimeParser parse;
@@ -414,6 +480,18 @@ public:
 		Assert::AreEqual(expectedEventDate2, parse.getItem().eventDate[1]);
 		Assert::AreEqual(expectedEventDate3, parse.getItem().eventDate[2]);
 
+		day = 1;
+		month = 0;
+		year = 0;
+		parse.setDate(day, month, year);
+		expectedEventDate1 = 1;
+		expectedEventDate2 = 0;
+		expectedEventDate3 = 0;
+
+		Assert::AreEqual(expectedEventDate1, parse.getItem().eventDate[0]);
+		Assert::AreEqual(expectedEventDate2, parse.getItem().eventDate[1]);
+		Assert::AreEqual(expectedEventDate3, parse.getItem().eventDate[2]);
+
 	}
 
 	TEST_METHOD(findDateDelimetersTest) {
@@ -456,17 +534,55 @@ public:
 		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 
+		/*test for the case where there is no year and end time*/
+		input = "27/6 12:00"; 
+		parse.calculateDateTime(input);
+		expectedDate = 27;
+		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
+		expectedMonth = 6;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+		expectedStartHour = 12;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		expectedStartMinute = 00;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+		expectedEndHour = 0;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+
+		/*test for the case where there is no year and no time*/
+		input = "27/6"; 
+		parse.calculateDateTime(input);
+		expectedDate = 27;
+		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
+		expectedMonth = 6;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+		expectedStartHour = 0;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+		expectedEndHour = 0;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+
 		/*test for the boundary case when the input dateTimestring is empty*/
 		input = ""; 
 		parse.calculateDateTime(input);
-		expectedDate = 6;
+		expectedDate = 8;
 		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
 		expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
 		expectedYear = 2015;
 		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
-	}
 
+
+
+	}
 	//@author A0111951N
 	TEST_METHOD(extractDateTimeTest1) {
 		string inputArray[] = {"12/3/2015"}; 
@@ -507,7 +623,7 @@ public:
 			e;
 		}
 
-		int expectedDay = 6;
+		int expectedDay = 8;
 		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
 		int expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
@@ -934,6 +1050,7 @@ public:
 
 	TEST_METHOD(handleNextWeekDayTest) {
 		DateTimeParser parse;
+		/*test for the normal case */
 		int day = 20;
 		int month = 4;
 		int year = 2015;
@@ -945,6 +1062,20 @@ public:
 		Assert::AreEqual(expectedDay,day);
 		Assert::AreEqual(expectedMonth,month);
 		Assert::AreEqual(expectedYear,year);
+
+		/*test for the case where day is equal to 0*/
+		day = 0;
+		month = 4;
+		year = 2015;
+		expectedDay = 0;
+		expectedMonth = 4;
+		expectedYear = 2015;
+
+		parse.handleNextWeekDay(day, month, year);
+		Assert::AreEqual(expectedDay,day);
+		Assert::AreEqual(expectedMonth,month);
+		Assert::AreEqual(expectedYear,year);
+
 	}
 
 
@@ -1013,6 +1144,7 @@ public:
 	}
 	TEST_METHOD(handleImplicitNextTest) {
 		DateTimeParser parse;
+		/*test for the normal case where atart and end date in the same month*/
 		int startDay = 18;
 		int startMonth = 4 ; 
 		int startYear = 2015;
@@ -1028,6 +1160,7 @@ public:
 		Assert::AreEqual(expectedEndMonth, endMonth);
 		Assert::AreEqual(expectedEndYear, endYear);
 
+		/*test for the case where the end date is in the next month*/
 		startDay = 31;
 		startMonth = 4 ; 
 		startYear = 2015;
@@ -1101,16 +1234,19 @@ public:
 		parse.isDelimitedDate(input);
 		Assert::AreEqual(isExpectedPossible, parse.isPossibleTime(input));
 
+		/*test for the case where it's a time*/
 		isExpectedPossible = true;
 		input = "5p";
 		parse.isDelimitedDate(input);
 		Assert::AreEqual(isExpectedPossible, parse.isPossibleTime(input));
 
+		/*test for the case where it's not a time*/
 		isExpectedPossible = false;
 		input = "dinner";
 		parse.isDelimitedDate(input);
 		Assert::AreEqual(isExpectedPossible, parse.isPossibleTime(input));
 
+		/*test for the case where there is a dateDelimiter and is not a possible time*/
 		isExpectedPossible = false;
 		input = "sunday morning 7:00";
 		parse.isDelimitedDate(input);
@@ -1248,6 +1384,7 @@ public:
 	//@author A0114613U
 	TEST_METHOD(UpdateItemStartDateTest) {
 		DateTimeParser parse;
+		/*test for the case where all three day/month/year are present*/
 		string input = "24/12/2015" ;
 		Item item;
 		parse.updateItemDateTime(input, item);
@@ -1274,7 +1411,7 @@ public:
 		/*boundary case where all of day/month/year are zeros*/
 		parse.resetItemDateTime();
 		parse.updateItemStartDate();
-		expectedEventDate0 = 6; 
+		expectedEventDate0 = 8; 
 		expectedEventDate1 = 4; 
 		expectedEventDate2 = 2015; 
 		Assert::AreEqual(expectedEventDate0, parse.getItem().eventDate[0]);
@@ -1346,10 +1483,25 @@ public:
 	//@author A0114613U
 	TEST_METHOD(convertStringToIntegerTest) {
 		DateTimeParser parse;
+		/*test for the case where the input string is a number string*/
 		string input = "1235";
 		int expectedOutput = 1235;
 		Assert::AreEqual(expectedOutput, parse.convertStringToInteger(input));
 
+		/*test for the case where the input string contains 1 non-integer*/
+		input = "12a34";
+		expectedOutput = 12;
+		Assert::AreEqual(expectedOutput, parse.convertStringToInteger(input));
+
+		/*test for the case where the input string contains only 1 integer*/
+		input = "a3f";
+		expectedOutput = 0;
+		Assert::AreEqual(expectedOutput, parse.convertStringToInteger(input));
+
+		/*test for the case where the input stringhas no integer*/
+		input = "avdd";
+		expectedOutput = 0;
+		Assert::AreEqual(expectedOutput, parse.convertStringToInteger(input));
 	}
 
 	/* how to do
