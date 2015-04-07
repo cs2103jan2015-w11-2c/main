@@ -1551,5 +1551,6 @@ public:
 		Assert::AreEqual(expectedMessage, actualMessage);
 
 	}
-	};
+    };
+	
 }
