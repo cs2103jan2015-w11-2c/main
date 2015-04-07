@@ -1,4 +1,3 @@
-//@author A0111951N
 #include "stdafx.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -79,7 +78,7 @@ public:
 		Assert::AreEqual(expected, parse.getUserCommand());
 	}
 
-	// fails the test
+	//author A0114613U
 	TEST_METHOD(findDateKeyWordTest) {
 		Parser parse;
 		string input = "call John from tuesday";
@@ -89,8 +88,6 @@ public:
 
 	}
 
-
-	//author A0114613U
 	TEST_METHOD(isCorrectDateDelimiterTest) {
 		Parser parse;
 		string input = "meet John on sunday 17:00";
