@@ -13,14 +13,14 @@ using namespace std;
 //Constants
 const string DATE_START_1 = "from";
 const string DATE_START_2 = "on";
-const int DATE_KEYWORDS_SIZE = 54;
+const int DATE_KEYWORDS_SIZE = 58;
 const string DATE_KEYWORDS[]= {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
 						"sunday", "mon", "tue", "tues", "wed", "thur", "thurs", "fri", "sat", "sun",
-						"january", "february", "march", "april", "may", "june", "july",
-						"august", "september", "october", "november", "december",
-						"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", 
-						"oct", "nov", "dec", "today", "floating", "float", "tomorrow", "tom","tmr",
-						"from", "on", "to", "-", "next", "nex", "p", "pm", "m"};
+						"january", "february", "march", "april", "may", "june", "july", "august",
+						 "september", "october", "november", "december", "jan", "feb", "mar",
+						 "apr", "may", "jun", "jul", "aug", "sep", "sept", "oct", "nov", "novem",
+						 "dec", "decem", "today", "floating", "float", "tomorrow", "tom", "tmr",
+						 "from", "on", "to", "-", "next", "nex", "p", "pm", "m"};
 
 class Parser {
 private:

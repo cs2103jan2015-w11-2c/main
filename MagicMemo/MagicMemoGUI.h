@@ -13,6 +13,12 @@
 
 using namespace std;
 
+// interval to check for deadlines/events 
+// TICK_MIN * TICK_SEC * TICK_MS
+static const int TICK_MIN = 1;
+static const int TICK_SEC = 10;
+static const int TICK_MS = 1000;
+
 namespace MagicMemo {
 
 	using namespace System;
@@ -27,7 +33,7 @@ namespace MagicMemo {
 	/// </summary>
 	public ref class MagicMemoGUI : public System::Windows::Forms::Form {
 	private:
-		MessageManager^ magicManager;
+		static MessageManager^ magicManager;
 
 	public:
 		MagicMemoGUI(void) {
@@ -92,14 +98,14 @@ namespace MagicMemo {
 			this->todayTaskBoxLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
 				| System::Windows::Forms::AnchorStyles::Left) 
 				| System::Windows::Forms::AnchorStyles::Right));
-			this->todayTaskBoxLabel->AutoSize = true;
 			this->todayTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12.75F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->todayTaskBoxLabel->Location = System::Drawing::Point(76, 45);
+			this->todayTaskBoxLabel->Location = System::Drawing::Point(22, 45);
 			this->todayTaskBoxLabel->Name = L"todayTaskBoxLabel";
-			this->todayTaskBoxLabel->Size = System::Drawing::Size(147, 20);
+			this->todayTaskBoxLabel->Size = System::Drawing::Size(254, 20);
 			this->todayTaskBoxLabel->TabIndex = 0;
 			this->todayTaskBoxLabel->Text = L"Upcoming Tasks";
+			this->todayTaskBoxLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// commandInputBox
 			// 
@@ -126,27 +132,26 @@ namespace MagicMemo {
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->allTaskBoxLabel->Font = (gcnew System::Drawing::Font(L"Arial Rounded MT Bold", 12.75F, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->allTaskBoxLabel->Location = System::Drawing::Point(352, 45);
+			this->allTaskBoxLabel->Location = System::Drawing::Point(315, 45);
 			this->allTaskBoxLabel->Name = L"allTaskBoxLabel";
-			this->allTaskBoxLabel->Size = System::Drawing::Size(168, 20);
+			this->allTaskBoxLabel->Size = System::Drawing::Size(263, 20);
 			this->allTaskBoxLabel->TabIndex = 5;
 			this->allTaskBoxLabel->Text = L"Other Tasks";
 			this->allTaskBoxLabel->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// programHeading
 			// 
-			this->programHeading->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
-				| System::Windows::Forms::AnchorStyles::Left) 
-				| System::Windows::Forms::AnchorStyles::Right));
-			this->programHeading->AutoSize = true;
-			this->programHeading->Font = (gcnew System::Drawing::Font(L"Cooper Black", 30, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			this->programHeading->Dock = System::Windows::Forms::DockStyle::Top;
+			this->programHeading->Font = (gcnew System::Drawing::Font(L"Cooper Black", 27.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
 			this->programHeading->ForeColor = System::Drawing::Color::DarkBlue;
-			this->programHeading->Location = System::Drawing::Point(158, 4);
+			this->programHeading->Location = System::Drawing::Point(0, 0);
 			this->programHeading->Name = L"programHeading";
-			this->programHeading->Size = System::Drawing::Size(265, 46);
+			this->programHeading->Size = System::Drawing::Size(590, 46);
 			this->programHeading->TabIndex = 6;
 			this->programHeading->Text = L"Magic Memo";
+			this->programHeading->TextAlign = System::Drawing::ContentAlignment::BottomCenter;
+			this->programHeading->Click += gcnew System::EventHandler(this, &MagicMemoGUI::programHeading_Click);
 			// 
 			// allTaskBox
 			// 
@@ -214,14 +219,14 @@ namespace MagicMemo {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->ClientSize = System::Drawing::Size(590, 391);
-			this->Controls->Add(this->todayTaskBox);
-			this->Controls->Add(this->successMessageLabel);
 			this->Controls->Add(this->allTaskBox);
+			this->Controls->Add(this->todayTaskBox);
+			this->Controls->Add(this->pictureBox);
+			this->Controls->Add(this->programHeading);
+			this->Controls->Add(this->successMessageLabel);
 			this->Controls->Add(this->commandInputBox);
 			this->Controls->Add(this->allTaskBoxLabel);
 			this->Controls->Add(this->todayTaskBoxLabel);
-			this->Controls->Add(this->pictureBox);
-			this->Controls->Add(this->programHeading);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
@@ -291,8 +296,26 @@ namespace MagicMemo {
 		}
 
 	private: 
+		// Initializes the timer
 		System::Void MagicMemoGUI_Load(System::Object^  sender, System::EventArgs^  e) {
+			//Timer^ MyTimer = gcnew Timer;
+			//MyTimer->Tick += gcnew EventHandler(popupDeadlines);
+			//MyTimer->Interval = (TICK_MIN * TICK_SEC * TICK_MS);
+			//MyTimer->Start();
 		}
+		/*
+	private:
+		// Displays events
+		static void popupDeadlines(System::Object^  sender, System::EventArgs^  e) {
+			magicManager->generateMessageOutputs("display");
+			MessageBox::Show(
+				"Message 1\nMessage 2\nMessage3", 
+				"Title", 
+				MessageBoxButtons::OK, 
+				MessageBoxIcon::Asterisk, 
+				MessageBoxDefaultButton::Button1, 
+				MessageBoxOptions::DefaultDesktopOnly);
+		}*/
 
 	private:
 		// Sets success message and fills task boxes
@@ -347,7 +370,9 @@ namespace MagicMemo {
 			}
 			__super::WndProc(m);
 		}
-	};
+	private: System::Void programHeading_Click(System::Object^  sender, System::EventArgs^  e) {
+		    }
+};
 
 	// hide the command prompt window
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") 
