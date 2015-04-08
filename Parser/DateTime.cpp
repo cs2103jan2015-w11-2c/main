@@ -31,7 +31,7 @@ int DateTime::getCurrentMinute() {
 }
 
 int DateTime::getCurrentHour() {
-	return (1 + _today.tm_hour);
+	return (_today.tm_hour);
 }
 
 // returns the weekday for the specified day, month and year
@@ -54,14 +54,14 @@ string DateTime::getMonth(const int mon) {
 	if (mon == 0) {
 		return "";
 	}
-	return MONTH[mon-1];
+	return MONTH[mon - 1];
 }
 
 string DateTime::getMonthFull(const int mon) {
 	if (mon == 0) {
 		return "";
 	}
-	return MONTH_FULL[mon-1];
+	return MONTH_FULL[mon - 1];
 }
 
 bool DateTime::isLeapYear (int year) {

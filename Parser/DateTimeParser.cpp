@@ -26,7 +26,8 @@ DateTimeParser::DateTimeParser(void) {
 }
 
 
-void DateTimeParser::updateItemDateTime(string rawDateTime, Item& item) {
+void DateTimeParser::updateItemDateTime(string rawDateTime, Item& item, bool isDeadline) {
+	_isDeadlineEvent = isDeadline;
 	_item = item;
 	resetDateTime();
 	calculateDateTime(rawDateTime);
@@ -465,7 +466,7 @@ void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
 		day = 0;
 		month = 0;
 		year = 0;
-		//throw std::out_of_range(ERROR_INVALID_DATE_INPUT);
+		//		throw std::out_of_range(ERROR_INVALID_DATE_INPUT);
 	}
 }
 
@@ -535,6 +536,14 @@ void DateTimeParser::verifyStartEnd(
 					endMin = 0;
 					isError = true;
 				}
+		}
+
+		if(_isDeadlineEvent) {
+			endDay = 0;
+			endMonth = 0;
+			endYear = 0;
+			endHr = 0;
+			endMin = 0;
 		}
 
 		if(isError) {

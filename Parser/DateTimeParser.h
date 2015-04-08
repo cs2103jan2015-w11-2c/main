@@ -40,13 +40,16 @@ private:
 	bool _updateTimeFlag;
 	bool _isFloating;
 	bool _isDateChangedFromFloat;
+	bool _isDeadlineEvent;
 
 public:
 	DateTimeParser(void);
 
+	//takes as input the raw date & time string, the Item
+	//to be updated, and boolean isDeadline
 	//updates the item with correct Date and Time fields
 	//only changes fields that are originally 0
-	void updateItemDateTime(string, Item &);
+	void updateItemDateTime(string, Item &, bool);
 
 	//reset private date and time fields
 	void resetDateTime();

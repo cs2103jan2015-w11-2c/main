@@ -13,14 +13,15 @@ using namespace std;
 //Constants
 const string DATE_START_1 = "from";
 const string DATE_START_2 = "on";
-const int DATE_KEYWORDS_SIZE = 58;
+const string DATE_START_DEADLINE = "by";
+const int DATE_KEYWORDS_SIZE = 56;
 const string DATE_KEYWORDS[]= {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
 						"sunday", "mon", "tue", "tues", "wed", "thur", "thurs", "fri", "sat", "sun",
 						"january", "february", "march", "april", "may", "june", "july", "august",
 						 "september", "october", "november", "december", "jan", "feb", "mar",
 						 "apr", "may", "jun", "jul", "aug", "sep", "sept", "oct", "nov", "novem",
 						 "dec", "decem", "today", "floating", "float", "tomorrow", "tom", "tmr",
-						 "from", "on", "to", "-", "next", "nex", "p", "pm", "m"};
+						 "to", "-", "next", "nex", "p", "pm", "m"};
 
 class Parser {
 private:
@@ -29,9 +30,9 @@ private:
 	static const string STRING_FLOATING;
 
 	Item _item;
-	DateTimeParser _splitDateTime;
-
+	DateTimeParser _dateTimeParse;
 	string _userCommand;
+	bool _isDeadline;
 
 public:
 	Parser();
@@ -49,6 +50,9 @@ public:
 	//extracts the first word of Item.event
 	//and stores it in _userCommand
 	void extractUserCommand();
+
+	//true if the event is a deadline event
+	bool _isDeadlineEvent();
 
 	//takes input string and keyword
 	//returns the position of the delimiter, string::npos otherwise
