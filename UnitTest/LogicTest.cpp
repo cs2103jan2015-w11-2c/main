@@ -1,4 +1,3 @@
-//@author A0111951N
 #include "stdafx.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -79,7 +78,7 @@ public:
 		Assert::AreEqual(expected, parse.getUserCommand());
 	}
 
-	// fails the test
+	//author A0114613U
 	TEST_METHOD(findDateKeyWordTest) {
 		Parser parse;
 		string input = "call John from tuesday";
@@ -89,8 +88,6 @@ public:
 
 	}
 
-
-	//author A0114613U
 	TEST_METHOD(isCorrectDateDelimiterTest) {
 		Parser parse;
 		string input = "meet John on sunday 17:00";
@@ -552,7 +549,7 @@ public:
 		expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 
-		/*test for the case where there is no year and no timr*/
+		/*test for the case where there is no year and no time*/
 		input = "27/6"; 
 		parse.calculateDateTime(input);
 		expectedDate = 27;
@@ -573,7 +570,7 @@ public:
 		/*test for the boundary case when the input dateTimestring is empty*/
 		input = ""; 
 		parse.calculateDateTime(input);
-		expectedDate = 7;
+		expectedDate = 8;
 		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
 		expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
@@ -623,7 +620,7 @@ public:
 			e;
 		}
 
-		int expectedDay = 6;
+		int expectedDay = 8;
 		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
 		int expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
@@ -1411,7 +1408,7 @@ public:
 		/*boundary case where all of day/month/year are zeros*/
 		parse.resetItemDateTime();
 		parse.updateItemStartDate();
-		expectedEventDate0 = 6; 
+		expectedEventDate0 = 8; 
 		expectedEventDate1 = 4; 
 		expectedEventDate2 = 2015; 
 		Assert::AreEqual(expectedEventDate0, parse.getItem().eventDate[0]);
@@ -1703,5 +1700,6 @@ public:
 		Assert::AreEqual(expectedMessage, actualMessage);
 
 	}
-	};
+    };
+	
 }

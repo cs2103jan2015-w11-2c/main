@@ -101,7 +101,7 @@ public:
 	string getProgramFilePath();
 
 	//restore the default filename and filepath
-	void restoreFileInfo();
+	bool  restoreFileInfo();
 
 	~FileStorage(void);
 };

@@ -125,7 +125,6 @@ bool Parser::isDateKeyword(string word) {
 }
 
 
-// try - catch to be moved to Controller?
 void Parser::extractDateAndTime() {
 	size_t delimiterIndex = findDateKeyWord(_item.event, DATE_START_1);
 
