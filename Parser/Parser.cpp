@@ -8,6 +8,7 @@ const string Parser::STRING_FLOATING = "floating";
 Parser::Parser() {
 	_userCommand = "";
 	_item.initializeItem();
+	_isDeadline = false;
 }
 
 
@@ -76,6 +77,10 @@ void Parser::extractUserCommand() {
 
 }
 
+bool Parser::_isDeadlineEvent() {
+	return _isDeadline;
+}
+
 size_t Parser::findDateKeyWord(string inputLine, string delimiter) {
 	string line = convertStringToLowerCase(inputLine);
 	size_t dateStart = line.rfind(delimiter);
@@ -113,7 +118,7 @@ bool Parser::isCorrectDateDelimiter(string inputLine, size_t index) {
 }
 
 bool Parser::isDateKeyword(string word) {
-	if(_splitDateTime.convertStringToInteger(word) != 0) {
+	if(_dateTimeParse.convertStringToInteger(word) != 0) {
 		return true;
 	}
 	for(int i = 0; i < DATE_KEYWORDS_SIZE; i++) {
@@ -126,7 +131,12 @@ bool Parser::isDateKeyword(string word) {
 
 
 void Parser::extractDateAndTime() {
-	size_t delimiterIndex = findDateKeyWord(_item.event, DATE_START_1);
+	size_t delimiterIndex = findDateKeyWord(_item.event, DATE_START_DEADLINE);
+	_isDeadline = (delimiterIndex == string::npos) ? false : true;
+
+	if(delimiterIndex == string::npos) {
+		delimiterIndex = findDateKeyWord(_item.event, DATE_START_1);
+	}
 
 	if(delimiterIndex == string::npos) {
 		delimiterIndex = findDateKeyWord(_item.event, DATE_START_2);
@@ -138,7 +148,7 @@ void Parser::extractDateAndTime() {
 		rawDateTimeChunk = convertStringToLowerCase(rawDateTimeChunk);
 
 		try {
-			_splitDateTime.updateItemDateTime(rawDateTimeChunk, _item);
+			_dateTimeParse.updateItemDateTime(rawDateTimeChunk, _item, _isDeadline);
 		} catch (const out_of_range& e) {
 			cout << e.what();
 		}
@@ -271,11 +281,11 @@ void Parser::extractSearchQuery(Item &item) {
 		string itemEvent = temp.event;
 		if (itemEvent != STRING_FLOATING) {
 			itemEvent = convertStringToLowerCase(itemEvent);
-			dateTimeParser.updateItemDateTime(itemEvent, temp);
+			dateTimeParser.updateItemDateTime(itemEvent, temp, false);
 
 			if (!dateTimeParser.getIsDateUpdatedFromFloat() &&
 				(dateTimeParser.getUpdateDateFlag() || dateTimeParser.getUpdateTimeFlag())) {
-				temp.event = "";
+					temp.event = "";
 			}
 			if (!dateTimeParser.getUpdateDateFlag()) {
 				clearStartAndEndDate(temp);
