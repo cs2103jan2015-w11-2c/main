@@ -168,5 +168,17 @@ namespace UnitTest
 		isExpected = 1;
 		Assert::AreEqual(isExpected, control.compareEarlierThan(item5, item6));
 	}
+
+		TEST_METHOD(getTimePosTest) {
+		Parser parse;
+		Controller control;
+		Item item;
+		string input = "testing on 8/4/2015 8:30pm";
+		parse.setStringToParse(input);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		long expected = 1; 
+        Assert::AreEqual(expected,control.getTimePos(item.eventDate,item.eventStartTime));
+	} 
 	};
 }
