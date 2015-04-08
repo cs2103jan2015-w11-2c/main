@@ -7,14 +7,12 @@ MessageManager::MessageManager(void) {
 
 	_allNumberHighlight = new vector<HIGHLIGHT>;
 	_allDateHighlight = new vector<HIGHLIGHT>;
-	_allEndDateHighlight = new vector<HIGHLIGHT>;
 	_allTimeHighlight = new vector<HIGHLIGHT>;
 	_allEventHighlight = new vector<HIGHLIGHT>;
 	_allCompletedHighlight = new vector<HIGHLIGHT>;
 
 	_todayNumberHighlight = new vector<HIGHLIGHT>;
 	_todayDateHighlight = new vector<HIGHLIGHT>;
-	_todayEndDateHighlight = new vector<HIGHLIGHT>;
 	_todayTimeHighlight = new vector<HIGHLIGHT>;
 	_todayEventHighlight = new vector<HIGHLIGHT>;
 	_todayCompletedHighlight = new vector<HIGHLIGHT>;
@@ -84,14 +82,6 @@ Void MessageManager::calculateAllTaskIndexes() {
 		}
 
 		temp.index = temp.index + temp.length;
-		temp.length = _allTaskVector->at(i).endDate.length();
-		_allEndDateHighlight->push_back(temp);
-
-		if(temp.length > 0) {
-			temp.index++;
-		}
-
-		temp.index = temp.index + temp.length;
 		temp.length = _allTaskVector->at(i).event.length();
 		_allEventHighlight->push_back(temp);
 
@@ -127,14 +117,6 @@ Void MessageManager::calculateTodayTaskIndexes() {
 		}
 
 		temp.index = temp.index + temp.length;
-		temp.length = _todayTaskVector->at(i).endDate.length();
-		_todayEndDateHighlight->push_back(temp);
-
-		if(temp.length > 0) {
-			temp.index++;
-		}
-
-		temp.index = temp.index + temp.length;
 		temp.length = _todayTaskVector->at(i).event.length();
 		_todayEventHighlight->push_back(temp);
 
@@ -143,18 +125,17 @@ Void MessageManager::calculateTodayTaskIndexes() {
 }
 
 Void MessageManager::colorAllTaskBox(RichTextBox^ allTaskBox) {
-	colorTextInTaskBox(_allNumberHighlight, _allDateHighlight, _allTimeHighlight, _allEndDateHighlight, _allEventHighlight, allTaskBox);
+	colorTextInTaskBox(_allNumberHighlight, _allDateHighlight, _allTimeHighlight, _allEventHighlight, allTaskBox);
 }
 
 Void MessageManager::colorTodayTaskBox(RichTextBox^ todayTaskBox) {
-	colorTextInTaskBox(_todayNumberHighlight, _todayDateHighlight, _todayTimeHighlight, _todayEndDateHighlight, _todayEventHighlight, todayTaskBox);
+	colorTextInTaskBox(_todayNumberHighlight, _todayDateHighlight, _todayTimeHighlight, _todayEventHighlight, todayTaskBox);
 }
 
 Void MessageManager::colorTextInTaskBox(
 	vector<HIGHLIGHT>* _numberHighlight, 
 	vector<HIGHLIGHT>* _dateHighlight,
 	vector<HIGHLIGHT>* _timeHighlight,
-	vector<HIGHLIGHT>* _endDateHighlight,
 	vector<HIGHLIGHT>* _eventHighlight, 
 	RichTextBox^ taskBox) {
 		taskBox->SelectAll();
@@ -176,7 +157,7 @@ Void MessageManager::colorTextInTaskBox(
 			taskBox->SelectionAlignment = HorizontalAlignment::Left;
 		}
 
-		//time
+		//time and end date
 		for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
 			taskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
 			if(_timeHighlight->at(i).special == "expired") {
@@ -185,20 +166,6 @@ Void MessageManager::colorTextInTaskBox(
 				taskBox->SelectionColor = System::Drawing::Color::Red;
 			} else {
 				taskBox->SelectionColor = System::Drawing::Color::DarkGreen;
-			}
-			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 10, FontStyle::Regular);
-			taskBox->SelectionAlignment = HorizontalAlignment::Left;
-		}
-
-		//end date
-		for(unsigned int i = 0; i < _endDateHighlight->size(); i++) {
-			taskBox->Select(_endDateHighlight->at(i).index, _endDateHighlight->at(i).length);
-			if(_timeHighlight->at(i).special == "clash") {
-				taskBox->SelectionColor = System::Drawing::Color::Red;
-			} else if(_timeHighlight->at(i).special == "expired") {
-				taskBox->SelectionColor = System::Drawing::Color::Gray;
-			} else {
-				taskBox->SelectionColor = System::Drawing::Color::Brown;
 			}
 			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 10, FontStyle::Regular);
 			taskBox->SelectionAlignment = HorizontalAlignment::Left;
@@ -269,10 +236,6 @@ String^ MessageManager::toString(vector<RESULT>* taskVector) {
 			oss << taskVector->at(i).time << " ";
 		}
 
-		if(taskVector->at(i).endDate != "") {
-			oss << taskVector->at(i).endDate << " ";
-		}
-
 		oss << taskVector->at(i).event << endl;
 	}
 
@@ -308,7 +271,6 @@ String^ MessageManager::getAllTaskBoxLabel() {
 Void MessageManager::clearAllTaskIndexVectors() {
 	_allNumberHighlight->clear();
 	_allDateHighlight->clear();
-	_allEndDateHighlight->clear();
 	_allTimeHighlight->clear();
 	_allEventHighlight->clear();
 	_allCompletedHighlight->clear();
@@ -317,7 +279,6 @@ Void MessageManager::clearAllTaskIndexVectors() {
 Void MessageManager::clearTodayTaskIndexVectors() {
 	_todayNumberHighlight->clear();
 	_todayDateHighlight->clear();
-	_todayEndDateHighlight->clear();
 	_todayTimeHighlight->clear();
 	_todayEventHighlight->clear();
 	_todayCompletedHighlight->clear();

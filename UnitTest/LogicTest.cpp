@@ -379,7 +379,7 @@ public:
 		DateTimeParser parse;
 
 		try {
-			parse.updateItemDateTime(inputString, item);
+			parse.updateItemDateTime(inputString, item, false);
 		} catch (const out_of_range& e) {	
 			e;
 		}
@@ -1318,7 +1318,7 @@ public:
 		DateTimeParser parse;
 		Item item;
 		string input = "25/5/2015 10:00 - 21:45" ;
-		parse.updateItemDateTime(input, item);
+		parse.updateItemDateTime(input, item, false);
 		parse.getItem();
 
 		int expectedEventStartTime0 =  10 ;
@@ -1384,7 +1384,7 @@ public:
 		/*test for the case where all three day/month/year are present*/
 		string input = "24/12/2015" ;
 		Item item;
-		parse.updateItemDateTime(input, item);
+		parse.updateItemDateTime(input, item, false);
 		parse.updateItemStartDate();
 		int expectedEventDate0 = 24; 
 		int expectedEventDate1 = 12; 
