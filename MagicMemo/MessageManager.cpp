@@ -180,9 +180,9 @@ Void MessageManager::colorTextInTaskBox(
 		for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
 			taskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
 			if(_timeHighlight->at(i).special == "expired") {
-				taskBox->SelectionColor = System::Drawing::Color::Red;
+				taskBox->SelectionColor = System::Drawing::Color::Gray;
 			} else if(_timeHighlight->at(i).special == "clash") {
-				taskBox->SelectionColor = System::Drawing::Color::DarkOrange;
+				taskBox->SelectionColor = System::Drawing::Color::Red;
 			} else {
 				taskBox->SelectionColor = System::Drawing::Color::DarkGreen;
 			}
@@ -194,9 +194,9 @@ Void MessageManager::colorTextInTaskBox(
 		for(unsigned int i = 0; i < _endDateHighlight->size(); i++) {
 			taskBox->Select(_endDateHighlight->at(i).index, _endDateHighlight->at(i).length);
 			if(_timeHighlight->at(i).special == "clash") {
-				taskBox->SelectionColor = System::Drawing::Color::Orange;
-			} else if(_timeHighlight->at(i).special == "expired") {
 				taskBox->SelectionColor = System::Drawing::Color::Red;
+			} else if(_timeHighlight->at(i).special == "expired") {
+				taskBox->SelectionColor = System::Drawing::Color::Gray;
 			} else {
 				taskBox->SelectionColor = System::Drawing::Color::Brown;
 			}
@@ -208,9 +208,9 @@ Void MessageManager::colorTextInTaskBox(
 		for(unsigned int i = 0; i < _eventHighlight->size(); i++) {
 			taskBox->Select(_eventHighlight->at(i).index, _eventHighlight->at(i).length);
 			if(_timeHighlight->at(i).special == "clash") {
-				taskBox->SelectionColor = System::Drawing::Color::Orange;
-			} else if(_timeHighlight->at(i).special == "expired") {
 				taskBox->SelectionColor = System::Drawing::Color::Red;
+			} else if(_timeHighlight->at(i).special == "expired") {
+				taskBox->SelectionColor = System::Drawing::Color::Gray;
 			} else {
 				taskBox->SelectionColor = System::Drawing::Color::Black;
 			}

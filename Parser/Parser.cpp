@@ -140,7 +140,7 @@ void Parser::extractDateAndTime() {
 		try {
 			_splitDateTime.updateItemDateTime(rawDateTimeChunk, _item);
 		} catch (const out_of_range& e) {
-			e;
+			cout << e.what();
 		}
 	}
 }
