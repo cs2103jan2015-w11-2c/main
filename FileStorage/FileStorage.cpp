@@ -292,7 +292,8 @@ string FileStorage::getProgramFilePath() {
 
 //@author A0115452N
 bool FileStorage::restoreFileInfo() {
-    changeFileName(_defaultFileName.c_str());
+    assert(_fileName!=_defaultFileName.c_str());//the newfileName cannot be the default one
+	changeFileName(_defaultFileName.c_str());
 	if (_fileName == getFullFileName()) {
 		return false;
 	} 
