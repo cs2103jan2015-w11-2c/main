@@ -272,18 +272,76 @@ void Parser::clearStartAndEndDate(Item &item) {
 	}
 }
 
+bool Parser::checkIsValidDate(const string input) {
+	int day = 0;
+	int mon = 0;
+	int year = 0;
+
+	DateTime dateTime;
+	string temp = input;
+	size_t pos = temp.find_first_of("/");
+	if (pos == string::npos) {
+		return false;
+	}
+	day = stoi(temp.substr(0, pos + 1), NULL, 10);
+
+	if (day == 0) {
+		return false;
+	}
+
+	temp = temp.substr(pos + 1);
+
+	pos = temp.find_first_of("/");
+	if (pos == string::npos) {
+		year = dateTime.getCurrentYear();
+	} else {
+		mon = stoi(temp.substr(0, pos + 1), NULL, 10);
+		if (mon == 0) {
+			return false;
+		}
+
+		temp = temp.substr(pos + 1);
+		
+		year = stoi(temp, NULL, 10);
+		if (year == 0) {
+			return false;
+		}
+	}
+	return dateTime.isValidDate(day, mon, year);
+}
+
+bool Parser::checkIsDeadline(const string input) {
+	istringstream iss(input);
+	int i = 0;
+	string temp = "";
+
+	while (iss >> temp) {
+		if (temp != "") {
+			i++;
+		}
+	}
+
+	if (i == 1) {
+		return true;
+	}
+	return false;
+}
+
 void Parser::extractSearchQuery(Item &item) {
 	Item temp = item;
 
-	if(checkIsFloating(temp)) {
+	//if(checkIsFloating(temp)) {
 		DateTimeParser dateTimeParser;
 
 		string itemEvent = temp.event;
 		if (itemEvent != STRING_FLOATING) {
 			itemEvent = convertStringToLowerCase(itemEvent);
-			dateTimeParser.updateItemDateTime(itemEvent, temp, false);
+			string tempEvent = "from " + item.event.substr(item.event.find_first_not_of("\t\n"));
+			if (isCorrectDateDelimiter(tempEvent, 0) || checkIsValidDate(item.event)){
+				dateTimeParser.updateItemDateTime(itemEvent, temp, checkIsDeadline(item.event));
+			}
 
-			if (!dateTimeParser.getIsDateUpdatedFromFloat() &&
+			if (/*!dateTimeParser.getIsDateUpdatedFromFloat() &&*/
 				(dateTimeParser.getUpdateDateFlag() || dateTimeParser.getUpdateTimeFlag())) {
 					temp.event = "";
 			}
@@ -294,7 +352,7 @@ void Parser::extractSearchQuery(Item &item) {
 			temp.initializeItem();
 		}
 		item = temp;
-	}
+//	}
 }
 
 Parser::~Parser(void) {

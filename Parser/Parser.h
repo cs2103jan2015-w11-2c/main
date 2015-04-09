@@ -83,6 +83,12 @@ public:
 
 	void clearStartAndEndDate(Item &);
 
+	bool isTimeOrDate(const string);
+
+	bool checkIsValidDate(const string);
+
+	bool checkIsDeadline(const string);
+
 	void extractSearchQuery(Item &);
 
 	~Parser(void);

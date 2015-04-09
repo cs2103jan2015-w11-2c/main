@@ -9,7 +9,7 @@ const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n"
 
 INITIALIZE_EASYLOGGINGPP;
 
-
+//author A0116179B
 Controller::Controller(void) {
 	// Load configuration from file
 	el::Configurations conf("logging.conf");

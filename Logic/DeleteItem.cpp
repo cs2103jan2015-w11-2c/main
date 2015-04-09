@@ -1,6 +1,6 @@
 #pragma once
 
-//#define NDEBUG
+//author A0116179B
 
 #include <iostream>
 #include <vector>
