@@ -87,20 +87,20 @@ string Item::dateToString() {
 
 string Item::startDateToString() {
 	ostringstream oss;
-		oss << "[" << eventDate[0] << "/" << eventDate[1] << "/" << eventDate[2] << "]";
-		return oss.str();
+	oss << "[" << eventDate[0] << "/" << eventDate[1] << "/" << eventDate[2] << "]";
+	return oss.str();
 }
 
 string Item::endDateToString() {
 	if (eventEndDate[0] == 0 && eventEndDate[1] == 0 && eventEndDate[2] == 0) {
 		return "";
 	}
-		ostringstream oss;
-		oss << "[" << eventEndDate[0] << "/" << eventEndDate[1] << "/" << eventEndDate[2] << "]";
-		return oss.str();
+	ostringstream oss;
+	oss << "[" << eventEndDate[0] << "/" << eventEndDate[1] << "/" << eventEndDate[2] << "]";
+	return oss.str();
 }
 
-//@author A0111951N
+//@author A0115452N
 string Item::timeToString() {
 	ostringstream oss;
 	string startTimeOfDay = getPM(eventStartTime[0]);
@@ -116,6 +116,33 @@ string Item::timeToString() {
 			oss << "-" << getHour(eventEndTime[0]);
 			oss << getMinute(eventEndTime[1]) << endTimeOfDay;
 		}
+
+		oss << "]";
+
+		return oss.str();
+	}
+}
+
+string Item::timeAndEndDateToString() {
+	ostringstream oss;
+	string startTimeOfDay = getPM(eventStartTime[0]);
+	string endTimeOfDay = getPM(eventEndTime[0]);
+
+	if(eventStartTime[0] == 0) {
+		return "";
+	} else {
+		oss << "[" << getHour(eventStartTime[0]);
+		oss << getMinute(eventStartTime[1]) <<  startTimeOfDay;
+
+		if(eventEndTime[0] != 0) {
+			oss << "-" << getHour(eventEndTime[0]);
+			oss << getMinute(eventEndTime[1]) << endTimeOfDay;
+		}
+
+		if (eventEndDate[0] != 0 && eventEndDate[1] != 0 && eventEndDate[2] != 0) {
+			oss << ", " << eventEndDate[0] << "/" << eventEndDate[1];
+		}
+
 		oss << "]";
 
 		return oss.str();

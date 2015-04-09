@@ -373,7 +373,7 @@ void Controller::generateResults(const vector<Item> vectorStore) {
 
 		temp.lineNumber = to_string(i + 1) + ".";
 		temp.date = inputVector[i].dateToString();
-		_is12HourFormat ? temp.time = inputVector[i].timeToString() : temp.time = inputVector[i].timeTo24HrString();
+		_is12HourFormat ? temp.time = inputVector[i].timeAndEndDateToString() : temp.time = inputVector[i].timeTo24HrString();
 		temp.endDate = inputVector[i].endDateToString();
 		temp.event = inputVector[i].event;
 		if(!checkIsFloating(inputVector[i])) {
