@@ -1,4 +1,5 @@
 #include "MessageManager.h"
+#include <iostream>
 //@author A0111951N
 MessageManager::MessageManager(void) {
 	magicMemo = new Controller();
@@ -7,19 +8,23 @@ MessageManager::MessageManager(void) {
 
 	_allNumberHighlight = new vector<HIGHLIGHT>;
 	_allDateHighlight = new vector<HIGHLIGHT>;
-	_allEndDateHighlight = new vector<HIGHLIGHT>;
 	_allTimeHighlight = new vector<HIGHLIGHT>;
 	_allEventHighlight = new vector<HIGHLIGHT>;
 	_allCompletedHighlight = new vector<HIGHLIGHT>;
 
 	_todayNumberHighlight = new vector<HIGHLIGHT>;
 	_todayDateHighlight = new vector<HIGHLIGHT>;
-	_todayEndDateHighlight = new vector<HIGHLIGHT>;
 	_todayTimeHighlight = new vector<HIGHLIGHT>;
 	_todayEventHighlight = new vector<HIGHLIGHT>;
 	_todayCompletedHighlight = new vector<HIGHLIGHT>;
 
-	isBoxExtended = false;
+	_pastInputStrings = new vector<string>;
+	_nextInputStrings = new vector<string>;
+
+	_isBoxExtended = false;
+	_isCallToPrevious = false;
+	_isCallToForward = false;
+
 	_userInput = "";
 	_successMessage = "";
 	_todayTaskBoxMessage = "";
@@ -28,6 +33,9 @@ MessageManager::MessageManager(void) {
 }
 
 Void MessageManager::generateMessageOutputs(String^ textFromUser) {
+	moveNextStrings();
+	_pastInputStrings->push_back(convertToStdString(textFromUser));
+
 	magicMemo->executeCommand(convertToStdString(textFromUser));
 
 	*_allTaskVector = magicMemo->getOtherResult();
@@ -45,7 +53,7 @@ Void MessageManager::generateMessageOutputs(String^ textFromUser) {
 	_todayTaskBoxMessage = toString(_todayTaskVector);
 
 	//Textbox size
-	isBoxExtended = magicMemo->isWide();
+	_isBoxExtended = magicMemo->isWide();
 }
 
 Void MessageManager::calculateAllTaskIndexes() {
@@ -78,14 +86,6 @@ Void MessageManager::calculateAllTaskIndexes() {
 		temp.index = temp.index + temp.length + 1;
 		temp.length = _allTaskVector->at(i).time.length();
 		_allTimeHighlight->push_back(temp);
-
-		if(temp.length > 0) {
-			temp.index++;
-		}
-
-		temp.index = temp.index + temp.length;
-		temp.length = _allTaskVector->at(i).endDate.length();
-		_allEndDateHighlight->push_back(temp);
 
 		if(temp.length > 0) {
 			temp.index++;
@@ -127,14 +127,6 @@ Void MessageManager::calculateTodayTaskIndexes() {
 		}
 
 		temp.index = temp.index + temp.length;
-		temp.length = _todayTaskVector->at(i).endDate.length();
-		_todayEndDateHighlight->push_back(temp);
-
-		if(temp.length > 0) {
-			temp.index++;
-		}
-
-		temp.index = temp.index + temp.length;
 		temp.length = _todayTaskVector->at(i).event.length();
 		_todayEventHighlight->push_back(temp);
 
@@ -143,18 +135,17 @@ Void MessageManager::calculateTodayTaskIndexes() {
 }
 
 Void MessageManager::colorAllTaskBox(RichTextBox^ allTaskBox) {
-	colorTextInTaskBox(_allNumberHighlight, _allDateHighlight, _allTimeHighlight, _allEndDateHighlight, _allEventHighlight, allTaskBox);
+	colorTextInTaskBox(_allNumberHighlight, _allDateHighlight, _allTimeHighlight, _allEventHighlight, allTaskBox);
 }
 
 Void MessageManager::colorTodayTaskBox(RichTextBox^ todayTaskBox) {
-	colorTextInTaskBox(_todayNumberHighlight, _todayDateHighlight, _todayTimeHighlight, _todayEndDateHighlight, _todayEventHighlight, todayTaskBox);
+	colorTextInTaskBox(_todayNumberHighlight, _todayDateHighlight, _todayTimeHighlight, _todayEventHighlight, todayTaskBox);
 }
 
 Void MessageManager::colorTextInTaskBox(
 	vector<HIGHLIGHT>* _numberHighlight, 
 	vector<HIGHLIGHT>* _dateHighlight,
 	vector<HIGHLIGHT>* _timeHighlight,
-	vector<HIGHLIGHT>* _endDateHighlight,
 	vector<HIGHLIGHT>* _eventHighlight, 
 	RichTextBox^ taskBox) {
 		taskBox->SelectAll();
@@ -176,7 +167,7 @@ Void MessageManager::colorTextInTaskBox(
 			taskBox->SelectionAlignment = HorizontalAlignment::Left;
 		}
 
-		//time
+		//time and end date
 		for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
 			taskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
 			if(_timeHighlight->at(i).special == "expired") {
@@ -185,20 +176,6 @@ Void MessageManager::colorTextInTaskBox(
 				taskBox->SelectionColor = System::Drawing::Color::Red;
 			} else {
 				taskBox->SelectionColor = System::Drawing::Color::DarkGreen;
-			}
-			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 10, FontStyle::Regular);
-			taskBox->SelectionAlignment = HorizontalAlignment::Left;
-		}
-
-		//end date
-		for(unsigned int i = 0; i < _endDateHighlight->size(); i++) {
-			taskBox->Select(_endDateHighlight->at(i).index, _endDateHighlight->at(i).length);
-			if(_timeHighlight->at(i).special == "clash") {
-				taskBox->SelectionColor = System::Drawing::Color::Red;
-			} else if(_timeHighlight->at(i).special == "expired") {
-				taskBox->SelectionColor = System::Drawing::Color::Gray;
-			} else {
-				taskBox->SelectionColor = System::Drawing::Color::Brown;
 			}
 			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 10, FontStyle::Regular);
 			taskBox->SelectionAlignment = HorizontalAlignment::Left;
@@ -232,8 +209,8 @@ Void MessageManager::updateAutoCompleteSource(TextBox^ inputBox) {
 }
 
 Void MessageManager::toggleTaskBoxSize(RichTextBox^ allTaskBox, RichTextBox^ todayTaskBox, PictureBox^ pictureBox) {
-	if(isBoxExtended) {
-		isBoxExtended = false;
+	if(_isBoxExtended) {
+		_isBoxExtended = false;
 		allTaskBox->Location = System::Drawing::Point(315, 75);
 		allTaskBox->Size = System::Drawing::Size(260, 255);
 		todayTaskBox->Location = System::Drawing::Point(16, 75);
@@ -243,7 +220,7 @@ Void MessageManager::toggleTaskBoxSize(RichTextBox^ allTaskBox, RichTextBox^ tod
 		pictureBox->Size = System::Drawing::Size(565, 265);
 		pictureBox->Image = System::Drawing::Image::FromFile("resources//notebookShort.png");
 	} else {
-		isBoxExtended = true;
+		_isBoxExtended = true;
 		allTaskBox->Location = System::Drawing::Point(315, 22);
 		allTaskBox->Size = System::Drawing::Size(260, 310);
 		todayTaskBox->Location = System::Drawing::Point(16, 22);
@@ -267,10 +244,6 @@ String^ MessageManager::toString(vector<RESULT>* taskVector) {
 
 		if(taskVector->at(i).time != "") {
 			oss << taskVector->at(i).time << " ";
-		}
-
-		if(taskVector->at(i).endDate != "") {
-			oss << taskVector->at(i).endDate << " ";
 		}
 
 		oss << taskVector->at(i).event << endl;
@@ -305,10 +278,73 @@ String^ MessageManager::getAllTaskBoxLabel() {
 	}
 }
 
+Void MessageManager::moveNextStrings() {
+	_isCallToPrevious = false;
+	_isCallToForward = false;
+	while(!_nextInputStrings->empty()) {
+		_pastInputStrings->push_back(_nextInputStrings->back());
+		_nextInputStrings->pop_back();
+	}
+
+	for(unsigned int i = 0; i < _pastInputStrings->size(); i++) {
+		cout << "Moved: " << _pastInputStrings->at(i) << endl;
+	} cout << endl;
+
+	for(unsigned int i = 0; i < _nextInputStrings->size(); i++) {
+		cout << "MovedNEXt: " << _pastInputStrings->at(i) << endl;
+	} cout << endl;
+}
+
+String^ MessageManager::getLastInput() {
+	if(_pastInputStrings->empty()) {
+		return "";
+	}
+	string lastInput = _pastInputStrings->back();
+	_nextInputStrings->push_back(lastInput);
+	_pastInputStrings->pop_back();
+
+	if(_isCallToForward && !_pastInputStrings->empty()) {
+		lastInput = _pastInputStrings->back();
+		_nextInputStrings->push_back(lastInput);
+		_pastInputStrings->pop_back();
+		_isCallToForward = false;
+	}
+	_isCallToPrevious = true;
+
+	for(unsigned int i = 0; i < _pastInputStrings->size(); i++) {
+		cout << "Past: " << _pastInputStrings->at(i) << endl;
+	} cout << endl;
+	return convertToSystemString(lastInput);
+}
+
+String^ MessageManager::getNextInput() {
+
+	if(_nextInputStrings->empty()) {
+		return "";
+	}
+	string nextInput = _nextInputStrings->back();
+	_pastInputStrings->push_back(nextInput);
+	_nextInputStrings->pop_back();
+
+	if(_isCallToPrevious && !_nextInputStrings->empty()) {
+		nextInput = _nextInputStrings->back();
+		_pastInputStrings->push_back(nextInput);
+		_nextInputStrings->pop_back();
+		_isCallToPrevious = false;
+	}
+	_isCallToForward = true;
+
+	for(unsigned int i = 0; i < _nextInputStrings->size(); i++) {
+		cout << "NEX: " << _nextInputStrings->at(i) << endl;
+	}cout << endl;
+	return convertToSystemString(nextInput);
+
+}
+
+
 Void MessageManager::clearAllTaskIndexVectors() {
 	_allNumberHighlight->clear();
 	_allDateHighlight->clear();
-	_allEndDateHighlight->clear();
 	_allTimeHighlight->clear();
 	_allEventHighlight->clear();
 	_allCompletedHighlight->clear();
@@ -317,7 +353,6 @@ Void MessageManager::clearAllTaskIndexVectors() {
 Void MessageManager::clearTodayTaskIndexVectors() {
 	_todayNumberHighlight->clear();
 	_todayDateHighlight->clear();
-	_todayEndDateHighlight->clear();
 	_todayTimeHighlight->clear();
 	_todayEventHighlight->clear();
 	_todayCompletedHighlight->clear();

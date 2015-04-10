@@ -26,7 +26,6 @@ private:
 	static String^ LABEL_IS_HELP = "Help";
 	static String^ LABEL_ALL_TASKS = "Other Tasks";
 
-
 	Controller* magicMemo;
 
 	vector<RESULT>* _allTaskVector;
@@ -34,18 +33,18 @@ private:
 
 	vector<HIGHLIGHT>* _allNumberHighlight;
 	vector<HIGHLIGHT>* _allDateHighlight;
-	vector<HIGHLIGHT>* _allEndDateHighlight;
 	vector<HIGHLIGHT>* _allTimeHighlight;
 	vector<HIGHLIGHT>* _allEventHighlight;
 	vector<HIGHLIGHT>* _allCompletedHighlight;
 
 	vector<HIGHLIGHT>* _todayNumberHighlight;
 	vector<HIGHLIGHT>* _todayDateHighlight;
-	vector<HIGHLIGHT>* _todayEndDateHighlight;
 	vector<HIGHLIGHT>* _todayTimeHighlight;
 	vector<HIGHLIGHT>* _todayEventHighlight;
 	vector<HIGHLIGHT>* _todayCompletedHighlight;
 
+	vector<string>* _pastInputStrings;
+	vector<string>* _nextInputStrings;
 
 	String^ _userInput;
 	String^ _successMessage;
@@ -53,7 +52,9 @@ private:
 	String^ _allTaskBoxMessage;
 	String^ _inputBoxMessage;
 
-	bool isBoxExtended;
+	bool _isBoxExtended;
+	bool _isCallToPrevious;
+	bool _isCallToForward;
 
 
 public:
@@ -74,7 +75,6 @@ public:
 		vector<HIGHLIGHT>* _numberHighlight, 
 		vector<HIGHLIGHT>* _dateHighlight,
 		vector<HIGHLIGHT>* _timeHighlight,
-		vector<HIGHLIGHT>* _endDateHighlight,
 		vector<HIGHLIGHT>* _eventHighlight, 
 		RichTextBox^ taskBox);
 
@@ -95,6 +95,15 @@ public:
 	String^ getInputBoxMessage();
 
 	String^ getAllTaskBoxLabel();
+
+	//transfers all strings from _nextInputStrings to _pastInputStrings
+	void moveNextStrings();
+
+	//returns the previous input
+	String^ getLastInput();
+
+	//returns the next input after previous
+	String^ getNextInput();
 
 	Void clearAllTaskIndexVectors();
 

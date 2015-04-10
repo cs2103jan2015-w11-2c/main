@@ -44,6 +44,8 @@ public:
 
 	string timeToString();
 
+	string timeAndEndDateToString();
+
 	string timeTo24HrString();
 
 	string toString();

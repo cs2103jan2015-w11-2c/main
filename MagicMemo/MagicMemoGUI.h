@@ -122,8 +122,8 @@ namespace MagicMemo {
 			this->commandInputBox->TabIndex = 1;
 			this->commandInputBox->Text = L"Enter text here:";
 			this->commandInputBox->UseWaitCursor = true;
-			this->commandInputBox->TextChanged += gcnew System::EventHandler(this, &MagicMemoGUI::commandInputBox_TextChanged);
 			this->commandInputBox->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &MagicMemoGUI::commandInputBox_KeyDown);
+			this->commandInputBox->PreviewKeyDown += gcnew System::Windows::Forms::PreviewKeyDownEventHandler(this, &MagicMemoGUI::commandInputBox_PreviewKeyDown);
 			// 
 			// allTaskBoxLabel
 			// 
@@ -242,11 +242,7 @@ namespace MagicMemo {
 #pragma endregion
 
 		//@author A0111951N
-	private:
-		//Get value while typing
-		System::Void commandInputBox_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 
-		}
 	private:
 		System::Void commandInputBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
 			if(e->KeyCode == Keys::Enter) {
@@ -280,6 +276,17 @@ namespace MagicMemo {
 		}
 
 	private: 
+		System::Void commandInputBox_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e) {
+			if (e->KeyCode.Equals(Keys::Up)) {
+				commandInputBox->Text = magicManager->getLastInput();
+				commandInputBox->SelectionStart = 100; 
+			} else if (e->KeyCode.Equals(Keys::Down)) {
+				commandInputBox->Text = magicManager->getNextInput();
+				commandInputBox->SelectionStart = 100; 
+			}
+		}
+
+	private: 
 		// return focus to the intput textbox on keypress
 		System::Void allTaskBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
 			if((e->KeyCode != Keys::Up) && (e->KeyCode != Keys::Down) && (e->KeyCode != Keys::Left) && (e->KeyCode != Keys::Right)) {
@@ -304,17 +311,17 @@ namespace MagicMemo {
 			//MyTimer->Start();
 		}
 		/*
-	private:
+		private:
 		// Displays events
 		static void popupDeadlines(System::Object^  sender, System::EventArgs^  e) {
-			magicManager->generateMessageOutputs("display");
-			MessageBox::Show(
-				"Message 1\nMessage 2\nMessage3", 
-				"Title", 
-				MessageBoxButtons::OK, 
-				MessageBoxIcon::Asterisk, 
-				MessageBoxDefaultButton::Button1, 
-				MessageBoxOptions::DefaultDesktopOnly);
+		magicManager->generateMessageOutputs("display");
+		MessageBox::Show(
+		"Message 1\nMessage 2\nMessage3", 
+		"Title", 
+		MessageBoxButtons::OK, 
+		MessageBoxIcon::Asterisk, 
+		MessageBoxDefaultButton::Button1, 
+		MessageBoxOptions::DefaultDesktopOnly);
 		}*/
 
 	private:
@@ -372,7 +379,8 @@ namespace MagicMemo {
 		}
 	private: System::Void programHeading_Click(System::Object^  sender, System::EventArgs^  e) {
 		    }
-};
+
+	};
 
 	// hide the command prompt window
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") 

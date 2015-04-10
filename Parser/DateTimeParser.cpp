@@ -470,7 +470,7 @@ void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
 		day = 0;
 		month = 0;
 		year = 0;
-		//		throw std::out_of_range(ERROR_INVALID_DATE_INPUT);
+		//throw std::out_of_range(ERROR_INVALID_DATE_INPUT);
 	}
 }
 
@@ -532,14 +532,19 @@ void DateTimeParser::verifyStartEnd(
 
 		if ((isLessEq[0] && isLessEq[1] && isLessEq[2] && isLess[3]) ||
 			(isLessEq[0] && isLessEq[1] && isLessEq[2] && isLessEq[3] && isLess[4])) {
-				if(((startHr > endHr) && ((endHr + 12) > startHr) && ((endHr + 12) < 24) && (endHr != 0))
+				if(((startHr > endHr) && ((endHr + 12) >= startHr) && ((endHr + 12) < 24) && (endHr != 0))
 					|| ((startHr < 12) && ((endHr + 12) < 24) && (endHr != 0))) {
 						endHr += 12;
 				} else {
-					endHr = 0;
-					endMin = 0;
+					endHr = startHr + 1;
+					endMin = startMin;
 					isError = true;
 				}
+		}
+
+		if (!_isDeadlineEvent && (endHr == 0) && (endMin == 0)) {
+			endHr = startHr + 1;
+			endMin = startMin;
 		}
 
 		if(_isDeadlineEvent) {
