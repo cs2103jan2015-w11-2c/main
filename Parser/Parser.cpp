@@ -1,5 +1,6 @@
 //@author A0111951N
 #include "Parser.h"
+#include "assert.h"
 
 const string Parser::ERROR_NO_LINE_NUMBER = "No line number specified!";
 const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!";
@@ -209,11 +210,13 @@ vector <string> Parser::getFragmentedEvent(){
 		outputVec.push_back(weekDay);
 	}
 
+	assert(_item.eventDate[0] >= 0);
 	if(_item.eventDate[0] != 0){
 		std::string tempStr1 = std::to_string(_item.eventDate[0]);
 		outputVec.push_back(tempStr1);
 	}
 
+	assert(_item.eventDate[1] >= 0);
 	if(_item.eventDate[1] != 0){
 		std::string tempStr2 = std::to_string(_item.eventDate[1]);
 		outputVec.push_back(tempStr2);
@@ -223,6 +226,7 @@ vector <string> Parser::getFragmentedEvent(){
 		outputVec.push_back(monthStr);
 	}
 
+	assert(_item.eventDate[2] >= 0);
 	if(_item.eventDate[2] != 0){
 		std::string tempStr3 = std::to_string(_item.eventDate[2]);
 		outputVec.push_back(tempStr3);

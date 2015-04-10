@@ -428,9 +428,9 @@ public:
 		string inputString = "12/3/15 6 p - 5:59 p";
 		Item item;
 		DateTimeParser parse;
-
+		bool isDeadline = false;
 		try {
-			parse.updateItemDateTime(inputString, item);
+			parse.updateItemDateTime(inputString, item, isDeadline);
 		} catch (const out_of_range& e) {	
 			e;
 		}
@@ -614,7 +614,7 @@ public:
 		DateTimeParser parse;
 		string input = ""; 
 		parse.calculateDateTime(input);
-		int expectedDate = 8;
+		int expectedDate = 10;
 		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
 		int expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
@@ -663,7 +663,7 @@ public:
 			e;
 		}
 
-		int expectedDay = 8;
+		int expectedDay = 10;
 		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
 		int expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
@@ -1076,6 +1076,13 @@ public:
 		Assert::AreEqual(expectedMonth, month);
 		Assert::AreEqual(expectedYear, year);
 
+		/*try {
+			parse.setDateFromWeekDay(-10, day, month, year);
+		}
+		catch(const std::invalid_argument& e ) {
+			e;
+		}*/
+
 	}
 
 	/*test for a weekday on the next week*/
@@ -1084,7 +1091,7 @@ public:
 		int day;
 		int month;
 		int year;
-		int expectedDay = 9;
+		int expectedDay = 16;
 		int expectedMonth = 4;
 		int expectedYear = 2015;
 		parse.setDateFromWeekDay(4, day, month, year);
@@ -1414,7 +1421,9 @@ public:
 		DateTimeParser parse;
 		Item item;
 		string input = "25/5/2015 10:00 - 21:45" ;
-		parse.updateItemDateTime(input, item);
+		bool isDeadline = false;
+		parse.updateItemStartDate();
+		parse.updateItemDateTime(input, item, isDeadline);
 		parse.getItem();
 
 		int expectedEventStartTime0 =  10 ;
@@ -1479,9 +1488,9 @@ public:
 	TEST_METHOD(UpdateItemStartDateTest1) {
 		DateTimeParser parse;
 		Item item;
-		string input = "24/12/2015" ;
-
-		parse.updateItemDateTime(input, item);
+		item.eventDate[0] = 24;
+		item.eventDate[1] =12;
+		item.eventDate[2] = 2015;
 		parse.updateItemStartDate();
 		int expectedEventDate0 = 24; 
 		int expectedEventDate1 = 12; 
@@ -1511,9 +1520,12 @@ public:
 	TEST_METHOD(UpdateItemStartDateTest3) {
 		DateTimeParser parse;	
 		Item item;
+		item.eventDate[0] = 0;
+		item.eventDate[1] = 0;
+		item.eventDate[2] = 0;
 		parse.resetItemDateTime();
 		parse.updateItemStartDate();
-		int expectedEventDate0 = 8; 
+		int expectedEventDate0 = 10; 
 		int expectedEventDate1 = 4; 
 		int expectedEventDate2 = 2015; 
 		Assert::AreEqual(expectedEventDate0, parse.getItem().eventDate[0]);
