@@ -31,6 +31,7 @@ namespace UnitTest
 
 		//@author A0115452N
 		TEST_METHOD(checkIsDeadLineTest) {
+
 			string input1 = "travelling from Monday to Friday"; 
 			Item item;
 			Parser parse;
@@ -38,7 +39,7 @@ namespace UnitTest
 			parse.setStringToParse(input1);
 			parse.extractDateAndTime();
 			item = parse.getItem();
-			bool isExpected = true;
+			bool isExpected = false;
 			Assert::AreEqual(isExpected,control.checkIsDeadline(item));
 
 			string input2 = "travelling on 5/5"; 
@@ -125,9 +126,9 @@ namespace UnitTest
 
 		}
 
-		
-		
-		
+
+
+
 		//@author A0114613U
 		TEST_METHOD(sortAlphabeticalTest) {
 

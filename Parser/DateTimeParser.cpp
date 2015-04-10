@@ -370,6 +370,18 @@ void DateTimeParser::updateHrDayMon(int monthNum, int& hour, int& day, int& mont
 	itemHour = 0;
 }
 
+bool DateTimeParser::isDateKeyword(string word) {
+	if(convertStringToInteger(word) != 0) {
+		return true;
+	}
+	for(int i = 0; i < DATE_KEYWORDS_SIZE; i++) {
+		if(word == DATE_KEYWORDS[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+
 bool DateTimeParser::isDelimitedDate(string input) {
 	size_t dateDelimiterPos = findDateDelimiters(input);
 	if (dateDelimiterPos == string::npos) {
@@ -460,7 +472,7 @@ void DateTimeParser::verifyAllDateTime() {
 }
 
 void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
-	if (year == 0) {
+	if ((year == 0) && (month != 0) && (day != 0)) {
 		year = _dateTime.getCurrentYear();
 	} else if (year < 2000) {
 		year += 2000;
