@@ -47,14 +47,6 @@ public:
 	}
 
 
-	/*	
-	TEST_METHOD(getLineOpNumberTest) {
-
-
-
-	}
-	*/
-
 	//@author A0111951N
 	TEST_METHOD(ExtractUserCommandTest) {
 		Parser parse;
@@ -107,23 +99,6 @@ public:
 
 	}
 
-	TEST_METHOD(isDateKeywordTest) {
-		Parser parse;
-
-		bool isExpectedBool = false;
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("on"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("from"));
-
-		isExpectedBool = true;
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("tuesday"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("mon"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("-"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("today"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("tomorrow"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("next"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("pm"));
-
-	}
 
 	//@author A0111951N
 	TEST_METHOD(extractDateAndTimeTest) {
@@ -398,7 +373,7 @@ public:
 		int expectedStartMinute = 0;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
 
-		int expectedEndHour = 0;
+		int expectedEndHour = 19;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
 		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
@@ -464,6 +439,24 @@ public:
 	}*/
 
 	//@author A0114613U
+	TEST_METHOD(isDateKeywordTest) {
+		DateTimeParser parse;
+
+		bool isExpectedBool = false;
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("on"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("from"));
+
+		isExpectedBool = true;
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("tuesday"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("mon"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("-"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("today"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("tomorrow"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("next"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("pm"));
+
+	}
+
 	TEST_METHOD(setDateTest) {
 		DateTimeParser parse;
 		Item item;
