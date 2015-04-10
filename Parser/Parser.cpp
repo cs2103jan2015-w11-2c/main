@@ -1,5 +1,6 @@
 //@author A0111951N
 #include "Parser.h"
+#include "..\EasyLoggingpp\easylogging++.h"
 
 const string Parser::ERROR_NO_LINE_NUMBER = "No line number specified!";
 const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!";
@@ -36,12 +37,14 @@ vector<int> Parser::getLineOpNumber() {
 	char *end;
 	lineNum = (int)strtol(_item.event.c_str(), &end, 10);
 
+	LOG(INFO) << "Line number extraction: " << lineNum;
+
 	while(lineNum > 0) {
 		char tempChar = *end;
 		int tempInt = lineNum;
 		numVector.push_back(lineNum);	
 		lineNum = (int)strtol(end + 1, &end, 10);
-
+		LOG(INFO) << "Line number extraction: " << lineNum;
 		if((tempChar == '-') && (lineNum > tempInt)) {
 			for(int i = 1; i < (lineNum - tempInt); i++) {
 				numVector.push_back(tempInt + i);
@@ -110,23 +113,11 @@ bool Parser::isCorrectDateDelimiter(string inputLine, size_t index) {
 	istringstream iss(temp);
 	string word;
 	while((iss >> word) && isDate) {
-		if(!isDateKeyword(word)) {
+		if(!_dateTimeParse.isDateKeyword(word)) {
 			isDate = false;
 		}
 	}
 	return isDate;
-}
-
-bool Parser::isDateKeyword(string word) {
-	if(_dateTimeParse.convertStringToInteger(word) != 0) {
-		return true;
-	}
-	for(int i = 0; i < DATE_KEYWORDS_SIZE; i++) {
-		if(word == DATE_KEYWORDS[i]) {
-			return true;
-		}
-	}
-	return false;
 }
 
 
@@ -152,6 +143,8 @@ void Parser::extractDateAndTime() {
 		} catch (const out_of_range& e) {
 			cout << e.what();
 		}
+		assertItemValues();
+
 	}
 }
 
@@ -171,6 +164,19 @@ string Parser::removeSpacePadding(string line) {
 string Parser::convertStringToLowerCase(string inputString) {
 	transform(inputString.begin(), inputString.end(), inputString.begin(), ::tolower);
 	return inputString;
+}
+
+void Parser::assertItemValues() {
+	assert(_item.eventDate[0] >= 0);
+	assert(_item.eventDate[1] >= 0);
+	assert(_item.eventDate[2] >= 0);
+	assert(_item.eventEndDate[0] >= 0);
+	assert(_item.eventEndDate[1] >= 0);
+	assert(_item.eventEndDate[2] >= 0);
+	assert(_item.eventStartTime[0] >= 0);
+	assert(_item.eventStartTime[1] >= 0);
+	assert(_item.eventEndTime[0] >= 0);
+	assert(_item.eventEndTime[1] >= 0);
 }
 
 

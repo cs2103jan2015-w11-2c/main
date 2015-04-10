@@ -47,14 +47,6 @@ public:
 	}
 
 
-	/*	
-	TEST_METHOD(getLineOpNumberTest) {
-
-
-
-	}
-	*/
-
 	//@author A0111951N
 	TEST_METHOD(ExtractUserCommandTest) {
 		Parser parse;
@@ -107,21 +99,6 @@ public:
 
 	}
 
-	TEST_METHOD(isDateKeywordTest) {
-		Parser parse;
-
-		bool isExpectedBool = true;	
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("tuesday"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("mon"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("on"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("from"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("-"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("today"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("tomorrow"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("next"));
-		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("pm"));
-
-	}
 
 	//@author A0111951N
 	TEST_METHOD(extractDateAndTimeTest) {
@@ -396,7 +373,7 @@ public:
 		int expectedStartMinute = 0;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
 
-		int expectedEndHour = 0;
+		int expectedEndHour = 19;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
 		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
@@ -462,6 +439,24 @@ public:
 	}*/
 
 	//@author A0114613U
+	TEST_METHOD(isDateKeywordTest) {
+		DateTimeParser parse;
+
+		bool isExpectedBool = false;
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("on"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("from"));
+
+		isExpectedBool = true;
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("tuesday"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("mon"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("-"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("today"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("tomorrow"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("next"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("pm"));
+
+	}
+
 	TEST_METHOD(setDateTest) {
 		DateTimeParser parse;
 		Item item;
@@ -510,8 +505,8 @@ public:
 		Assert::AreEqual(expectedPos, parse.findDateDelimiters(input));
 	}
 
+	/*test fot the case when the input contains date and start and invalid end time of event*/
 	TEST_METHOD(calculateDateTimeTest) {
-		/*test fot the case when the input contains date and start and end time of event*/
 		string input = "27/5/2015 12:30 - 24:00"; 
 		Item item;
 		DateTimeParser parse;
@@ -526,9 +521,9 @@ public:
 		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
 		int expectedStartMinute = 30;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
-		int expectedEndHour = 24;
+		int expectedEndHour = 13;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
-		int expectedEndMinute = 0;
+		int expectedEndMinute = 30;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 
 		/*test for the case where there is no year and end time*/
@@ -603,7 +598,7 @@ public:
 		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
 		int expectedStartMinute = 0;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
-		int expectedEndHour = 0;
+		int expectedEndHour = 1;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
 		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
@@ -613,6 +608,7 @@ public:
 		string inputArray[] = {"2:30"}; 
 		Item item;
 		DateTimeParser parse;
+		DateTime today;
 
 		try {
 			parse.extractDateTime(inputArray, 1);
@@ -620,11 +616,11 @@ public:
 			e;
 		}
 
-		int expectedDay = 8;
+		int expectedDay = today.getCurrentDay();
 		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
-		int expectedMonth = 4;
+		int expectedMonth = today.getCurrentMonth();
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
-		int expectedYear = 2015;
+		int expectedYear = today.getCurrentYear();
 		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
 
 		int expectedStartHour = 2;
@@ -632,9 +628,9 @@ public:
 		int expectedStartMinute = 30;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
 
-		int expectedEndHour = 0;
+		int expectedEndHour = 3;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
-		int expectedEndMinute = 0;
+		int expectedEndMinute = 30;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 
 	}
@@ -779,14 +775,14 @@ public:
 		} catch (const out_of_range& e) {	
 			e;
 		}
-		int expectedDay = 17;
+		int expectedDay = 24;
 		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
 		int expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
 		int expectedYear = 2015;
 		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
 
-		int expectedEndDay = 22;
+		int expectedEndDay = 29;
 		Assert::AreEqual(expectedEndDay, parse.getItem().eventEndDate[0]);
 		int expectedEndMonth = 4;
 		Assert::AreEqual(expectedEndMonth, parse.getItem().eventEndDate[1]);
@@ -869,9 +865,9 @@ public:
 		int expectedStartMinute = 0;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
 
-		int expectedEndHour = 0;
+		int expectedEndHour = 18;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
-		int expectedEndMinute = 0;
+		int expectedEndMinute = 30;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 	}
 
@@ -1038,7 +1034,7 @@ public:
 		expectedDay = 9;
 		expectedMonth = 4;
 		expectedYear = 2015;
-		parse.setDateFromWeekDay(4, day, month, year);
+		parse.setDateFromWeekDay(19, day, month, year);
 		Assert::AreEqual(expectedDay, day);
 		Assert::AreEqual(expectedMonth, month);
 		Assert::AreEqual(expectedYear, year);
@@ -1700,6 +1696,6 @@ public:
 		Assert::AreEqual(expectedMessage, actualMessage);
 
 	}
-    };
-	
+	};
+
 }

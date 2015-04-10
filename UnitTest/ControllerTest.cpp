@@ -38,7 +38,7 @@ namespace UnitTest
 		parse.setStringToParse(input1);
 		parse.extractDateAndTime();
 		item = parse.getItem();
-		bool isExpected = true;
+		bool isExpected = false;
 		Assert::AreEqual(isExpected,control.checkIsDeadline(item));
 
 		string input2 = "travelling on 5/5"; 
