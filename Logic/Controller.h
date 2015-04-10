@@ -12,22 +12,34 @@
 
 using namespace std;
 
-static const int NUM_HELP_COMMANDS = 7; 
+static const int NUM_HELP_COMMANDS = 12; 
 
 static const string HELP_COMMANDS[] = {"add xxx", 
 	"delete #", 
 	"display", 
+	"edit # xxx",
+	"copy # xxx",
 	"clear", 
 	"sort", 
 	"search xxx",
+	"12/24",
+	"view/wide",
+	"undo",
+	"redo",
 	"exit"};
 
 static const string HELP_DESCRIPTION[] = {"line xxx is added to the text file with a line number",
 	"the line with the corresponding # is deleted",
 	"all data in the file is displayed",
+	"modifies the data in line # with xxx",
+	"makes a copy of line #, and applies changes in time and date specified in xxx",
 	"all data in the file is deleted",
 	"all data in the file is sorted alphabetically",
-	"all lines with xxx is displayed",
+	"all lines related to xxx are displayed",
+	"Sets the time format to 12 Hour and 24 Hour respectively",
+	"Widens the textbox to show more items",
+	"Undo the previous change",
+	"Redo the a change if undo was previously called",
 	"program quits"};
 
 static const string DEADLINE_HEADER = "Deadline Events";
