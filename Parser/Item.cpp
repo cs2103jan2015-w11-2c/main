@@ -159,6 +159,11 @@ string Item::timeTo24HrString() {
 		if(eventEndTime[0] != 0) {
 			oss << "-" << get24HrHour(eventEndTime[0]) << get24HrMinute(eventEndTime[1]);
 		}
+
+		if (eventEndDate[0] != 0 && eventEndDate[1] != 0 && eventEndDate[2] != 0) {
+			oss << ", " << eventEndDate[0] << "/" << eventEndDate[1];
+		}
+
 		oss << "]";
 
 		return oss.str();
