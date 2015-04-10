@@ -1,5 +1,6 @@
 //@author A0111951N
 #include "Parser.h"
+#include "..\EasyLoggingpp\easylogging++.h"
 
 const string Parser::ERROR_NO_LINE_NUMBER = "No line number specified!";
 const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!";
@@ -36,12 +37,14 @@ vector<int> Parser::getLineOpNumber() {
 	char *end;
 	lineNum = (int)strtol(_item.event.c_str(), &end, 10);
 
+	LOG(INFO) << "Line number extraction: " << lineNum;
+
 	while(lineNum > 0) {
 		char tempChar = *end;
 		int tempInt = lineNum;
 		numVector.push_back(lineNum);	
 		lineNum = (int)strtol(end + 1, &end, 10);
-
+		LOG(INFO) << "Line number extraction: " << lineNum;
 		if((tempChar == '-') && (lineNum > tempInt)) {
 			for(int i = 1; i < (lineNum - tempInt); i++) {
 				numVector.push_back(tempInt + i);
