@@ -219,14 +219,30 @@ public:
 	}
 
 	bool isSameStartDateAndTime(const Item item, const Item input) {
+		DateTimeParser dateTimeParser;
+		
+		int day = input.eventDate[0];
+		int mon = input.eventDate[1];
+		int year = input.eventDate[2];
+
+		dateTimeParser.getNextDayDate(day, mon, year);
+		int nextDayDate[3] = {day, mon, year};
+
+		dateTimeParser.getNextDayDate(day, mon, year);
+		int afterNextDayDate[3] = {day, mon, year};
+
 		for (int i = 0; i < 3; i++) {
-			if(item.eventDate[i] != input.eventDate[i]) {
+			if(item.eventDate[i] != input.eventDate[i] &&
+				item.eventDate[i] != nextDayDate[i] &&
+				item.eventDate[i] != afterNextDayDate[i]) {
 				return false;
 			}
 		}
 
 		for (int i = 0; i < 2; i++) {
-			if(input.eventStartTime[i] != 0 && item.eventStartTime[i] != input.eventStartTime[i]) {
+			if((input.eventStartTime[i] != 0 && item.eventStartTime[i] != input.eventStartTime[i]) &&
+				item.eventDate[i] != nextDayDate[i] &&
+				item.eventDate[i] != afterNextDayDate[i]) {
 				return false;
 			}
 		}
@@ -321,7 +337,7 @@ public:
 				
 				_otherResult->push_back(temp);
 			}
-		}else if (!hasEndDate) {
+		} else if (!hasEndDate) {
 			for (unsigned int i = 0; i < vectorStore.size(); i++) {
 				if (isSameStartDateAndTime(vectorStore[i], _input)) {
 					RESULT temp;

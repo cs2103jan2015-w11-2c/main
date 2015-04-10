@@ -204,6 +204,7 @@ bool Item::isDeadline() {
 			return true;
 		}
 	}
+	return false;
 }
 
 //Author A0111951N
