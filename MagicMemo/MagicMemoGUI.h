@@ -172,11 +172,12 @@ namespace MagicMemo {
 			// 
 			this->successMessageLabel->Font = (gcnew System::Drawing::Font(L"Franklin Gothic Demi", 12, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
-			this->successMessageLabel->Location = System::Drawing::Point(18, 335);
+			this->successMessageLabel->Location = System::Drawing::Point(16, 335);
 			this->successMessageLabel->Name = L"successMessageLabel";
-			this->successMessageLabel->Size = System::Drawing::Size(197, 21);
+			this->successMessageLabel->Size = System::Drawing::Size(559, 21);
 			this->successMessageLabel->TabIndex = 8;
 			this->successMessageLabel->Text = L"Welcome to Magic Memo!";
+			this->successMessageLabel->TextAlign = System::Drawing::ContentAlignment::MiddleLeft;
 			// 
 			// todayTaskBox
 			// 

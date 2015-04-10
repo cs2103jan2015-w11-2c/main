@@ -20,7 +20,7 @@ static const string ERROR_INVALID_LINE_NUMBER = "Invalid line number specified:"
 static const string ERROR_FILE_EMPTY  = "File is empty\n";
 static const string ERROR_NO_FILENAME = "No filename specified!\n";
 static const string ERROR_FILE_ALREADY_EXISTS = "A file with the same name already exists in the location specified";
-static const string ERROR_FILEPATH_NOT_FOUND = "The specified filepath was not found or the file already exists there";
+static const string ERROR_FILEPATH_NOT_FOUND = "The specified filepath was not found or the file already exists there\n";
 static const string ERROR_SEARCH_ITEM_NOT_FOUND = "\"%s\" Not found!\n";
 	
 struct RESULT {
