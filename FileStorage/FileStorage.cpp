@@ -134,8 +134,8 @@ void FileStorage::addLine(Item item, const string& fileName) {
 	out << item.event;
 
 	if(item.eventDate[0] != 0 && item.eventDate[1] != 0 && item.eventDate[2] != 0) {
-		if (item.eventEndDate[0] == 0 && item.eventEndDate[1] == 0 && item.eventEndDate[2] == 0) {
-			out << " by";
+		if (item.eventEndTime[0] == 0 && item.eventEndTime[1] == 0) {
+			out << " by ";
 		} else {
 			out << " from ";
 		}
