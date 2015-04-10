@@ -189,7 +189,7 @@ public:
 			newSearchResult.result = resultVector->at(i);
 			newSearchResult.editDistance = minEditDist;
 
-			if (minEditDist != -1 && minEditDist < powerSearchLowThreshold) {
+			if (minEditDist != -1 && minEditDist <= powerSearchLowThreshold) {
 				unsigned int j = 0;
 				while (j < powerSearchLowRes.size() && powerSearchLowRes[j].editDistance <= minEditDist) {
 					j++;
