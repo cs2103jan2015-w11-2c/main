@@ -528,7 +528,7 @@ void DateTimeParser::verifyStartEnd(
 
 		if ((isLessEq[0] && isLessEq[1] && isLessEq[2] && isLess[3]) ||
 			(isLessEq[0] && isLessEq[1] && isLessEq[2] && isLessEq[3] && isLess[4])) {
-				if(((startHr > endHr) && ((endHr + 12) > startHr) && ((endHr + 12) < 24) && (endHr != 0))
+				if(((startHr > endHr) && ((endHr + 12) >= startHr) && ((endHr + 12) < 24) && (endHr != 0))
 					|| ((startHr < 12) && ((endHr + 12) < 24) && (endHr != 0))) {
 						endHr += 12;
 				} else {
