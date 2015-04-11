@@ -47,6 +47,12 @@ static const string HELP_DESCRIPTION[] = {
 };
 
 static const string DEADLINE_HEADER = "Deadline Events";
+static const string ERROR_INCORRECT_NUMBER_ARGUMENTS = "Sleep requires 4 arguments\n";;
+
+static const int DEFAULT_SLEEP_START_HR = 24;
+static const int DEFAULT_SLEEP_START_MIN = 0;
+static const int DEFAULT_SLEEP_END_HR = 5;
+static const int DEFAULT_SLEEP_END_MIN = 0;
 
 class Controller {
 private:
@@ -82,6 +88,8 @@ private:
 	bool _isHelp;
 
 	bool _is12HourFormat;
+
+	int _sleepTime[2][2];
 
 public:
 	Controller(void);
@@ -131,6 +139,8 @@ public:
 
 	void search(Item, string);
 
+	void searchFree(Item, string);
+
 	bool isSearch();
 
 	void toggleIsWide();
@@ -143,9 +153,6 @@ public:
 
 	void edit(Item);
 
-	//NEED TO IMPLEMENT A textfile to reflect the change
-	//in name so that the next time the program is run
-	//it will not revert to old file name
 	void rename(string newFileName);
 
 	//Example of new file path:
@@ -177,6 +184,8 @@ public:
 	void setClockTo12Hour();
 
 	void setClockTo24Hour();
+
+	void setSleepTime();
 
 	~Controller(void);
 };
