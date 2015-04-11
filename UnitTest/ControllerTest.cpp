@@ -43,7 +43,7 @@ namespace UnitTest
 	}
 
 		TEST_METHOD(checkIsDeadLineTest2) {
-		string input = "travelling on 5/5";
+		string input = "travelling by 5/5";
 		Item item;
 		Controller control;
 		Parser parse;
@@ -202,16 +202,6 @@ namespace UnitTest
 		Assert::AreEqual(isExpected, control.compareEarlierThan(item1, item2));
 	}
 
-		TEST_METHOD(getTimePosTest) {
-		Parser parse;
-		Controller control;
-		Item item;
-		string input = "testing on 8/4/2015 8:30pm";
-		parse.setStringToParse(input);
-		parse.extractDateAndTime();
-		item = parse.getItem();
-		long expected = 1; 
-        Assert::AreEqual(expected,control.getTimePos(item.eventDate,item.eventStartTime));
-	} 
+		
 	};
 }
