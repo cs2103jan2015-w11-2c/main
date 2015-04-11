@@ -1,5 +1,5 @@
 #include "Controller.h"
-
+//@author A0116179B
 #include "easylogging++.h"
 #define ELPP_THREAD_SAFE
 #define ELPP_DISABLE_LOGS
@@ -7,7 +7,7 @@
 
 const string Controller::SUCCESS_12_HR = "Date format changed to 12-hr format!";
 const string Controller::SUCCESS_24_HR = "Date format changed to 24-hr format!";
-const string Controller::SUCCESS_NOTIFICATION_TIME_CHANGED = "Notification time changed from %d minutes to %d minutes";
+const string Controller::SUCCESS_NOTIFICATION_TIME_CHANGED = "Notification time changed from %d minute(s) to %d minute(s)";
 const string Controller::SUCCESS_NOTIFICATION_ON = "Notifications turned on";
 const string Controller::SUCCESS_NOTIFICATION_OFF = "Notifications turned off";
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
@@ -17,7 +17,6 @@ const int Controller::MAX_NOTIFICATION = 30240;
 
 INITIALIZE_EASYLOGGINGPP;
 
-//author A0116179B
 Controller::Controller(void) {
 	// Load configuration from file
 	el::Configurations conf("logging.conf");
@@ -397,7 +396,8 @@ void Controller::generateResults(const vector<Item> vectorStore) {
 			for (int j = 0; j < 3; j++) {
 				inputVector[i].eventEndDate[j] = inputVector[i].eventDate[j];
 			}
-			_is12HourFormat ? temp.time = inputVector[i].timeAndEndDateToString() : temp.time = inputVector[i].timeTo24HrString();
+			_is12HourFormat ? temp.time = inputVector[i].timeToString() : temp.time = inputVector[i].timeTo24HrString();
+			temp.time += inputVector[i].endDateToString();
 			temp.date = DEADLINE_HEADER;
 			deadlineResult.push_back(temp);
 		} else if ((inputVector[i].eventDate[0] == newDateTime.getCurrentDay() ||
@@ -431,7 +431,14 @@ void Controller::commandOptions(string command) {
 
 void Controller::addData(Item item) {
 	AddItem *addItemCommand = new AddItem(item);
-	_invoker->executeCommand(_vectorStore, addItemCommand, _successMessage);
+
+	try {
+		_invoker->executeCommand(_vectorStore, addItemCommand, _successMessage);
+	} catch (const logic_error& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << e.what();
+		return;
+	}
 
 	chronoSort(_vectorStore);
 
@@ -489,9 +496,17 @@ void Controller::sortAlphabetical() {
 void Controller::search(Item data, string message) {
 	vector<Item> tempVector = _vectorStore;
 
-	_parser->extractSearchQuery(data);
+	try {
+		_parser->extractSearchQuery(data);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+		return;
+	}
+	SearchItem *searchItemCommand;
 
-	SearchItem *searchItemCommand = new SearchItem(data, message, &_otherResult, _sleepTime, false);
+	searchItemCommand= new SearchItem(data, message, &_otherResult, _sleepTime, false);
+
 	_invoker->disableUndo();
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
 }
@@ -558,9 +573,11 @@ void Controller::edit(Item data) {
 	Item item = _parser->getItem();
 
 	EditItem *editItemCommand = new EditItem(lineNumber, item);
-
-	_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
-
+	try {
+		_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+	}
 	chronoSort(_vectorStore);
 
 	if(!rewriteFile()) {
@@ -572,13 +589,23 @@ void Controller::edit(Item data) {
 
 void Controller::rename(string newFileName) {
 	RenameFile *renameFileCommand = new RenameFile(newFileName);
-	_invoker->executeCommand(_outputFile, renameFileCommand, _successMessage);
+	try {
+		_invoker->executeCommand(_outputFile, renameFileCommand, _successMessage);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+	}
 
 }
 
 void Controller::move(string newFileLocation) {
 	MoveFileLocation *moveFileCommand = new MoveFileLocation(newFileLocation);
-	_invoker->executeCommand(_outputFile, moveFileCommand, _successMessage);
+	try {
+		_invoker->executeCommand(_outputFile, moveFileCommand, _successMessage);
+	} catch (const invalid_argument& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+	}
 }
 
 void Controller::undo() {
@@ -811,8 +838,8 @@ void Controller::setReminderTime() {
 		clog << e.what();
 		return;
 	}
-
-	if((numMinutes > MAX_NOTIFICATION) || (numMinutes < 0)) {
+	assert(numMinutes > 0);
+	if(numMinutes > MAX_NOTIFICATION) {
 		_successMessage = ERROR_INVALID_NOTIFICATION_TIME;
 		return;
 	}

@@ -39,7 +39,7 @@ namespace UnitTest
 			parse.extractDateAndTime();
 			item = parse.getItem();
 			bool isExpected = false;
-			Assert::AreEqual(isExpected,control.checkIsDeadline(item));
+			Assert::AreEqual(isExpected, control.checkIsDeadline(item));
 		}
 
 		TEST_METHOD(checkIsDeadLineTest2) {
@@ -51,10 +51,10 @@ namespace UnitTest
 			parse.extractDateAndTime();
 			item = parse.getItem();
 			bool isExpected = true;
-			Assert::AreEqual(isExpected,control.checkIsDeadline(item));
+			Assert::AreEqual(isExpected, control.checkIsDeadline(item));
 		}
 
-		TEST_METHOD(checkDateisUnsetTest1) {
+		TEST_METHOD(checkDateIsUnsetTest1) {
 			string input = "meeting";
 			Controller control;
 			Item item;
@@ -62,11 +62,12 @@ namespace UnitTest
 			parse.setStringToParse(input);
 			parse.extractDateAndTime();
 			item = parse.getItem();
+
 			bool isExpected = true;
 			Assert::AreEqual(isExpected,control.checkDateIsUnset(item.eventDate));
 		}
 
-		TEST_METHOD(checkDateisUnsetTest2) {
+		TEST_METHOD(checkDateIsUnsetTest2) {
 			string input = "meeting on friday";
 			Controller control;
 			Item item;
@@ -74,8 +75,9 @@ namespace UnitTest
 			parse.setStringToParse(input);
 			parse.extractDateAndTime();
 			item = parse.getItem();
+
 			bool isExpected = false;
-			Assert::AreEqual(isExpected,control.checkDateIsUnset(item.eventDate));
+			Assert::AreEqual(isExpected, control.checkDateIsUnset(item.eventDate));
 		}
 
 

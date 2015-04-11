@@ -33,7 +33,7 @@ public:
 	//@author A0111951N
 	void executeAction(FileStorage *outputFile) {
 		if(_fileName == "") {
-			_message = ERROR_NO_FILENAME;
+			throw std::out_of_range(ERROR_NO_FILENAME);
 		} else {
 			_oldFileName = outputFile->getFileName();
 			int dotPos = _fileName.length() - 4;
@@ -45,7 +45,7 @@ public:
 				sprintf_s(buffer, SUCCESS_FILENAME_CHANGED.c_str(), outputFile->getFileName().c_str());
 				_message = buffer;
 			} else {
-				_message = ERROR_FILE_ALREADY_EXISTS;
+				throw std::out_of_range(_message = ERROR_FILE_ALREADY_EXISTS);
 			}
 		}
 	}

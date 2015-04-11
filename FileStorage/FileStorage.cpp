@@ -10,7 +10,7 @@ FileStorage::FileStorage(void) {
 
 	_is12Hr = true;
 	_isWide = false;
-	_isNotificationsOn = true;
+	_isNotificationsOn = false;
 	_notifyMin = 10;
 
 	if(isFileEmpty(_fileConfigFileName)) {
@@ -222,6 +222,7 @@ bool FileStorage::changeFileName(string newFileName) {
 	if(fileExists(newFileName)) {
 		return false;
 	}
+	assert(newFileName != "");
 	string oldFileName = getFullFileName();
 	setFileName(newFileName);
 	rename(oldFileName.c_str(), getFullFileName().c_str());
@@ -239,7 +240,7 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 	if(!directoryExists(newFilePath)) {
 		return false;
 	}
-
+	assert(newFilePath != "");
 	string newFullFileName = newFilePath + "\\" + _fileName;
 
 	if(fileExists(newFullFileName)) {

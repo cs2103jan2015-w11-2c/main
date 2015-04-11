@@ -16,7 +16,7 @@ using namespace std;
 // interval to check for deadlines/events 
 // TICK_MIN * TICK_SEC * TICK_MS
 static const int TICK_MIN = 1;
-static const int TICK_SEC = 10;
+static const int TICK_SEC = 60;
 static const int TICK_MS = 1000;
 
 namespace MagicMemo {
@@ -392,6 +392,6 @@ namespace MagicMemo {
 	};
 
 	// hide the command prompt window
-	//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") 
+	#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") 
 
 }

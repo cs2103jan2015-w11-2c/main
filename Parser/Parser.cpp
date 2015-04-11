@@ -4,6 +4,7 @@
 
 const string Parser::ERROR_NO_LINE_NUMBER = "No line number specified!";
 const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!";
+const string Parser::ERROR_SEARCH_STRING_EMPTY = "No search query specified!";
 const string Parser::STRING_FLOATING = "floating";
 
 Parser::Parser() {
@@ -337,7 +338,9 @@ bool Parser::checkIsDeadline(const string input) {
 
 void Parser::extractSearchQuery(Item &item) {
 	Item temp = item;
-
+	if(item.event == "") {
+		throw std::out_of_range(ERROR_SEARCH_STRING_EMPTY);
+	}
 	//if(checkIsFloating(temp)) {
 		DateTimeParser dateTimeParser;
 
