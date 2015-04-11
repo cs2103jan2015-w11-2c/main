@@ -1,5 +1,5 @@
 #include "Controller.h"
-
+//@author A0116179B
 #include "easylogging++.h"
 #define ELPP_THREAD_SAFE
 #define ELPP_DISABLE_LOGS
@@ -17,7 +17,6 @@ const int Controller::MAX_NOTIFICATION = 30240;
 
 INITIALIZE_EASYLOGGINGPP;
 
-//author A0116179B
 Controller::Controller(void) {
 	// Load configuration from file
 	el::Configurations conf("logging.conf");
@@ -558,9 +557,11 @@ void Controller::edit(Item data) {
 	Item item = _parser->getItem();
 
 	EditItem *editItemCommand = new EditItem(lineNumber, item);
-
-	_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
-
+	try {
+		_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+	}
 	chronoSort(_vectorStore);
 
 	if(!rewriteFile()) {
@@ -811,8 +812,8 @@ void Controller::setReminderTime() {
 		clog << e.what();
 		return;
 	}
-
-	if((numMinutes > MAX_NOTIFICATION) || (numMinutes < 0)) {
+	assert(numMinutes > 0);
+	if(numMinutes > MAX_NOTIFICATION) {
 		_successMessage = ERROR_INVALID_NOTIFICATION_TIME;
 		return;
 	}

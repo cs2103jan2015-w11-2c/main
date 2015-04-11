@@ -1,6 +1,7 @@
 #pragma once
 //@author A0111951N
 
+#define NDEBUG 
 #include <string>
 #include <sstream>
 #include <exception>
@@ -10,9 +11,6 @@
 #include "Item.h"
 #include "../EasyLoggingpp/easylogging++.h"
 #include "DateTimeParser.h"
-
-//disable assertions upon release
-//#define NDEBUG 
 
 using namespace std;
 
