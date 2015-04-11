@@ -572,6 +572,11 @@ void DateTimeParser::verifyStartEnd(
 		}
 }
 
+void DateTimeParser::getNextDayDate(int& day, int& month, int& year) {
+	day++;
+	handleDayOverflow(day, month, year);
+}
+
 int DateTimeParser::convertStringToInteger(string numberString) {
 	char *end;
 	return (int)strtol(numberString.c_str(), &end, 10);

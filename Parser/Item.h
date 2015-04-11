@@ -50,6 +50,9 @@ public:
 
 	string toString();
 
+	bool isFloating();
+
+	bool isDeadline();
 	//for logging
 	void logItemValues();
 };

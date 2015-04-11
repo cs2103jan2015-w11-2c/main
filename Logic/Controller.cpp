@@ -9,7 +9,7 @@ const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n"
 
 INITIALIZE_EASYLOGGINGPP;
 
-
+//author A0116179B
 Controller::Controller(void) {
 	// Load configuration from file
 	el::Configurations conf("logging.conf");
@@ -217,23 +217,13 @@ bool Controller::checkIsDeadline(const Item item) {
 			return false;
 		}
 	}
-	for (int i = 0; i < 2; i++) {
-		if (item.eventEndTime[i] != 0) {
-			return false;
-		}
-	}
-	bool isDeadline = false;
-	for (int i = 0; !isDeadline && i < 3; i++) {
+	
+	for (int i = 0; i < 3; i++) {
 		if (item.eventDate[i] != 0) {
-			isDeadline = true;
+			return true;
 		}
 	}
-	for (int i = 0; !isDeadline && i < 2; i++) {
-		if (item.eventStartTime[i] != 0) {
-			isDeadline = true;
-		}
-	}
-	return isDeadline;
+	return false;
 }
 
 bool Controller::checkIsExpired(const Item item) {
@@ -384,7 +374,10 @@ void Controller::generateResults(const vector<Item> vectorStore) {
 		if (checkIsFloating(inputVector[i])) {
 			floatResult.push_back(temp);
 		} else if (temp.isDeadline) {
-			temp.endDate = inputVector[i].startDateToString();
+			for (int j = 0; j < 3; j++) {
+				inputVector[i].eventEndDate[j] = inputVector[i].eventDate[j];
+			}
+			_is12HourFormat ? temp.time = inputVector[i].timeAndEndDateToString() : temp.time = inputVector[i].timeTo24HrString();
 			temp.date = DEADLINE_HEADER;
 			deadlineResult.push_back(temp);
 		} else if ((inputVector[i].eventDate[0] == newDateTime.getCurrentDay() ||

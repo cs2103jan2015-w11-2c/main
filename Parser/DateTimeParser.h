@@ -158,6 +158,8 @@ public:
 		int& endMonth,
 		int& endYear);
 
+	void getNextDayDate(int &, int &, int &);
+
 	// returns 0 if unsuccessful (or number is 0)
 	// otherwise returns the converted number
 	int convertStringToInteger(string numberString);

@@ -159,6 +159,11 @@ string Item::timeTo24HrString() {
 		if(eventEndTime[0] != 0) {
 			oss << "-" << get24HrHour(eventEndTime[0]) << get24HrMinute(eventEndTime[1]);
 		}
+
+		if (eventEndDate[0] != 0 && eventEndDate[1] != 0 && eventEndDate[2] != 0) {
+			oss << ", " << eventEndDate[0] << "/" << eventEndDate[1];
+		}
+
 		oss << "]";
 
 		return oss.str();
@@ -172,6 +177,37 @@ string Item::toString() {
 }
 
 
+//Author A0116179B
+bool Item::isFloating() {
+	for (int i = 0; i < 3; i++) {
+		if (eventDate[i] != 0 || eventEndDate[i] != 0) {
+			return false;
+		}
+	}
+	for (int i = 0; i < 2; i++) {
+		if (eventStartTime[i] != 0 || eventEndTime[i] != 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool Item::isDeadline() {
+	for (int i = 0; i < 3; i++) {
+		if (eventEndDate[i] != 0) {
+			return false;
+		}
+	}
+
+	for (int i = 0; i < 3; i++) {
+		if (eventDate[i] != 0) {
+			return true;
+		}
+	}
+	return false;
+}
+
+//Author A0111951N
 void Item::logItemValues() {
 	LOG(INFO) << event;
 	LOG(INFO) << eventDate[0];
