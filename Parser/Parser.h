@@ -1,7 +1,6 @@
 #pragma once
 //@author A0111951N
 
-#define NDEBUG 
 #include <string>
 #include <sstream>
 #include <exception>

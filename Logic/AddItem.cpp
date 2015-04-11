@@ -37,6 +37,9 @@ public:
 	}
 
 	void executeAction(vector<Item> &vectorStore) {
+		if(_input.event == "") {
+			throw std::logic_error(ERROR_MISSING_EVENT);
+		}
 		vectorStore.push_back(_input);
 
 		char buffer[1000];

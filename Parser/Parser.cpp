@@ -14,6 +14,7 @@ Parser::Parser() {
 
 
 void Parser::setStringToParse(string userInput) {
+	LOG(INFO) << "Parsing: " << userInput;
 	_item.initializeItem();
 	_item.event = userInput;
 }
@@ -77,7 +78,8 @@ void Parser::extractUserCommand() {
 		spacePos = _item.event.find_first_not_of(" ");
 		_item.event = _item.event.substr(spacePos);
 	}
-
+	LOG(INFO) << "User Command: " << _userCommand;
+	LOG(INFO) << "Rest of string: " << _item.event;
 }
 
 bool Parser::_isDeadlineEvent() {
@@ -141,7 +143,7 @@ void Parser::extractDateAndTime() {
 		try {
 			_dateTimeParse.updateItemDateTime(rawDateTimeChunk, _item, _isDeadline);
 		} catch (const out_of_range& e) {
-			cout << e.what();
+			LOG(ERROR) << e.what();
 		}
 		assertItemValues();
 

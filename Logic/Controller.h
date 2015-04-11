@@ -1,7 +1,7 @@
 #pragma once
 
 //@author A0116179B
-#define NDEBUG
+
 #include <assert.h>
 #include <exception>
 #include <iostream>

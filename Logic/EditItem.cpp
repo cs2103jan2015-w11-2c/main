@@ -66,8 +66,7 @@ public:
 
 	void executeAction(vector<Item> &vectorStore) {
 		if(_lineNumber <= 0   || _lineNumber > (int)vectorStore.size()) {
-			_message = ERROR_INVALID_LINE_NUMBER + " ";
-			_message += ('0' + _lineNumber);
+			_message = ERROR_INVALID_LINE_NUMBER + " " + to_string(_lineNumber);
 			throw std::out_of_range(_message);
 		} else {
 			char buffer[1000];

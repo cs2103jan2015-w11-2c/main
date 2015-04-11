@@ -430,7 +430,14 @@ void Controller::commandOptions(string command) {
 
 void Controller::addData(Item item) {
 	AddItem *addItemCommand = new AddItem(item);
-	_invoker->executeCommand(_vectorStore, addItemCommand, _successMessage);
+	
+	try {
+		_invoker->executeCommand(_vectorStore, addItemCommand, _successMessage);
+	} catch (const logic_error& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << e.what();
+		return;
+	}
 
 	chronoSort(_vectorStore);
 
