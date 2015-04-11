@@ -608,7 +608,7 @@ public:
 		DateTimeParser parse;
 		string input = ""; 
 		parse.calculateDateTime(input);
-		int expectedDate = 10;
+		int expectedDate = 11;
 		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
 		int expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
@@ -1076,16 +1076,13 @@ public:
 	/*test for a weekday on the next week*/
 	TEST_METHOD(setDateFromWeekDayTest2) {
 		DateTimeParser parse;
-		int day;
-		int month;
-		int year;
-		int expectedDay = 16;
+		int day = 9;
+		int month = 4;
+		int year = 2015;
+		int expectedDay = 17;
 		int expectedMonth = 4;
 		int expectedYear = 2015;
 		parse.setDateFromWeekDay(4, day, month, year);
-		expectedDay = 9;
-		expectedMonth = 4;
-		expectedYear = 2015;
 		parse.setDateFromWeekDay(19, day, month, year);
 		Assert::AreEqual(expectedDay, day);
 		Assert::AreEqual(expectedMonth, month);
@@ -1509,15 +1506,16 @@ public:
 	/*boundary case where all of day/month/year are zeros*/
 	TEST_METHOD(UpdateItemStartDateTest3) {
 		DateTimeParser parse;	
+		DateTime datetime;
 		Item item;
 		item.eventDate[0] = 0;
 		item.eventDate[1] = 0;
 		item.eventDate[2] = 0;
 		parse.resetItemDateTime();
 		parse.updateItemStartDate();
-		int expectedEventDate0 = 10; 
-		int expectedEventDate1 = 4; 
-		int expectedEventDate2 = 2015; 
+		int expectedEventDate0 = datetime.getCurrentDay(); 
+		int expectedEventDate1 = datetime.getCurrentMonth(); 
+		int expectedEventDate2 = datetime.getCurrentYear(); 
 		Assert::AreEqual(expectedEventDate0, parse.getItem().eventDate[0]);
 		Assert::AreEqual(expectedEventDate1, parse.getItem().eventDate[1]);
 		Assert::AreEqual(expectedEventDate2, parse.getItem().eventDate[2]);

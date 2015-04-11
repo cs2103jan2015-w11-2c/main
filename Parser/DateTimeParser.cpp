@@ -300,10 +300,6 @@ void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, 
 	year = _dateTime.getCurrentYear();
 	int currentWeekDayIndex = _dateTime.getIntWeekDay(day, month, year);
 
-	if((weekDayIndex < -3)||(weekDayIndex = -1)||(weekDayIndex > 7)){
-	throw std::invalid_argument( "Invalide input of weekday" );
-	}
-
 	if(weekDayIndex == -3) {
 		day = 0;
 		month = 0;
