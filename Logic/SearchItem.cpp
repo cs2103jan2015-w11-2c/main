@@ -244,19 +244,36 @@ public:
 		dateTimeParser.getNextDayDate(day, mon, year);
 		int afterNextDayDate[3] = {day, mon, year};
 
-		for (int i = 0; i < 3; i++) {
-			if(item.eventDate[i] != input.eventDate[i] &&
-				item.eventDate[i] != nextDayDate[i] &&
-				item.eventDate[i] != afterNextDayDate[i]) {
-				return false;
+		//If deadline event, allow comparisons up to 2 days ahead, else only current day
+		if (item.eventEndTime[0] == 0 && item.eventEndTime[1] == 0) {
+			for (int i = 0; i < 3; i++) {
+				if(item.eventDate[i] != input.eventDate[i] &&
+					item.eventDate[i] != nextDayDate[i] &&
+					item.eventDate[i] != afterNextDayDate[i]) {
+					return false;
+				}
+			}
+		} else {
+			for (int i = 0; i < 3; i++) {
+				if(item.eventDate[i] != input.eventDate[i]) {
+					return false;
+				}
 			}
 		}
 
-		for (int i = 0; i < 2; i++) {
-			if((input.eventStartTime[i] != 0 && item.eventStartTime[i] != input.eventStartTime[i]) &&
-				item.eventDate[i] != nextDayDate[i] &&
-				item.eventDate[i] != afterNextDayDate[i]) {
-				return false;
+		if (item.eventEndTime[0] == 0 && item.eventEndTime[1] == 0) {
+			for (int i = 0; i < 2; i++) {
+				if((input.eventStartTime[i] != 0 && item.eventStartTime[i] != input.eventStartTime[i]) &&
+					item.eventDate[i] != nextDayDate[i] &&
+					item.eventDate[i] != afterNextDayDate[i]) {
+					return false;
+				}
+			}
+		} else {
+			for (int i = 0; i < 2; i++) {
+				if(input.eventStartTime[i] != 0 && item.eventStartTime[i] != input.eventStartTime[i]) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -311,10 +328,17 @@ public:
 		if(compareDateEarlierThan(item.eventDate, input.eventDate) == -1) {
 			return false;
 		}
-		
+
 		//check if item ends later than input end date
 		if(compareDateEarlierThan(item.eventEndDate, input.eventEndDate) == 1) {
 			return false;
+		}
+
+		//If the item is a deadline item, then the start date is compared to the input end date
+		if (!timeIsSpecified(item.eventEndTime)) {
+			if (compareDateEarlierThan(item.eventDate, input.eventEndDate) == 1) {
+				return false;
+			}
 		}
 
 		//check if item starts earlier than input start time and is specified
@@ -325,7 +349,9 @@ public:
 		}
 		
 		//check if item ends later than input end time and is specified
-		if (timeIsSpecified(input.eventEndTime) && 
+		//Since parser automatically sets the end time to be 1 hour after start, we use the start time
+		//as an indicator for whether time has been specified
+		if (timeIsSpecified(input.eventStartTime) && 
 			(!timeIsSpecified(item.eventEndTime) 
 			|| compareTimeEarlierThan(item.eventEndTime, input.eventEndTime) == 1)) {
 				return false;
@@ -395,8 +421,6 @@ public:
 	}
 
 	bool isWithinSleepRange(const Item item) {
-	
-
 		//check if item starts earlier than input start time and is specified
 		if (timeIsSpecified(_sleepTime[0]) && 
 			(!timeIsSpecified(item.eventStartTime) 
@@ -411,6 +435,34 @@ public:
 				return false;
 		}
 		return true;
+	}
+
+	void initializeTime(int time[2]) {
+		for (int i = 0; i < 2; i++) {
+			time[i] = 0;
+		}
+	}
+
+	void filterForfree(vector<Item> vectorStore) {
+		_otherResult->clear();
+
+		int startFreeTime[2];
+		int endFreeTime[2];
+
+		initializeTime(startFreeTime);
+		initializeTime(endFreeTime);
+
+		for (unsigned int i = 0; i < vectorStore.size(); i++) {
+			if (!vectorStore[i].isFloating() && !vectorStore[i].isDeadline()) {
+				RESULT temp;
+				temp.event = vectorStore[i].event;
+				temp.date = vectorStore[i].dateToString();
+				temp.time = vectorStore[i].timeToString();
+				temp.lineNumber = to_string(i + 1) + ".";
+				
+				_otherResult->push_back(temp);
+			}
+		}
 	}
 
 	void executeAction(vector<Item> &vectorStore) {
