@@ -13,7 +13,6 @@ namespace UnitTest
 			Controller control;
 			vector<RESULT> allTasks;
 			vector<RESULT> todayTasks;
-			control.executeCommand("clear");
 			string input = "Add testing from 1/4 3:50 p 1";
 			control.executeCommand(input);
 			allTasks = control.getOtherResult();
@@ -26,56 +25,65 @@ namespace UnitTest
 			Assert::AreEqual(expectedDate, allTasks[0].date);
 			Assert::AreEqual(expectedTime, allTasks[0].time);
 			Assert::AreEqual(expectedEvent, allTasks[0].event);
+
 		}
 
 
 		//@author A0115452N
-		TEST_METHOD(checkIsDeadLineTest) {
-
-			string input1 = "travelling from Monday to Friday"; 
+		TEST_METHOD(checkIsDeadLineTest1) {
+			string input = "travelling from Monday to Friday"; 
 			Item item;
 			Parser parse;
 			Controller control;
-			parse.setStringToParse(input1);
+			parse.setStringToParse(input);
 			parse.extractDateAndTime();
 			item = parse.getItem();
 			bool isExpected = false;
 			Assert::AreEqual(isExpected,control.checkIsDeadline(item));
+		}
 
-			string input2 = "travelling on 5/5"; 
-			parse.setStringToParse(input2);
+		TEST_METHOD(checkIsDeadLineTest2) {
+			string input = "travelling by 5/5";
+			Item item;
+			Controller control;
+			Parser parse;
+			parse.setStringToParse(input);
 			parse.extractDateAndTime();
 			item = parse.getItem();
-			isExpected = true;
+			bool isExpected = true;
 			Assert::AreEqual(isExpected,control.checkIsDeadline(item));
 		}
 
-		TEST_METHOD(checkDateisUnsetTest) {
-			string input1 = "meeting";
+		TEST_METHOD(checkDateisUnsetTest1) {
+			string input = "meeting";
 			Controller control;
 			Item item;
 			Parser parse;
-			parse.setStringToParse(input1);
+			parse.setStringToParse(input);
 			parse.extractDateAndTime();
 			item = parse.getItem();
 			bool isExpected = true;
 			Assert::AreEqual(isExpected,control.checkDateIsUnset(item.eventDate));
+		}
 
-			string input2 = "meeting on friday";
-			parse.setStringToParse(input2);
+		TEST_METHOD(checkDateisUnsetTest2) {
+			string input = "meeting on friday";
+			Controller control;
+			Item item;
+			Parser parse;
+			parse.setStringToParse(input);
 			parse.extractDateAndTime();
 			item = parse.getItem();
-			isExpected = false;
+			bool isExpected = false;
 			Assert::AreEqual(isExpected,control.checkDateIsUnset(item.eventDate));
-
 		}
 
 
-		TEST_METHOD(checkIsClashTest) {
+		TEST_METHOD(checkIsClashTest1) {
 			string input1 = "dinner on Tuesday 5pm";
 			string input2 = "outing on Tuesday 5pm";
 			Controller control;
-			Item item1, item2, item3, item4;
+			Item item1, item2;
 			Parser parse;
 			parse.setStringToParse(input1);
 			parse.extractDateAndTime();
@@ -84,49 +92,61 @@ namespace UnitTest
 			parse.extractDateAndTime();
 			item2 = parse.getItem();
 			bool isExpected = true;
-			Assert::AreEqual(isExpected, control.checkIsClash(item1,item2));
-
-			string input3 = "meeting on Tuesday 3pm";
-			string input4 = "having dinner on Tuesday 4pm";
-			parse.setStringToParse(input3);
-			parse.extractDateAndTime();
-			item3 = parse.getItem();
-			parse.setStringToParse(input4);
-			parse.extractDateAndTime();
-			item4 = parse.getItem();
-			isExpected = false;
-			Assert::AreEqual(isExpected, control.checkIsClash(item3,item4));
-
+			Assert::AreEqual(isExpected, control.checkIsClash(item1, item2));
 		}
 
-		TEST_METHOD(checkIsExpried) {
+		TEST_METHOD(checkIsClashTest2) {
+			string input1 = "meeting on Tuesday 3pm";
+			string input2 = "having dinner on Tuesday 4pm";
+			Controller control;
+			Item item1, item2;
+			Parser parse;
+			parse.setStringToParse(input1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(input2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+			bool isExpected = false;
+			Assert::AreEqual(isExpected, control.checkIsClash(item1, item2));
+		}
+
+		TEST_METHOD(checkIsExpriedTest1) {
 			Controller control;
 			Item item;
 			Parser parse;
-			string input1 = "exams on 25/4/2014";
-			parse.setStringToParse(input1);
+			string input = "exams on 25/4/2014";
+			parse.setStringToParse(input);
 			parse.extractDateAndTime();
 			item = parse.getItem();
 			bool isExpected = true;
 			Assert::AreEqual(isExpected, control.checkIsExpired(item));
+		}
 
-			string input2 = "having class on 4/4/2015";
-			parse.setStringToParse(input2);
+		TEST_METHOD(checkIsExpriedTest2) {
+			Controller control;
+			Item item;
+			Parser parse;
+			string input = "having class on 4/4/2015";
+			parse.setStringToParse(input);
 			parse.extractDateAndTime();
 			item = parse.getItem();
-			isExpected = true;
+			bool isExpected = true;
 			Assert::AreEqual(isExpected, control.checkIsExpired(item));
+		}
 
-			string input3 = "having class on 4/5/2015";
-			parse.setStringToParse(input3);
+		TEST_METHOD(checkIsExpriedTest3) {
+			Controller control;
+			Item item;
+			Parser parse;
+			string input = "having class on 4/5/2015";
+			parse.setStringToParse(input);
 			parse.extractDateAndTime();
 			item = parse.getItem();
-			isExpected = false;
+			bool isExpected = false;
 			Assert::AreEqual(isExpected, control.checkIsExpired(item));
 
 		}
-
-
 
 
 		//@author A0114613U
@@ -146,7 +166,8 @@ namespace UnitTest
 
 		}*/
 
-		TEST_METHOD(copyTest) {}
+		TEST_METHOD(copyTest) {
+		}
 		TEST_METHOD(editTest) {}
 		TEST_METHOD(renameTest) {}
 		TEST_METHOD(moveTest) {}
@@ -392,8 +413,56 @@ namespace UnitTest
 			Assert::AreEqual(expectedResult, controller.compareEarlierThan(item1, item2));
 		}
 
+		/*
+		TEST_METHOD(chronoSortTest) {
+			vector<Item> vectorStore;
+			Controller controller;
+			Item item1;
+			Item item2;
+			Item item3;
+			Item item4;
+			Item temp1;
+			Item temp2;
+			Item temp3;
+			Item temp4;
+			Parser parse;
+			string inputString1 = "presentation on 19/4/2015 ";
+			string inputString2 = "study on 14/5/2015 ";
+			string inputString3 = "presentation on 17/4/2015 2pm";
+			string inputString4 = "meet ann on 21/8/2015 12 to 14";
+			parse.setStringToParse(inputString1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			vectorStore.push_back(item1);
+			parse.setStringToParse(inputString2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+			vectorStore.push_back(item2);
+			parse.setStringToParse(inputString3);
+			parse.extractDateAndTime();
+			item3 = parse.getItem();
+			vectorStore.push_back(item3);
+			parse.setStringToParse(inputString4);
+			parse.extractDateAndTime();
+			item4 = parse.getItem();
+			vectorStore.push_back(item4); 
+			temp1 = item1;
+			temp2 = item3;
+			temp3 = item2;
+			temp4 = item4;
+			controller.chronoSort(vectorStore);
+			item1 = vectorStore.at(0);
+			item2 = vectorStore.at(1);
+			item3 = vectorStore.at(2);
+			item4 = vectorStore.at(3);
 
-		TEST_METHOD(chronoSortTest) {}
+			Assert::AreEqual(temp1, item1);
+			Assert::AreEqual(temp2, item2);
+			Assert::AreEqual(temp3, item3);
+			Assert::AreEqual(temp4, item4);
+		}
+		*/
+
 		TEST_METHOD(addToInputBankTest) {}
 		TEST_METHOD(setClockTo12HourTest) {}
 		TEST_METHOD(setClockTo24HourTest) {}

@@ -14,6 +14,7 @@ Parser::Parser() {
 
 
 void Parser::setStringToParse(string userInput) {
+	LOG(INFO) << "Parsing: " << userInput;
 	_item.initializeItem();
 	_item.event = userInput;
 }
@@ -77,7 +78,8 @@ void Parser::extractUserCommand() {
 		spacePos = _item.event.find_first_not_of(" ");
 		_item.event = _item.event.substr(spacePos);
 	}
-
+	LOG(INFO) << "User Command: " << _userCommand;
+	LOG(INFO) << "Rest of string: " << _item.event;
 }
 
 bool Parser::_isDeadlineEvent() {
@@ -141,7 +143,7 @@ void Parser::extractDateAndTime() {
 		try {
 			_dateTimeParse.updateItemDateTime(rawDateTimeChunk, _item, _isDeadline);
 		} catch (const out_of_range& e) {
-			cout << e.what();
+			LOG(ERROR) << e.what();
 		}
 		assertItemValues();
 
@@ -215,13 +217,11 @@ vector <string> Parser::getFragmentedEvent(){
 		outputVec.push_back(weekDay);
 	}
 
-	//assert(_item.eventDate[0] >= 0);
 	if(_item.eventDate[0] != 0){
 		std::string tempStr1 = std::to_string(_item.eventDate[0]);
 		outputVec.push_back(tempStr1);
 	}
 
-	//assert(_item.eventDate[1] >= 0);
 	if(_item.eventDate[1] != 0){
 		std::string tempStr2 = std::to_string(_item.eventDate[1]);
 		outputVec.push_back(tempStr2);
@@ -231,7 +231,6 @@ vector <string> Parser::getFragmentedEvent(){
 		outputVec.push_back(monthStr);
 	}
 
-	//assert(_item.eventDate[2] >= 0);
 	if(_item.eventDate[2] != 0){
 		std::string tempStr3 = std::to_string(_item.eventDate[2]);
 		outputVec.push_back(tempStr3);
@@ -361,7 +360,7 @@ void Parser::extractSearchQuery(Item &item) {
 			temp.initializeItem();
 		}
 		item = temp;
-  //}
+//	}
 }
 
 Parser::~Parser(void) {

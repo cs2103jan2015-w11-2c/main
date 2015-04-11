@@ -19,6 +19,7 @@ public:
 		Assert::AreEqual(expected, parse.getItem().event);
 	}
 
+
 	TEST_METHOD(getUserCommandTest1) {
 		Parser parse;
 		parse.setStringToParse("delete task1");
@@ -55,8 +56,17 @@ public:
 		Assert::AreEqual(expectedOutput, output);	
 	}
 
+	/*boundary case of invalid input user command*/
+	TEST_METHOD(getUserCommandTest5) {
+		Parser parse;
+		parse.setStringToParse("test invalid input on monday");
+		parse.extractUserCommand();
+		string expectedOutput = "test";
+		string output = parse.getUserCommand();
+		Assert::AreEqual(expectedOutput, output);	
+	}
 	//@author A0111951N
-	TEST_METHOD(ExtractUserCommandTest) {
+	TEST_METHOD(ExtractUserCommandTest1) {
 		Parser parse;
 		string expected = "add";
 
@@ -74,6 +84,24 @@ public:
 
 		expected = "";
 		parse.setStringToParse("    ");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
+	}
+
+	/*boundary case for invalid input command "do"*/
+	TEST_METHOD(ExtractUserCommandTest2) {
+		Parser parse;
+		string expected = "do";
+
+		parse.setStringToParse("Do testing");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
+
+		parse.setStringToParse("Do   testing");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
+
+	    parse.setStringToParse("DO");
 		parse.extractUserCommand();
 		Assert::AreEqual(expected, parse.getUserCommand());
 	}
@@ -105,7 +133,7 @@ public:
 		Assert::AreEqual(isExpectedDel,parse.isCorrectDateDelimiter(input,pos));
 
 	}
-
+	/*boundary case of invalid delimiter "for"*/
 	TEST_METHOD(isCorrectDateDelimiterTest2) {
 		Parser parse;
 		string input = "meet John for good friday 17:00";
@@ -181,18 +209,6 @@ public:
 		Parser parse;
 		string input = "ALL CAPITAL LETTERS";
 		string expected = "all capital letters";
-		Assert::AreEqual(expected, parse.convertStringToLowerCase(input));
-
-		input = "Some Capital lettERS";
-		expected = "some capital letters";
-		Assert::AreEqual(expected, parse.convertStringToLowerCase(input));
-
-		input = " ";
-		expected = " ";
-		Assert::AreEqual(expected, parse.convertStringToLowerCase(input));
-
-		input = "all small letters";
-		expected = "all small letters";
 		Assert::AreEqual(expected, parse.convertStringToLowerCase(input));
 	}
 
@@ -359,6 +375,28 @@ public:
 		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
 	}
 
+	TEST_METHOD(checkIsFloatingTest6) {
+		string inputString1 = "meet friends";
+		Item item;
+		Parser parse;
+		parse.setStringToParse(inputString1);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		bool isExpectedFloating = true;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+	}
+	/*boundary case when the task description contains a date word but it's not a real date*/
+	TEST_METHOD(checkIsFloatingTest7) {
+		string inputString1 = "meet friends for good friday";
+		Item item;
+		Parser parse;
+		parse.setStringToParse(inputString1);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		bool isExpectedFloating = true;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+	}
+
 	//@author A0111951N
 	TEST_METHOD(clearStartAndEndDateTest1){
 		string inputString1 = "meet friends from 1/4/2015 - 5/4/2015";
@@ -430,6 +468,37 @@ public:
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 	}
 
+	TEST_METHOD(updateItemDateTest2) {
+		string inputString = "12/3/15 6 p - 5:59 p";
+		Item item;
+		DateTimeParser parse;
+
+		try {
+			parse.updateItemDateTime(inputString, item, false);
+		} catch (const out_of_range& e) {	
+			e;
+		}
+
+		int expectedDay = 12;
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = 3;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+		int expectedStartHour = 18;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+
+		int expectedEndHour = 19;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+	
+	
 	//@author A0111951N
 	TEST_METHOD(resetItemDateTimeTest) {
 		DateTimeParser parse;
@@ -534,8 +603,17 @@ public:
 		Assert::AreEqual(expectedPos, parse.findDateDelimiters(input));
 	}
 
+	/*boundary case of an invalid empty input*/
+	TEST_METHOD(findDateDelimetersTest5) {
+		DateTimeParser parse;
+		string input = "*()aha$31";
+		size_t expectedPos = string::npos;
+		Assert::AreEqual(expectedPos, parse.findDateDelimiters(input));
+	}
 
+	/*test for the case when the input contains date and start and invalid end time of event*/
 	TEST_METHOD(calculateDateTimeTest1) {
+
 		string input = "27/5/2015 12:30 - 24:00"; 
 		Item item;
 		DateTimeParser parse;
@@ -640,7 +718,7 @@ public:
 		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
 		int expectedStartMinute = 0;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
-	    int expectedEndHour = 0;
+		int expectedEndHour = 1;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
 		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
@@ -670,9 +748,9 @@ public:
 		int expectedStartMinute = 30;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
 
-		int expectedEndHour = 0;
+		int expectedEndHour = 3;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
-		int expectedEndMinute = 0;
+		int expectedEndMinute = 30;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 
 	}
@@ -913,7 +991,6 @@ public:
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 	}
 
-
 	//@author A0114613U	
 	TEST_METHOD(mapWeekDayTest1) {
 		DateTimeParser parse;
@@ -1089,6 +1166,21 @@ public:
 		Assert::AreEqual(expectedYear, year);
 	}
 
+	/*boundary case of an invalid integer for weekday*/
+	TEST_METHOD(setDateFromWeekDayTest3) {
+		DateTimeParser parse;
+		int day;
+		int month;
+		int year;
+		int expectedDay = 7;
+		int expectedMonth = 4;
+		int expectedYear = 2015;
+		parse.setDateFromWeekDay(-5, day, month, year);
+		Assert::AreEqual(expectedDay, day);
+		Assert::AreEqual(expectedMonth, month);
+		Assert::AreEqual(expectedYear, year);
+
+	}
 
 	TEST_METHOD(handleNextWeekDayTest1) {
 		DateTimeParser parse;

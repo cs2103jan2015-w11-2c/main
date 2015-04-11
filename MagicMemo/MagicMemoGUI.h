@@ -155,6 +155,9 @@ namespace MagicMemo {
 			// 
 			// allTaskBox
 			// 
+			this->allTaskBox->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
 			this->allTaskBox->BackColor = System::Drawing::Color::White;
 			this->allTaskBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->allTaskBox->Font = (gcnew System::Drawing::Font(L"Palatino Linotype", 11.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
@@ -170,6 +173,9 @@ namespace MagicMemo {
 			// 
 			// successMessageLabel
 			// 
+			this->successMessageLabel->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
 			this->successMessageLabel->Font = (gcnew System::Drawing::Font(L"Franklin Gothic Demi", 12, System::Drawing::FontStyle::Regular, 
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
 			this->successMessageLabel->Location = System::Drawing::Point(16, 335);
@@ -306,24 +312,26 @@ namespace MagicMemo {
 	private: 
 		// Initializes the timer
 		System::Void MagicMemoGUI_Load(System::Object^  sender, System::EventArgs^  e) {
-			//Timer^ MyTimer = gcnew Timer;
-			//MyTimer->Tick += gcnew EventHandler(popupDeadlines);
-			//MyTimer->Interval = (TICK_MIN * TICK_SEC * TICK_MS);
-			//MyTimer->Start();
+			Timer^ myTimer = gcnew Timer;
+			myTimer->Tick += gcnew EventHandler(popupDeadlines);
+			myTimer->Interval = (TICK_MIN * TICK_SEC * TICK_MS);
+			myTimer->Start();
 		}
-		/*
-		private:
+
+	private:
 		// Displays events
 		static void popupDeadlines(System::Object^  sender, System::EventArgs^  e) {
-		magicManager->generateMessageOutputs("display");
-		MessageBox::Show(
-		"Message 1\nMessage 2\nMessage3", 
-		"Title", 
-		MessageBoxButtons::OK, 
-		MessageBoxIcon::Asterisk, 
-		MessageBoxDefaultButton::Button1, 
-		MessageBoxOptions::DefaultDesktopOnly);
-		}*/
+			String^ notifications;
+			if(magicManager->hasNotificationEvent(notifications)) {
+				MessageBox::Show(
+					notifications, 
+					"Events Notifications",
+					MessageBoxButtons::OK, 
+					MessageBoxIcon::Asterisk, 
+					MessageBoxDefaultButton::Button1, 
+					MessageBoxOptions::DefaultDesktopOnly);
+			}
+		}
 
 	private:
 		// Sets success message and fills task boxes
@@ -384,6 +392,6 @@ namespace MagicMemo {
 	};
 
 	// hide the command prompt window
-#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") 
+	//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") 
 
 }

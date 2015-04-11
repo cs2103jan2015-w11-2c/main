@@ -5,7 +5,15 @@
 #define ELPP_DISABLE_LOGS
 #include "easylogging++.h"
 
+const string Controller::SUCCESS_12_HR = "Date format changed to 12-hr format!";
+const string Controller::SUCCESS_24_HR = "Date format changed to 24-hr format!";
+const string Controller::SUCCESS_NOTIFICATION_TIME_CHANGED = "Notification time changed from %d minutes to %d minutes";
+const string Controller::SUCCESS_NOTIFICATION_ON = "Notifications turned on";
+const string Controller::SUCCESS_NOTIFICATION_OFF = "Notifications turned off";
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
+const string Controller::ERROR_INVALID_LINE_NUMBER = "getLineOpNumber() throws: ";
+const string Controller::ERROR_INVALID_NOTIFICATION_TIME = "Invalid Notification time!";
+const int Controller::MAX_NOTIFICATION = 30240;
 
 INITIALIZE_EASYLOGGINGPP;
 
@@ -22,11 +30,10 @@ Controller::Controller(void) {
 	_parser = new Parser;
 	_outputFile = FileStorage::getInstance();
 	_invoker = new CommandInvoker;
+	initializeOptions();
 	initializeVector();
 	_isSearch = false;
-	_isWide = true;
 	_isHelp = false;
-	_is12HourFormat = true;
 	_sleepTime[0][0] = DEFAULT_SLEEP_START_HR;
 	_sleepTime[0][1] = DEFAULT_SLEEP_START_MIN;
 	_sleepTime[1][0] = DEFAULT_SLEEP_END_HR;
@@ -52,7 +59,7 @@ void Controller::executeCommand(string inputText) {
 	if(userCommand != "") {
 		addToInputBank();
 	}
-	
+
 	_isSearch = false;
 
 
@@ -100,7 +107,12 @@ void Controller::executeCommand(string inputText) {
 		getHelp();
 	} else if (userCommand == "sleep") {
 		setSleepTime();
-	} else if (userCommand == "exit") {
+	} else if ((userCommand == "notify") || (userCommand == "notification")){
+		toggleNotification();
+	} else if (userCommand == "reminder") {
+		setReminderTime();
+	}
+	else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
 }
@@ -129,10 +141,11 @@ void Controller::initializeVector() {
 }
 
 void Controller::initializeOptions() {
-	vector<bool> options = _outputFile->getOptionFileData();
-
-	_is12HourFormat = options[0];
-	_isWide = options[1];
+	vector<int> options = _outputFile->getOptionFileData();
+	_is12HourFormat = (options[0] == 1) ? true : false;
+	_isWide = (options[1] == 1) ? true : false;
+	_isNotificationsOn = (options[2] == 1) ? true : false;
+	_notifyTime = options[3];
 }
 
 long Controller::getTimePos(const int date[3], const int time[2]) {
@@ -174,7 +187,7 @@ bool Controller::checkIsClash(const Item item1, const Item item2) {
 	} else {
 		endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventEndTime);
 	}
-	
+
 	long startTimePos2 = getTimePos(item2.eventDate, item2.eventStartTime);
 	long endTimePos2;
 	if (!checkDateIsUnset(item2.eventDate) && checkDateIsUnset(item2.eventEndDate)) {
@@ -188,10 +201,10 @@ bool Controller::checkIsClash(const Item item1, const Item item2) {
 	} else {
 		endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
 	}
-	
+
 	bool isDeadline1 = checkIsDeadline(item1);
 	bool isDeadline2 = checkIsDeadline(item2);
-	
+
 	if (isDeadline1 && isDeadline2) {
 		if (startTimePos1 != startTimePos2) {
 			return false;
@@ -224,7 +237,7 @@ bool Controller::checkIsDeadline(const Item item) {
 			return false;
 		}
 	}
-	
+
 	for (int i = 0; i < 3; i++) {
 		if (item.eventDate[i] != 0) {
 			return true;
@@ -430,7 +443,15 @@ void Controller::addData(Item item) {
 }
 
 void Controller::deleteData() {
-	DeleteItem *deleteItemCommand = new DeleteItem(_parser->getLineOpNumber());
+	DeleteItem *deleteItemCommand;
+	try {
+		deleteItemCommand = new DeleteItem(_parser->getLineOpNumber());
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
+		clog << e.what();
+		return;
+	}
 
 	_invoker->executeCommand(_vectorStore, deleteItemCommand, _successMessage);
 
@@ -503,7 +524,15 @@ bool Controller::isHelp() {
 }
 
 void Controller::copy(Item input) {
-	CopyItem *copyItemCommand = new CopyItem(_parser->getLineOpNumber()[0], input);
+	CopyItem *copyItemCommand;
+	try {
+		copyItemCommand = new CopyItem(_parser->getLineOpNumber()[0], input);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
+		clog << e.what();
+		return;
+	}
 	_invoker->executeCommand(_vectorStore, copyItemCommand, _successMessage);
 
 	chronoSort(_vectorStore);
@@ -516,8 +545,15 @@ void Controller::copy(Item input) {
 }
 
 void Controller::edit(Item data) {
-	int lineNumber = _parser->getLineOpNumber()[0];
-
+	int lineNumber;
+	try {
+		lineNumber = _parser->getLineOpNumber()[0];
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
+		clog << e.what();
+		return;
+	}
 	_parser->extractUserCommand();
 	Item item = _parser->getItem();
 
@@ -663,12 +699,14 @@ void Controller::setClockTo12Hour() {
 	_is12HourFormat = true;
 	generateResults(_vectorStore);
 	_outputFile->saveIs12Hr(_is12HourFormat);
+	_successMessage = SUCCESS_12_HR;
 }
 
 void Controller::setClockTo24Hour() {
 	_is12HourFormat = false;
 	generateResults(_vectorStore);
 	_outputFile->saveIs12Hr(_is12HourFormat);
+	_successMessage = SUCCESS_24_HR;
 }
 
 void Controller::setSleepTime() {
@@ -682,6 +720,117 @@ void Controller::setSleepTime() {
 		for (int j = 0 ; j < 2 ; j++) {
 			_sleepTime[i][j] = sleepParam[i * 2 + j];
 		}
+	}
+}
+
+//@author A0111951N
+bool Controller::isNotificationsOn() {
+	return _isNotificationsOn;
+}
+
+string Controller::getNotifications() {
+	int targetMin;
+	int targetHr;
+	int targetDay;
+	int targetMon; 
+	int targetYr;
+
+	calculateTargetDateTime(targetMin, targetHr, targetDay, targetMon, targetYr);
+	return findEventMatch(targetMin, targetHr, targetDay, targetMon, targetYr);
+}
+
+void Controller::calculateTargetDateTime (
+	int& targetMin, 
+	int& targetHr,
+	int& targetDay,
+	int& targetMon, 
+	int& targetYr) {
+		DateTime today;
+		targetMin = today.getCurrentMinute() + _notifyTime;
+		targetHr = today.getCurrentHour();
+		targetDay = today.getCurrentDay();
+		targetMon = today.getCurrentMonth();
+		targetYr = today.getCurrentYear();
+
+		if(targetMin >= 60) {
+			targetHr += targetMin / 60;
+			targetMin %= 60;
+		}
+
+		if(targetHr >= 24) {
+			targetDay += targetHr / 24;
+			targetHr %= 24;
+		}
+
+		if(targetDay > today.numDaysInMonth(targetDay, targetYr)) {
+			targetMon++;
+			targetDay -= today.numDaysInMonth(targetDay, targetYr);
+		}
+
+		if(targetMon > 12) {
+			targetYr++;
+			targetMon -= 12;
+		}
+
+		//convert hour to 1-24 format
+		if(targetHr == 0) {
+			targetHr = 24;
+		}
+}
+
+string Controller::findEventMatch (
+	int& targetMin, 
+	int& targetHr,
+	int& targetDay,
+	int& targetMon, 
+	int& targetYr) {
+		ostringstream oss;
+
+		for(unsigned int i = 0; i < _vectorStore.size(); i++) {
+			Item temp = _vectorStore[i];
+			if(	(temp.eventDate[0] == targetDay) &&
+				(temp.eventDate[1] == targetMon) &&
+				(temp.eventDate[2] == targetYr) &&
+				(temp.eventStartTime[0] == targetHr) &&
+				(temp.eventStartTime[1] == targetMin)) {
+					oss << temp.dateToString() << " ";
+					oss << temp.timeAndEndDateToString() << " ";
+					oss << temp.event << "\n";
+			}
+		}
+		return oss.str();
+}
+
+void Controller::setReminderTime() {
+	int numMinutes;
+	try {
+		numMinutes = _parser->getLineOpNumber()[0];
+	} catch (const out_of_range& e) {
+		setSuccessMessage(ERROR_INVALID_NOTIFICATION_TIME);
+		LOG(ERROR) << ERROR_INVALID_NOTIFICATION_TIME << e.what();
+		clog << e.what();
+		return;
+	}
+
+	if((numMinutes > MAX_NOTIFICATION) || (numMinutes < 0)) {
+		_successMessage = ERROR_INVALID_NOTIFICATION_TIME;
+		return;
+	}
+	char buffer[1000];
+	sprintf_s(buffer, SUCCESS_NOTIFICATION_TIME_CHANGED.c_str(), _notifyTime, numMinutes);
+	_notifyTime = numMinutes;
+	_outputFile->saveNotifications(_isNotificationsOn, _notifyTime);
+	_successMessage = buffer;
+}
+
+void Controller::toggleNotification() {
+	_isNotificationsOn = !_isNotificationsOn;
+	_outputFile->saveNotifications(_isNotificationsOn, _notifyTime);
+
+	if(_isNotificationsOn) {
+		_successMessage = SUCCESS_NOTIFICATION_ON;
+	} else {
+		_successMessage = SUCCESS_NOTIFICATION_OFF;
 	}
 }
 

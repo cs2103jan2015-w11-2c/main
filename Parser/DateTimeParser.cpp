@@ -308,7 +308,7 @@ void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, 
 		return;
 	}
 
-	int diffInDay = 0;	
+	int diffInDay = 0;
 	if(weekDayIndex == 0) {
 		diffInDay = 0;
 	} else if(weekDayIndex == -2) {

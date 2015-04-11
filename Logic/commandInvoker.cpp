@@ -1,6 +1,7 @@
 #include "commandInvoker.h"
 
-//author A0116179B
+//@author A0111951N
+
 CommandInvoker::CommandInvoker(void) {
 	_numRedo = 0;
 	_enableUndoFlag = true;
