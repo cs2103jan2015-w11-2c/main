@@ -97,6 +97,10 @@ public:
 
 	String^ getAllTaskBoxLabel();
 
+	//returns true if a notification is pending
+	//sets the input string to the notifcation
+	bool hasNotificationEvent(String^%);
+
 	//transfers all strings from _nextInputStrings to _pastInputStrings
 	void moveNextStrings();
 

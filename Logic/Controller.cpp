@@ -7,8 +7,13 @@
 
 const string Controller::SUCCESS_12_HR = "Date format changed to 12-hr format!";
 const string Controller::SUCCESS_24_HR = "Date format changed to 24-hr format!";
+const string Controller::SUCCESS_NOTIFICATION_TIME_CHANGED = "Notification time changed from %d minutes to %d minutes";
+const string Controller::SUCCESS_NOTIFICATION_ON = "Notifications turned on";
+const string Controller::SUCCESS_NOTIFICATION_OFF = "Notifications turned off";
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
 const string Controller::ERROR_INVALID_LINE_NUMBER = "getLineOpNumber() throws: ";
+const string Controller::ERROR_INVALID_NOTIFICATION_TIME = "Invalid Notification time!";
+const int Controller::MAX_NOTIFICATION = 30240;
 
 INITIALIZE_EASYLOGGINGPP;
 
@@ -25,11 +30,10 @@ Controller::Controller(void) {
 	_parser = new Parser;
 	_outputFile = FileStorage::getInstance();
 	_invoker = new CommandInvoker;
+	initializeOptions();
 	initializeVector();
 	_isSearch = false;
-	_isWide = true;
 	_isHelp = false;
-	_is12HourFormat = true;
 	_sleepTime[0][0] = DEFAULT_SLEEP_START_HR;
 	_sleepTime[0][1] = DEFAULT_SLEEP_START_MIN;
 	_sleepTime[1][0] = DEFAULT_SLEEP_END_HR;
@@ -55,7 +59,7 @@ void Controller::executeCommand(string inputText) {
 	if(userCommand != "") {
 		addToInputBank();
 	}
-	
+
 	_isSearch = false;
 
 
@@ -103,7 +107,12 @@ void Controller::executeCommand(string inputText) {
 		getHelp();
 	} else if (userCommand == "sleep") {
 		setSleepTime();
-	} else if (userCommand == "exit") {
+	} else if ((userCommand == "notify") || (userCommand == "notification")){
+		toggleNotification();
+	} else if (userCommand == "reminder") {
+		setReminderTime();
+	}
+	else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
 }
@@ -133,9 +142,10 @@ void Controller::initializeVector() {
 
 void Controller::initializeOptions() {
 	vector<int> options = _outputFile->getOptionFileData();
-
-	_is12HourFormat = options[0];
-	_isWide = options[1];
+	_is12HourFormat = (options[0] == 1) ? true : false;
+	_isWide = (options[1] == 1) ? true : false;
+	_isNotificationsOn = (options[2] == 1) ? true : false;
+	_notifyTime = options[3];
 }
 
 long Controller::getTimePos(const int date[3], const int time[2]) {
@@ -696,7 +706,7 @@ void Controller::setClockTo24Hour() {
 	_is12HourFormat = false;
 	generateResults(_vectorStore);
 	_outputFile->saveIs12Hr(_is12HourFormat);
-		_successMessage = SUCCESS_24_HR;
+	_successMessage = SUCCESS_24_HR;
 }
 
 void Controller::setSleepTime() {
@@ -710,6 +720,93 @@ void Controller::setSleepTime() {
 		for (int j = 0 ; j < 2 ; j++) {
 			_sleepTime[i][j] = sleepParam[i * 2 + j];
 		}
+	}
+}
+
+bool Controller::isNotificationsOn() {
+	return _isNotificationsOn;
+}
+
+string Controller::getNotifications() {
+	ostringstream oss;
+	DateTime today;
+	int targetMin = today.getCurrentMinute() + _notifyTime;
+	int targetHr = today.getCurrentHour();
+	int targetDay = today.getCurrentDay();
+	int targetMon = today.getCurrentMonth();
+	int targetYr = today.getCurrentYear();
+
+	if(targetMin >= 60) {
+		targetHr += targetMin / 60;
+		targetMin %= 60;
+	}
+
+	if(targetHr >= 24) {
+		targetDay += targetHr / 24;
+		targetHr %= 24;
+	}
+
+	if(targetDay > today.numDaysInMonth(targetDay, targetYr)) {
+		targetMon++;
+		targetDay -= today.numDaysInMonth(targetDay, targetYr);
+	}
+
+	if(targetMon > 12) {
+		targetYr++;
+		targetMon -= 12;
+	}
+
+	//convert hour to 1-24 format
+	if(targetHr == 0) {
+		targetHr = 24;
+	}
+
+	for(unsigned int i = 0; i < _vectorStore.size(); i++) {
+		Item temp = _vectorStore[i];
+
+		if(	(temp.eventDate[0] == targetDay) &&
+			(temp.eventDate[1] == targetMon) &&
+			(temp.eventDate[2] == targetYr) &&
+			(temp.eventStartTime[0] == targetHr) &&
+			(temp.eventStartTime[1] == targetMin)) {
+				oss << temp.dateToString() << " ";
+				oss << temp.timeAndEndDateToString() << " ";
+				oss << temp.event << "\n";
+		}
+	}
+	return oss.str();
+}
+
+void Controller::setReminderTime() {
+	int numMinutes;
+	try {
+		numMinutes = _parser->getLineOpNumber()[0];
+	} catch (const out_of_range& e) {
+		setSuccessMessage(ERROR_INVALID_NOTIFICATION_TIME);
+		LOG(ERROR) << ERROR_INVALID_NOTIFICATION_TIME << e.what();
+		clog << e.what();
+		return;
+	}
+
+	if((numMinutes > MAX_NOTIFICATION) || (numMinutes < 0)) {
+		_successMessage = ERROR_INVALID_NOTIFICATION_TIME;
+		return;
+	}
+	char buffer[1000];
+	sprintf_s(buffer, SUCCESS_NOTIFICATION_TIME_CHANGED.c_str(), _notifyTime, numMinutes);
+	_notifyTime = numMinutes;
+	_outputFile->saveNotifications(_isNotificationsOn, _notifyTime);
+	_successMessage = buffer;
+}
+
+void Controller::toggleNotification() {
+	_isNotificationsOn = !_isNotificationsOn;
+	_outputFile->saveNotifications(_isNotificationsOn, _notifyTime);
+	
+	if(_isNotificationsOn) {
+		_successMessage = SUCCESS_NOTIFICATION_ON;
+	} else {
+		_successMessage = SUCCESS_NOTIFICATION_OFF;
 	}
 }
 

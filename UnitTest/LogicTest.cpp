@@ -505,7 +505,7 @@ public:
 		Assert::AreEqual(expectedPos, parse.findDateDelimiters(input));
 	}
 
-	/*test fot the case when the input contains date and start and invalid end time of event*/
+	/*test for the case when the input contains date and start and invalid end time of event*/
 	TEST_METHOD(calculateDateTimeTest) {
 		string input = "27/5/2015 12:30 - 24:00"; 
 		Item item;
