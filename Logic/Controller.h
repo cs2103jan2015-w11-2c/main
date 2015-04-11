@@ -202,6 +202,10 @@ public:
 
 	string getNotifications();
 
+	void calculateTargetDateTime(int&, int&, int&, int&, int&);
+
+	string findEventMatch(int&, int&, int&, int&, int&);
+
 	void setReminderTime();
 
 	void toggleNotification();

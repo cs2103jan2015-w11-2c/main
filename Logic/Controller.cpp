@@ -723,58 +723,82 @@ void Controller::setSleepTime() {
 	}
 }
 
+//@author A0111951N
 bool Controller::isNotificationsOn() {
 	return _isNotificationsOn;
 }
 
 string Controller::getNotifications() {
-	ostringstream oss;
-	DateTime today;
-	int targetMin = today.getCurrentMinute() + _notifyTime;
-	int targetHr = today.getCurrentHour();
-	int targetDay = today.getCurrentDay();
-	int targetMon = today.getCurrentMonth();
-	int targetYr = today.getCurrentYear();
+	int targetMin;
+	int targetHr;
+	int targetDay;
+	int targetMon; 
+	int targetYr;
 
-	if(targetMin >= 60) {
-		targetHr += targetMin / 60;
-		targetMin %= 60;
-	}
+	calculateTargetDateTime(targetMin, targetHr, targetDay, targetMon, targetYr);
+	return findEventMatch(targetMin, targetHr, targetDay, targetMon, targetYr);
+}
 
-	if(targetHr >= 24) {
-		targetDay += targetHr / 24;
-		targetHr %= 24;
-	}
+void Controller::calculateTargetDateTime (
+	int& targetMin, 
+	int& targetHr,
+	int& targetDay,
+	int& targetMon, 
+	int& targetYr) {
+		DateTime today;
+		targetMin = today.getCurrentMinute() + _notifyTime;
+		targetHr = today.getCurrentHour();
+		targetDay = today.getCurrentDay();
+		targetMon = today.getCurrentMonth();
+		targetYr = today.getCurrentYear();
 
-	if(targetDay > today.numDaysInMonth(targetDay, targetYr)) {
-		targetMon++;
-		targetDay -= today.numDaysInMonth(targetDay, targetYr);
-	}
-
-	if(targetMon > 12) {
-		targetYr++;
-		targetMon -= 12;
-	}
-
-	//convert hour to 1-24 format
-	if(targetHr == 0) {
-		targetHr = 24;
-	}
-
-	for(unsigned int i = 0; i < _vectorStore.size(); i++) {
-		Item temp = _vectorStore[i];
-
-		if(	(temp.eventDate[0] == targetDay) &&
-			(temp.eventDate[1] == targetMon) &&
-			(temp.eventDate[2] == targetYr) &&
-			(temp.eventStartTime[0] == targetHr) &&
-			(temp.eventStartTime[1] == targetMin)) {
-				oss << temp.dateToString() << " ";
-				oss << temp.timeAndEndDateToString() << " ";
-				oss << temp.event << "\n";
+		if(targetMin >= 60) {
+			targetHr += targetMin / 60;
+			targetMin %= 60;
 		}
-	}
-	return oss.str();
+
+		if(targetHr >= 24) {
+			targetDay += targetHr / 24;
+			targetHr %= 24;
+		}
+
+		if(targetDay > today.numDaysInMonth(targetDay, targetYr)) {
+			targetMon++;
+			targetDay -= today.numDaysInMonth(targetDay, targetYr);
+		}
+
+		if(targetMon > 12) {
+			targetYr++;
+			targetMon -= 12;
+		}
+
+		//convert hour to 1-24 format
+		if(targetHr == 0) {
+			targetHr = 24;
+		}
+}
+
+string Controller::findEventMatch (
+	int& targetMin, 
+	int& targetHr,
+	int& targetDay,
+	int& targetMon, 
+	int& targetYr) {
+		ostringstream oss;
+
+		for(unsigned int i = 0; i < _vectorStore.size(); i++) {
+			Item temp = _vectorStore[i];
+			if(	(temp.eventDate[0] == targetDay) &&
+				(temp.eventDate[1] == targetMon) &&
+				(temp.eventDate[2] == targetYr) &&
+				(temp.eventStartTime[0] == targetHr) &&
+				(temp.eventStartTime[1] == targetMin)) {
+					oss << temp.dateToString() << " ";
+					oss << temp.timeAndEndDateToString() << " ";
+					oss << temp.event << "\n";
+			}
+		}
+		return oss.str();
 }
 
 void Controller::setReminderTime() {
@@ -802,7 +826,7 @@ void Controller::setReminderTime() {
 void Controller::toggleNotification() {
 	_isNotificationsOn = !_isNotificationsOn;
 	_outputFile->saveNotifications(_isNotificationsOn, _notifyTime);
-	
+
 	if(_isNotificationsOn) {
 		_successMessage = SUCCESS_NOTIFICATION_ON;
 	} else {
