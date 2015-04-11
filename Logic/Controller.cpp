@@ -7,7 +7,7 @@
 
 const string Controller::SUCCESS_12_HR = "Date format changed to 12-hr format!";
 const string Controller::SUCCESS_24_HR = "Date format changed to 24-hr format!";
-const string Controller::SUCCESS_NOTIFICATION_TIME_CHANGED = "Notification time changed from %d minutes to %d minutes";
+const string Controller::SUCCESS_NOTIFICATION_TIME_CHANGED = "Notification time changed from %d minute(s) to %d minute(s)";
 const string Controller::SUCCESS_NOTIFICATION_ON = "Notifications turned on";
 const string Controller::SUCCESS_NOTIFICATION_OFF = "Notifications turned off";
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
@@ -497,7 +497,7 @@ void Controller::search(Item data, string message) {
 	vector<Item> tempVector = _vectorStore;
 
 	try {
-	_parser->extractSearchQuery(data);
+		_parser->extractSearchQuery(data);
 	} catch (const out_of_range& e) {
 		setSuccessMessage(e.what());
 		LOG(INFO) << e.what();
@@ -505,7 +505,7 @@ void Controller::search(Item data, string message) {
 	}
 	SearchItem *searchItemCommand;
 
-		searchItemCommand= new SearchItem(data, message, &_otherResult, _sleepTime, false);
+	searchItemCommand= new SearchItem(data, message, &_otherResult, _sleepTime, false);
 
 	_invoker->disableUndo();
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
@@ -589,13 +589,23 @@ void Controller::edit(Item data) {
 
 void Controller::rename(string newFileName) {
 	RenameFile *renameFileCommand = new RenameFile(newFileName);
-	_invoker->executeCommand(_outputFile, renameFileCommand, _successMessage);
+	try {
+		_invoker->executeCommand(_outputFile, renameFileCommand, _successMessage);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+	}
 
 }
 
 void Controller::move(string newFileLocation) {
 	MoveFileLocation *moveFileCommand = new MoveFileLocation(newFileLocation);
-	_invoker->executeCommand(_outputFile, moveFileCommand, _successMessage);
+	try {
+		_invoker->executeCommand(_outputFile, moveFileCommand, _successMessage);
+	} catch (const invalid_argument& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+	}
 }
 
 void Controller::undo() {

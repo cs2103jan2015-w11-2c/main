@@ -222,6 +222,7 @@ bool FileStorage::changeFileName(string newFileName) {
 	if(fileExists(newFileName)) {
 		return false;
 	}
+	assert(newFileName != "");
 	string oldFileName = getFullFileName();
 	setFileName(newFileName);
 	rename(oldFileName.c_str(), getFullFileName().c_str());
@@ -239,7 +240,7 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 	if(!directoryExists(newFilePath)) {
 		return false;
 	}
-
+	assert(newFilePath != "");
 	string newFullFileName = newFilePath + "\\" + _fileName;
 
 	if(fileExists(newFullFileName)) {
