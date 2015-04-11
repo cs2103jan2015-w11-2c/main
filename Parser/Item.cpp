@@ -95,7 +95,7 @@ string Item::endDateToString() {
 		return "";
 	}
 	ostringstream oss;
-	oss << "[" << eventEndDate[0] << "/" << eventEndDate[1] << "/" << eventEndDate[2] << "]";
+	oss << "[" << eventEndDate[0] << "/" << eventEndDate[1] << "]";
 	return oss.str();
 }
 

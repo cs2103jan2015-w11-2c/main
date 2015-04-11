@@ -396,7 +396,8 @@ void Controller::generateResults(const vector<Item> vectorStore) {
 			for (int j = 0; j < 3; j++) {
 				inputVector[i].eventEndDate[j] = inputVector[i].eventDate[j];
 			}
-			_is12HourFormat ? temp.time = inputVector[i].timeAndEndDateToString() : temp.time = inputVector[i].timeTo24HrString();
+			_is12HourFormat ? temp.time = inputVector[i].timeToString() : temp.time = inputVector[i].timeTo24HrString();
+			temp.time += inputVector[i].endDateToString();
 			temp.date = DEADLINE_HEADER;
 			deadlineResult.push_back(temp);
 		} else if ((inputVector[i].eventDate[0] == newDateTime.getCurrentDay() ||
@@ -430,7 +431,7 @@ void Controller::commandOptions(string command) {
 
 void Controller::addData(Item item) {
 	AddItem *addItemCommand = new AddItem(item);
-	
+
 	try {
 		_invoker->executeCommand(_vectorStore, addItemCommand, _successMessage);
 	} catch (const logic_error& e) {
@@ -495,9 +496,17 @@ void Controller::sortAlphabetical() {
 void Controller::search(Item data, string message) {
 	vector<Item> tempVector = _vectorStore;
 
+	try {
 	_parser->extractSearchQuery(data);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+		return;
+	}
+	SearchItem *searchItemCommand;
 
-	SearchItem *searchItemCommand = new SearchItem(data, message, &_otherResult, _sleepTime, false);
+		searchItemCommand= new SearchItem(data, message, &_otherResult, _sleepTime, false);
+
 	_invoker->disableUndo();
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
 }

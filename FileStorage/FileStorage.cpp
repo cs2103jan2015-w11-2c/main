@@ -10,7 +10,7 @@ FileStorage::FileStorage(void) {
 
 	_is12Hr = true;
 	_isWide = false;
-	_isNotificationsOn = true;
+	_isNotificationsOn = false;
 	_notifyMin = 10;
 
 	if(isFileEmpty(_fileConfigFileName)) {
