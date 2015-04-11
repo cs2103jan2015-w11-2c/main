@@ -99,13 +99,13 @@ vector<string> FileStorage::getAutoCompleteFileData() {
 	return tempVector;
 }
 
-vector<bool> FileStorage::getOptionFileData() {
+vector<int> FileStorage::getOptionFileData() {
 	if(isFileEmpty(_optionFileName)) {
 		updateOptionsFile();
 	}
 
-	vector<bool> boolVector;
-	bool content;
+	vector<int> boolVector;
+	int content;
 	ifstream readFile(_optionFileName.c_str());
 	while(readFile >> content) {
 		boolVector.push_back(content);    

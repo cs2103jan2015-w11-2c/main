@@ -52,7 +52,10 @@ class Controller {
 private:
 	static const string SUCCESS_FILENAME_CHANGED;
 	static const string SUCCESS_FILE_LOCATION_CHANGED;
+	static const string SUCCESS_12_HR;
+	static const string SUCCESS_24_HR;
 	static const string ERROR_FILE_OPERATION_FAILED;
+	static const string ERROR_INVALID_LINE_NUMBER;
 	static const string ERROR_NO_FILENAME;
 	static const string ERROR_FILE_ALREADY_EXISTS;
 	static const string ERROR_FILEPATH_NOT_FOUND;
@@ -119,9 +122,6 @@ public:
 
 	//returns the data deleted or *#*#*#*#* if not found
 	void deleteData();
-
-	//returns line number for operation or 0 if line number is invalid
-	int getLineNumberForOperation();
 
 	void displayAll();
 
