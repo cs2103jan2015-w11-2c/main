@@ -9,6 +9,16 @@
 #include "..\EasyLoggingpp\easylogging++.h"
 using namespace std;
 
+const int DATE_KEYWORDS_SIZE = 56;
+const string DATE_KEYWORDS[]= {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
+						"sunday", "mon", "tue", "tues", "wed", "thur", "thurs", "fri", "sat", "sun",
+						"january", "february", "march", "april", "may", "june", "july", "august",
+						 "september", "october", "november", "december", "jan", "feb", "mar",
+						 "apr", "may", "jun", "jul", "aug", "sep", "sept", "oct", "nov", "novem",
+						 "dec", "decem", "today", "floating", "float", "tomorrow", "tom", "tmr",
+						 "to", "-", "next", "nex", "p", "pm", "m"};
+
+
 //updateItemDateTime takes in the ITEM to be updated
 //and the unedited date and time input from the user
 //it then updates the date and time fields in ITEM directly
@@ -96,6 +106,9 @@ public:
 	//sets the month, sets the day and resets hour
 	void updateHrDayMon(int monthNum, int& hour, int& day, int& month, int& year, int& itemHour);
 
+	//returns true if the word is a possible date/time keyword
+	bool isDateKeyword(string);
+
 	// returns true if the string is a date of format day/month{/year}
 	bool isDelimitedDate(string);
 
@@ -144,6 +157,8 @@ public:
 		int& endDay,
 		int& endMonth,
 		int& endYear);
+
+	void getNextDayDate(int &, int &, int &);
 
 	// returns 0 if unsuccessful (or number is 0)
 	// otherwise returns the converted number

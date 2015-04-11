@@ -1,5 +1,6 @@
 #pragma once
 
+//author A0116179B
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -11,25 +12,43 @@
 
 using namespace std;
 
-static const int NUM_HELP_COMMANDS = 7; 
+static const int NUM_HELP_COMMANDS = 12; 
 
 static const string HELP_COMMANDS[] = {"add xxx", 
 	"delete #", 
 	"display", 
+	"edit # xxx",
+	"copy # xxx",
 	"clear", 
 	"sort", 
 	"search xxx",
+	"12/24",
+	"view/wide",
+	"undo",
+	"redo",
 	"exit"};
 
 static const string HELP_DESCRIPTION[] = {"line xxx is added to the text file with a line number",
 	"the line with the corresponding # is deleted",
 	"all data in the file is displayed",
+	"modifies the data in line # with xxx",
+	"makes a copy of line #, and applies changes in time and date specified in xxx",
 	"all data in the file is deleted",
 	"all data in the file is sorted alphabetically",
-	"all lines with xxx is displayed",
+	"all lines related to xxx are displayed",
+	"Sets the time format to 12 Hour and 24 Hour respectively",
+	"Widens the textbox to show more items",
+	"Undo the previous change",
+	"Redo the a change if undo was previously called",
 	"program quits"};
 
 static const string DEADLINE_HEADER = "Deadline Events";
+static const string ERROR_INCORRECT_NUMBER_ARGUMENTS = "Sleep requires 4 arguments\n";;
+
+static const int DEFAULT_SLEEP_START_HR = 24;
+static const int DEFAULT_SLEEP_START_MIN = 0;
+static const int DEFAULT_SLEEP_END_HR = 5;
+static const int DEFAULT_SLEEP_END_MIN = 0;
 
 class Controller {
 private:
@@ -62,6 +81,8 @@ private:
 	bool _isHelp;
 
 	bool _is12HourFormat;
+
+	int _sleepTime[2][2];
 
 public:
 	Controller(void);
@@ -103,9 +124,6 @@ public:
 	//returns the data deleted or *#*#*#*#* if not found
 	void deleteData();
 
-	//returns line number for operation or 0 if line number is invalid
-	int getLineNumberForOperation();
-
 	void displayAll();
 
 	void clearAll();
@@ -113,6 +131,8 @@ public:
 	void sortAlphabetical();
 
 	void search(Item, string);
+
+	void searchFree(Item, string);
 
 	bool isSearch();
 
@@ -160,6 +180,8 @@ public:
 	void setClockTo12Hour();
 
 	void setClockTo24Hour();
+
+	void setSleepTime();
 
 	~Controller(void);
 };

@@ -2,11 +2,15 @@
 #include <string>
 #include <sstream>
 #include <exception>
+#include <assert.h>
 #include <algorithm>
 #include <map>
 #include "Item.h"
 #include "../EasyLoggingpp/easylogging++.h"
 #include "DateTimeParser.h"
+
+//disable assertions upon release
+//#define NDEBUG 
 
 using namespace std;
 
@@ -14,14 +18,6 @@ using namespace std;
 const string DATE_START_1 = "from";
 const string DATE_START_2 = "on";
 const string DATE_START_DEADLINE = "by";
-const int DATE_KEYWORDS_SIZE = 56;
-const string DATE_KEYWORDS[]= {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
-						"sunday", "mon", "tue", "tues", "wed", "thur", "thurs", "fri", "sat", "sun",
-						"january", "february", "march", "april", "may", "june", "july", "august",
-						 "september", "october", "november", "december", "jan", "feb", "mar",
-						 "apr", "may", "jun", "jul", "aug", "sep", "sept", "oct", "nov", "novem",
-						 "dec", "decem", "today", "floating", "float", "tomorrow", "tom", "tmr",
-						 "to", "-", "next", "nex", "p", "pm", "m"};
 
 class Parser {
 private:
@@ -61,9 +57,6 @@ public:
 	//returns true if the words after the delimiter are all date/time keywords
 	bool isCorrectDateDelimiter(string inputLine, size_t index);
 
-	//returns true if the word is a possible date/time keyword
-	bool isDateKeyword(string);
-
 	//input format is [_day/_month time(24hrs) at the end of the input
 	//if time is input as 12 hr, input p to specify pm
 	//12 is taken as 12 noon. if 12 am, then input m
@@ -77,11 +70,19 @@ public:
 
 	string convertStringToLowerCase(string inputString);
 
+	void assertItemValues();
+
 	vector<string> getFragmentedEvent();
 
 	bool checkIsFloating(const Item);
 
 	void clearStartAndEndDate(Item &);
+
+	bool isTimeOrDate(const string);
+
+	bool checkIsValidDate(const string);
+
+	bool checkIsDeadline(const string);
 
 	void extractSearchQuery(Item &);
 

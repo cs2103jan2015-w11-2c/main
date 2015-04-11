@@ -38,7 +38,7 @@ namespace UnitTest
 		parse.setStringToParse(input);
 		parse.extractDateAndTime();
 		item = parse.getItem();
-		bool isExpected = true;
+		bool isExpected = false;
 		Assert::AreEqual(isExpected,control.checkIsDeadline(item));
 	}
 
