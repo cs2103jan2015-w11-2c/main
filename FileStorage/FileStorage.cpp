@@ -11,7 +11,7 @@ FileStorage::FileStorage(void) {
 	_is12Hr = true;
 	_isWide = false;
 
-	if(isFileEmpty(_fileConfigFileName)) {  //if not initialized
+	if(isFileEmpty(_fileConfigFileName)) {
 		initializeFileConfig();
 	}
 
@@ -99,13 +99,13 @@ vector<string> FileStorage::getAutoCompleteFileData() {
 	return tempVector;
 }
 
-vector<bool> FileStorage::getOptionFileData() {
+vector<int> FileStorage::getOptionFileData() {
 	if(isFileEmpty(_optionFileName)) {
 		updateOptionsFile();
 	}
 
-	vector<bool> boolVector;
-	bool content;
+	vector<int> boolVector;
+	int content;
 	ifstream readFile(_optionFileName.c_str());
 	while(readFile >> content) {
 		boolVector.push_back(content);    
@@ -297,13 +297,17 @@ string FileStorage::getProgramFilePath() {
 
 //@author A0115452N
 bool FileStorage::restoreFileInfo() {
+<<<<<<< HEAD
     assert(_fileName!=_defaultFileName.c_str());//the newfileName cannot be the default one
 	changeFileName(_defaultFileName.c_str());
 	if (_fileName == getFullFileName()) {
+=======
+	if(!changeFileName(_defaultFileName.c_str())) {
 		return false;
-	} 
-	else {
-		changeFileLocation(getProgramFilePath());
+	}
+	if(!changeFileLocation(getProgramFilePath())) {
+>>>>>>> master
+		return false;
 	} 
 	return true;
 }

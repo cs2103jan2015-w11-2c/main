@@ -1,4 +1,6 @@
 #pragma once
+//@author A0111951N
+
 #include <iostream>
 #include <sstream>
 #include "..\EasyLoggingpp\easylogging++.h"

@@ -1,4 +1,5 @@
 #pragma once
+//@author A0115452N
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -47,9 +48,11 @@ public:
 	vector<string> getAutoCompleteFileData();
 
 	//returns an options vector:
-	//first element - is12Hr;
-	//second element - isWide;
-	vector<bool> getOptionFileData();
+	//first element - is12Hr : 1 if true, 0 otherwise;
+	//second element - isWide: 1 if true, 0 otherwise;
+	//3rd element - isAlarm
+	//3rd elemment - time for alarm
+	vector<int> getOptionFileData();
 
 	//main text file
 	void addLineToFile(Item);

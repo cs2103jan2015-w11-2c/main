@@ -5,7 +5,10 @@
 #define ELPP_DISABLE_LOGS
 #include "easylogging++.h"
 
+const string Controller::SUCCESS_12_HR = "Date format changed to 12-hr format!";
+const string Controller::SUCCESS_24_HR = "Date format changed to 24-hr format!";
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
+const string Controller::ERROR_INVALID_LINE_NUMBER = "getLineOpNumber() throws: ";
 
 INITIALIZE_EASYLOGGINGPP;
 
@@ -129,7 +132,7 @@ void Controller::initializeVector() {
 }
 
 void Controller::initializeOptions() {
-	vector<bool> options = _outputFile->getOptionFileData();
+	vector<int> options = _outputFile->getOptionFileData();
 
 	_is12HourFormat = options[0];
 	_isWide = options[1];
@@ -174,7 +177,7 @@ bool Controller::checkIsClash(const Item item1, const Item item2) {
 	} else {
 		endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventEndTime);
 	}
-	
+
 	long startTimePos2 = getTimePos(item2.eventDate, item2.eventStartTime);
 	long endTimePos2;
 	if (!checkDateIsUnset(item2.eventDate) && checkDateIsUnset(item2.eventEndDate)) {
@@ -188,10 +191,10 @@ bool Controller::checkIsClash(const Item item1, const Item item2) {
 	} else {
 		endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
 	}
-	
+
 	bool isDeadline1 = checkIsDeadline(item1);
 	bool isDeadline2 = checkIsDeadline(item2);
-	
+
 	if (isDeadline1 && isDeadline2) {
 		if (startTimePos1 != startTimePos2) {
 			return false;
@@ -224,7 +227,7 @@ bool Controller::checkIsDeadline(const Item item) {
 			return false;
 		}
 	}
-	
+
 	for (int i = 0; i < 3; i++) {
 		if (item.eventDate[i] != 0) {
 			return true;
@@ -430,7 +433,15 @@ void Controller::addData(Item item) {
 }
 
 void Controller::deleteData() {
-	DeleteItem *deleteItemCommand = new DeleteItem(_parser->getLineOpNumber());
+	DeleteItem *deleteItemCommand;
+	try {
+		deleteItemCommand = new DeleteItem(_parser->getLineOpNumber());
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
+		clog << e.what();
+		return;
+	}
 
 	_invoker->executeCommand(_vectorStore, deleteItemCommand, _successMessage);
 
@@ -503,7 +514,15 @@ bool Controller::isHelp() {
 }
 
 void Controller::copy(Item input) {
-	CopyItem *copyItemCommand = new CopyItem(_parser->getLineOpNumber()[0], input);
+	CopyItem *copyItemCommand;
+	try {
+		copyItemCommand = new CopyItem(_parser->getLineOpNumber()[0], input);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
+		clog << e.what();
+		return;
+	}
 	_invoker->executeCommand(_vectorStore, copyItemCommand, _successMessage);
 
 	chronoSort(_vectorStore);
@@ -516,8 +535,15 @@ void Controller::copy(Item input) {
 }
 
 void Controller::edit(Item data) {
-	int lineNumber = _parser->getLineOpNumber()[0];
-
+	int lineNumber;
+	try {
+		lineNumber = _parser->getLineOpNumber()[0];
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
+		clog << e.what();
+		return;
+	}
 	_parser->extractUserCommand();
 	Item item = _parser->getItem();
 
@@ -663,12 +689,14 @@ void Controller::setClockTo12Hour() {
 	_is12HourFormat = true;
 	generateResults(_vectorStore);
 	_outputFile->saveIs12Hr(_is12HourFormat);
+	_successMessage = SUCCESS_12_HR;
 }
 
 void Controller::setClockTo24Hour() {
 	_is12HourFormat = false;
 	generateResults(_vectorStore);
 	_outputFile->saveIs12Hr(_is12HourFormat);
+		_successMessage = SUCCESS_24_HR;
 }
 
 void Controller::setSleepTime() {

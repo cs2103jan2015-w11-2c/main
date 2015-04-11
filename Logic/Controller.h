@@ -1,6 +1,7 @@
 #pragma once
 
-//author A0116179B
+//@author A0111951N
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -14,8 +15,9 @@ using namespace std;
 
 static const int NUM_HELP_COMMANDS = 12; 
 
-static const string HELP_COMMANDS[] = {"add xxx", 
-	"delete #", 
+static const string HELP_COMMANDS[] = {
+	"add xxx", 
+	"delete # {#, #-#}", 
 	"display", 
 	"edit # xxx",
 	"copy # xxx",
@@ -28,8 +30,9 @@ static const string HELP_COMMANDS[] = {"add xxx",
 	"redo",
 	"exit"};
 
-static const string HELP_DESCRIPTION[] = {"line xxx is added to the text file with a line number",
-	"the line with the corresponding # is deleted",
+static const string HELP_DESCRIPTION[] = {
+	"line xxx is added to the text file with a line number",
+	"the line with the corresponding # is deleted. (deletion of multiple line supported)",
 	"all data in the file is displayed",
 	"modifies the data in line # with xxx",
 	"makes a copy of line #, and applies changes in time and date specified in xxx",
@@ -40,7 +43,8 @@ static const string HELP_DESCRIPTION[] = {"line xxx is added to the text file wi
 	"Widens the textbox to show more items",
 	"Undo the previous change",
 	"Redo the a change if undo was previously called",
-	"program quits"};
+	"program quits"
+};
 
 static const string DEADLINE_HEADER = "Deadline Events";
 static const string ERROR_INCORRECT_NUMBER_ARGUMENTS = "Sleep requires 4 arguments\n";;
@@ -54,7 +58,10 @@ class Controller {
 private:
 	static const string SUCCESS_FILENAME_CHANGED;
 	static const string SUCCESS_FILE_LOCATION_CHANGED;
+	static const string SUCCESS_12_HR;
+	static const string SUCCESS_24_HR;
 	static const string ERROR_FILE_OPERATION_FAILED;
+	static const string ERROR_INVALID_LINE_NUMBER;
 	static const string ERROR_NO_FILENAME;
 	static const string ERROR_FILE_ALREADY_EXISTS;
 	static const string ERROR_FILEPATH_NOT_FOUND;
@@ -146,9 +153,6 @@ public:
 
 	void edit(Item);
 
-	//NEED TO IMPLEMENT A textfile to reflect the change
-	//in name so that the next time the program is run
-	//it will not revert to old file name
 	void rename(string newFileName);
 
 	//Example of new file path:
