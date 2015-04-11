@@ -11,7 +11,7 @@ FileStorage::FileStorage(void) {
 	_is12Hr = true;
 	_isWide = false;
 
-	if(isFileEmpty(_fileConfigFileName)) {  //if not initialized
+	if(isFileEmpty(_fileConfigFileName)) {
 		initializeFileConfig();
 	}
 
@@ -297,12 +297,11 @@ string FileStorage::getProgramFilePath() {
 
 //@author A0115452N
 bool FileStorage::restoreFileInfo() {
-    changeFileName(_defaultFileName.c_str());
-	if (_fileName == getFullFileName()) {
+	if(!changeFileName(_defaultFileName.c_str())) {
 		return false;
-	} 
-	else {
-		changeFileLocation(getProgramFilePath());
+	}
+	if(!changeFileLocation(getProgramFilePath())) {
+		return false;
 	} 
 	return true;
 }

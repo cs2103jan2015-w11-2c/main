@@ -1,6 +1,7 @@
 #include "Command.h"
 
-//author A0116179B
+//@author A0111951N
+
 Command::Command() {
 }
 

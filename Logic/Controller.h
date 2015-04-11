@@ -1,6 +1,7 @@
 #pragma once
 
-//author A0116179B
+//@author A0111951N
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -14,8 +15,9 @@ using namespace std;
 
 static const int NUM_HELP_COMMANDS = 12; 
 
-static const string HELP_COMMANDS[] = {"add xxx", 
-	"delete #", 
+static const string HELP_COMMANDS[] = {
+	"add xxx", 
+	"delete # {#, #-#}", 
 	"display", 
 	"edit # xxx",
 	"copy # xxx",
@@ -28,8 +30,9 @@ static const string HELP_COMMANDS[] = {"add xxx",
 	"redo",
 	"exit"};
 
-static const string HELP_DESCRIPTION[] = {"line xxx is added to the text file with a line number",
-	"the line with the corresponding # is deleted",
+static const string HELP_DESCRIPTION[] = {
+	"line xxx is added to the text file with a line number",
+	"the line with the corresponding # is deleted. (deletion of multiple line supported)",
 	"all data in the file is displayed",
 	"modifies the data in line # with xxx",
 	"makes a copy of line #, and applies changes in time and date specified in xxx",
@@ -40,7 +43,8 @@ static const string HELP_DESCRIPTION[] = {"line xxx is added to the text file wi
 	"Widens the textbox to show more items",
 	"Undo the previous change",
 	"Redo the a change if undo was previously called",
-	"program quits"};
+	"program quits"
+};
 
 static const string DEADLINE_HEADER = "Deadline Events";
 
