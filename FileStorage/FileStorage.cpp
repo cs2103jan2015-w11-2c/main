@@ -214,6 +214,7 @@ bool FileStorage::changeFileName(string newFileName) {
 	}
 	string oldFileName = getFullFileName();
 	setFileName(newFileName);
+    assert(!newFileName.empty());//new FileName cannot be empty or null
 	rename(oldFileName.c_str(), getFullFileName().c_str());
 
 	updateFileConfigInfo();
@@ -231,7 +232,7 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 	}
 
 	string newFullFileName = newFilePath + "\\" + _fileName;
-
+	assert(!newFilePath.empty());//newFilePath cannot be empty or null
 	if(fileExists(newFullFileName)) {
 		return false;
 	}
@@ -297,16 +298,10 @@ string FileStorage::getProgramFilePath() {
 
 //@author A0115452N
 bool FileStorage::restoreFileInfo() {
-<<<<<<< HEAD
-    assert(_fileName!=_defaultFileName.c_str());//the newfileName cannot be the default one
-	changeFileName(_defaultFileName.c_str());
-	if (_fileName == getFullFileName()) {
-=======
-	if(!changeFileName(_defaultFileName.c_str())) {
+    if(!changeFileName(_defaultFileName.c_str())) {
 		return false;
 	}
 	if(!changeFileLocation(getProgramFilePath())) {
->>>>>>> master
 		return false;
 	} 
 	return true;
