@@ -16,7 +16,7 @@ using namespace std;
 // interval to check for deadlines/events 
 // TICK_MIN * TICK_SEC * TICK_MS
 static const int TICK_MIN = 1;
-static const int TICK_SEC = 10;
+static const int TICK_SEC = 60;
 static const int TICK_MS = 1000;
 
 namespace MagicMemo {
@@ -312,24 +312,26 @@ namespace MagicMemo {
 	private: 
 		// Initializes the timer
 		System::Void MagicMemoGUI_Load(System::Object^  sender, System::EventArgs^  e) {
-			//Timer^ MyTimer = gcnew Timer;
-			//MyTimer->Tick += gcnew EventHandler(popupDeadlines);
-			//MyTimer->Interval = (TICK_MIN * TICK_SEC * TICK_MS);
-			//MyTimer->Start();
+			Timer^ myTimer = gcnew Timer;
+			myTimer->Tick += gcnew EventHandler(popupDeadlines);
+			myTimer->Interval = (TICK_MIN * TICK_SEC * TICK_MS);
+			myTimer->Start();
 		}
-		/*
-		private:
+
+	private:
 		// Displays events
 		static void popupDeadlines(System::Object^  sender, System::EventArgs^  e) {
-		magicManager->generateMessageOutputs("display");
-		MessageBox::Show(
-		"Message 1\nMessage 2\nMessage3", 
-		"Title", 
-		MessageBoxButtons::OK, 
-		MessageBoxIcon::Asterisk, 
-		MessageBoxDefaultButton::Button1, 
-		MessageBoxOptions::DefaultDesktopOnly);
-		}*/
+			String^ notifications;
+			if(magicManager->hasNotificationEvent(notifications)) {
+				MessageBox::Show(
+					notifications, 
+					"Events Notifications",
+					MessageBoxButtons::OK, 
+					MessageBoxIcon::Asterisk, 
+					MessageBoxDefaultButton::Button1, 
+					MessageBoxOptions::DefaultDesktopOnly);
+			}
+		}
 
 	private:
 		// Sets success message and fills task boxes
@@ -390,6 +392,6 @@ namespace MagicMemo {
 	};
 
 	// hide the command prompt window
-#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") 
+	#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") 
 
 }

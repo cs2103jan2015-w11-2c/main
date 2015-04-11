@@ -10,6 +10,8 @@ FileStorage::FileStorage(void) {
 
 	_is12Hr = true;
 	_isWide = false;
+	_isNotificationsOn = true;
+	_notifyMin = 10;
 
 	if(isFileEmpty(_fileConfigFileName)) {
 		initializeFileConfig();
@@ -104,15 +106,15 @@ vector<int> FileStorage::getOptionFileData() {
 		updateOptionsFile();
 	}
 
-	vector<int> boolVector;
+	vector<int> optionsVector;
 	int content;
 	ifstream readFile(_optionFileName.c_str());
 	while(readFile >> content) {
-		boolVector.push_back(content);    
+		optionsVector.push_back(content);    
 	}
 	readFile.close();
 
-	return boolVector;
+	return optionsVector;
 }
 
 void FileStorage::addLineToFile(Item item) {
@@ -186,10 +188,18 @@ void FileStorage::saveIsWide(bool isWide) {
 	updateOptionsFile();
 }
 
+void FileStorage::saveNotifications(bool isOn, int minsBefore) {
+	_isNotificationsOn = isOn;
+	_notifyMin = minsBefore;
+	updateOptionsFile();
+}
+
 void FileStorage::updateOptionsFile() {
 	ofstream outFile(_optionFileName.c_str());
 	outFile << _is12Hr << endl;
 	outFile << _isWide << endl;
+	outFile << _isNotificationsOn << endl;
+	outFile << _notifyMin;
 	outFile.close();
 }
 

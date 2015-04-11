@@ -1,6 +1,6 @@
 #include "commandInvoker.h"
 
-//@author A0111951N
+//@author A0116179B
 
 CommandInvoker::CommandInvoker(void) {
 	_numRedo = 0;

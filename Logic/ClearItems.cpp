@@ -1,7 +1,6 @@
 #pragma once
 
-//@author A0111951N
-
+//@author A0116179B
 #include <iostream>
 #include <vector>
 #include "Item.h"

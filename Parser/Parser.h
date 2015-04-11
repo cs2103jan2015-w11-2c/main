@@ -11,9 +11,6 @@
 #include "../EasyLoggingpp/easylogging++.h"
 #include "DateTimeParser.h"
 
-//disable assertions upon release
-//#define NDEBUG 
-
 using namespace std;
 
 //Constants

@@ -1,7 +1,9 @@
 #pragma once
 
-//@author A0111951N
+//@author A0116179B
 
+#include <assert.h>
+#include <exception>
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -60,11 +62,16 @@ private:
 	static const string SUCCESS_FILE_LOCATION_CHANGED;
 	static const string SUCCESS_12_HR;
 	static const string SUCCESS_24_HR;
+	static const string SUCCESS_NOTIFICATION_TIME_CHANGED;
+	static const string SUCCESS_NOTIFICATION_ON;
+	static const string SUCCESS_NOTIFICATION_OFF;
 	static const string ERROR_FILE_OPERATION_FAILED;
 	static const string ERROR_INVALID_LINE_NUMBER;
 	static const string ERROR_NO_FILENAME;
 	static const string ERROR_FILE_ALREADY_EXISTS;
 	static const string ERROR_FILEPATH_NOT_FOUND;
+	static const string ERROR_INVALID_NOTIFICATION_TIME;
+	static const int MAX_NOTIFICATION;
 
 	FileStorage *_outputFile;
 	Parser *_parser;
@@ -90,6 +97,12 @@ private:
 	bool _is12HourFormat;
 
 	int _sleepTime[2][2];
+
+	//advanced notification time, in minutes
+	//maximum allowable is 30240 (3 weeks)
+	int _notifyTime;
+
+	bool _isNotificationsOn;
 
 public:
 	Controller(void);
@@ -186,6 +199,18 @@ public:
 	void setClockTo24Hour();
 
 	void setSleepTime();
+
+	bool isNotificationsOn();
+
+	string getNotifications();
+
+	void calculateTargetDateTime(int&, int&, int&, int&, int&);
+
+	string findEventMatch(int&, int&, int&, int&, int&);
+
+	void setReminderTime();
+
+	void toggleNotification();
 
 	~Controller(void);
 };
