@@ -27,6 +27,10 @@ Controller::Controller(void) {
 	_isWide = true;
 	_isHelp = false;
 	_is12HourFormat = true;
+	_sleepTime[0][0] = DEFAULT_SLEEP_START_HR;
+	_sleepTime[0][1] = DEFAULT_SLEEP_START_MIN;
+	_sleepTime[1][0] = DEFAULT_SLEEP_END_HR;
+	_sleepTime[1][1] = DEFAULT_SLEEP_END_MIN;
 }
 
 void Controller::executeCommand(string inputText) {
@@ -48,12 +52,9 @@ void Controller::executeCommand(string inputText) {
 	if(userCommand != "") {
 		addToInputBank();
 	}
+	
+	_isSearch = false;
 
-	if(userCommand == "search") {
-		_isSearch = true;
-	} else {
-		_isSearch = false;
-	}
 
 	if((userCommand == "help") || (userCommand == "?")) {
 		_isHelp = true;
@@ -72,8 +73,12 @@ void Controller::executeCommand(string inputText) {
 	} else if (userCommand == "sort") {
 		sortAlphabetical();
 	} else if (userCommand == "search") {
+		_isSearch = true;
 		search(data, searchQuery);
-	} else if (userCommand == "copy") {
+	} else if (userCommand == "free") {
+		_isSearch = true;
+		search(data, searchQuery);
+	}else if (userCommand == "copy") {
 		copy(data);
 	} else if (userCommand == "edit") {
 		edit(data);
@@ -93,6 +98,8 @@ void Controller::executeCommand(string inputText) {
 		setClockTo24Hour();
 	} else if (userCommand == "help" || userCommand == "?") {
 		getHelp();
+	} else if (userCommand == "sleep") {
+		setSleepTime();
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
@@ -212,8 +219,8 @@ bool Controller::checkIsClash(const Item item1, const Item item2) {
 }
 
 bool Controller::checkIsDeadline(const Item item) {
-	for (int i = 0; i < 3; i++) {
-		if (item.eventEndDate[i] != 0) {
+	for (int i = 0; i < 2; i++) {
+		if (item.eventEndTime[i] != 0) {
 			return false;
 		}
 	}
@@ -434,24 +441,6 @@ void Controller::deleteData() {
 	generateResults(_vectorStore);
 }
 
-int Controller::getLineNumberForOperation() {
-	unsigned int lineNumber = 0;
-	try {
-		//lineNumber = _parser->getLineOpNumber();
-		if (lineNumber <= 0 || lineNumber > _vectorStore.size()) {
-			return 0;
-		}
-	} catch (const out_of_range& e) {
-		setSuccessMessage(e.what());
-		LOG(ERROR) << "getLinenumberForOperation() throws: " << e.what();
-		clog << e.what();
-		return 0;
-	}
-
-	return lineNumber;
-
-}
-
 void Controller::displayAll() {
 	generateResults(_vectorStore);
 	//return _vectorStore;
@@ -481,7 +470,17 @@ void Controller::search(Item data, string message) {
 
 	_parser->extractSearchQuery(data);
 
-	SearchItem *searchItemCommand = new SearchItem(data, message, &_otherResult);
+	SearchItem *searchItemCommand = new SearchItem(data, message, &_otherResult, _sleepTime, false);
+	_invoker->disableUndo();
+	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
+}
+
+void Controller::searchFree(Item data, string message) {
+	vector<Item> tempVector = _vectorStore;
+
+	_parser->extractSearchQuery(data);
+
+	SearchItem *searchItemCommand = new SearchItem(data, message, &_otherResult, _sleepTime, true);
 	_invoker->disableUndo();
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
 }
@@ -670,6 +669,20 @@ void Controller::setClockTo24Hour() {
 	_is12HourFormat = false;
 	generateResults(_vectorStore);
 	_outputFile->saveIs12Hr(_is12HourFormat);
+}
+
+void Controller::setSleepTime() {
+	vector<int> sleepParam =  _parser->getLineOpNumber();
+
+	if (sleepParam.size() < 4) {
+		setSuccessMessage(ERROR_INCORRECT_NUMBER_ARGUMENTS);
+		return;
+	}
+	for (int i = 0 ; i < 2 ; i++) {
+		for (int j = 0 ; j < 2 ; j++) {
+			_sleepTime[i][j] = sleepParam[i * 2 + j];
+		}
+	}
 }
 
 Controller::~Controller(void) {

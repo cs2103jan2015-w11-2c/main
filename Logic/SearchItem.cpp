@@ -24,15 +24,28 @@ private:
 	Item _input;
 	string _message;
 	vector<RESULT> *_otherResult;
+	int _sleepTime[2][2];
+	bool _searchFree;
 
 public:
 	SearchItem() {
 		_message = "";
+		_sleepTime[0][0] = 0;
+		_sleepTime[0][1] = 0;
+		_sleepTime[1][0] = 0;
+		_sleepTime[1][1] = 0;
+		_searchFree = false;
 	}
-	SearchItem(const Item input, const string message, vector<RESULT> *otherResult) {
+
+	SearchItem(const Item input, const string message, vector<RESULT> *otherResult, int sleepTime[][2], bool free) {
 		_input = input;
 		_message = message;
 		_otherResult = otherResult;
+		_sleepTime[0][0] = sleepTime[0][0];
+		_sleepTime[0][1] = sleepTime[0][1];
+		_sleepTime[1][0] = sleepTime[1][0];
+		_sleepTime[1][1] = sleepTime[1][1];
+		_searchFree = free;
 	}
 
 	~SearchItem() {
@@ -381,26 +394,49 @@ public:
 		}
 	}
 
+	bool isWithinSleepRange(const Item item) {
+	
+
+		//check if item starts earlier than input start time and is specified
+		if (timeIsSpecified(_sleepTime[0]) && 
+			(!timeIsSpecified(item.eventStartTime) 
+			|| compareTimeEarlierThan(item.eventStartTime, _sleepTime[0]) == -1)) {
+				return false;
+		}
+		
+		//check if item ends later than input end time and is specified
+		if (timeIsSpecified(_sleepTime[1]) && 
+			(!timeIsSpecified(item.eventEndTime) 
+			|| compareTimeEarlierThan(item.eventEndTime, _sleepTime[1]) == 1)) {
+				return false;
+		}
+		return true;
+	}
+
 	void executeAction(vector<Item> &vectorStore) {
 		char buffer[1000];
 		
-		if(_input.event != "") {
-			if (_input.isFloating()) {
-				filterDateAndTime(vectorStore, false, false);
-			} else if (_input.isDeadline()) {
-				filterDateAndTime(vectorStore, true, false);
+		if (!_searchFree) {
+			if(_input.event != "") {
+				if (_input.isFloating()) {
+					filterDateAndTime(vectorStore, false, false);
+				} else if (_input.isDeadline()) {
+					filterDateAndTime(vectorStore, true, false);
+				} else {
+					filterDateAndTime(vectorStore, true, true);
+				}
+				search(_otherResult);
 			} else {
-				filterDateAndTime(vectorStore, true, true);
+				if (_input.isFloating()) {
+					filterForFloating(vectorStore);
+				} else if (_input.isDeadline()) {
+					filterDateAndTime(vectorStore, true, false);
+				} else {
+					filterDateAndTime(vectorStore, true, true);
+				}
 			}
-			search(_otherResult);
 		} else {
-			if (_input.isFloating()) {
-				filterForFloating(vectorStore);
-			} else if (_input.isDeadline()) {
-				filterDateAndTime(vectorStore, true, false);
-			} else {
-				filterDateAndTime(vectorStore, true, true);
-			}
+	//		filterForFree(vectorStore);
 		}
 
 		if (vectorStore.size() == 0) {
