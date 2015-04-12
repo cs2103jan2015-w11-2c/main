@@ -10,8 +10,13 @@ FileStorage::FileStorage(void) {
 
 	_is12Hr = true;
 	_isWide = false;
-	_isNotificationsOn = true;
+	_isNotificationsOn = false;
 	_notifyMin = 10;
+	_sleepHourStart = 23;
+	_sleepMinStart = 0;
+	_sleepHourEnd = 5;
+	_sleepMinEnd = 0;
+
 
 	if(isFileEmpty(_fileConfigFileName)) {
 		initializeFileConfig();
@@ -194,12 +199,25 @@ void FileStorage::saveNotifications(bool isOn, int minsBefore) {
 	updateOptionsFile();
 }
 
+void FileStorage::saveSleepTime(int sleepTime[][2]) {
+	_sleepHourStart = sleepTime[0][0];
+	_sleepMinStart  = sleepTime[0][1];
+	_sleepHourEnd = sleepTime[1][0];
+	_sleepMinEnd = sleepTime[1][1];
+	updateOptionsFile();
+}
+
 void FileStorage::updateOptionsFile() {
 	ofstream outFile(_optionFileName.c_str());
 	outFile << _is12Hr << endl;
 	outFile << _isWide << endl;
 	outFile << _isNotificationsOn << endl;
-	outFile << _notifyMin;
+	outFile << _notifyMin << endl;
+	outFile << _sleepHourStart << endl;;
+	outFile << _sleepMinStart << endl;;
+	outFile << _sleepHourEnd << endl;;
+	outFile << _sleepMinEnd;
+
 	outFile.close();
 }
 
@@ -222,6 +240,7 @@ bool FileStorage::changeFileName(string newFileName) {
 	if(fileExists(newFileName)) {
 		return false;
 	}
+	assert(newFileName != "");
 	string oldFileName = getFullFileName();
 	setFileName(newFileName);
 	rename(oldFileName.c_str(), getFullFileName().c_str());
@@ -239,7 +258,7 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 	if(!directoryExists(newFilePath)) {
 		return false;
 	}
-
+	assert(newFilePath != "");
 	string newFullFileName = newFilePath + "\\" + _fileName;
 
 	if(fileExists(newFullFileName)) {

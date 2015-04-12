@@ -1,7 +1,9 @@
 #pragma once
 
-//@author A0111951N
+//@author A0116179B
 
+#include <assert.h>
+#include <exception>
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -13,7 +15,7 @@
 
 using namespace std;
 
-static const int NUM_HELP_COMMANDS = 12; 
+static const int NUM_HELP_COMMANDS = 16; 
 
 static const string HELP_COMMANDS[] = {
 	"add xxx", 
@@ -24,10 +26,13 @@ static const string HELP_COMMANDS[] = {
 	"clear", 
 	"sort", 
 	"search xxx",
+	"free # xxx",
 	"12/24",
 	"view/wide",
 	"undo",
 	"redo",
+	"mark/done",
+	"archive",
 	"exit"};
 
 static const string HELP_DESCRIPTION[] = {
@@ -39,17 +44,19 @@ static const string HELP_DESCRIPTION[] = {
 	"all data in the file is deleted",
 	"all data in the file is sorted alphabetically",
 	"all lines related to xxx are displayed",
-	"Sets the time format to 12 Hour and 24 Hour respectively",
-	"Widens the textbox to show more items",
-	"Undo the previous change",
-	"Redo the a change if undo was previously called",
+	"all free slots of minimum length # are displayed on day specified in xxx",
+	"sets the time format to 12 Hour and 24 Hour respectively",
+	"widens the textbox to show more items",
+	"undo the previous change",
+	"redo the a change if undo was previously called",
+	"remove a line from the list and places it in the archive",
+	"display the archive",
 	"program quits"
 };
 
 static const string DEADLINE_HEADER = "Deadline Events";
-static const string ERROR_INCORRECT_NUMBER_ARGUMENTS = "Sleep requires 4 arguments\n";;
 
-static const int DEFAULT_SLEEP_START_HR = 24;
+static const int DEFAULT_SLEEP_START_HR = 23;
 static const int DEFAULT_SLEEP_START_MIN = 0;
 static const int DEFAULT_SLEEP_END_HR = 5;
 static const int DEFAULT_SLEEP_END_MIN = 0;
@@ -63,12 +70,14 @@ private:
 	static const string SUCCESS_NOTIFICATION_TIME_CHANGED;
 	static const string SUCCESS_NOTIFICATION_ON;
 	static const string SUCCESS_NOTIFICATION_OFF;
+	static const string SUCCESS_SLEEP;
 	static const string ERROR_FILE_OPERATION_FAILED;
 	static const string ERROR_INVALID_LINE_NUMBER;
 	static const string ERROR_NO_FILENAME;
 	static const string ERROR_FILE_ALREADY_EXISTS;
 	static const string ERROR_FILEPATH_NOT_FOUND;
 	static const string ERROR_INVALID_NOTIFICATION_TIME;
+	static const string ERROR_INCORRECT_ARGUMENTS;
 	static const int MAX_NOTIFICATION;
 
 	FileStorage *_outputFile;
@@ -196,7 +205,7 @@ public:
 
 	void setClockTo24Hour();
 
-	void setSleepTime();
+	void setSleepTime(Item);
 
 	bool isNotificationsOn();
 
@@ -207,6 +216,12 @@ public:
 	string findEventMatch(int&, int&, int&, int&, int&);
 
 	void setReminderTime();
+
+	void markAsComplete();
+
+	void generateArchive(vector<Item>);
+
+	void viewArchive();
 
 	void toggleNotification();
 

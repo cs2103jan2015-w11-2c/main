@@ -1,5 +1,5 @@
 #include "Controller.h"
-
+//@author A0116179B
 #include "easylogging++.h"
 #define ELPP_THREAD_SAFE
 #define ELPP_DISABLE_LOGS
@@ -7,17 +7,18 @@
 
 const string Controller::SUCCESS_12_HR = "Date format changed to 12-hr format!";
 const string Controller::SUCCESS_24_HR = "Date format changed to 24-hr format!";
-const string Controller::SUCCESS_NOTIFICATION_TIME_CHANGED = "Notification time changed from %d minutes to %d minutes";
+const string Controller::SUCCESS_NOTIFICATION_TIME_CHANGED = "Notification time changed from %d minute(s) to %d minute(s)";
+const string Controller::SUCCESS_SLEEP = "Sleep time changed to %d:%s - %d:%s";
 const string Controller::SUCCESS_NOTIFICATION_ON = "Notifications turned on";
 const string Controller::SUCCESS_NOTIFICATION_OFF = "Notifications turned off";
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
 const string Controller::ERROR_INVALID_LINE_NUMBER = "getLineOpNumber() throws: ";
 const string Controller::ERROR_INVALID_NOTIFICATION_TIME = "Invalid Notification time!";
+const string Controller::ERROR_INCORRECT_ARGUMENTS = "Invalid arguments used";
 const int Controller::MAX_NOTIFICATION = 30240;
 
 INITIALIZE_EASYLOGGINGPP;
 
-//author A0116179B
 Controller::Controller(void) {
 	// Load configuration from file
 	el::Configurations conf("logging.conf");
@@ -84,7 +85,7 @@ void Controller::executeCommand(string inputText) {
 		search(data, searchQuery);
 	} else if (userCommand == "free") {
 		_isSearch = true;
-		search(data, searchQuery);
+		searchFree(data, searchQuery);
 	}else if (userCommand == "copy") {
 		copy(data);
 	} else if (userCommand == "edit") {
@@ -106,13 +107,16 @@ void Controller::executeCommand(string inputText) {
 	} else if (userCommand == "help" || userCommand == "?") {
 		getHelp();
 	} else if (userCommand == "sleep") {
-		setSleepTime();
+		setSleepTime(data);
 	} else if ((userCommand == "notify") || (userCommand == "notification")){
 		toggleNotification();
 	} else if (userCommand == "reminder") {
 		setReminderTime();
-	}
-	else if (userCommand == "exit") {
+	} else if (userCommand == "done" || userCommand == "mark") {
+		markAsComplete();
+	} else if (userCommand == "archive") {
+		viewArchive();
+	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
 }
@@ -397,7 +401,8 @@ void Controller::generateResults(const vector<Item> vectorStore) {
 			for (int j = 0; j < 3; j++) {
 				inputVector[i].eventEndDate[j] = inputVector[i].eventDate[j];
 			}
-			_is12HourFormat ? temp.time = inputVector[i].timeAndEndDateToString() : temp.time = inputVector[i].timeTo24HrString();
+			_is12HourFormat ? temp.time = inputVector[i].timeToString() : temp.time = inputVector[i].timeTo24HrString();
+			temp.time += inputVector[i].endDateToString();
 			temp.date = DEADLINE_HEADER;
 			deadlineResult.push_back(temp);
 		} else if ((inputVector[i].eventDate[0] == newDateTime.getCurrentDay() ||
@@ -431,7 +436,14 @@ void Controller::commandOptions(string command) {
 
 void Controller::addData(Item item) {
 	AddItem *addItemCommand = new AddItem(item);
-	_invoker->executeCommand(_vectorStore, addItemCommand, _successMessage);
+
+	try {
+		_invoker->executeCommand(_vectorStore, addItemCommand, _successMessage);
+	} catch (const logic_error& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << e.what();
+		return;
+	}
 
 	chronoSort(_vectorStore);
 
@@ -445,7 +457,7 @@ void Controller::addData(Item item) {
 void Controller::deleteData() {
 	DeleteItem *deleteItemCommand;
 	try {
-		deleteItemCommand = new DeleteItem(_parser->getLineOpNumber());
+		deleteItemCommand = new DeleteItem(_parser->getLineOpNumber(), false);
 	} catch (const out_of_range& e) {
 		setSuccessMessage(e.what());
 		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
@@ -489,17 +501,23 @@ void Controller::sortAlphabetical() {
 void Controller::search(Item data, string message) {
 	vector<Item> tempVector = _vectorStore;
 
-	_parser->extractSearchQuery(data);
+	try {
+		_parser->extractSearchQuery(data);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+		return;
+	}
+	SearchItem *searchItemCommand;
 
-	SearchItem *searchItemCommand = new SearchItem(data, message, &_otherResult, _sleepTime, false);
+	searchItemCommand= new SearchItem(data, message, &_otherResult, _sleepTime, false);
+
 	_invoker->disableUndo();
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
 }
 
 void Controller::searchFree(Item data, string message) {
 	vector<Item> tempVector = _vectorStore;
-
-	_parser->extractSearchQuery(data);
 
 	SearchItem *searchItemCommand = new SearchItem(data, message, &_otherResult, _sleepTime, true);
 	_invoker->disableUndo();
@@ -513,6 +531,7 @@ bool Controller::isSearch() {
 void Controller::toggleIsWide() {
 	_isWide = !_isWide;
 	_outputFile->saveIsWide(_isWide);
+	setSuccessMessage("");
 }
 
 bool Controller::isWide() {
@@ -558,9 +577,11 @@ void Controller::edit(Item data) {
 	Item item = _parser->getItem();
 
 	EditItem *editItemCommand = new EditItem(lineNumber, item);
-
-	_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
-
+	try {
+		_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+	}
 	chronoSort(_vectorStore);
 
 	if(!rewriteFile()) {
@@ -572,13 +593,23 @@ void Controller::edit(Item data) {
 
 void Controller::rename(string newFileName) {
 	RenameFile *renameFileCommand = new RenameFile(newFileName);
-	_invoker->executeCommand(_outputFile, renameFileCommand, _successMessage);
+	try {
+		_invoker->executeCommand(_outputFile, renameFileCommand, _successMessage);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+	}
 
 }
 
 void Controller::move(string newFileLocation) {
 	MoveFileLocation *moveFileCommand = new MoveFileLocation(newFileLocation);
-	_invoker->executeCommand(_outputFile, moveFileCommand, _successMessage);
+	try {
+		_invoker->executeCommand(_outputFile, moveFileCommand, _successMessage);
+	} catch (const invalid_argument& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+	}
 }
 
 void Controller::undo() {
@@ -709,18 +740,49 @@ void Controller::setClockTo24Hour() {
 	_successMessage = SUCCESS_24_HR;
 }
 
-void Controller::setSleepTime() {
-	vector<int> sleepParam =  _parser->getLineOpNumber();
+void Controller::setSleepTime(Item data) {
+	string timeString = data.event;
+	vector<int> sleepParam;
+	istringstream iss(timeString);
+	int timeArg;
+	bool isHour = true;
 
-	if (sleepParam.size() < 4) {
-		setSuccessMessage(ERROR_INCORRECT_NUMBER_ARGUMENTS);
-		return;
+	while (iss >> timeArg) {
+		if (isHour) {
+			if (timeArg > 0  && timeArg <= 24) {
+				sleepParam .push_back(timeArg);
+			} else {
+				setSuccessMessage(ERROR_INCORRECT_ARGUMENTS);
+				return;
+			}
+		} else {
+			if (timeArg % 60 == 0 && timeArg >= 0) {
+				sleepParam .push_back(timeArg);
+			} else {
+				setSuccessMessage(ERROR_INCORRECT_ARGUMENTS);
+				return;
+			}
+		}
+		isHour = !isHour;
 	}
+	
 	for (int i = 0 ; i < 2 ; i++) {
 		for (int j = 0 ; j < 2 ; j++) {
 			_sleepTime[i][j] = sleepParam[i * 2 + j];
 		}
 	}
+	char buffer[1000];
+	string startMins = to_string(_sleepTime[0][1]);
+	if (_sleepTime[0][1] < 10) {
+		startMins = "0" + startMins;
+	}
+	string endMins = to_string(_sleepTime[1][1]);
+	if (_sleepTime[1][1] < 10) {
+		endMins = "0" + endMins;
+	}
+	sprintf_s(buffer, SUCCESS_SLEEP.c_str(), _sleepTime[0][0], startMins.c_str(), _sleepTime[1][0], endMins.c_str()); 
+	setSuccessMessage(buffer);
+	_outputFile->saveSleepTime(_sleepTime);
 }
 
 //@author A0111951N
@@ -811,8 +873,8 @@ void Controller::setReminderTime() {
 		clog << e.what();
 		return;
 	}
-
-	if((numMinutes > MAX_NOTIFICATION) || (numMinutes < 0)) {
+	assert(numMinutes > 0);
+	if(numMinutes > MAX_NOTIFICATION) {
 		_successMessage = ERROR_INVALID_NOTIFICATION_TIME;
 		return;
 	}
@@ -821,6 +883,32 @@ void Controller::setReminderTime() {
 	_notifyTime = numMinutes;
 	_outputFile->saveNotifications(_isNotificationsOn, _notifyTime);
 	_successMessage = buffer;
+}
+
+void Controller::markAsComplete() {
+
+	DeleteItem *deleteItemCommand;
+	try {
+		deleteItemCommand = new DeleteItem(_parser->getLineOpNumber(), true);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
+		clog << e.what();
+		return;
+	}
+	_invoker->executeCommand(_vectorStore, deleteItemCommand, _successMessage);
+
+	vector<Item> markedItems = deleteItemCommand->getMarkedItems();
+
+	for (unsigned int i = 0; i < markedItems.size(); i++) {
+		_outputFile->addLineToArchive(markedItems[i]);
+	}
+
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
+
+	generateResults(_vectorStore);
 }
 
 void Controller::toggleNotification() {
@@ -832,6 +920,51 @@ void Controller::toggleNotification() {
 	} else {
 		_successMessage = SUCCESS_NOTIFICATION_OFF;
 	}
+}
+
+void Controller::generateArchive(const vector<Item> archiveData) {
+	vector<Item> inputVector = archiveData;
+	vector<RESULT> floatResult;
+	vector<RESULT> deadlineResult;
+	vector<RESULT> otherResult;
+	bool isClashed = false;
+	bool willClash = false;
+	DateTime newDateTime;
+
+	for (unsigned int i = 0; i < inputVector.size(); i++) {
+		RESULT temp;
+
+		temp.isDeadline = checkIsDeadline(inputVector[i]);
+		temp.isClash = false;
+		temp.lineNumber = to_string(i + 1) + ".";
+		temp.date = inputVector[i].dateToString();
+		_is12HourFormat ? temp.time = inputVector[i].timeAndEndDateToString() : temp.time = inputVector[i].timeTo24HrString();
+		temp.endDate = inputVector[i].endDateToString();
+		temp.event = inputVector[i].event;
+		temp.isExpired = false;
+		if (checkIsFloating(inputVector[i])) {
+			floatResult.push_back(temp);
+		} else if (temp.isDeadline) {
+			for (int j = 0; j < 3; j++) {
+				inputVector[i].eventEndDate[j] = inputVector[i].eventDate[j];
+			}
+			_is12HourFormat ? temp.time = inputVector[i].timeToString() : temp.time = inputVector[i].timeTo24HrString();
+			temp.time += inputVector[i].endDateToString();
+			temp.date = DEADLINE_HEADER;
+			deadlineResult.push_back(temp);
+		} else {
+			otherResult.push_back(temp);
+		}
+	}
+
+	otherResult.insert(otherResult.begin(), deadlineResult.begin(), deadlineResult.end());
+	otherResult.insert(otherResult.begin(), floatResult.begin(), floatResult.end());
+	_otherResult = otherResult;
+
+}
+
+void Controller::viewArchive() {
+	generateArchive(_outputFile->getArchiveData());
 }
 
 Controller::~Controller(void) {

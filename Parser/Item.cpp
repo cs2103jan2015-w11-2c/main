@@ -95,7 +95,7 @@ string Item::endDateToString() {
 		return "";
 	}
 	ostringstream oss;
-	oss << "[" << eventEndDate[0] << "/" << eventEndDate[1] << "/" << eventEndDate[2] << "]";
+	oss << "[" << eventEndDate[0] << "/" << eventEndDate[1] << "]";
 	return oss.str();
 }
 
@@ -194,6 +194,12 @@ bool Item::isFloating() {
 bool Item::isDeadline() {
 	for (int i = 0; i < 3; i++) {
 		if (eventEndDate[i] != 0) {
+			return false;
+		}
+	}
+
+	for (int i = 0; i < 2; i++) {
+		if (eventEndTime[i] != 0) {
 			return false;
 		}
 	}

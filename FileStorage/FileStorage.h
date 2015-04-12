@@ -1,5 +1,6 @@
 #pragma once
 //@author A0115452N
+#include <assert.h>
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -24,6 +25,10 @@ private:
 	bool _isWide;
 	bool _isNotificationsOn;
 	int _notifyMin;
+	int _sleepHourStart;
+	int _sleepMinStart;
+	int _sleepHourEnd;
+	int _sleepMinEnd;
 	static FileStorage* theOne;
 	FileStorage(void);
 
@@ -52,7 +57,8 @@ public:
 	//1st element - is12Hr : 1 if true, 0 otherwise;
 	//2nd element - isWide: 1 if true, 0 otherwise;
 	//3rd element - isNotificationsOn
-	//4th elemment - time for notifications
+	//4th element - time for notifications
+	//5th-8th element - time for sleep
 	vector<int> getOptionFileData();
 
 	//main text file
@@ -72,6 +78,8 @@ public:
 	void saveIsWide(bool);
 
 	void saveNotifications(bool, int);
+
+	void saveSleepTime(int [][2]);
 
 	//update options file
 	void updateOptionsFile();

@@ -38,7 +38,7 @@ public:
 			sprintf_s(buffer, SUCCESS_FILE_LOCATION_CHANGED.c_str(), outputFile->getFullFileName().c_str());
 			_message = buffer;
 		} else {
-			_message = ERROR_FILEPATH_NOT_FOUND;
+			throw std::invalid_argument(ERROR_FILEPATH_NOT_FOUND);
 		}
 	}
 

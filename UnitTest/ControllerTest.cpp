@@ -39,7 +39,7 @@ namespace UnitTest
 			parse.extractDateAndTime();
 			item = parse.getItem();
 			bool isExpected = false;
-			Assert::AreEqual(isExpected,control.checkIsDeadline(item));
+			Assert::AreEqual(isExpected, control.checkIsDeadline(item));
 		}
 
 		TEST_METHOD(checkIsDeadLineTest2) {
@@ -51,7 +51,7 @@ namespace UnitTest
 			parse.extractDateAndTime();
 			item = parse.getItem();
 			bool isExpected = true;
-			Assert::AreEqual(isExpected,control.checkIsDeadline(item));
+			Assert::AreEqual(isExpected, control.checkIsDeadline(item));
 		}
 
 		TEST_METHOD(checkDateisUnsetTest1) {
@@ -154,17 +154,6 @@ namespace UnitTest
 
 		}
 
-		/*	TEST_METHOD(searchTest) {
-		Controller controller;
-		string inputString = "testing from 23/4/2015 14:0 - 16:0";
-		Item item;
-		Parser parse;
-		parse.setStringToParse(inputString);
-		parse.extractDateAndTime();
-		item = parse.getItem();
-
-
-		}*/
 
 		TEST_METHOD(copyTest) {
 		}
@@ -174,6 +163,7 @@ namespace UnitTest
 		TEST_METHOD(undoTest) {}
 		TEST_METHOD(redoTest) {}
 		TEST_METHOD(gethelpTest) {}
+
 		/*test for the case when first item has a time but second item only has a date*/
 		TEST_METHOD(swapTest1) {
 			Controller controller;
@@ -413,8 +403,8 @@ namespace UnitTest
 			Assert::AreEqual(expectedResult, controller.compareEarlierThan(item1, item2));
 		}
 
-		/*
-		TEST_METHOD(chronoSortTest) {
+		/*test for case when the events all on different dates*/
+		TEST_METHOD(chronoSortTest1) {
 			vector<Item> vectorStore;
 			Controller controller;
 			Item item1;
@@ -433,35 +423,134 @@ namespace UnitTest
 			parse.setStringToParse(inputString1);
 			parse.extractDateAndTime();
 			item1 = parse.getItem();
+			temp1 = parse.getItem();
 			vectorStore.push_back(item1);
 			parse.setStringToParse(inputString2);
 			parse.extractDateAndTime();
 			item2 = parse.getItem();
+			temp3 = parse.getItem();
 			vectorStore.push_back(item2);
 			parse.setStringToParse(inputString3);
 			parse.extractDateAndTime();
 			item3 = parse.getItem();
+			temp2 = parse.getItem();
 			vectorStore.push_back(item3);
 			parse.setStringToParse(inputString4);
 			parse.extractDateAndTime();
 			item4 = parse.getItem();
+			temp4 = parse.getItem();
 			vectorStore.push_back(item4); 
-			temp1 = item1;
-			temp2 = item3;
-			temp3 = item2;
-			temp4 = item4;
 			controller.chronoSort(vectorStore);
 			item1 = vectorStore.at(0);
 			item2 = vectorStore.at(1);
 			item3 = vectorStore.at(2);
 			item4 = vectorStore.at(3);
 
-			Assert::AreEqual(temp1, item1);
-			Assert::AreEqual(temp2, item2);
-			Assert::AreEqual(temp3, item3);
-			Assert::AreEqual(temp4, item4);
+			Assert::AreEqual(temp1.event, item1.event);
+			Assert::AreEqual(temp2.event, item2.event);
+			Assert::AreEqual(temp3.event, item3.event);
+			Assert::AreEqual(temp4.event, item4.event);
 		}
-		*/
+		
+		/*test for the case when the events are all on same date, diff time*/
+		TEST_METHOD(chronoSortTest2) {
+			vector<Item> vectorStore;
+			Controller controller;
+			Item item1;
+			Item item2;
+			Item item3;
+			Item item4;
+			Item temp1;
+			Item temp2;
+			Item temp3;
+			Item temp4;
+			Parser parse;
+			string inputString1 = "presentation on 19/4/2015 7:0 ";
+			string inputString2 = "study on 19/4/2015 14 to 15";
+			string inputString3 = "presentation on 19/4/2015 1pm";
+			string inputString4 = "meet ann on 19/4/2015 15 to 9pm";
+			parse.setStringToParse(inputString1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			temp1 = parse.getItem();
+			vectorStore.push_back(item1);
+			parse.setStringToParse(inputString2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+			temp3 = parse.getItem();
+			vectorStore.push_back(item2);
+			parse.setStringToParse(inputString3);
+			parse.extractDateAndTime();
+			item3 = parse.getItem();
+			temp2 = parse.getItem();
+			vectorStore.push_back(item3);
+			parse.setStringToParse(inputString4);
+			parse.extractDateAndTime();
+			item4 = parse.getItem();
+			temp4 = parse.getItem();
+			vectorStore.push_back(item4); 
+			controller.chronoSort(vectorStore);
+			item1 = vectorStore.at(0);
+			item2 = vectorStore.at(1);
+			item3 = vectorStore.at(2);
+			item4 = vectorStore.at(3);
+
+			Assert::AreEqual(temp1.event, item1.event);
+			Assert::AreEqual(temp2.event, item2.event);
+			Assert::AreEqual(temp3.event, item3.event);
+			Assert::AreEqual(temp4.event, item4.event);
+		}
+		
+		/*test for the case when some events are of the same start time*/
+			TEST_METHOD(chronoSortTest) {
+			vector<Item> vectorStore;
+			Controller controller;
+			Item item1;
+			Item item2;
+			Item item3;
+			Item item4;
+			Item temp1;
+			Item temp2;
+			Item temp3;
+			Item temp4;
+			Parser parse;
+			string inputString1 = "presentation on 19/4/2015 7 ";
+			string inputString2 = "study on 19/4/2015 11:00";
+			string inputString3 = "presentation on 19/4/2015 7 to 13";
+			string inputString4 = "meet ann on 19/4/2015 3pm to 7pm";
+			parse.setStringToParse(inputString1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			temp1 = parse.getItem();
+			vectorStore.push_back(item1);
+			parse.setStringToParse(inputString2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+			temp3 = parse.getItem();
+			vectorStore.push_back(item2);
+			parse.setStringToParse(inputString3);
+			parse.extractDateAndTime();
+			item3 = parse.getItem();
+			temp2 = parse.getItem();
+			vectorStore.push_back(item3);
+			parse.setStringToParse(inputString4);
+			parse.extractDateAndTime();
+			item4 = parse.getItem();
+			temp4 = parse.getItem();
+			vectorStore.push_back(item4); 
+			controller.chronoSort(vectorStore);
+			item1 = vectorStore.at(0);
+			item2 = vectorStore.at(1);
+			item3 = vectorStore.at(2);
+			item4 = vectorStore.at(3);
+
+			Assert::AreEqual(temp1.event, item1.event);
+			Assert::AreEqual(temp2.event, item2.event);
+			Assert::AreEqual(temp3.event, item3.event);
+			Assert::AreEqual(temp4.event, item4.event);
+		}
+		
+
 
 		TEST_METHOD(addToInputBankTest) {}
 		TEST_METHOD(setClockTo12HourTest) {}

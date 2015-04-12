@@ -684,13 +684,14 @@ public:
 	TEST_METHOD(calculateDateTimeTest4) {
 		Item item;
 		DateTimeParser parse;
+		DateTime datetime;
 		string input = ""; 
 		parse.calculateDateTime(input);
-		int expectedDate = 11;
+		int expectedDate = datetime.getCurrentDay();
 		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
-		int expectedMonth = 4;
+		int expectedMonth =  datetime.getCurrentMonth();
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
-		int expectedYear = 2015;
+		int expectedYear =  datetime.getCurrentYear();
 		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
 
 	}
@@ -1166,21 +1167,6 @@ public:
 		Assert::AreEqual(expectedYear, year);
 	}
 
-	/*boundary case of an invalid integer for weekday*/
-	TEST_METHOD(setDateFromWeekDayTest3) {
-		DateTimeParser parse;
-		int day;
-		int month;
-		int year;
-		int expectedDay = 7;
-		int expectedMonth = 4;
-		int expectedYear = 2015;
-		parse.setDateFromWeekDay(-5, day, month, year);
-		Assert::AreEqual(expectedDay, day);
-		Assert::AreEqual(expectedMonth, month);
-		Assert::AreEqual(expectedYear, year);
-
-	}
 
 	TEST_METHOD(handleNextWeekDayTest1) {
 		DateTimeParser parse;
@@ -1872,7 +1858,7 @@ public:
 		vector<int> deleteInput;
 		deleteInput.push_back(0);
 
-		DeleteItem *deleteItem = new DeleteItem(deleteInput);
+		DeleteItem *deleteItem = new DeleteItem;
 		invoker->executeCommand(testVector, deleteItem, message);
 
 		int expectedSize = 1;
@@ -1888,7 +1874,7 @@ public:
 		deleteInput.clear();
 		deleteInput.push_back(1);
 
-		DeleteItem *deleteItem2 = new DeleteItem(deleteInput);
+		DeleteItem *deleteItem2 = new DeleteItem;
 		invoker->executeCommand(testVector, deleteItem2, message);
 
 		expectedSize = 0;

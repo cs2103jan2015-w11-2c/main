@@ -544,14 +544,14 @@ void DateTimeParser::verifyStartEnd(
 					|| ((startHr < 12) && ((endHr + 12) < 24) && (endHr != 0))) {
 						endHr += 12;
 				} else {
-					endHr = startHr + 1;
+					endHr = (startHr + 1) % 24;
 					endMin = startMin;
 					isError = true;
 				}
 		}
 
 		if (!_isDeadlineEvent && (endHr == 0) && (endMin == 0)) {
-			endHr = startHr + 1;
+			endHr = ((startHr + 1) % 24);
 			endMin = startMin;
 		}
 
