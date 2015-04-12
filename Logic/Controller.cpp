@@ -35,6 +35,7 @@ Controller::Controller(void) {
 	initializeVector();
 	_isSearch = false;
 	_isHelp = false;
+	_isArchiveSearch = false;
 	_sleepTime[0][0] = DEFAULT_SLEEP_START_HR;
 	_sleepTime[0][1] = DEFAULT_SLEEP_START_MIN;
 	_sleepTime[1][0] = DEFAULT_SLEEP_END_HR;
@@ -885,6 +886,18 @@ void Controller::setReminderTime() {
 	_successMessage = buffer;
 }
 
+void Controller::toggleNotification() {
+	_isNotificationsOn = !_isNotificationsOn;
+	_outputFile->saveNotifications(_isNotificationsOn, _notifyTime);
+
+	if(_isNotificationsOn) {
+		_successMessage = SUCCESS_NOTIFICATION_ON;
+	} else {
+		_successMessage = SUCCESS_NOTIFICATION_OFF;
+	}
+}
+
+//@author A0116179B
 void Controller::markAsComplete() {
 
 	DeleteItem *deleteItemCommand;
@@ -893,7 +906,6 @@ void Controller::markAsComplete() {
 	} catch (const out_of_range& e) {
 		setSuccessMessage(e.what());
 		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
-		clog << e.what();
 		return;
 	}
 	_invoker->executeCommand(_vectorStore, deleteItemCommand, _successMessage);
@@ -909,17 +921,6 @@ void Controller::markAsComplete() {
 	}
 
 	generateResults(_vectorStore);
-}
-
-void Controller::toggleNotification() {
-	_isNotificationsOn = !_isNotificationsOn;
-	_outputFile->saveNotifications(_isNotificationsOn, _notifyTime);
-
-	if(_isNotificationsOn) {
-		_successMessage = SUCCESS_NOTIFICATION_ON;
-	} else {
-		_successMessage = SUCCESS_NOTIFICATION_OFF;
-	}
 }
 
 void Controller::generateArchive(const vector<Item> archiveData) {
@@ -961,10 +962,15 @@ void Controller::generateArchive(const vector<Item> archiveData) {
 	otherResult.insert(otherResult.begin(), floatResult.begin(), floatResult.end());
 	_otherResult = otherResult;
 
+	_isArchiveSearch = true;
 }
 
 void Controller::viewArchive() {
 	generateArchive(_outputFile->getArchiveData());
+}
+
+bool Controller::isArchiveSearch() {
+	return _isArchiveSearch;
 }
 
 Controller::~Controller(void) {

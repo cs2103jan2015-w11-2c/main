@@ -101,6 +101,8 @@ private:
 
 	bool _isHelp;
 
+	bool _isArchiveSearch;
+
 	bool _is12HourFormat;
 
 	int _sleepTime[2][2];
@@ -217,13 +219,15 @@ public:
 
 	void setReminderTime();
 
+	void toggleNotification();
+
 	void markAsComplete();
 
 	void generateArchive(vector<Item>);
 
 	void viewArchive();
 
-	void toggleNotification();
+	bool isArchiveSearch();
 
 	~Controller(void);
 };

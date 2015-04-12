@@ -25,6 +25,7 @@ ref class MessageManager {
 private:
 	static String^ LABEL_IS_SEARCH = "Search Results";
 	static String^ LABEL_IS_HELP = "Help";
+	static String^ LABEL_IS_ARCHIVE_SEARCH = "Archived Events";
 	static String^ LABEL_ALL_TASKS = "Other Tasks";
 
 	Controller* magicMemo;
