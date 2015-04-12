@@ -1,4 +1,4 @@
-﻿namespace GUI_Test
+﻿namespace GUITest
 {
     using System;
     using System.Collections.Generic;
