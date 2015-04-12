@@ -15,19 +15,26 @@ private:
 	vector<int> _lineNumbers;
 	string _message;
 	vector<Item> _deletedItems;
+	bool _isMarkDone;
+	int numUndoItems;
 public:
 	DeleteItem() {
 		_message = "";
+		_isMarkDone = false;
 	}
 
-	DeleteItem(const vector<int> input) {
+	DeleteItem(const vector<int> input, const bool isMarkDone) {
 		_lineNumbers = input;
 		_message = "";
+		_isMarkDone = isMarkDone;
 	}
 
 	~DeleteItem() {
 	}
 
+	vector<Item> getMarkedItems() {
+		return _deletedItems;
+	}
 
 	void executeAction(vector<Item>& vectorStore) {
 		bool isFirstError = true;
@@ -74,7 +81,11 @@ public:
 		if (!isFirstSuccess) {
 			char buffer[1000];
 
-			sprintf_s(buffer, SUCCESS_DELETED.c_str(), oss.str().c_str());
+			if (_isMarkDone) {
+				sprintf_s(buffer, SUCCESS_DONE.c_str(), oss.str().c_str());
+			} else {
+				sprintf_s(buffer, SUCCESS_DELETED.c_str(), oss.str().c_str());
+			}
 			if(!isFirstError) {
 				_message = ", " + _message;
 			}
