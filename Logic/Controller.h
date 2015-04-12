@@ -97,6 +97,9 @@ private:
 
 	//for search function, to check tell UI to change the heading to "Search Results"
 	bool _isSearch;
+	
+	//for free function, to check tell UI to change the heading to "Free Slots"
+	bool _isFree;
 
 	//for option to allow widening of display
 	bool _isWide;
@@ -136,13 +139,9 @@ public:
 
 	bool checkDateIsUnset(const int [3]);
 
-	bool checkIsClash(const Item, const Item);
+	bool checkIsClash(Item, Item);
 
-	bool checkIsDeadline(const Item);
-
-	bool checkIsExpired(const Item);
-
-	bool checkIsFloating(const Item);
+	bool checkIsExpired(Item);
 
 	void generateResults(const vector<Item>);
 
@@ -166,6 +165,8 @@ public:
 	void searchFree(Item, string);
 
 	bool isSearch();
+
+	bool isFree();
 
 	void toggleIsWide();
 

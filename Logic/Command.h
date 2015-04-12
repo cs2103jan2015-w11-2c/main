@@ -32,7 +32,6 @@ static const string ERROR_SEARCH_ITEM_NOT_FOUND = "\"%s\" Not found!";
 struct RESULT {
 	string lineNumber;
 	string date;
-	string endDate;
 	string event;
 	string time;
 	bool isClash;

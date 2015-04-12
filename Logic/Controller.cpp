@@ -36,6 +36,7 @@ Controller::Controller(void) {
 	initializeOptions();
 	initializeVector();
 	_isSearch = false;
+	_isFree = false;
 	_isHelp = false;
 	_isArchiveSearch = false;
 	_sleepTime[0][0] = DEFAULT_SLEEP_START_HR;
@@ -87,7 +88,7 @@ void Controller::executeCommand(string inputText) {
 		_isSearch = true;
 		search(data, searchQuery);
 	} else if (userCommand == "free") {
-		_isSearch = true;
+		_isFree = true;
 		searchFree(data, searchQuery);
 	}else if (userCommand == "copy") {
 		copy(data);
@@ -182,7 +183,7 @@ bool Controller::checkDateIsUnset(const int date[3]) {
 	return true;
 }
 
-bool Controller::checkIsClash(const Item item1, const Item item2) {
+bool Controller::checkIsClash(Item item1, Item item2) {
 	long startTimePos1 = getTimePos(item1.eventDate, item1.eventStartTime);
 	long endTimePos1;
 	if (!checkDateIsUnset(item1.eventDate) && checkDateIsUnset(item1.eventEndDate)) {
@@ -211,8 +212,8 @@ bool Controller::checkIsClash(const Item item1, const Item item2) {
 		endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
 	}
 
-	bool isDeadline1 = checkIsDeadline(item1);
-	bool isDeadline2 = checkIsDeadline(item2);
+	bool isDeadline1 = item1.isDeadline();
+	bool isDeadline2 = item2.isDeadline();
 
 	if (isDeadline1 && isDeadline2) {
 		if (startTimePos1 != startTimePos2) {
@@ -240,25 +241,10 @@ bool Controller::checkIsClash(const Item item1, const Item item2) {
 	return true;
 }
 
-bool Controller::checkIsDeadline(const Item item) {
-	for (int i = 0; i < 2; i++) {
-		if (item.eventEndTime[i] != 0) {
-			return false;
-		}
-	}
-
-	for (int i = 0; i < 3; i++) {
-		if (item.eventDate[i] != 0) {
-			return true;
-		}
-	}
-	return false;
-}
-
-bool Controller::checkIsExpired(const Item item) {
+bool Controller::checkIsExpired(Item item) {
 	DateTime dateTime;
 
-	if (checkIsDeadline(item)) {
+	if (item.isDeadline()) {
 		if (item.eventDate[2] < dateTime.getCurrentYear()) {
 			return true;
 		} else if (item.eventDate[2] == dateTime.getCurrentYear()) {
@@ -342,73 +328,54 @@ bool Controller::checkIsExpired(const Item item) {
 	return false;
 }
 
-bool Controller::checkIsFloating(const Item item) {
-	for (int i = 0; i < 3; i++) {
-		if (item.eventDate[i] != 0) {
-			return false;
-		}
-	}
-	for (int i = 0; i < 3; i++) {
-		if (item.eventEndDate[i] != 0) {
-			return false;
-		}
-	}
-	for (int i = 0; i < 2; i++) {
-		if (item.eventStartTime[i] != 0) {
-			return false;
-		}
-	}
-	for (int i = 0; i < 2; i++) {
-		if (item.eventEndTime[i] != 0) {
-			return false;
-		}
-	}
-	return true;
-}
-
 void Controller::generateResults(const vector<Item> vectorStore) {
 	vector<Item> inputVector = vectorStore;
 	vector<RESULT> todayResult;
 	vector<RESULT> otherResult;
 	vector<RESULT> floatResult;
 	vector<RESULT> deadlineResult;
-	bool isClashed = false;
-	bool willClash = false;
 	DateTime newDateTime;
 
 	for (unsigned int i = 0; i < inputVector.size(); i++) {
 		RESULT temp;
 
-		temp.isDeadline = checkIsDeadline(inputVector[i]);
-		if (i < inputVector.size() - 1) {
-			willClash = checkIsClash(inputVector[i], inputVector[i + 1]);
-			isClashed = willClash;
-		} 
-		if (isClashed || willClash) {
-			temp.isClash = true;
-		} else {
-			temp.isClash = false;
+		temp.isDeadline = inputVector[i].isDeadline();
+
+		temp.isClash = false;
+		for (unsigned int j = 0; j < inputVector.size(); j++) {
+			if (i != j && checkIsClash(vectorStore[i], vectorStore[j])) {
+				temp.isClash = true;
+				break;
+			}
 		}
 
 		temp.lineNumber = to_string(i + 1) + ".";
 		temp.date = inputVector[i].dateToString();
-		_is12HourFormat ? temp.time = inputVector[i].timeAndEndDateToString() : temp.time = inputVector[i].timeTo24HrString();
-		temp.endDate = inputVector[i].endDateToString();
+		if (_is12HourFormat) {
+			temp.time = inputVector[i].timeAndEndDateToString();
+		} else { 
+			temp.time = inputVector[i].timeTo24HrString();
+		}
+
 		temp.event = inputVector[i].event;
-		if(!checkIsFloating(inputVector[i])) {
+		if(!inputVector[i].isFloating()) {
 			temp.isExpired = checkIsExpired(inputVector[i]);
 		} else {
 			temp.isExpired = false;
 		}
-		if (checkIsFloating(inputVector[i])) {
+		if (inputVector[i].isFloating()) {
 			floatResult.push_back(temp);
 		} else if (temp.isDeadline) {
 			for (int j = 0; j < 3; j++) {
 				inputVector[i].eventEndDate[j] = inputVector[i].eventDate[j];
 			}
-			_is12HourFormat ? temp.time = inputVector[i].timeToString() : temp.time = inputVector[i].timeTo24HrString();
-			temp.time += inputVector[i].endDateToString();
+			if (_is12HourFormat) {
+				temp.time = inputVector[i].timeAndEndDateToString();
+			} else {
+				temp.time = inputVector[i].timeTo24HrString();
+			}
 			temp.date = DEADLINE_HEADER;
+			
 			deadlineResult.push_back(temp);
 		} else if ((inputVector[i].eventDate[0] == newDateTime.getCurrentDay() ||
 			inputVector[i].eventDate[0] == newDateTime.getCurrentDay() + 1) &&
@@ -511,7 +478,7 @@ void Controller::search(Item data, string message) {
 	}
 	SearchItem *searchItemCommand;
 
-	searchItemCommand= new SearchItem(data, message, &_otherResult, _sleepTime, false);
+	searchItemCommand= new SearchItem(data, message, &_otherResult, _sleepTime, false, _is12HourFormat);
 
 	_invoker->disableUndo();
 	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
@@ -533,7 +500,7 @@ void Controller::searchFree(Item data, string message) {
 	_parser->extractUserCommand();
 	Item item = _parser->getItem();
 	
-	if (item.event != "" || item.isFloating()) {
+	if (item.event != "" || !item.isFloating()) {
 		try {
 			_parser->extractSearchQuery(item);
 		} catch (const out_of_range& e) {
@@ -545,7 +512,7 @@ void Controller::searchFree(Item data, string message) {
 
 	item.event = to_string(lineNumber);
 
-	SearchItem *searchItemCommand = new SearchItem(item, message, &_otherResult, _sleepTime, true);
+	SearchItem *searchItemCommand = new SearchItem(item, message, &_otherResult, _sleepTime, true, _is12HourFormat);
 	_invoker->disableUndo();
 	try {
 		_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
@@ -558,6 +525,10 @@ void Controller::searchFree(Item data, string message) {
 
 bool Controller::isSearch() {
 	return _isSearch;
+}
+
+bool Controller::isFree() {
+	return _isFree;
 }
 
 void Controller::toggleIsWide() {
@@ -959,30 +930,36 @@ void Controller::generateArchive(const vector<Item> archiveData) {
 	vector<RESULT> floatResult;
 	vector<RESULT> deadlineResult;
 	vector<RESULT> otherResult;
-	bool isClashed = false;
-	bool willClash = false;
+	
 	DateTime newDateTime;
 
 	for (unsigned int i = 0; i < inputVector.size(); i++) {
 		RESULT temp;
 
-		temp.isDeadline = checkIsDeadline(inputVector[i]);
+		temp.isDeadline = inputVector[i].isDeadline();
 		temp.isClash = false;
 		temp.lineNumber = to_string(i + 1) + ".";
 		temp.date = inputVector[i].dateToString();
-		_is12HourFormat ? temp.time = inputVector[i].timeAndEndDateToString() : temp.time = inputVector[i].timeTo24HrString();
-		temp.endDate = inputVector[i].endDateToString();
+		if (_is12HourFormat) {
+			temp.time = inputVector[i].timeAndEndDateToString();
+		} else {
+			temp.time = inputVector[i].timeTo24HrString();
+		}
 		temp.event = inputVector[i].event;
 		temp.isExpired = false;
-		if (checkIsFloating(inputVector[i])) {
+		if (inputVector[i].isFloating()) {
 			floatResult.push_back(temp);
 		} else if (temp.isDeadline) {
 			for (int j = 0; j < 3; j++) {
 				inputVector[i].eventEndDate[j] = inputVector[i].eventDate[j];
 			}
-			_is12HourFormat ? temp.time = inputVector[i].timeToString() : temp.time = inputVector[i].timeTo24HrString();
-			temp.time += inputVector[i].endDateToString();
+			if (_is12HourFormat) {
+				temp.time = inputVector[i].timeAndEndDateToString();
+			} else {
+				temp.time = inputVector[i].timeTo24HrString();
+			}
 			temp.date = DEADLINE_HEADER;
+			
 			deadlineResult.push_back(temp);
 		} else {
 			otherResult.push_back(temp);
