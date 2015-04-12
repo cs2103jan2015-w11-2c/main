@@ -9,8 +9,6 @@
 
 const int initialMinEditDist = -1;
 const int powerSearchLowThreshold = 1;
-const int powerSearchHighThreshold = 1;
-const int acronymSearchThreshold = 2;
 const int DAY_NUM_MINS = 1440;
 
 const string TIME_UNIT_HOURS = " hours";
@@ -18,15 +16,6 @@ const string TIME_UNIT_MINUTES = " minutes";
 const string STRING_FREE_SLOTS = "Free Slots";
 
 using namespace std;
-
-//nodes for time management
-struct Node {
-	bool isFree;
-	Node *next;
-	Node * prev;
-	int startTime[2];
-	int endTime[2];
-};
 
 struct SEARCHRESULT {
 	int editDistance;
@@ -344,14 +333,26 @@ public:
 		}
 
 		//check if item ends later than input end date
-		if(compareDateEarlierThan(item.eventEndDate, input.eventEndDate) == 1) {
-			return false;
+		if (input.eventEndDate[0] == 0 && input.eventEndDate[1] == 0 && input.eventEndDate[2] == 0) {
+			if(compareDateEarlierThan(item.eventEndDate, input.eventDate) == 1) {
+				return false;
+			}
+		} else {
+			if(compareDateEarlierThan(item.eventEndDate, input.eventEndDate) == 1) {
+				return false;
+			}
 		}
 
 		//If the item is a deadline item, then the start date is compared to the input end date
 		if (!timeIsSpecified(item.eventEndTime)) {
-			if (compareDateEarlierThan(item.eventDate, input.eventEndDate) == 1) {
-				return false;
+			if (input.eventEndDate[0] == 0 && input.eventEndDate[1] == 0 && input.eventEndDate[2] == 0) {
+				if (compareDateEarlierThan(item.eventDate, input.eventDate) == 1) {
+					return false;
+				}
+			} else {
+				if (compareDateEarlierThan(item.eventDate, input.eventEndDate) == 1) {
+					return false;
+				}
 			}
 		}
 
@@ -365,10 +366,16 @@ public:
 		//check if item ends later than input end time and is specified
 		//Since parser automatically sets the end time to be 1 hour after start, we use the start time
 		//as an indicator for whether time has been specified
-		if (timeIsSpecified(input.eventStartTime) && 
-			(!timeIsSpecified(item.eventEndTime) 
-			|| compareTimeEarlierThan(item.eventEndTime, input.eventEndTime) == 1)) {
-				return false;
+		if (timeIsSpecified(input.eventStartTime)) { //there is an end time
+			if (timeIsSpecified(item.eventEndTime)) {
+				if (compareTimeEarlierThan(item.eventEndTime, input.eventEndTime) == 1) {
+					return false;
+				}
+			} else {
+				if (compareTimeEarlierThan(item.eventStartTime, input.eventEndTime) == 1) {
+					return false;
+				}
+			}
 		}
 		return true;
 	}
@@ -434,7 +441,7 @@ public:
 		}
 	}
 
-	void initializeTimeFrame(bool timeFrames[1440]) {
+	void initializeTimeFrame(bool timeFrames[DAY_NUM_MINS]) {
 		for (int i = 0; i < 1440; i++) {
 			timeFrames[i] = false;
 		}
@@ -469,7 +476,7 @@ public:
 		
 		for (int i = 0; i < 1440; i++) {
 			if (!timeFrames[i]) {
-				if(!isFound) {
+				if(!isFound && i < 1439) {
 					isFound = true;
 					startMin = i;
 				}

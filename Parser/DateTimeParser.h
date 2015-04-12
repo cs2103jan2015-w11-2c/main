@@ -52,6 +52,7 @@ private:
 	bool _isFloating;
 	bool _isDateChangedFromFloat;
 	bool _isDeadlineEvent;
+	bool _endTimeAdjusted;
 
 public:
 	DateTimeParser(void);
@@ -90,6 +91,7 @@ public:
 
 	//sets the day, month and year from weekday input
 	//-2 taken as tomorrow, -3 taken as floating
+	//invalid weekDayIndex changed to 0
 	void setDateFromWeekDay(int weekDayIndex, int& day, int& month, int& year);
 
 	//accounts for "next" when weekday is specified,
@@ -189,5 +191,7 @@ public:
 	bool getUpdateTimeFlag();
 
 	bool getIsDateUpdatedFromFloat();
+
+	bool getEndTimeAdjusted();
 };
 

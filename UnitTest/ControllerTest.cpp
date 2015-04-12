@@ -3,23 +3,19 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace UnitTest
-{
-	TEST_CLASS(MainControllerTest)
-	{
+namespace UnitTest {
+	TEST_CLASS(MainControllerTest) {
 	public:
 
 		TEST_METHOD(AddTest) {
 			Controller control;
-			vector<RESULT> allTasks;
-			vector<RESULT> todayTasks;
-			string input = "Add testing from 1/4 3:50 p 1";
+			string input = "Add testing from 1/4 3:50p 3";
+			control.executeCommand("clear");
 			control.executeCommand(input);
-			allTasks = control.getOtherResult();
-			todayTasks = control.getTodayResult();
+			vector<RESULT> allTasks = control.getOtherResult();
 
 			string expectedDate = "Wednesday, 1 Apr 2015";
-			string expectedTime = "[3:50p-4:50p]";
+			string expectedTime = "[3:50p-6:50p]";
 			string expectedEvent = "testing";
 
 			Assert::AreEqual(expectedDate, allTasks[0].date);
@@ -54,7 +50,7 @@ namespace UnitTest
 			Assert::AreEqual(isExpected, control.checkIsDeadline(item));
 		}
 
-		TEST_METHOD(checkDateisUnsetTest1) {
+		TEST_METHOD(checkDateIsUnsetTest1) {
 			string input = "meeting";
 			Controller control;
 			Item item;
@@ -62,11 +58,15 @@ namespace UnitTest
 			parse.setStringToParse(input);
 			parse.extractDateAndTime();
 			item = parse.getItem();
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 			bool isExpected = true;
 			Assert::AreEqual(isExpected,control.checkDateIsUnset(item.eventDate));
 		}
 
-		TEST_METHOD(checkDateisUnsetTest2) {
+		TEST_METHOD(checkDateIsUnsetTest2) {
 			string input = "meeting on friday";
 			Controller control;
 			Item item;
@@ -74,8 +74,10 @@ namespace UnitTest
 			parse.setStringToParse(input);
 			parse.extractDateAndTime();
 			item = parse.getItem();
+
 			bool isExpected = false;
-			Assert::AreEqual(isExpected,control.checkDateIsUnset(item.eventDate));
+			Assert::AreEqual(isExpected, control.checkDateIsUnset(item.eventDate));
+
 		}
 
 
@@ -210,7 +212,7 @@ namespace UnitTest
 			Item item2;
 			Parser parse;
 			string inputString1 = "testing from 23/4/2015 14:0 - 16:0";
-			string inputString2 = "projec meeting";		
+			string inputString2 = "project meeting";		
 			parse.setStringToParse(inputString1);
 			parse.extractDateAndTime();
 			item1 = parse.getItem();
@@ -324,8 +326,8 @@ namespace UnitTest
 			Assert::AreEqual(expectedResult, controller.compareEarlierThan(item1, item2));
 		}
 
-		/*test for the case where two event are on same start hour,diff start min*/
-		/*event 1 is earlier than 2*/
+		//test for the case where two event are on same start hour, diff start min
+		//event 1 is earlier than 2
 		TEST_METHOD(compareEarlierThanTest5) {
 			Controller controller;
 			Item item1;

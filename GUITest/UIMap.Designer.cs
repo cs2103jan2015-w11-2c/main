@@ -372,8 +372,9 @@ namespace GUITest
             WinEdit uICommandInputBoxEdit1 = this.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit;
             WinEdit uICommandInputBoxEdit2 = this.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit;
             WinEdit uICommandInputBoxEdit3 = this.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit;
-            WinButton uIQuitButton = this.UIMagicMemoWindow1.UIMagicMemoClient.UIQuitButton;
             #endregion
+
+            // Last mouse action was not recorded.
 
             // Type 'clear' in 'commandInputBox' text box
             uICommandInputBoxEdit.Text = this.trash1Params.UICommandInputBoxEditText;
@@ -381,26 +382,25 @@ namespace GUITest
             // Type '{Enter}' in 'commandInputBox' text box
             Keyboard.SendKeys(uICommandInputBoxEdit, this.trash1Params.UICommandInputBoxEditSendKeys, ModifierKeys.None);
 
-            // Type 'add task1 on thurs 18' in 'commandInputBox' text box
+            // Type 'add task1 on 5/5/2015' in 'commandInputBox' text box
             uICommandInputBoxEdit1.Text = this.trash1Params.UICommandInputBoxEditText1;
 
             // Type '{Enter}' in 'commandInputBox' text box
             Keyboard.SendKeys(uICommandInputBoxEdit1, this.trash1Params.UICommandInputBoxEditSendKeys1, ModifierKeys.None);
 
-            // Type 'add task2 on thur 18 to 22' in 'commandInputBox' text box
+            // The control for this action was not recorded.
+
+            // Type 'add task2 on 5/6' in 'commandInputBox' text box
             uICommandInputBoxEdit2.Text = this.trash1Params.UICommandInputBoxEditText2;
 
             // Type '{Enter}' in 'commandInputBox' text box
             Keyboard.SendKeys(uICommandInputBoxEdit2, this.trash1Params.UICommandInputBoxEditSendKeys2, ModifierKeys.None);
 
-            // Type 'edit task2 on friday 18 to 22' in 'commandInputBox' text box
+            // Type 'add task3 on next sun' in 'commandInputBox' text box
             uICommandInputBoxEdit3.Text = this.trash1Params.UICommandInputBoxEditText3;
 
             // Type '{Enter}' in 'commandInputBox' text box
             Keyboard.SendKeys(uICommandInputBoxEdit3, this.trash1Params.UICommandInputBoxEditSendKeys3, ModifierKeys.None);
-
-            // Click '&Quit' button
-            Mouse.Click(uIQuitButton, new Point(22, 3));
         }
         
         /// <summary>
@@ -2384,9 +2384,9 @@ namespace GUITest
         public string UICommandInputBoxEditSendKeys = "{Enter}";
         
         /// <summary>
-        /// Type 'add task1 on thurs 18' in 'commandInputBox' text box
+        /// Type 'add task1 on 5/5/2015' in 'commandInputBox' text box
         /// </summary>
-        public string UICommandInputBoxEditText1 = "add task1 on thurs 18";
+        public string UICommandInputBoxEditText1 = "add task1 on 5/5/2015";
         
         /// <summary>
         /// Type '{Enter}' in 'commandInputBox' text box
@@ -2394,9 +2394,9 @@ namespace GUITest
         public string UICommandInputBoxEditSendKeys1 = "{Enter}";
         
         /// <summary>
-        /// Type 'add task2 on thur 18 to 22' in 'commandInputBox' text box
+        /// Type 'add task2 on 5/6' in 'commandInputBox' text box
         /// </summary>
-        public string UICommandInputBoxEditText2 = "add task2 on thur 18 to 22";
+        public string UICommandInputBoxEditText2 = "add task2 on 5/6";
         
         /// <summary>
         /// Type '{Enter}' in 'commandInputBox' text box
@@ -2404,9 +2404,9 @@ namespace GUITest
         public string UICommandInputBoxEditSendKeys2 = "{Enter}";
         
         /// <summary>
-        /// Type 'edit task2 on friday 18 to 22' in 'commandInputBox' text box
+        /// Type 'add task3 on next sun' in 'commandInputBox' text box
         /// </summary>
-        public string UICommandInputBoxEditText3 = "edit task2 on friday 18 to 22";
+        public string UICommandInputBoxEditText3 = "add task3 on next sun";
         
         /// <summary>
         /// Type '{Enter}' in 'commandInputBox' text box

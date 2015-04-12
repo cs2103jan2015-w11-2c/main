@@ -435,10 +435,6 @@ bool Controller::rewriteFile() {
 	return true;
 }
 
-void Controller::commandOptions(string command) {
-
-}
-
 void Controller::addData(Item item) {
 	AddItem *addItemCommand = new AddItem(item);
 
@@ -524,7 +520,32 @@ void Controller::search(Item data, string message) {
 void Controller::searchFree(Item data, string message) {
 	vector<Item> tempVector = _vectorStore;
 
-	SearchItem *searchItemCommand = new SearchItem(data, message, &_otherResult, _sleepTime, true);
+	int lineNumber;
+	try {
+		lineNumber = _parser->getLineOpNumber()[0];
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
+		clog << e.what();
+		return;
+	}
+
+	_parser->extractUserCommand();
+	Item item = _parser->getItem();
+	
+	if (item.event != "" || item.isFloating()) {
+		try {
+			_parser->extractSearchQuery(item);
+		} catch (const out_of_range& e) {
+			setSuccessMessage(e.what());
+			LOG(INFO) << e.what();
+			return;
+		}
+	}
+
+	item.event = to_string(lineNumber);
+
+	SearchItem *searchItemCommand = new SearchItem(item, message, &_otherResult, _sleepTime, true);
 	_invoker->disableUndo();
 	try {
 		_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
