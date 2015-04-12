@@ -333,14 +333,26 @@ public:
 		}
 
 		//check if item ends later than input end date
-		if(compareDateEarlierThan(item.eventEndDate, input.eventEndDate) == 1) {
-			return false;
+		if (input.eventEndDate[0] == 0 && input.eventEndDate[1] == 0 && input.eventEndDate[2] == 0) {
+			if(compareDateEarlierThan(item.eventEndDate, input.eventDate) == 1) {
+				return false;
+			}
+		} else {
+			if(compareDateEarlierThan(item.eventEndDate, input.eventEndDate) == 1) {
+				return false;
+			}
 		}
 
 		//If the item is a deadline item, then the start date is compared to the input end date
 		if (!timeIsSpecified(item.eventEndTime)) {
-			if (compareDateEarlierThan(item.eventDate, input.eventEndDate) == 1) {
-				return false;
+			if (input.eventEndDate[0] == 0 && input.eventEndDate[1] == 0 && input.eventEndDate[2] == 0) {
+				if (compareDateEarlierThan(item.eventDate, input.eventDate) == 1) {
+					return false;
+				}
+			} else {
+				if (compareDateEarlierThan(item.eventDate, input.eventEndDate) == 1) {
+					return false;
+				}
 			}
 		}
 
@@ -354,10 +366,16 @@ public:
 		//check if item ends later than input end time and is specified
 		//Since parser automatically sets the end time to be 1 hour after start, we use the start time
 		//as an indicator for whether time has been specified
-		if (timeIsSpecified(input.eventStartTime) && 
-			(!timeIsSpecified(item.eventEndTime) 
-			|| compareTimeEarlierThan(item.eventEndTime, input.eventEndTime) == 1)) {
-				return false;
+		if (timeIsSpecified(input.eventStartTime)) { //there is an end time
+			if (timeIsSpecified(item.eventEndTime)) {
+				if (compareTimeEarlierThan(item.eventEndTime, input.eventEndTime) == 1) {
+					return false;
+				}
+			} else {
+				if (compareTimeEarlierThan(item.eventStartTime, input.eventEndTime) == 1) {
+					return false;
+				}
+			}
 		}
 		return true;
 	}
@@ -458,7 +476,7 @@ public:
 		
 		for (int i = 0; i < 1440; i++) {
 			if (!timeFrames[i]) {
-				if(!isFound) {
+				if(!isFound && i < 1439) {
 					isFound = true;
 					startMin = i;
 				}
