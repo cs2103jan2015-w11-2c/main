@@ -359,6 +359,10 @@ void Parser::extractSearchQuery(Item &item) {
 			//if (!dateTimeParser.getUpdateDateFlag()) {
 				//clearStartAndEndDate(temp);
 			//}
+			if (dateTimeParser.getEndTimeAdjusted()) {
+				temp.eventEndTime[0] = 0;
+				temp.eventEndTime[1] = 0;
+			}
 		} else {
 			temp.initializeItem();
 		}
