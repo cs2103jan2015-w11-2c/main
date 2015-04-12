@@ -581,18 +581,14 @@ void DateTimeParser::verifyStartEnd(
 			endDay = 0;
 			isError = true;
 		}
-		_endTimeAdjusted = false;
+		_isEndTimeAdjusted = false;
 		if ((isLessEq[0] && isLessEq[1] && isLessEq[2] && isLess[3]) ||
 			(isLessEq[0] && isLessEq[1] && isLessEq[2] && isLessEq[3] && isLess[4])) {
 				if(((startHr > endHr) && ((endHr + 12) >= startHr) && ((endHr + 12) < 24) && (endHr != 0))
 					|| ((startHr < 12) && ((endHr + 12) < 24) && (endHr != 0))) {
 						endHr += 12;
 				} else {
-					//endHr = (startHr + 1) % 24;
-					//endMin = startMin;
-					if (endHr == 0) {
-						_endTimeAdjusted = true;
-					}
+					_isEndTimeAdjusted = true;
 					addDuration(1, 
 						startHr, 
 						startMin,
@@ -609,11 +605,7 @@ void DateTimeParser::verifyStartEnd(
 		}
 
 		if (!_isDeadlineEvent && (endHr == 0) && (endMin == 0)) {
-			//endHr = ((startHr + 1) % 24);
-			//endMin = startMin;
-			if (endHr == 0) {
-				_endTimeAdjusted = true;
-			}
+			_isEndTimeAdjusted = true;
 			addDuration(1, 
 				startHr, 
 				startMin,
@@ -670,5 +662,5 @@ bool DateTimeParser::getIsDateUpdatedFromFloat() {
 }
 
 bool DateTimeParser::getEndTimeAdjusted() {
-	return _endTimeAdjusted;
+	return _isEndTimeAdjusted;
 }

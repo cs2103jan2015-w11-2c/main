@@ -102,6 +102,8 @@ public:
 	//sets the input string to the notifcation
 	bool hasNotificationEvent(String^%);
 
+	void setNotificationPicture(PictureBox^);
+
 	//transfers all strings from _nextInputStrings to _pastInputStrings
 	void moveNextStrings();
 

@@ -2,8 +2,8 @@
 #include "Parser.h"
 #include "..\EasyLoggingpp\easylogging++.h"
 
-const string Parser::ERROR_NO_LINE_NUMBER = "No line number specified!";
-const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!";
+const string Parser::ERROR_NO_LINE_NUMBER = "No number specified!";
+const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid number specified!";
 const string Parser::ERROR_SEARCH_STRING_EMPTY = "No search query specified!";
 const string Parser::STRING_FLOATING = "floating";
 
