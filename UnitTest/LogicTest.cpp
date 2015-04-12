@@ -2049,7 +2049,7 @@ public:
 
 		Assert::AreEqual(expectedSize, actualSize);
 
-		string expectedMessage = "Invalid line number specified: 0";
+		string expectedMessage = "Invalid number specified: 0";
 		string actualMessage = message;
 
 		Assert::AreEqual(expectedMessage, actualMessage);
