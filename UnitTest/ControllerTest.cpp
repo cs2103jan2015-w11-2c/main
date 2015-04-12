@@ -38,18 +38,6 @@ namespace UnitTest {
 			Assert::AreEqual(isExpected, control.checkIsDeadline(item));
 		}
 
-		TEST_METHOD(checkIsDeadLineTest2) {
-			string input = "travelling by 5/5";
-			Item item;
-			Controller control;
-			Parser parse;
-			parse.setStringToParse(input);
-			parse.extractDateAndTime();
-			item = parse.getItem();
-			bool isExpected = true;
-			Assert::AreEqual(isExpected, control.checkIsDeadline(item));
-		}
-
 		TEST_METHOD(checkDateIsUnsetTest1) {
 			string input = "meeting";
 			Controller control;
