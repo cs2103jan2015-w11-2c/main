@@ -304,6 +304,9 @@ int DateTimeParser::mapMonth(string inputMonth) {
 }
 
 void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, int& year) {
+	if(weekDayIndex < -3) {
+		weekDayIndex = 0;
+	}
 	day = _dateTime.getCurrentDay();
 	month = _dateTime.getCurrentMonth();
 	year = _dateTime.getCurrentYear();
@@ -438,7 +441,7 @@ void DateTimeParser::addDuration (
 	int& endDay,
 	int& endMonth,
 	int& endYear) {
-		if(duration > 24) {
+		if((duration > 24) || (startHr == 0)) {
 			return;
 		}
 		endHr = (startHr == 24) ?  duration : startHr + duration;
