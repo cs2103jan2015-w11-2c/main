@@ -5,8 +5,8 @@
 #define ELPP_DISABLE_LOGS
 #include "easylogging++.h"
 
-const string Controller::SUCCESS_12_HR = "Date format changed to 12-hr format!";
-const string Controller::SUCCESS_24_HR = "Date format changed to 24-hr format!";
+const string Controller::SUCCESS_12_HR = "Date format changed to 12-hr format";
+const string Controller::SUCCESS_24_HR = "Date format changed to 24-hr format";
 const string Controller::SUCCESS_NOTIFICATION_TIME_CHANGED = "Notification time changed from %d minute(s) to %d minute(s)";
 const string Controller::SUCCESS_SLEEP = "Sleep time changed to %d:%s - %d:%s";
 const string Controller::SUCCESS_NOTIFICATION_ON = "Notifications turned on";
@@ -370,10 +370,11 @@ void Controller::generateResults(const vector<Item> vectorStore) {
 				inputVector[i].eventEndDate[j] = inputVector[i].eventDate[j];
 			}
 			if (_is12HourFormat) {
-				temp.time = inputVector[i].timeAndEndDateToString();
+				temp.time = inputVector[i].timeToString();
 			} else {
 				temp.time = inputVector[i].timeTo24HrString();
 			}
+			temp.time += inputVector[i].endDateToString();
 			temp.date = DEADLINE_HEADER;
 			
 			deadlineResult.push_back(temp);
