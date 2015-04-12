@@ -1,4 +1,6 @@
 #pragma once
+//@author A0111951N
+
 #include <string>
 #include <sstream>
 #include <exception>
@@ -8,9 +10,6 @@
 #include "Item.h"
 #include "../EasyLoggingpp/easylogging++.h"
 #include "DateTimeParser.h"
-
-//disable assertions upon release
-//#define NDEBUG 
 
 using namespace std;
 
@@ -23,6 +22,7 @@ class Parser {
 private:
 	static const string ERROR_NO_LINE_NUMBER;
 	static const string ERROR_INVALID_LINE_NUMBER;
+	static const string ERROR_SEARCH_STRING_EMPTY;
 	static const string STRING_FLOATING;
 
 	Item _item;

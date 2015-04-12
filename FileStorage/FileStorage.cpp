@@ -10,8 +10,10 @@ FileStorage::FileStorage(void) {
 
 	_is12Hr = true;
 	_isWide = false;
+	_isNotificationsOn = false;
+	_notifyMin = 10;
 
-	if(isFileEmpty(_fileConfigFileName)) {  //if not initialized
+	if(isFileEmpty(_fileConfigFileName)) {
 		initializeFileConfig();
 	}
 
@@ -99,20 +101,20 @@ vector<string> FileStorage::getAutoCompleteFileData() {
 	return tempVector;
 }
 
-vector<bool> FileStorage::getOptionFileData() {
+vector<int> FileStorage::getOptionFileData() {
 	if(isFileEmpty(_optionFileName)) {
 		updateOptionsFile();
 	}
 
-	vector<bool> boolVector;
-	bool content;
+	vector<int> optionsVector;
+	int content;
 	ifstream readFile(_optionFileName.c_str());
 	while(readFile >> content) {
-		boolVector.push_back(content);    
+		optionsVector.push_back(content);    
 	}
 	readFile.close();
 
-	return boolVector;
+	return optionsVector;
 }
 
 void FileStorage::addLineToFile(Item item) {
@@ -186,10 +188,18 @@ void FileStorage::saveIsWide(bool isWide) {
 	updateOptionsFile();
 }
 
+void FileStorage::saveNotifications(bool isOn, int minsBefore) {
+	_isNotificationsOn = isOn;
+	_notifyMin = minsBefore;
+	updateOptionsFile();
+}
+
 void FileStorage::updateOptionsFile() {
 	ofstream outFile(_optionFileName.c_str());
 	outFile << _is12Hr << endl;
 	outFile << _isWide << endl;
+	outFile << _isNotificationsOn << endl;
+	outFile << _notifyMin;
 	outFile.close();
 }
 
@@ -212,6 +222,7 @@ bool FileStorage::changeFileName(string newFileName) {
 	if(fileExists(newFileName)) {
 		return false;
 	}
+	assert(newFileName != "");
 	string oldFileName = getFullFileName();
 	setFileName(newFileName);
 	rename(oldFileName.c_str(), getFullFileName().c_str());
@@ -229,7 +240,7 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 	if(!directoryExists(newFilePath)) {
 		return false;
 	}
-
+	assert(newFilePath != "");
 	string newFullFileName = newFilePath + "\\" + _fileName;
 
 	if(fileExists(newFullFileName)) {
@@ -297,12 +308,11 @@ string FileStorage::getProgramFilePath() {
 
 //@author A0115452N
 bool FileStorage::restoreFileInfo() {
-    changeFileName(_defaultFileName.c_str());
-	if (_fileName == getFullFileName()) {
+	if(!changeFileName(_defaultFileName.c_str())) {
 		return false;
-	} 
-	else {
-		changeFileLocation(getProgramFilePath());
+	}
+	if(!changeFileLocation(getProgramFilePath())) {
+		return false;
 	} 
 	return true;
 }

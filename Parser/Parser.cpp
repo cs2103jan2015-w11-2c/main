@@ -4,6 +4,7 @@
 
 const string Parser::ERROR_NO_LINE_NUMBER = "No line number specified!";
 const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid line number specified!";
+const string Parser::ERROR_SEARCH_STRING_EMPTY = "No search query specified!";
 const string Parser::STRING_FLOATING = "floating";
 
 Parser::Parser() {
@@ -14,6 +15,7 @@ Parser::Parser() {
 
 
 void Parser::setStringToParse(string userInput) {
+	LOG(INFO) << "Parsing: " << userInput;
 	_item.initializeItem();
 	_item.event = userInput;
 }
@@ -77,7 +79,8 @@ void Parser::extractUserCommand() {
 		spacePos = _item.event.find_first_not_of(" ");
 		_item.event = _item.event.substr(spacePos);
 	}
-
+	LOG(INFO) << "User Command: " << _userCommand;
+	LOG(INFO) << "Rest of string: " << _item.event;
 }
 
 bool Parser::_isDeadlineEvent() {
@@ -141,7 +144,7 @@ void Parser::extractDateAndTime() {
 		try {
 			_dateTimeParse.updateItemDateTime(rawDateTimeChunk, _item, _isDeadline);
 		} catch (const out_of_range& e) {
-			cout << e.what();
+			LOG(ERROR) << e.what();
 		}
 		assertItemValues();
 
@@ -335,7 +338,9 @@ bool Parser::checkIsDeadline(const string input) {
 
 void Parser::extractSearchQuery(Item &item) {
 	Item temp = item;
-
+	if(item.event == "") {
+		throw std::out_of_range(ERROR_SEARCH_STRING_EMPTY);
+	}
 	//if(checkIsFloating(temp)) {
 		DateTimeParser dateTimeParser;
 

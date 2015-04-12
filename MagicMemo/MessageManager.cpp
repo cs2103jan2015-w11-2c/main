@@ -278,6 +278,16 @@ String^ MessageManager::getAllTaskBoxLabel() {
 	}
 }
 
+bool MessageManager::hasNotificationEvent(String ^%output) {
+	string notifications = magicMemo->getNotifications();
+	if((magicMemo->isNotificationsOn()) && (notifications != "")) {
+		output = convertToSystemString(notifications);
+		return true;
+	} else {
+		return false;
+	}
+}
+
 Void MessageManager::moveNextStrings() {
 	_isCallToPrevious = false;
 	_isCallToForward = false;
@@ -285,14 +295,6 @@ Void MessageManager::moveNextStrings() {
 		_pastInputStrings->push_back(_nextInputStrings->back());
 		_nextInputStrings->pop_back();
 	}
-
-	for(unsigned int i = 0; i < _pastInputStrings->size(); i++) {
-		cout << "Moved: " << _pastInputStrings->at(i) << endl;
-	} cout << endl;
-
-	for(unsigned int i = 0; i < _nextInputStrings->size(); i++) {
-		cout << "MovedNEXt: " << _pastInputStrings->at(i) << endl;
-	} cout << endl;
 }
 
 String^ MessageManager::getLastInput() {
@@ -311,9 +313,6 @@ String^ MessageManager::getLastInput() {
 	}
 	_isCallToPrevious = true;
 
-	for(unsigned int i = 0; i < _pastInputStrings->size(); i++) {
-		cout << "Past: " << _pastInputStrings->at(i) << endl;
-	} cout << endl;
 	return convertToSystemString(lastInput);
 }
 
@@ -334,9 +333,6 @@ String^ MessageManager::getNextInput() {
 	}
 	_isCallToForward = true;
 
-	for(unsigned int i = 0; i < _nextInputStrings->size(); i++) {
-		cout << "NEX: " << _nextInputStrings->at(i) << endl;
-	}cout << endl;
 	return convertToSystemString(nextInput);
 
 }

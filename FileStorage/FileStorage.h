@@ -1,4 +1,6 @@
 #pragma once
+//@author A0115452N
+#include <assert.h>
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -21,6 +23,8 @@ private:
 	string _autoCompleteFileName;
 	bool _is12Hr;
 	bool _isWide;
+	bool _isNotificationsOn;
+	int _notifyMin;
 	static FileStorage* theOne;
 	FileStorage(void);
 
@@ -46,9 +50,11 @@ public:
 	vector<string> getAutoCompleteFileData();
 
 	//returns an options vector:
-	//first element - is12Hr;
-	//second element - isWide;
-	vector<bool> getOptionFileData();
+	//1st element - is12Hr : 1 if true, 0 otherwise;
+	//2nd element - isWide: 1 if true, 0 otherwise;
+	//3rd element - isNotificationsOn
+	//4th elemment - time for notifications
+	vector<int> getOptionFileData();
 
 	//main text file
 	void addLineToFile(Item);
@@ -65,6 +71,8 @@ public:
 	void saveIs12Hr(bool);
 
 	void saveIsWide(bool);
+
+	void saveNotifications(bool, int);
 
 	//update options file
 	void updateOptionsFile();

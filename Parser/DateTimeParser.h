@@ -1,4 +1,5 @@
 #pragma once
+//@author A0111951N
 
 #include <string>
 #include <sstream>
@@ -58,7 +59,6 @@ public:
 	//takes as input the raw date & time string, the Item
 	//to be updated, and boolean isDeadline
 	//updates the item with correct Date and Time fields
-	//only changes fields that are originally 0
 	void updateItemDateTime(string, Item &, bool);
 
 	//reset private date and time fields
@@ -89,7 +89,7 @@ public:
 	int mapMonth(string);
 
 	//sets the day, month and year from weekday input
-	//-2 takesn as tomorrow, -3 as floating
+	//-2 taken as tomorrow, -3 taken as floating
 	void setDateFromWeekDay(int weekDayIndex, int& day, int& month, int& year);
 
 	//accounts for "next" when weekday is specified,

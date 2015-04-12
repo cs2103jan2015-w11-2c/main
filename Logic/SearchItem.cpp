@@ -1,6 +1,6 @@
 #pragma once
 
-//author A0116179B
+//@author A0116179B
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -66,38 +66,38 @@ public:
 
 	//Levenshtein's Algorithm to get edit distance between two words
 	int getEditDist(const string input, const string item) {
-		int itemSize=item.size();
-		int inputSize=input.size();
+		int itemSize = item.size();
+		int inputSize = input.size();
 		int upLeftCell;
 
-		if(inputSize==0)
+		if(inputSize == 0)
 			return itemSize;
-		if(itemSize==0)
+		if(itemSize == 0)
 			return inputSize;
 
 		int *difference = new int [inputSize+1];
 
-		for(int i=0;i<=inputSize;i++) {
-			difference[i]=i;
+		for(int i = 0; i <= inputSize; i++) {
+			difference[i] = i;
 		}
 
-		for(int i=1;i<=itemSize;i++) {
-			difference[0]=i;
-			upLeftCell=i-1;
+		for(int i = 1; i <= itemSize; i++) {
+			difference[0] = i;
+			upLeftCell = i - 1;
 
-			for(int j=1;j<=inputSize;j++) {
-				if(input[j-1]==item[i-1]) {
-					int temp=upLeftCell;
-					upLeftCell=difference[j];
-					difference[j]=temp;
+			for(int j = 1; j <= inputSize; j++) {
+				if(input[j-1] == item[i-1]) {
+					int temp = upLeftCell;
+					upLeftCell = difference[j];
+					difference[j] = temp;
 				}
 				else {
-					int minimum(upLeftCell<difference[j-1]?upLeftCell:difference[j-1]);
+					int minimum(upLeftCell < difference[j-1] ? upLeftCell : difference[j-1]);
 				
-					int temp=difference[j];
-					if(minimum<difference[j])
-						difference[j]=minimum;
-					upLeftCell=temp;
+					int temp = difference[j];
+					if(minimum < difference[j])
+						difference[j] = minimum;
+					upLeftCell = temp;
 					difference[j]++;
 				}
 			}

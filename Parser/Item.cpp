@@ -1,5 +1,5 @@
 #include "Item.h"
-
+//@author A0111951N
 const string Item::MESSAGE_UNDATED_TASK = "Floating";
 
 Item::Item() {
@@ -23,7 +23,6 @@ void Item::initializeItem() {
 	eventEndTime[1] = 0;
 }
 
-//@author A0111951N
 int Item::getHour(int hour) {
 	if(hour == 24) {
 		return 0;
@@ -96,7 +95,7 @@ string Item::endDateToString() {
 		return "";
 	}
 	ostringstream oss;
-	oss << "[" << eventEndDate[0] << "/" << eventEndDate[1] << "/" << eventEndDate[2] << "]";
+	oss << "[" << eventEndDate[0] << "/" << eventEndDate[1] << "]";
 	return oss.str();
 }
 
@@ -177,7 +176,7 @@ string Item::toString() {
 }
 
 
-//Author A0116179B
+//@author A0116179B
 bool Item::isFloating() {
 	for (int i = 0; i < 3; i++) {
 		if (eventDate[i] != 0 || eventEndDate[i] != 0) {
@@ -213,7 +212,7 @@ bool Item::isDeadline() {
 	return false;
 }
 
-//Author A0111951N
+//@author A0111951N
 void Item::logItemValues() {
 	LOG(INFO) << event;
 	LOG(INFO) << eventDate[0];

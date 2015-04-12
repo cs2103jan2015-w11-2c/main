@@ -1,6 +1,7 @@
 #pragma once
 
-//author A0116179B
+//@author A0116179B
+
 #include <iostream>
 #include <vector>
 #include <string>
