@@ -70,6 +70,8 @@ private:
 	static const string SUCCESS_NOTIFICATION_TIME_CHANGED;
 	static const string SUCCESS_NOTIFICATION_ON;
 	static const string SUCCESS_NOTIFICATION_OFF;
+	static const string SUCCESS_RESTORE_FILE_DEFAULTS;
+	static const string ERROR_FILE_RESTORE_FAILED;
 	static const string SUCCESS_SLEEP;
 	static const string ERROR_FILE_OPERATION_FAILED;
 	static const string ERROR_INVALID_LINE_NUMBER;
@@ -100,6 +102,8 @@ private:
 	bool _isWide;
 
 	bool _isHelp;
+
+	bool _isArchiveSearch;
 
 	bool _is12HourFormat;
 
@@ -217,13 +221,17 @@ public:
 
 	void setReminderTime();
 
+	void toggleNotification();
+
 	void markAsComplete();
 
 	void generateArchive(vector<Item>);
 
 	void viewArchive();
 
-	void toggleNotification();
+	bool isArchiveSearch();
+
+	void restoreDefaultFileInfo();
 
 	~Controller(void);
 };

@@ -273,6 +273,8 @@ String^ MessageManager::getAllTaskBoxLabel() {
 		return LABEL_IS_SEARCH;
 	} else if(magicMemo->isHelp()) {
 		return LABEL_IS_HELP;
+	} else if(magicMemo->isArchiveSearch()) {
+		return LABEL_IS_ARCHIVE_SEARCH;
 	} else {
 		return LABEL_ALL_TASKS;
 	}

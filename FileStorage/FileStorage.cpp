@@ -329,9 +329,12 @@ bool FileStorage::restoreFileInfo() {
 	if(!changeFileName(_defaultFileName.c_str())) {
 		return false;
 	}
-	if(!changeFileLocation(getProgramFilePath())) {
-		return false;
-	} 
+	if(_filePath != getProgramFilePath()) {
+		if(!changeFileLocation(getProgramFilePath())) {
+			return false;
+		}
+	}
+	
 	return true;
 }
 
