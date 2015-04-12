@@ -113,7 +113,7 @@ void Controller::executeCommand(string inputText) {
 		setSleepTime(data);
 	} else if ((userCommand == "notify") || (userCommand == "notification")){
 		toggleNotification();
-	} else if (userCommand == "reminder") {
+	} else if ((userCommand == "reminder") || (userCommand == "remind")){
 		setReminderTime();
 	} else if (userCommand == "done" || userCommand == "mark") {
 		markAsComplete();
@@ -856,9 +856,9 @@ void Controller::calculateTargetDateTime (
 			targetHr %= 24;
 		}
 
-		if(targetDay > today.numDaysInMonth(targetDay, targetYr)) {
+		if(targetDay > today.numDaysInMonth(targetMon, targetYr)) {
 			targetMon++;
-			targetDay -= today.numDaysInMonth(targetDay, targetYr);
+			targetDay -= today.numDaysInMonth(targetMon, targetYr);
 		}
 
 		if(targetMon > 12) {
@@ -873,15 +873,16 @@ void Controller::calculateTargetDateTime (
 }
 
 string Controller::findEventMatch (
-	int& targetMin, 
-	int& targetHr,
-	int& targetDay,
-	int& targetMon, 
-	int& targetYr) {
+	int targetMin, 
+	int targetHr,
+	int targetDay,
+	int targetMon, 
+	int targetYr) {
 		ostringstream oss;
 
 		for(unsigned int i = 0; i < _vectorStore.size(); i++) {
 			Item temp = _vectorStore[i];
+			
 			if(	(temp.eventDate[0] == targetDay) &&
 				(temp.eventDate[1] == targetMon) &&
 				(temp.eventDate[2] == targetYr) &&
@@ -892,6 +893,7 @@ string Controller::findEventMatch (
 					oss << temp.event << "\n";
 			}
 		}
+		
 		return oss.str();
 }
 

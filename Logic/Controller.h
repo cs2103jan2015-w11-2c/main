@@ -217,7 +217,7 @@ public:
 
 	void calculateTargetDateTime(int&, int&, int&, int&, int&);
 
-	string findEventMatch(int&, int&, int&, int&, int&);
+	string findEventMatch(int, int, int, int, int);
 
 	void setReminderTime();
 

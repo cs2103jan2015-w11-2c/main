@@ -290,6 +290,14 @@ bool MessageManager::hasNotificationEvent(String ^%output) {
 	}
 }
 
+void MessageManager::setNotificationPicture(PictureBox^ notificationBox) {
+	if(magicMemo->isNotificationsOn()) {
+		notificationBox->Image = System::Drawing::Image::FromFile("resources//AlarmOn.png");
+	} else {
+		notificationBox->Image = System::Drawing::Image::FromFile("resources//AlarmOff.png");
+	}
+}
+
 Void MessageManager::moveNextStrings() {
 	_isCallToPrevious = false;
 	_isCallToForward = false;

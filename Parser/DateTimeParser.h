@@ -52,7 +52,7 @@ private:
 	bool _isFloating;
 	bool _isDateChangedFromFloat;
 	bool _isDeadlineEvent;
-	bool _endTimeAdjusted;
+	bool _isEndTimeAdjusted;
 
 public:
 	DateTimeParser(void);
