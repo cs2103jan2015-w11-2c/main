@@ -199,6 +199,12 @@ bool Item::isDeadline() {
 		}
 	}
 
+	for (int i = 0; i < 2; i++) {
+		if (eventEndTime[i] != 0) {
+			return false;
+		}
+	}
+
 	for (int i = 0; i < 3; i++) {
 		if (eventDate[i] != 0) {
 			return true;

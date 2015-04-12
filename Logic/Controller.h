@@ -45,7 +45,7 @@ static const string HELP_DESCRIPTION[] = {"line xxx is added to the text file wi
 static const string DEADLINE_HEADER = "Deadline Events";
 static const string ERROR_INCORRECT_NUMBER_ARGUMENTS = "Sleep requires 4 arguments\n";;
 
-static const int DEFAULT_SLEEP_START_HR = 24;
+static const int DEFAULT_SLEEP_START_HR = 23;
 static const int DEFAULT_SLEEP_START_MIN = 0;
 static const int DEFAULT_SLEEP_END_HR = 5;
 static const int DEFAULT_SLEEP_END_MIN = 0;

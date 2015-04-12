@@ -77,7 +77,7 @@ void Controller::executeCommand(string inputText) {
 		search(data, searchQuery);
 	} else if (userCommand == "free") {
 		_isSearch = true;
-		search(data, searchQuery);
+		searchFree(data, searchQuery);
 	}else if (userCommand == "copy") {
 		copy(data);
 	} else if (userCommand == "edit") {
@@ -477,8 +477,6 @@ void Controller::search(Item data, string message) {
 
 void Controller::searchFree(Item data, string message) {
 	vector<Item> tempVector = _vectorStore;
-
-	_parser->extractSearchQuery(data);
 
 	SearchItem *searchItemCommand = new SearchItem(data, message, &_otherResult, _sleepTime, true);
 	_invoker->disableUndo();

@@ -12,7 +12,20 @@ const int powerSearchLowThreshold = 1;
 const int powerSearchHighThreshold = 1;
 const int acronymSearchThreshold = 2;
 
+const string TIME_UNIT_HOURS = " hours";
+const string TIME_UNIT_MINUTES = " minutes";
+const string STRING_FREE_SLOTS = "Free Slots";
+
 using namespace std;
+
+//nodes for time management
+struct Node {
+	bool isFree;
+	Node *next;
+	Node * prev;
+	int startTime[2];
+	int endTime[2];
+};
 
 struct SEARCHRESULT {
 	int editDistance;
@@ -321,7 +334,7 @@ public:
 		return false;
 	}
 
-	//Returns true if an item occurs within range specified in the search query
+	//Returns true if an item occurs within range specified by input
 	bool isWithinRange(const Item item, const Item input) {
 		
 		//check if item starts earlier than input start date
@@ -420,47 +433,132 @@ public:
 		}
 	}
 
-	bool isWithinSleepRange(const Item item) {
-		//check if item starts earlier than input start time and is specified
-		if (timeIsSpecified(_sleepTime[0]) && 
-			(!timeIsSpecified(item.eventStartTime) 
-			|| compareTimeEarlierThan(item.eventStartTime, _sleepTime[0]) == -1)) {
-				return false;
+	void initializeTimeFrame(bool timeFrames[1440]) {
+		for (int i = 0; i < 1440; i++) {
+			timeFrames[i] = false;
 		}
+	}
+
+	void blockTimeFrame(bool timeFrame[1440], 
+		const int startHr, 
+		const int startMin, 
+		const int endHr, 
+		const int endMin) {
+
+		int startTime = startHr * 60 + startMin;
+		int endTime = endHr * 60 + endMin;
 		
-		//check if item ends later than input end time and is specified
-		if (timeIsSpecified(_sleepTime[1]) && 
-			(!timeIsSpecified(item.eventEndTime) 
-			|| compareTimeEarlierThan(item.eventEndTime, _sleepTime[1]) == 1)) {
-				return false;
-		}
-		return true;
-	}
-
-	void initializeTime(int time[2]) {
-		for (int i = 0; i < 2; i++) {
-			time[i] = 0;
+		for (int i = startTime; i < endTime; i++) {
+			if (!timeFrame[i]) {
+				timeFrame[i] = true;
+			}
 		}
 	}
 
-	void filterForfree(vector<Item> vectorStore) {
-		_otherResult->clear();
+	void filterForFree(vector<Item> vectorStore) {
+		//Boolean array to represent every minute of a 24hour day
+		bool timeFrames[1440];
+		//Sets entire time frame to free
+		initializeTimeFrame(timeFrames);
 
-		int startFreeTime[2];
-		int endFreeTime[2];
-
-		initializeTime(startFreeTime);
-		initializeTime(endFreeTime);
+		vector<Item> tempVector;
 
 		for (unsigned int i = 0; i < vectorStore.size(); i++) {
-			if (!vectorStore[i].isFloating() && !vectorStore[i].isDeadline()) {
-				RESULT temp;
-				temp.event = vectorStore[i].event;
-				temp.date = vectorStore[i].dateToString();
-				temp.time = vectorStore[i].timeToString();
-				temp.lineNumber = to_string(i + 1) + ".";
-				
-				_otherResult->push_back(temp);
+			if (!vectorStore[i].isDeadline() && !vectorStore[i].isFloating()) {
+				if (compareDateEarlierThan(vectorStore[i].eventEndDate, _input.eventDate) == 0 ||
+					compareDateEarlierThan(vectorStore[i].eventDate, _input.eventDate) == 0) {
+						tempVector.push_back(vectorStore[i]);
+				} 
+			}
+		}
+
+		blockTimeFrame(timeFrames, _sleepTime[0][0] % 24, _sleepTime[0][1], 24, 0);
+		blockTimeFrame(timeFrames, 0, 0, _sleepTime[1][0] % 24, _sleepTime[1][1]);
+
+
+		for (unsigned int i = 0; i < tempVector.size(); i++) {
+			int startHour = 0;
+			int startMinute = 0;
+			int endHour = 0;
+			int endMinute = 0;
+		
+			if (compareDateEarlierThan(tempVector[i].eventDate, _input.eventDate) == 0) {
+				startHour = tempVector[i].eventStartTime[0] % 24;
+				startMinute = tempVector[i].eventStartTime[1] % 60;
+			} else {
+				startHour = _sleepTime[1][0];
+				startMinute = _sleepTime[1][1];
+			}
+			
+			if ((tempVector[i].eventEndDate[0] == 0 && tempVector[i].eventEndDate[1] == 0) ||
+				(compareDateEarlierThan(tempVector[i].eventEndDate, _input.eventDate) == 0)) {
+				endHour = tempVector[i].eventEndTime[0] % 24;
+				endMinute = tempVector[i].eventEndTime[1] % 60;
+			} else {
+				endHour = _sleepTime[0][0];
+				endMinute = _sleepTime[0][1];
+			}
+			
+			blockTimeFrame(timeFrames, startHour, startMinute, endHour, endMinute);
+
+		}
+
+		int blockLength = stoi(_input.event, NULL, 10);
+		blockLength *= 60;
+
+		bool isFound = false;
+		int count = 0;
+		int index = 0;
+		int startMin = 0;
+
+		_otherResult->clear();
+
+	
+
+		for (int i = 0; i < 1440; i++) {
+			if (!timeFrames[i]) {
+				if(!isFound) {
+					isFound = true;
+					startMin = i;
+				}
+				count++;
+			} else {
+				if (isFound) {
+					isFound = false;
+					if (count >= blockLength) {
+						RESULT temp;
+						Item tempItem;
+					
+						tempItem.eventStartTime[0] = startMin / 60;
+						if (tempItem.eventStartTime[0] == 0) {
+							tempItem.eventStartTime[0] = 24;
+						}
+						tempItem.eventStartTime[1] = startMin % 60;
+					
+						tempItem.eventEndTime[0] = i / 60;
+						if (tempItem.eventEndTime[0] == 0) {
+							tempItem.eventEndTime[0] = 24;
+						}
+						tempItem.eventEndTime[1] = i % 60;
+						tempItem.eventEndDate[0] = _input.eventDate[0];
+						tempItem.eventEndDate[1] = _input.eventDate[1];
+						tempItem.eventEndDate[2] = _input.eventDate[2];
+
+						int duration = i - startMin;
+						temp.event = to_string(duration/60) + TIME_UNIT_HOURS;
+						if (duration % 60 != 0) {
+							temp.event += ", " + to_string(duration%60) + TIME_UNIT_MINUTES;
+						}
+						temp.date = STRING_FREE_SLOTS;
+						temp.time = tempItem.timeAndEndDateToString();
+						temp.lineNumber = to_string(index + 1) + ".";
+					
+						index++;
+
+						_otherResult->push_back(temp);
+					}
+				}
+				count = 0;
 			}
 		}
 	}
@@ -488,7 +586,7 @@ public:
 				}
 			}
 		} else {
-	//		filterForFree(vectorStore);
+			filterForFree(vectorStore);
 		}
 
 		if (vectorStore.size() == 0) {
