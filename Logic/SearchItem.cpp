@@ -11,6 +11,7 @@ const int initialMinEditDist = -1;
 const int powerSearchLowThreshold = 1;
 const int powerSearchHighThreshold = 1;
 const int acronymSearchThreshold = 2;
+const int DAY_NUM_MINS = 1440;
 
 const string TIME_UNIT_HOURS = " hours";
 const string TIME_UNIT_MINUTES = " minutes";
@@ -439,7 +440,7 @@ public:
 		}
 	}
 
-	void blockTimeFrame(bool timeFrame[1440], 
+	void blockTimeFrame(bool timeFrame[DAY_NUM_MINS], 
 		const int startHr, 
 		const int startMin, 
 		const int endHr, 
@@ -455,54 +456,7 @@ public:
 		}
 	}
 
-	void filterForFree(vector<Item> vectorStore) {
-		//Boolean array to represent every minute of a 24hour day
-		bool timeFrames[1440];
-		//Sets entire time frame to free
-		initializeTimeFrame(timeFrames);
-
-		vector<Item> tempVector;
-
-		for (unsigned int i = 0; i < vectorStore.size(); i++) {
-			if (!vectorStore[i].isDeadline() && !vectorStore[i].isFloating()) {
-				if (compareDateEarlierThan(vectorStore[i].eventEndDate, _input.eventDate) == 0 ||
-					compareDateEarlierThan(vectorStore[i].eventDate, _input.eventDate) == 0) {
-						tempVector.push_back(vectorStore[i]);
-				} 
-			}
-		}
-
-		blockTimeFrame(timeFrames, _sleepTime[0][0] % 24, _sleepTime[0][1], 24, 0);
-		blockTimeFrame(timeFrames, 0, 0, _sleepTime[1][0] % 24, _sleepTime[1][1]);
-
-
-		for (unsigned int i = 0; i < tempVector.size(); i++) {
-			int startHour = 0;
-			int startMinute = 0;
-			int endHour = 0;
-			int endMinute = 0;
-		
-			if (compareDateEarlierThan(tempVector[i].eventDate, _input.eventDate) == 0) {
-				startHour = tempVector[i].eventStartTime[0] % 24;
-				startMinute = tempVector[i].eventStartTime[1] % 60;
-			} else {
-				startHour = _sleepTime[1][0];
-				startMinute = _sleepTime[1][1];
-			}
-			
-			if ((tempVector[i].eventEndDate[0] == 0 && tempVector[i].eventEndDate[1] == 0) ||
-				(compareDateEarlierThan(tempVector[i].eventEndDate, _input.eventDate) == 0)) {
-				endHour = tempVector[i].eventEndTime[0] % 24;
-				endMinute = tempVector[i].eventEndTime[1] % 60;
-			} else {
-				endHour = _sleepTime[0][0];
-				endMinute = _sleepTime[0][1];
-			}
-			
-			blockTimeFrame(timeFrames, startHour, startMinute, endHour, endMinute);
-
-		}
-
+	void updateResultsForFree(const bool timeFrames[DAY_NUM_MINS]) {
 		int blockLength = stoi(_input.event, NULL, 10);
 		blockLength *= 60;
 
@@ -512,9 +466,7 @@ public:
 		int startMin = 0;
 
 		_otherResult->clear();
-
-	
-
+		
 		for (int i = 0; i < 1440; i++) {
 			if (!timeFrames[i]) {
 				if(!isFound) {
@@ -561,6 +513,58 @@ public:
 				count = 0;
 			}
 		}
+	}
+
+	void filterForFree(vector<Item> vectorStore) {
+		//Boolean array to represent every minute of a 24hour day
+		bool timeFrames[DAY_NUM_MINS];
+		//Sets entire time frame to free
+		initializeTimeFrame(timeFrames);
+
+		vector<Item> tempVector;
+
+		for (unsigned int i = 0; i < vectorStore.size(); i++) {
+			if (!vectorStore[i].isDeadline() && !vectorStore[i].isFloating()) {
+				if (compareDateEarlierThan(vectorStore[i].eventEndDate, _input.eventDate) == 0 ||
+					compareDateEarlierThan(vectorStore[i].eventDate, _input.eventDate) == 0) {
+						tempVector.push_back(vectorStore[i]);
+				} 
+			}
+		}
+
+		blockTimeFrame(timeFrames, _sleepTime[0][0] % 24, _sleepTime[0][1], 24, 0);
+		blockTimeFrame(timeFrames, 0, 0, _sleepTime[1][0] % 24, _sleepTime[1][1]);
+
+
+		for (unsigned int i = 0; i < tempVector.size(); i++) {
+			int startHour = 0;
+			int startMinute = 0;
+			int endHour = 0;
+			int endMinute = 0;
+		
+			if (compareDateEarlierThan(tempVector[i].eventDate, _input.eventDate) == 0) {
+				startHour = tempVector[i].eventStartTime[0] % 24;
+				startMinute = tempVector[i].eventStartTime[1] % 60;
+			} else {
+				startHour = _sleepTime[1][0];
+				startMinute = _sleepTime[1][1];
+			}
+			
+			if ((tempVector[i].eventEndDate[0] == 0 && tempVector[i].eventEndDate[1] == 0) ||
+				(compareDateEarlierThan(tempVector[i].eventEndDate, _input.eventDate) == 0)) {
+				endHour = tempVector[i].eventEndTime[0] % 24;
+				endMinute = tempVector[i].eventEndTime[1] % 60;
+			} else {
+				endHour = _sleepTime[0][0];
+				endMinute = _sleepTime[0][1];
+			}
+			
+			blockTimeFrame(timeFrames, startHour, startMinute, endHour, endMinute);
+
+		}
+
+		updateResultsForFree(timeFrames);
+		
 	}
 
 	void executeAction(vector<Item> &vectorStore) {

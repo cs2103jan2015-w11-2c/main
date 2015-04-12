@@ -11,6 +11,7 @@ using namespace std;
 
 static const string SUCCESS_ADDED  = "Added line: \"%s\"";
 static const string SUCCESS_DELETED = "Deleted line numbers: %s";
+static const string SUCCESS_DONE = "Line numbers marked as completed: %s";
 static const string SUCCESS_CLEARED = "All content deleted!";
 static const string SUCCESS_COPIED = "copied line: \"%s\" \n";
 static const string SUCCESS_SORTED_ALPHA = "All content sorted alphabetically";
