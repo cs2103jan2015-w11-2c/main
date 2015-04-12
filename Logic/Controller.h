@@ -31,7 +31,7 @@ static const string HELP_COMMANDS[] = {
 	"view/wide",
 	"undo",
 	"redo",
-	"mark/done",
+	"mark/done # {#, #-#}",
 	"archive",
 	"exit"};
 
@@ -49,7 +49,7 @@ static const string HELP_DESCRIPTION[] = {
 	"widens the textbox to show more items",
 	"undo the previous change",
 	"redo the a change if undo was previously called",
-	"remove a line from the list and places it in the archive",
+	"lines with corresponding ## are removed from the list and moved in the archive",
 	"display the archive",
 	"program quits"
 };
@@ -70,6 +70,8 @@ private:
 	static const string SUCCESS_NOTIFICATION_TIME_CHANGED;
 	static const string SUCCESS_NOTIFICATION_ON;
 	static const string SUCCESS_NOTIFICATION_OFF;
+	static const string SUCCESS_RESTORE_FILE_DEFAULTS;
+	static const string ERROR_FILE_RESTORE_FAILED;
 	static const string SUCCESS_SLEEP;
 	static const string ERROR_FILE_OPERATION_FAILED;
 	static const string ERROR_INVALID_LINE_NUMBER;
@@ -100,6 +102,8 @@ private:
 	bool _isWide;
 
 	bool _isHelp;
+
+	bool _isArchiveSearch;
 
 	bool _is12HourFormat;
 
@@ -217,13 +221,17 @@ public:
 
 	void setReminderTime();
 
+	void toggleNotification();
+
 	void markAsComplete();
 
 	void generateArchive(vector<Item>);
 
 	void viewArchive();
 
-	void toggleNotification();
+	bool isArchiveSearch();
+
+	void restoreDefaultFileInfo();
 
 	~Controller(void);
 };

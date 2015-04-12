@@ -1858,7 +1858,8 @@ public:
 		vector<int> deleteInput;
 		deleteInput.push_back(0);
 
-		DeleteItem *deleteItem = new DeleteItem;
+        DeleteItem *deleteItem = new DeleteItem(deleteInput, false);
+
 		invoker->executeCommand(testVector, deleteItem, message);
 
 		int expectedSize = 1;
@@ -1874,7 +1875,8 @@ public:
 		deleteInput.clear();
 		deleteInput.push_back(1);
 
-		DeleteItem *deleteItem2 = new DeleteItem;
+
+		DeleteItem *deleteItem2 = new DeleteItem(deleteInput, false);
 		invoker->executeCommand(testVector, deleteItem2, message);
 
 		expectedSize = 0;
