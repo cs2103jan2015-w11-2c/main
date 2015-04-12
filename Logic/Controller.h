@@ -70,6 +70,8 @@ private:
 	static const string SUCCESS_NOTIFICATION_TIME_CHANGED;
 	static const string SUCCESS_NOTIFICATION_ON;
 	static const string SUCCESS_NOTIFICATION_OFF;
+	static const string SUCCESS_RESTORE_FILE_DEFAULTS;
+	static const string ERROR_FILE_RESTORE_FAILED;
 	static const string SUCCESS_SLEEP;
 	static const string ERROR_FILE_OPERATION_FAILED;
 	static const string ERROR_INVALID_LINE_NUMBER;
@@ -228,6 +230,8 @@ public:
 	void viewArchive();
 
 	bool isArchiveSearch();
+
+	void restoreDefaultFileInfo();
 
 	~Controller(void);
 };

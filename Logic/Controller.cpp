@@ -11,6 +11,8 @@ const string Controller::SUCCESS_NOTIFICATION_TIME_CHANGED = "Notification time 
 const string Controller::SUCCESS_SLEEP = "Sleep time changed to %d:%s - %d:%s";
 const string Controller::SUCCESS_NOTIFICATION_ON = "Notifications turned on";
 const string Controller::SUCCESS_NOTIFICATION_OFF = "Notifications turned off";
+const string Controller::SUCCESS_RESTORE_FILE_DEFAULTS = "Default filename and filepath restored";
+const string Controller::ERROR_FILE_RESTORE_FAILED = "File restore failed, unable to overwrite existing file!\n";
 const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
 const string Controller::ERROR_INVALID_LINE_NUMBER = "getLineOpNumber() throws: ";
 const string Controller::ERROR_INVALID_NOTIFICATION_TIME = "Invalid Notification time!";
@@ -117,6 +119,8 @@ void Controller::executeCommand(string inputText) {
 		markAsComplete();
 	} else if (userCommand == "archive") {
 		viewArchive();
+	} else if (userCommand == "restore") {
+		restoreDefaultFileInfo();
 	} else if (userCommand == "exit") {
 		setSuccessMessage("exit");
 	}
@@ -522,7 +526,13 @@ void Controller::searchFree(Item data, string message) {
 
 	SearchItem *searchItemCommand = new SearchItem(data, message, &_otherResult, _sleepTime, true);
 	_invoker->disableUndo();
-	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
+	try {
+		_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+		return;
+	}
 }
 
 bool Controller::isSearch() {
@@ -766,7 +776,7 @@ void Controller::setSleepTime(Item data) {
 		}
 		isHour = !isHour;
 	}
-	
+
 	for (int i = 0 ; i < 2 ; i++) {
 		for (int j = 0 ; j < 2 ; j++) {
 			_sleepTime[i][j] = sleepParam[i * 2 + j];
@@ -971,6 +981,14 @@ void Controller::viewArchive() {
 
 bool Controller::isArchiveSearch() {
 	return _isArchiveSearch;
+}
+
+void Controller::restoreDefaultFileInfo() {
+	if(_outputFile->restoreFileInfo()) {
+		_successMessage = SUCCESS_RESTORE_FILE_DEFAULTS;
+	} else {
+		_successMessage =  ERROR_FILE_RESTORE_FAILED;
+	}
 }
 
 Controller::~Controller(void) {
