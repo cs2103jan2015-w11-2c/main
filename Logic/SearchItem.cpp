@@ -73,19 +73,10 @@ public:
 		return timePos;
 	}
 
-	bool checkDateIsUnset(const int date[3]) {
-		for (int i = 0; i < 3; i++) {
-			if (date[i] != 0) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	bool checkIsClash(Item item1, Item item2) {
 		long startTimePos1 = getTimePos(item1.eventDate, item1.eventStartTime);
 		long endTimePos1;
-		if (!checkDateIsUnset(item1.eventDate) && checkDateIsUnset(item1.eventEndDate)) {
+		if (dateIsSpecified(item1.eventDate) && !dateIsSpecified(item1.eventEndDate)) {
 			Item temp;
 			temp.eventEndDate[0] = item1.eventDate[0];
 			temp.eventEndDate[1] = item1.eventDate[1];
@@ -99,7 +90,7 @@ public:
 
 		long startTimePos2 = getTimePos(item2.eventDate, item2.eventStartTime);
 		long endTimePos2;
-		if (!checkDateIsUnset(item2.eventDate) && checkDateIsUnset(item2.eventEndDate)) {
+		if (dateIsSpecified(item2.eventDate) && !dateIsSpecified(item2.eventEndDate)) {
 			Item temp;
 			temp.eventEndDate[0] = item2.eventDate[0];
 			temp.eventEndDate[1] = item2.eventDate[1];
@@ -165,7 +156,7 @@ public:
 					}
 				}
 			}
-		} else if (checkDateIsUnset(item.eventEndDate)){
+		} else if (!dateIsSpecified(item.eventEndDate)){
 			if (item.eventDate[2] < dateTime.getCurrentYear()) {
 				return true;
 			} else if (item.eventDate[2] == dateTime.getCurrentYear()) {
@@ -424,7 +415,7 @@ public:
 		int afterNextDayDate[3] = {day, mon, year};
 
 		//If deadline event, allow comparisons up to 2 days ahead, else only current day
-		if (item.eventEndTime[0] == 0 && item.eventEndTime[1] == 0) {
+		if (item.isDeadlineTask) {
 			for (int i = 0; i < 3; i++) {
 				if(item.eventDate[i] != input.eventDate[i] &&
 					item.eventDate[i] != nextDayDate[i] &&
@@ -440,6 +431,7 @@ public:
 			}
 		}
 
+		//check to see whether if the start or the end of the timed task is matched with the input
 		for (int i = 0; i < 3; i++) {
 			if (item.eventEndDate[i] != input.eventDate[i]) {
 				isEndMatched = false;
@@ -447,7 +439,8 @@ public:
 			}
 		}
 
-		if (item.eventEndTime[0] == 0 && item.eventEndTime[1] == 0) {
+		//if IsDeadline, check against next 2 days, else check if if time matches the previously matched date
+		if (item.isDeadlineTask) {
 			for (int i = 0; i < 2; i++) {
 				if((input.eventStartTime[i] != 0 && item.eventStartTime[i] != input.eventStartTime[i]) &&
 					item.eventDate[i] != nextDayDate[i] &&
@@ -498,9 +491,19 @@ public:
 		}
 		return 1;
 	}
-
+	
+	//Returns true if any date field is non_zero to check if date has been set
+	bool dateIsSpecified(const int dateArray[3]) {
+		for (int i = 0; i < 2; i++) {
+			if (dateArray[i] != 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	//Returns true if any time field is non_zero to check if time has been set
-	bool timeIsSpecified(const int timeArray[2]) {
+	bool timeIsSpecified(const int timeArray[3]) {
 		for (int i = 0; i < 2; i++) {
 			if (timeArray[i] != 0) {
 				return true;
@@ -511,7 +514,7 @@ public:
 
 	//Returns true if an item occurs within range specified by input
 	bool isWithinRange(const Item item, const Item input) {
-		
+
 		DateTimeParser dateTimeParser;
 
 		int day;
@@ -519,7 +522,7 @@ public:
 		int year;
 
 
-		if (input.eventEndDate[0] == 0 && input.eventEndDate[1] == 0 && input.eventEndDate[2] == 0) {
+		if (!dateIsSpecified(item.eventEndDate)) {
 			day = input.eventDate[0];
 			mon = input.eventDate[1];
 			year = input.eventDate[2];
@@ -536,7 +539,7 @@ public:
 		int afterNextDayDate[3] = {day, mon, year};
 
 		//If item is a deadline task, then check against the next 2 days. If there is a match, return true 
-		if (!timeIsSpecified(item.eventEndTime)) {
+		if (item.isDeadlineTask) {
 			bool isMatch = true;
 		
 			for ( int i = 0; i < 3; i++) {
@@ -555,27 +558,14 @@ public:
 			return false;
 		}
 
-		//check if item ends later than input end date
-		if (input.eventEndDate[0] == 0 && input.eventEndDate[1] == 0 && input.eventEndDate[2] == 0) {
+		//check if item ends later than input end date. If end date unspecified, then compare with input start date
+		if (!dateIsSpecified(input.eventEndDate)) {
 			if(compareDateEarlierThan(item.eventEndDate, input.eventDate) == 1) {
 				return false;
 			}
 		} else {
 			if(compareDateEarlierThan(item.eventEndDate, input.eventEndDate) == 1) {
 				return false;
-			}
-		}
-
-		//If the item is a deadline item, then the start date is compared to the input end date
-		if (!timeIsSpecified(item.eventEndTime)) {
-			if (input.eventEndDate[0] == 0 && input.eventEndDate[1] == 0 && input.eventEndDate[2] == 0) {
-				if (compareDateEarlierThan(item.eventDate, input.eventDate) == 1) {
-					return false;
-				}
-			} else {
-				if (compareDateEarlierThan(item.eventDate, input.eventEndDate) == 1) {
-					return false;
-				}
 			}
 		}
 
@@ -587,9 +577,7 @@ public:
 		}
 		
 		//check if item ends later than input end time and is specified
-		//Since parser automatically sets the end time to be 1 hour after start, we use the start time
-		//as an indicator for whether time has been specified
-		if (timeIsSpecified(input.eventStartTime)) { //there is an end time
+		if (timeIsSpecified(input.eventEndTime)) { 
 			if (timeIsSpecified(item.eventEndTime)) {
 				if (compareTimeEarlierThan(item.eventEndTime, input.eventEndTime) == 1) {
 					return false;
@@ -908,7 +896,7 @@ public:
 			if(_input.event != "") {
 				if (_input.isFloating()) {
 					filterDateAndTime(vectorStore, false, false);
-				} else if (_input.isDeadline()) {
+				} else if (!dateIsSpecified(_input.eventEndDate)) {
 					filterDateAndTime(vectorStore, true, false);
 				} else {
 					filterDateAndTime(vectorStore, true, true);
@@ -917,7 +905,7 @@ public:
 			} else {
 				if (_input.isFloating()) {
 					filterForFloating(vectorStore);
-				} else if (_input.isDeadline()) {
+				} else if (!dateIsSpecified(_input.eventEndDate)) {
 					filterDateAndTime(vectorStore, true, false);
 				} else {
 					filterDateAndTime(vectorStore, true, true);
