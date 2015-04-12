@@ -9,8 +9,6 @@
 
 const int initialMinEditDist = -1;
 const int powerSearchLowThreshold = 1;
-const int powerSearchHighThreshold = 1;
-const int acronymSearchThreshold = 2;
 const int DAY_NUM_MINS = 1440;
 
 const string TIME_UNIT_HOURS = " hours";
@@ -18,15 +16,6 @@ const string TIME_UNIT_MINUTES = " minutes";
 const string STRING_FREE_SLOTS = "Free Slots";
 
 using namespace std;
-
-//nodes for time management
-struct Node {
-	bool isFree;
-	Node *next;
-	Node * prev;
-	int startTime[2];
-	int endTime[2];
-};
 
 struct SEARCHRESULT {
 	int editDistance;
@@ -434,7 +423,7 @@ public:
 		}
 	}
 
-	void initializeTimeFrame(bool timeFrames[1440]) {
+	void initializeTimeFrame(bool timeFrames[DAY_NUM_MINS]) {
 		for (int i = 0; i < 1440; i++) {
 			timeFrames[i] = false;
 		}

@@ -16,7 +16,6 @@ private:
 	string _message;
 	vector<Item> _deletedItems;
 	bool _isMarkDone;
-	int numUndoItems;
 public:
 	DeleteItem() {
 		_message = "";

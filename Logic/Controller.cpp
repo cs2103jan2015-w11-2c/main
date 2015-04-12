@@ -430,10 +430,6 @@ bool Controller::rewriteFile() {
 	return true;
 }
 
-void Controller::commandOptions(string command) {
-
-}
-
 void Controller::addData(Item item) {
 	AddItem *addItemCommand = new AddItem(item);
 
