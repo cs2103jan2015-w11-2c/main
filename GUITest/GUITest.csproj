@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="AddMethod.cs" />
     <Compile Include="ClearMethod.cs" />
+    <Compile Include="CodedUITest1.cs" />
     <Compile Include="TwentyfourHrMethod.cs" />
     <Compile Include="InvalidSearchMethod.cs" />
     <Compile Include="TwelveHrMethod.cs" />

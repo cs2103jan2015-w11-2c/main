@@ -16,7 +16,7 @@ using namespace std;
 // interval to check for deadlines/events 
 // TICK_MIN * TICK_SEC * TICK_MS
 static const int TICK_MIN = 1;
-static const int TICK_SEC = 60;
+static const int TICK_SEC = 30;
 static const int TICK_MS = 1000;
 
 namespace MagicMemo {
@@ -63,6 +63,7 @@ namespace MagicMemo {
 	private: System::Windows::Forms::RichTextBox^  allTaskBox;
 	private: System::Windows::Forms::Label^  successMessageLabel;
 	private: System::Windows::Forms::PictureBox^  pictureBox;
+	private: System::Windows::Forms::PictureBox^  alarmPic;
 
 
 	private: System::ComponentModel::IContainer^  components;
@@ -90,7 +91,9 @@ namespace MagicMemo {
 			this->successMessageLabel = (gcnew System::Windows::Forms::Label());
 			this->todayTaskBox = (gcnew System::Windows::Forms::RichTextBox());
 			this->pictureBox = (gcnew System::Windows::Forms::PictureBox());
+			this->alarmPic = (gcnew System::Windows::Forms::PictureBox());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->alarmPic))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// todayTaskBoxLabel
@@ -220,12 +223,27 @@ namespace MagicMemo {
 			this->pictureBox->TabIndex = 9;
 			this->pictureBox->TabStop = false;
 			// 
+			// alarmPic
+			// 
+			this->alarmPic->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
+				| System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->alarmPic->BackColor = System::Drawing::Color::White;
+			this->alarmPic->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"alarmPic.Image")));
+			this->alarmPic->Location = System::Drawing::Point(559, 359);
+			this->alarmPic->Name = L"alarmPic";
+			this->alarmPic->Size = System::Drawing::Size(19, 19);
+			this->alarmPic->SizeMode = System::Windows::Forms::PictureBoxSizeMode::Zoom;
+			this->alarmPic->TabIndex = 10;
+			this->alarmPic->TabStop = false;
+			// 
 			// MagicMemoGUI
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
 			this->ClientSize = System::Drawing::Size(590, 391);
+			this->Controls->Add(this->alarmPic);
 			this->Controls->Add(this->allTaskBox);
 			this->Controls->Add(this->todayTaskBox);
 			this->Controls->Add(this->pictureBox);
@@ -242,6 +260,7 @@ namespace MagicMemo {
 			this->Text = L"Magic Memo";
 			this->Load += gcnew System::EventHandler(this, &MagicMemoGUI::MagicMemoGUI_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->alarmPic))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -313,14 +332,14 @@ namespace MagicMemo {
 		// Initializes the timer
 		System::Void MagicMemoGUI_Load(System::Object^  sender, System::EventArgs^  e) {
 			Timer^ myTimer = gcnew Timer;
-			myTimer->Tick += gcnew EventHandler(popupDeadlines);
+			myTimer->Tick += gcnew EventHandler(popupNotifications);
 			myTimer->Interval = (TICK_MIN * TICK_SEC * TICK_MS);
 			myTimer->Start();
 		}
 
 	private:
-		// Displays events
-		static void popupDeadlines(System::Object^  sender, System::EventArgs^  e) {
+		// Displays notifications & updates view periodically
+		static void popupNotifications(System::Object^  sender, System::EventArgs^  e) {
 			String^ notifications;
 			if(magicManager->hasNotificationEvent(notifications)) {
 				MessageBox::Show(
@@ -345,6 +364,7 @@ namespace MagicMemo {
 			allTaskBoxLabel->Text = magicManager->getAllTaskBoxLabel();
 
 			magicManager->toggleTaskBoxSize(allTaskBox, todayTaskBox, pictureBox);
+			magicManager->setNotificationPicture(alarmPic);
 
 			allTaskBox->Text = magicManager->getAllTaskBoxMessage();
 			todayTaskBox->Text = magicManager->getTodayTaskBoxMessage();

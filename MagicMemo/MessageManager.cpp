@@ -105,6 +105,13 @@ Void MessageManager::calculateTodayTaskIndexes() {
 	int indexCount = 0;
 	for(unsigned int i = 0; i < _todayTaskVector->size(); i++) {
 		HIGHLIGHT temp;
+		if(_todayTaskVector->at(i).isExpired) {
+			temp.special = "expired";
+		} else if(_todayTaskVector->at(i).isClash) {
+			temp.special = "clash";
+		} else {
+			temp.special = "";
+		}
 
 		if(_todayTaskVector->at(i).date != prevDate) {
 			temp.index = indexCount;
@@ -287,6 +294,14 @@ bool MessageManager::hasNotificationEvent(String ^%output) {
 		return true;
 	} else {
 		return false;
+	}
+}
+
+void MessageManager::setNotificationPicture(PictureBox^ notificationBox) {
+	if(magicMemo->isNotificationsOn()) {
+		notificationBox->Image = System::Drawing::Image::FromFile("resources//AlarmOn.png");
+	} else {
+		notificationBox->Image = System::Drawing::Image::FromFile("resources//AlarmOff.png");
 	}
 }
 

@@ -21,6 +21,7 @@ void Item::initializeItem() {
 	eventStartTime[1] = 0;
 	eventEndTime[0] = 0;
 	eventEndTime[1] = 0;
+	isDeadlineTask = false;
 }
 
 int Item::getHour(int hour) {
@@ -192,24 +193,7 @@ bool Item::isFloating() {
 }
 
 bool Item::isDeadline() {
-	for (int i = 0; i < 3; i++) {
-		if (eventEndDate[i] != 0) {
-			return false;
-		}
-	}
-
-	for (int i = 0; i < 2; i++) {
-		if (eventEndTime[i] != 0) {
-			return false;
-		}
-	}
-
-	for (int i = 0; i < 3; i++) {
-		if (eventDate[i] != 0) {
-			return true;
-		}
-	}
-	return false;
+	return isDeadlineTask;
 }
 
 //@author A0111951N
