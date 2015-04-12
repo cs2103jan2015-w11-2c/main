@@ -101,7 +101,7 @@ public:
 		parse.extractUserCommand();
 		Assert::AreEqual(expected, parse.getUserCommand());
 
-	    parse.setStringToParse("DO");
+		parse.setStringToParse("DO");
 		parse.extractUserCommand();
 		Assert::AreEqual(expected, parse.getUserCommand());
 	}
@@ -497,8 +497,8 @@ public:
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 	}
 
-	
-	
+
+
 	//@author A0111951N
 	TEST_METHOD(resetItemDateTimeTest) {
 		DateTimeParser parse;
@@ -628,9 +628,9 @@ public:
 		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
 		int expectedStartMinute = 30;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
-		int expectedEndHour = 0;
+		int expectedEndHour = 24;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
-		int expectedEndMinute = 00;
+		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 
 	}
@@ -650,9 +650,9 @@ public:
 		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
 		int expectedStartHour = 12;
 		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
-		int expectedStartMinute = 00;
+		int expectedStartMinute = 0;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
-		int expectedEndHour = 0;
+		int expectedEndHour = 13;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
 		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
@@ -686,7 +686,7 @@ public:
 		DateTimeParser parse;
 		string input = ""; 
 		parse.calculateDateTime(input);
-		int expectedDate = 11;
+		int expectedDate = 15;
 		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
 		int expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
@@ -991,6 +991,170 @@ public:
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
 	}
 
+	//boundary case for cross-day duration
+	TEST_METHOD(addDurationTest) {
+		int duration = 1;
+		int startHr = 23;
+		int startMin = 15; 
+		int endHr;
+		int endMin;
+		int startDay = 15;
+		int startMonth = 4;
+		int startYear = 2015;
+		int endDay;
+		int endMonth;
+		int endYear;
+		Item item;
+		DateTimeParser parse;
+
+		parse.addDuration (duration, 
+			startHr, 
+			startMin,
+			endHr, 
+			endMin,
+			startDay,
+			startMonth,
+			startYear,
+			endDay,
+			endMonth,
+			endYear);
+
+		int expectedEndDay = 16;
+		Assert::AreEqual(expectedEndDay, endDay);
+		int expectedEndMonth = 4;
+		Assert::AreEqual(expectedEndMonth, endMonth);
+		int expectedEndYear = 2015;
+		Assert::AreEqual(expectedEndYear, endYear);
+
+		int expectedEndHour = 24;
+		Assert::AreEqual(expectedEndHour, endHr);
+		int expectedEndMinute = 15;
+		Assert::AreEqual(expectedEndMinute, endMin);
+	}
+
+	//boundary case for duration > 24
+	TEST_METHOD(addDurationTest2) {
+		int duration = 25;
+		int startHr = 23;
+		int startMin = 15; 
+		int endHr;
+		int endMin;
+		int startDay = 15;
+		int startMonth = 4;
+		int startYear = 2015;
+		int endDay;
+		int endMonth;
+		int endYear;
+		Item item;
+		DateTimeParser parse;
+
+		parse.addDuration (duration, 
+			startHr, 
+			startMin,
+			endHr, 
+			endMin,
+			startDay,
+			startMonth,
+			startYear,
+			endDay,
+			endMonth,
+			endYear);
+
+		int expectedEndDay = 15;
+		Assert::AreEqual(expectedEndDay, endDay);
+		int expectedEndMonth = 4;
+		Assert::AreEqual(expectedEndMonth, endMonth);
+		int expectedEndYear = 2015;
+		Assert::AreEqual(expectedEndYear, endYear);
+
+		int expectedEndHour = 23;
+		Assert::AreEqual(expectedEndHour, endHr);
+		int expectedEndMinute = 30;
+		Assert::AreEqual(expectedEndMinute, endMin);
+	}
+
+	//case of cross-am/pm duration
+	TEST_METHOD(addDurationTest3) {
+		int duration = 5;
+		int startHr = 9;
+		int startMin = 30; 
+		int endHr;
+		int endMin;
+		int startDay = 15;
+		int startMonth = 4;
+		int startYear = 2015;
+		int endDay = 0;
+		int endMonth = 0;
+		int endYear = 0;
+		Item item;
+		DateTimeParser parse;
+
+		parse.addDuration (duration, 
+			startHr, 
+			startMin,
+			endHr, 
+			endMin,
+			startDay,
+			startMonth,
+			startYear,
+			endDay,
+			endMonth,
+			endYear);
+
+		int expectedEndDay = 0;
+		Assert::AreEqual(expectedEndDay, endDay);
+		int expectedEndMonth = 0;
+		Assert::AreEqual(expectedEndMonth, endMonth);
+		int expectedEndYear = 0;
+		Assert::AreEqual(expectedEndYear, endYear);
+
+		int expectedEndHour = 14;
+		Assert::AreEqual(expectedEndHour, endHr);
+		int expectedEndMinute = 30;
+		Assert::AreEqual(expectedEndMinute, endMin);
+	}
+
+	//boundary case, duration = 24
+	TEST_METHOD(addDurationTest4) {
+		int duration = 24;
+		int startHr = 10;
+		int startMin = 30; 
+		int endHr;
+		int endMin;
+		int startDay = 15;
+		int startMonth = 4;
+		int startYear = 2015;
+		int endDay = 0;
+		int endMonth = 0;
+		int endYear = 0;
+		Item item;
+		DateTimeParser parse;
+
+		parse.addDuration (duration, 
+			startHr, 
+			startMin,
+			endHr, 
+			endMin,
+			startDay,
+			startMonth,
+			startYear,
+			endDay,
+			endMonth,
+			endYear);
+
+		int expectedEndDay = 16;
+		Assert::AreEqual(expectedEndDay, endDay);
+		int expectedEndMonth = 4;
+		Assert::AreEqual(expectedEndMonth, endMonth);
+		int expectedEndYear = 2015;
+		Assert::AreEqual(expectedEndYear, endYear);
+
+		int expectedEndHour = 10;
+		Assert::AreEqual(expectedEndHour, endHr);
+		int expectedEndMinute = 30;
+		Assert::AreEqual(expectedEndMinute, endMin);
+	}
+
 	//@author A0114613U	
 	TEST_METHOD(mapWeekDayTest1) {
 		DateTimeParser parse;
@@ -1172,7 +1336,7 @@ public:
 		int day;
 		int month;
 		int year;
-		int expectedDay = 7;
+		int expectedDay = 12;
 		int expectedMonth = 4;
 		int expectedYear = 2015;
 		parse.setDateFromWeekDay(-5, day, month, year);
@@ -1704,7 +1868,7 @@ public:
 		Assert::AreEqual(expectedOutput, parse.convertStringToInteger(input));
 	}
 
-	
+
 	};
 
 	//@author A0111951N
