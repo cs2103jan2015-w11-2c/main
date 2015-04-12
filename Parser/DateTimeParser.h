@@ -115,14 +115,29 @@ public:
 	//returns true if the string is a possible time
 	bool isPossibleTime(string input);
 
-	//retuns true if m, or pis found
+	//returns true if m, or p is found
 	//updates the date to 24hr format
 	bool is12Hour(char, int&);
 
 	//overloaded function
-	//retuns true if m, p, or pm is found
+	//returns true if m, p, or pm is found
 	//updates the date to 24hr format
 	bool is12Hour(string, int&);
+
+	//sets the end time based on start time + duration
+	//max duration allowed is 24 hours
+	void addDuration(
+		int duration,
+		int startHr, 
+		int startMin, 
+		int& endHr, 
+		int& endMin,
+		int startDay,
+		int startMonth,
+		int startYear,
+		int& endDay,
+		int& endMonth,
+		int& endYear);
 
 	//updates the day, month and year
 	//year taken as current year if not specified

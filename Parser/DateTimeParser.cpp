@@ -193,8 +193,17 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 		} else if(!isStartTime && !hasDash && (convertStringToInteger(inputArray[i]) > 0)) {
 			isEndTime = true;
 			int duration = convertStringToInteger(inputArray[i]);
-			_startHour == 24 ? _endHour = 1 : _endHour = _startHour + duration;
-			_endMinute = _startMinute;
+			addDuration (duration,
+				_startHour, 
+				_startMinute,
+				_endHour,
+				_endMinute,
+				_day,
+				_month,
+				_year,
+				_endDay,
+				_endMonth,
+				_endYear);
 			LOG(INFO) << "DURATION ADDED FROM START";
 		} else if(!isEndTime && is12Hour(inputArray[i], _startHour)) {
 			LOG(INFO) << "PM OR M, Start Hour";
@@ -417,6 +426,38 @@ bool DateTimeParser::is12Hour(string input, int& hour) {
 	return false;
 }
 
+void DateTimeParser::addDuration (
+	int duration,
+	int startHr, 
+	int startMin, 
+	int& endHr, 
+	int& endMin,
+	int startDay,
+	int startMonth,
+	int startYear,
+	int& endDay,
+	int& endMonth,
+	int& endYear) {
+		if(duration > 24) {
+			return;
+		}
+		endHr = (startHr == 24) ?  duration : startHr + duration;
+		endMin = startMin;
+		if((startDay == 0) && (startMonth == 0) && (startYear == 0)) {
+			startDay = _dateTime.getCurrentDay();
+			startMonth = _dateTime.getCurrentMonth();
+			startYear = _dateTime.getCurrentYear();
+		}
+		if(endHr >= 24) {
+			endHr = (endHr > 24) ? endHr - 24 : endHr;
+			endDay = startDay + 1;
+			endMonth = startMonth;
+			endYear = startYear;
+			handleDayOverflow (endDay, endMonth, endYear);
+		}
+}
+
+
 void DateTimeParser::separateDayMonthYear(string input, int& day, int& month, int& year) {
 	char *intEnd;
 	day = (int)strtol(input.c_str(), &intEnd, 10);
@@ -544,15 +585,37 @@ void DateTimeParser::verifyStartEnd(
 					|| ((startHr < 12) && ((endHr + 12) < 24) && (endHr != 0))) {
 						endHr += 12;
 				} else {
-					endHr = startHr + 1;
-					endMin = startMin;
+					//endHr = (startHr + 1) % 24;
+					//endMin = startMin;
+					addDuration(1, 
+						startHr, 
+						startMin,
+						endHr, 
+						endMin,
+						startDay,
+						startMonth,
+						startYear,
+						endDay,
+						endMonth,
+						endYear);
 					isError = true;
 				}
 		}
 
 		if (!_isDeadlineEvent && (endHr == 0) && (endMin == 0)) {
-			endHr = startHr + 1;
-			endMin = startMin;
+			//endHr = ((startHr + 1) % 24);
+			//endMin = startMin;
+			addDuration(1, 
+				startHr, 
+				startMin,
+				endHr, 
+				endMin,
+				startDay,
+				startMonth,
+				startYear,
+				endDay,
+				endMonth,
+				endYear);
 		}
 
 		if(_isDeadlineEvent) {
