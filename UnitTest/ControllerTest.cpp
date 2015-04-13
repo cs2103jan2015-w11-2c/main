@@ -26,18 +26,6 @@ namespace UnitTest {
 
 
 		//@author A0115452N
-		TEST_METHOD(checkIsDeadLineTest1) {
-			string input = "travelling from Monday to Friday"; 
-			Item item;
-			Parser parse;
-			Controller control;
-			parse.setStringToParse(input);
-			parse.extractDateAndTime();
-			item = parse.getItem();
-			bool isExpected = false;
-			Assert::AreEqual(isExpected, control.checkIsDeadline(item));
-		}
-
 		TEST_METHOD(checkDateIsUnsetTest1) {
 			string input = "meeting";
 			Controller control;
