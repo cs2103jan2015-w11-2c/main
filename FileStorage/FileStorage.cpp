@@ -31,8 +31,8 @@ FileStorage*FileStorage::theOne=nullptr;
 FileStorage*FileStorage::getInstance() {
 	if(theOne==nullptr) {
 		theOne = new FileStorage();
-		return theOne;
 	}
+	return theOne;
 }
 
 void FileStorage::setFileName(string newFileName) {
@@ -118,9 +118,9 @@ vector<int> FileStorage::getOptionFileData() {
 		optionsVector.push_back(content);    
 	}
 
-	_is12Hr = optionsVector[0];
-	_isWide = optionsVector[1];
-	_isNotificationsOn = optionsVector[2];
+	_is12Hr = (optionsVector[0] != 0);
+	_isWide = (optionsVector[1] != 0);
+	_isNotificationsOn = (optionsVector[2] != 0);
 	_notifyMin = optionsVector[3];
 	_sleepHourStart = optionsVector[4];
 	_sleepMinStart = optionsVector[5];
@@ -268,7 +268,10 @@ bool FileStorage::changeFileName(string newFileName) {
 }
 
 bool FileStorage::fileExists(const string& fileName) {
-	return (ifstream(fileName.c_str()));
+	if (ifstream(fileName.c_str())) {
+		return true;
+	}
+	return false;
 }
 
 bool FileStorage::changeFileLocation(string newFilePath) {
