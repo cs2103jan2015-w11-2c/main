@@ -24,6 +24,7 @@ static const string ERROR_INVALID_LINE_NUMBER = "Invalid number specified:";
 static const string ERROR_MISSING_EVENT = "No event specified!";
 static const string ERROR_FILE_EMPTY  = "File is empty";
 static const string ERROR_NO_FILENAME = "No filename specified!";
+static const string ERROR_INVALID_FILENAME = "Invalid character in filename!";
 static const string ERROR_FILE_ALREADY_EXISTS = "A file with the same name already exists in the location specified";
 static const string ERROR_NO_SEARCH_QUERY = "No search query entered!";
 static const string ERROR_FILEPATH_NOT_FOUND = "The specified filepath was not found or the file already exists there";

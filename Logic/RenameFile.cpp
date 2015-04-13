@@ -32,6 +32,10 @@ public:
 	}
 	//@author A0111951N
 	void executeAction(FileStorage *outputFile) {
+		size_t illegalChars = _fileName.find_first_of ("!@#$*^&/\\()[]\"|;=,");
+		if(illegalChars != string::npos) {
+			throw std::out_of_range(ERROR_INVALID_FILENAME);
+		}
 		if(_fileName == "") {
 			throw std::out_of_range(ERROR_NO_FILENAME);
 		} else {
