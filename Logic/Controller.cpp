@@ -356,10 +356,14 @@ void Controller::generateResults(const vector<Item> vectorStore) {
 
 		temp.lineNumber = to_string(i + 1) + ".";
 		temp.date = inputVector[i].dateToString();
+		
 		if (_is12HourFormat) {
 			temp.time = inputVector[i].timeAndEndDateToString();
 		} else { 
 			temp.time = inputVector[i].timeTo24HrString();
+		}
+		if (inputVector[i].eventEndTime[0] == 0 && inputVector[i].eventEndTime[1] == 0) {
+			temp.time += inputVector[i].endDateToString();
 		}
 
 		temp.event = inputVector[i].event;
@@ -379,7 +383,9 @@ void Controller::generateResults(const vector<Item> vectorStore) {
 			} else {
 				temp.time = inputVector[i].timeTo24HrString();
 			}
-			temp.time += inputVector[i].endDateToString();
+			if (inputVector[i].eventEndTime[0] == 0 && inputVector[i].eventEndTime[1] == 0) {
+				temp.time += inputVector[i].endDateToString();
+			}
 			temp.date = DEADLINE_HEADER;
 			
 			deadlineResult.push_back(temp);
@@ -497,7 +503,7 @@ void Controller::searchFree(Item data, string message) {
 
 	int lineNumber;
 	try {
-		lineNumber = _parser->getLineOpNumber()[0];
+		lineNumber = _parser->getLineOpNumberForFree()[0];
 	} catch (const out_of_range& e) {
 		setSuccessMessage(e.what());
 		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
@@ -575,6 +581,8 @@ void Controller::copy(Item input) {
 }
 
 void Controller::edit(Item data) {
+	bool floatDateIsOverwritten = _parser->getIsDateUpdatedFromFloat();
+	
 	int lineNumber;
 	try {
 		lineNumber = _parser->getLineOpNumber()[0];
@@ -586,6 +594,11 @@ void Controller::edit(Item data) {
 	}
 	_parser->extractUserCommand();
 	Item item = _parser->getItem();
+	if(_parser->getIsDateUpdatedFromFloat()) {
+		item.eventDate[0] = 0;
+		item.eventDate[1] = 0;
+		item.eventDate[2] = 0;
+	}
 
 	EditItem *editItemCommand = new EditItem(lineNumber, item);
 	try {

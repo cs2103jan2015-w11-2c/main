@@ -14,6 +14,7 @@ const int DAY_NUM_MINS = 1440;
 const string TIME_UNIT_HOURS = " hours";
 const string TIME_UNIT_MINUTES = " minutes";
 const string STRING_FREE_SLOTS = "Free Slots";
+const string ERROR_INVALID_SLOT_LENGTH = "Invalid slot length!";
 
 static const string DEADLINE_HEADING = "Deadline Events";
 
@@ -837,6 +838,20 @@ public:
 		}
 	}
 
+	void updateItemToNextDay() {
+		int day = _input.eventDate[0];
+		int mon = _input.eventDate[1];
+		int year = _input.eventDate[2];
+
+		DateTimeParser dateTimeParser;
+
+		dateTimeParser.getNextDayDate(day, mon, year);
+
+		_input.eventDate[0] = day;
+		_input.eventDate[1] = mon;
+		_input.eventDate[2] = year;
+	}
+
 	void filterForFree(vector<Item> vectorStore) {
 		//Boolean array to represent every minute of a 24hour day
 		bool timeFrames[DAY_NUM_MINS];
@@ -912,7 +927,18 @@ public:
 				}
 			}
 		} else {
-			filterForFree(vectorStore);
+			int blockLength = stoi(_input.event, NULL, 10);
+			int maxLength = _sleepTime[0][1] - _sleepTime[1][1];
+			maxLength += 60 * (_sleepTime[0][0] - _sleepTime[1][0]);
+			maxLength /= 60;
+			if (blockLength > maxLength) {
+				throw std::out_of_range(ERROR_INVALID_SLOT_LENGTH);
+			}
+
+			do {
+				filterForFree(vectorStore);
+				updateItemToNextDay();
+			} while (_otherResult->empty());
 		}
 
 		if (vectorStore.size() == 0) {
