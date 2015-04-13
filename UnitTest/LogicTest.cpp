@@ -1062,11 +1062,11 @@ public:
 			endMonth,
 			endYear);
 
-		int expectedEndDay = 15;
+		int expectedEndDay = 0;
 		Assert::AreEqual(expectedEndDay, endDay);
-		int expectedEndMonth = 4;
+		int expectedEndMonth = 0;
 		Assert::AreEqual(expectedEndMonth, endMonth);
-		int expectedEndYear = 2015;
+		int expectedEndYear = 0;
 		Assert::AreEqual(expectedEndYear, endYear);
 
 		int expectedEndHour = 23;
@@ -2020,3 +2020,4 @@ public:
 	
 	};
 }
+

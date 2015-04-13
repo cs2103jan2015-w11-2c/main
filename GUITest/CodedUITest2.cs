@@ -16,19 +16,17 @@ namespace GUITest
     /// Summary description for CodedUITest2
     /// </summary>
     [CodedUITest]
-    public class InvalidAddMethod
+    public class CodedUITest2
     {
-        public InvalidAddMethod()
+        public CodedUITest2()
         {
         }
 
         [TestMethod]
-        public void UIInvalidAddTest()
+        public void CodedUITestMethod1()
         {
             // To generate code for this test, select "Generate Code for Coded UI Test" from the shortcut menu and select one of the menu items.
             // For more information on generated code, see http://go.microsoft.com/fwlink/?LinkId=179463
-            this.UIMap.InvalidAddMethod1();
-            this.UIMap.AssertInvalidAddMethod1();
         }
 
         #region Additional test attributes

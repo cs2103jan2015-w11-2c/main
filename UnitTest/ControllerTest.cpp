@@ -5,30 +5,134 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UnitTest {
 	TEST_CLASS(MainControllerTest) {
-public:
 
-	TEST_METHOD(AddTest) {
-		Controller control;
-		string input = "Add testing from 1/4 3:50p 3";
-		control.executeCommand("clear");
-		control.executeCommand(input);
-		vector<RESULT> allTasks = control.getOtherResult();
+	public:
+		TEST_METHOD(AddTest) {
+			Controller control;
+			string input = "Add testing from 1/4 3:50p 3";
+			control.executeCommand("clear");
+			control.executeCommand(input);
+			vector<RESULT> allTasks = control.getOtherResult();
 
-		string expectedDate = "Wednesday, 1 Apr 2015";
-		string expectedTime = "[3:50p-6:50p]";
-		string expectedEvent = "testing";
+			string expectedDate = "Wednesday, 1 Apr 2015";
+			string expectedTime = "[3:50p-6:50p]";
+			string expectedEvent = "testing";
 
-		Assert::AreEqual(expectedDate, allTasks[0].date);
-		Assert::AreEqual(expectedTime, allTasks[0].time);
-		Assert::AreEqual(expectedEvent, allTasks[0].event);
+			Assert::AreEqual(expectedDate, allTasks[0].date);
+			Assert::AreEqual(expectedTime, allTasks[0].time);
+			Assert::AreEqual(expectedEvent, allTasks[0].event);
 
-	}
+		}
 
 
-	//@author A0115452N
-	TEST_METHOD(checkDateIsUnsetTest1) {
-		string input = "meeting";
-		Controller control;
+		//@author A0115452N
+		TEST_METHOD(checkDateIsUnsetTest1) {
+			string input = "meeting";
+			Controller control;
+			Item item;
+			Parser parse;
+			parse.setStringToParse(input);
+			parse.extractDateAndTime();
+			item = parse.getItem();
+
+			bool isExpected = true;
+			Assert::AreEqual(isExpected,control.checkDateIsUnset(item.eventDate));
+		}
+
+		TEST_METHOD(checkDateIsUnsetTest2) {
+			string input = "meeting on friday";
+			Controller control;
+			Item item;
+			Parser parse;
+			parse.setStringToParse(input);
+			parse.extractDateAndTime();
+			item = parse.getItem();
+
+			bool isExpected = false;
+			Assert::AreEqual(isExpected, control.checkDateIsUnset(item.eventDate));
+		}
+
+
+		TEST_METHOD(checkIsClashTest1) {
+			string input1 = "dinner on Tuesday 5pm";
+			string input2 = "outing on Tuesday 5pm";
+			Controller control;
+			Item item1, item2;
+			Parser parse;
+			parse.setStringToParse(input1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(input2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+			bool isExpected = true;
+			Assert::AreEqual(isExpected, control.checkIsClash(item1, item2));
+		}
+
+		TEST_METHOD(checkIsClashTest2) {
+			string input1 = "meeting on Tuesday 3pm";
+			string input2 = "having dinner on Tuesday 4pm";
+			Controller control;
+			Item item1, item2;
+			Parser parse;
+			parse.setStringToParse(input1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(input2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+			bool isExpected = false;
+			Assert::AreEqual(isExpected, control.checkIsClash(item1, item2));
+		}
+
+		TEST_METHOD(checkIsExpriedTest1) {
+			Controller control;
+			Item item;
+			Parser parse;
+			string input = "exams on 25/4/2014";
+			parse.setStringToParse(input);
+			parse.extractDateAndTime();
+			item = parse.getItem();
+			bool isExpected = true;
+			Assert::AreEqual(isExpected, control.checkIsExpired(item));
+		}
+
+		TEST_METHOD(checkIsExpriedTest2) {
+			Controller control;
+			Item item;
+			Parser parse;
+			string input = "having class on 4/4/2015";
+			parse.setStringToParse(input);
+			parse.extractDateAndTime();
+			item = parse.getItem();
+			bool isExpected = true;
+			Assert::AreEqual(isExpected, control.checkIsExpired(item));
+		}
+
+		TEST_METHOD(checkIsExpriedTest3) {
+			Controller control;
+			Item item;
+			Parser parse;
+			string input = "having class on 4/5/2015";
+			parse.setStringToParse(input);
+			parse.extractDateAndTime();
+			item = parse.getItem();
+			bool isExpected = false;
+			Assert::AreEqual(isExpected, control.checkIsExpired(item));
+
+		}
+
+
+		//@author A0114613U
+		TEST_METHOD(sortAlphabeticalTest) {
+
+		}
+
+		/*	TEST_METHOD(searchTest) {
+		Controller controller;
+		string inputString = "testing from 23/4/2015 14:0 - 16:0";
+
+>>>>>>> 3be32045313373fb2257457b02191b498060d4d1
 		Item item;
 		Parser parse;
 		parse.setStringToParse(input);
