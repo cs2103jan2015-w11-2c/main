@@ -217,17 +217,6 @@ Void MessageManager::updateAutoCompleteSource(TextBox^ inputBox) {
 
 Void MessageManager::toggleTaskBoxSize(RichTextBox^ allTaskBox, RichTextBox^ todayTaskBox, PictureBox^ pictureBox) {
 	if(_isBoxExtended) {
-		_isBoxExtended = false;
-		allTaskBox->Location = System::Drawing::Point(315, 75);
-		allTaskBox->Size = System::Drawing::Size(260, 255);
-		todayTaskBox->Location = System::Drawing::Point(16, 75);
-		todayTaskBox->Size = System::Drawing::Size(260, 255);
-
-		pictureBox->Location = System::Drawing::Point(13, 67);
-		pictureBox->Size = System::Drawing::Size(565, 265);
-		pictureBox->Image = System::Drawing::Image::FromFile("resources//notebookShort.png");
-	} else {
-		_isBoxExtended = true;
 		allTaskBox->Location = System::Drawing::Point(315, 22);
 		allTaskBox->Size = System::Drawing::Size(260, 310);
 		todayTaskBox->Location = System::Drawing::Point(16, 22);
@@ -236,6 +225,15 @@ Void MessageManager::toggleTaskBoxSize(RichTextBox^ allTaskBox, RichTextBox^ tod
 		pictureBox->Location = System::Drawing::Point(13, 12);
 		pictureBox->Size = System::Drawing::Size(565, 323);
 		pictureBox->Image = System::Drawing::Image::FromFile("resources//notebookTall.png");
+	} else {
+		allTaskBox->Location = System::Drawing::Point(315, 75);
+		allTaskBox->Size = System::Drawing::Size(260, 255);
+		todayTaskBox->Location = System::Drawing::Point(16, 75);
+		todayTaskBox->Size = System::Drawing::Size(260, 255);
+
+		pictureBox->Location = System::Drawing::Point(13, 67);
+		pictureBox->Size = System::Drawing::Size(565, 265);
+		pictureBox->Image = System::Drawing::Image::FromFile("resources//notebookShort.png");
 	}
 }
 
@@ -280,6 +278,8 @@ String^ MessageManager::getAllTaskBoxLabel() {
 		return LABEL_IS_SEARCH;
 	} else if(magicMemo->isHelp()) {
 		return LABEL_IS_HELP;
+	} else if(magicMemo->isFree()) {
+		return LABEL_IS_FREE;
 	} else if(magicMemo->isArchiveSearch()) {
 		return LABEL_IS_ARCHIVE_SEARCH;
 	} else {

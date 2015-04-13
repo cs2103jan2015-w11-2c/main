@@ -86,6 +86,8 @@ public:
 
 	bool clearFile();
 	
+	bool clearArchive();
+
 	//clear auto-complete file
 	bool clearAutoCompleteFile();
 
