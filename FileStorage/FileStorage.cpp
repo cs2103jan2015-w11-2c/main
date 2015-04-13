@@ -117,6 +117,16 @@ vector<int> FileStorage::getOptionFileData() {
 	while(readFile >> content) {
 		optionsVector.push_back(content);    
 	}
+
+	_is12Hr = optionsVector[0];
+	_isWide = optionsVector[1];
+	_isNotificationsOn = optionsVector[2];
+	_notifyMin = optionsVector[3];
+	_sleepHourStart = optionsVector[4];
+	_sleepMinStart = optionsVector[5];
+	_sleepHourEnd = optionsVector[6];
+	_sleepMinEnd = optionsVector[7];
+
 	readFile.close();
 
 	return optionsVector;
