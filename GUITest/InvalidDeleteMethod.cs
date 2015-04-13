@@ -16,19 +16,19 @@ namespace GUITest
     /// Summary description for CodedUITest2
     /// </summary>
     [CodedUITest]
-    public class AddMethod
+    public class InvalidDeleteMethod
     {
-        public AddMethod()
+        public InvalidDeleteMethod()
         {
         }
 
         [TestMethod]
-        public void UIAddTest()
+        public void UIInvalidDeleteTest()
         {
             // To generate code for this test, select "Generate Code for Coded UI Test" from the shortcut menu and select one of the menu items.
             // For more information on generated code, see http://go.microsoft.com/fwlink/?LinkId=179463
-            this.UIMap.AddMethod();
-            this.UIMap.AssertAddMethod();
+            this.UIMap.InvalidDeleteMethod();
+            this.UIMap.AssertInvalidDeleteMethod();
         }
 
         #region Additional test attributes
