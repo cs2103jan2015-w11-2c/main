@@ -1,0 +1,3889 @@
+//@author: a0111951n
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.cpp
+	 */
+
+bool FileStorage::changeFileName(string newFileName) {
+	if(fileExists(newFileName)) {
+		return false;
+	}
+	assert(newFileName != "");
+	string oldFileName = getFullFileName();
+	setFileName(newFileName);
+	rename(oldFileName.c_str(), getFullFileName().c_str());
+
+	updateFileConfigInfo();
+
+	return true;
+}
+
+bool FileStorage::fileExists(const string& fileName) {
+	if (ifstream(fileName.c_str())) {
+		return true;
+	}
+	return false;
+}
+
+bool FileStorage::changeFileLocation(string newFilePath) {
+	if(!directoryExists(newFilePath)) {
+		return false;
+	}
+	assert(newFilePath != "");
+	string newFullFileName = newFilePath + "\\" + _fileName;
+
+	if(fileExists(newFullFileName)) {
+		return false;
+	}
+
+	rename(getFullFileName().c_str(), newFullFileName.c_str());
+	setFilePath(newFilePath);
+
+	updateFileConfigInfo();
+
+	return true;
+}
+
+bool FileStorage::directoryExists(const string& dirName) {
+	DWORD ftyp = GetFileAttributesA(dirName.c_str());
+	if (ftyp == INVALID_FILE_ATTRIBUTES)
+		return false;  // wrong path!
+
+	if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
+		return true;   // valid directory!
+
+	return false;    // invalid directory!
+}
+
+bool FileStorage::isFileEmpty(string file) {
+	string x;
+	ifstream inFile(file.c_str());
+	inFile >> x;
+	if(x == "") {
+		return true;
+	}
+	return false;
+}
+
+
+void FileStorage::getFileConfigInfo() {
+	ifstream inFile(_fileConfigFileName.c_str());
+	getline(inFile, _fileName);
+	getline(inFile, _filePath);
+	inFile.close();
+
+}
+
+void FileStorage::initializeFileConfig() {
+	setFileName(_defaultFileName);
+	setFilePath(getProgramFilePath());
+
+	updateFileConfigInfo();
+}
+
+void FileStorage::updateFileConfigInfo() {
+	ofstream outFile(_fileConfigFileName.c_str());
+	outFile << _fileName << endl;
+	outFile << _filePath << endl;
+	outFile.close();
+}
+
+string FileStorage::getProgramFilePath() {
+	char buffer[MAX_PATH];
+	GetModuleFileName( NULL, buffer, MAX_PATH );
+	string::size_type pos = string( buffer ).find_last_of( "\\/" );
+	return string( buffer ).substr( 0, pos);
+}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.cpp
+	 */
+
+bool Controller::isNotificationsOn() {
+	return _isNotificationsOn;
+}
+
+string Controller::getNotifications() {
+	int targetMin;
+	int targetHr;
+	int targetDay;
+	int targetMon; 
+	int targetYr;
+
+	calculateTargetDateTime(targetMin, targetHr, targetDay, targetMon, targetYr);
+	return findEventMatch(targetMin, targetHr, targetDay, targetMon, targetYr);
+}
+
+void Controller::calculateTargetDateTime (
+	int& targetMin, 
+	int& targetHr,
+	int& targetDay,
+	int& targetMon, 
+	int& targetYr) {
+		DateTime today;
+		targetMin = today.getCurrentMinute() + _notifyTime;
+		targetHr = today.getCurrentHour();
+		targetDay = today.getCurrentDay();
+		targetMon = today.getCurrentMonth();
+		targetYr = today.getCurrentYear();
+
+		if(targetMin >= 60) {
+			targetHr += targetMin / 60;
+			targetMin %= 60;
+		}
+
+		if(targetHr >= 24) {
+			targetDay += targetHr / 24;
+			targetHr %= 24;
+		}
+
+		if(targetDay > today.numDaysInMonth(targetMon, targetYr)) {
+			targetMon++;
+			targetDay -= today.numDaysInMonth(targetMon, targetYr);
+		}
+
+		if(targetMon > 12) {
+			targetYr++;
+			targetMon -= 12;
+		}
+
+		//convert hour to 1-24 format
+		if(targetHr == 0) {
+			targetHr = 24;
+		}
+}
+
+string Controller::findEventMatch (
+	int targetMin, 
+	int targetHr,
+	int targetDay,
+	int targetMon, 
+	int targetYr) {
+		ostringstream oss;
+
+		for(unsigned int i = 0; i < _vectorStore.size(); i++) {
+			Item temp = _vectorStore[i];
+			
+			if(	(temp.eventDate[0] == targetDay) &&
+				(temp.eventDate[1] == targetMon) &&
+				(temp.eventDate[2] == targetYr) &&
+				(temp.eventStartTime[0] == targetHr) &&
+				(temp.eventStartTime[1] == targetMin)) {
+					oss << temp.dateToString() << " ";
+					oss << temp.timeAndEndDateToString() << " ";
+					oss << temp.event << "\n";
+			}
+		}
+		
+		return oss.str();
+}
+
+void Controller::setReminderTime() {
+	int numMinutes;
+	try {
+		numMinutes = _parser->getLineOpNumber()[0];
+	} catch (const out_of_range& e) {
+		setSuccessMessage(ERROR_INVALID_NOTIFICATION_TIME);
+		LOG(ERROR) << ERROR_INVALID_NOTIFICATION_TIME << e.what();
+		clog << e.what();
+		return;
+	}
+	assert(numMinutes > 0);
+	if(numMinutes > MAX_NOTIFICATION) {
+		_successMessage = ERROR_INVALID_NOTIFICATION_TIME;
+		return;
+	}
+	char buffer[1000];
+	sprintf_s(buffer, SUCCESS_NOTIFICATION_TIME_CHANGED.c_str(), _notifyTime, numMinutes);
+	_notifyTime = numMinutes;
+	_outputFile->saveNotifications(_isNotificationsOn, _notifyTime);
+	_successMessage = buffer;
+}
+
+void Controller::toggleNotification() {
+	_isNotificationsOn = !_isNotificationsOn;
+	_outputFile->saveNotifications(_isNotificationsOn, _notifyTime);
+
+	if(_isNotificationsOn) {
+		_successMessage = SUCCESS_NOTIFICATION_ON;
+	} else {
+		_successMessage = SUCCESS_NOTIFICATION_OFF;
+	}
+}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\MoveFile.cpp
+	 */
+
+#include <iostream>
+#include <vector>
+#include "FileStorage.h"
+#include "Item.h"
+#include "Command.h"
+
+using namespace std;
+
+class MoveFileLocation : public Command {
+private:
+	string _fileLocation;
+	string _oldFileLocation;
+	string _message;
+
+public:
+	MoveFileLocation() {
+		_fileLocation = "";
+		_oldFileLocation = "";
+		_message = "";
+	}
+
+	MoveFileLocation(const string fileLocation) {
+		_fileLocation = fileLocation;
+		_oldFileLocation = "";
+		_message = "";
+	}
+
+	~MoveFileLocation() {
+	}
+
+	void executeAction(FileStorage *outputFile) {
+		_oldFileLocation = outputFile->getFileLocation();
+		if(outputFile->changeFileLocation(_fileLocation)) {
+			char buffer[1000];
+			sprintf_s(buffer, SUCCESS_FILE_LOCATION_CHANGED.c_str(), outputFile->getFullFileName().c_str());
+			_message = buffer;
+		} else {
+			throw std::invalid_argument(ERROR_FILEPATH_NOT_FOUND);
+		}
+	}
+
+	string getMessage() {
+		return _message;
+	}
+};
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\MoveFile.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\RenameFile.cpp
+	 */
+
+	void executeAction(FileStorage *outputFile) {
+		size_t illegalChars = _fileName.find_first_of ("?!@#$*^&/\\{}()+[]\"|;=,");
+		if(illegalChars != string::npos) {
+			throw std::out_of_range(ERROR_INVALID_FILENAME);
+		}
+		if(_fileName == "") {
+			throw std::out_of_range(ERROR_NO_FILENAME);
+		} else {
+			_oldFileName = outputFile->getFileName();
+			int dotPos = _fileName.length() - 4;
+			if(_fileName[dotPos] != '.') { //ensure that the file is a .txt file
+				_fileName = _fileName + ".txt";
+			}
+			if(outputFile->changeFileName(_fileName)) {
+				char buffer[1000];
+				sprintf_s(buffer, SUCCESS_FILENAME_CHANGED.c_str(), outputFile->getFileName().c_str());
+				_message = buffer;
+			} else {
+				throw std::out_of_range(_message = ERROR_FILE_ALREADY_EXISTS);
+			}
+		}
+	}
+
+	string getMessage() {
+		return _message;
+	}
+};
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\RenameFile.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\SortAlphabetical.cpp
+	 */
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include "Item.h"
+#include "Command.h"
+
+using namespace std;
+
+class SortAlphabetical : public Command {
+private:
+	string _message;
+
+public:
+	SortAlphabetical() {
+		_message = "";
+	}
+
+	~SortAlphabetical() {
+	}
+
+	
+	void swap(Item& item1, Item& item2) {
+		Item tempItem = item1;
+		item1 = item2;
+		item2 = tempItem;
+	}
+
+	string getLowerCaseString(string currentString) {
+		transform(currentString.begin(), currentString.end(), currentString.begin(), ::tolower);
+		return currentString;
+	}
+
+	void selectionSortIgnoreCase(vector<Item>& vectorStore) {
+	for (unsigned int i = 0; i < (vectorStore.size() - 1); i++) {
+		int minIndex = i;
+		string minString = getLowerCaseString(vectorStore[minIndex].event);
+		string minValue = vectorStore[minIndex].event;
+		for (unsigned int j = i + 1; j < vectorStore.size(); j++) {
+			string currString = getLowerCaseString(vectorStore[j].event);
+			if (currString == minString && vectorStore[j].event < vectorStore[minIndex].event) {
+				swap(vectorStore[minIndex], vectorStore[j]);
+				minValue = vectorStore[minIndex].event;
+			}
+			if (currString < minString) {
+				minString = getLowerCaseString(vectorStore[j].event);
+				minValue = vectorStore[j].event;
+				minIndex = j;
+			}
+		}
+		swap(vectorStore[minIndex],vectorStore[i]);
+	}
+}
+
+	void executeAction(vector<Item>& vectorStore) {
+		if (vectorStore.empty()) {
+			_message = ERROR_FILE_EMPTY;
+		}
+		else {
+			selectionSortIgnoreCase(vectorStore);
+			_message = SUCCESS_SORTED_ALPHA;
+		}
+	}
+
+	string getMessage() {
+		return _message;
+	}
+	
+	void negateAction(vector<Item> &vectorStore) {
+	}
+};
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\SortAlphabetical.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MagicMemoGUI.h
+	 */
+
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include "Controller.h"
+#include "MessageManager.h"
+
+#pragma once
+#include <Windows.h>
+#pragma comment(lib, "user32.lib")
+
+using namespace std;
+
+// interval to check for deadlines/events 
+// TICK_MIN * TICK_SEC * TICK_MS
+static const int TICK_MIN = 1;
+static const int TICK_SEC = 60;
+static const int TICK_MS = 1000;
+
+namespace MagicMemo {
+
+	using namespace System;
+	using namespace System::ComponentModel;
+	using namespace System::Collections;
+	using namespace System::Windows::Forms;
+	using namespace System::Data;
+	using namespace System::Drawing;
+
+	/// <summary>
+	/// Summary for MagicMemoGUI
+	/// </summary>
+	public ref class MagicMemoGUI : public System::Windows::Forms::Form {
+	private:
+		static MessageManager^ magicManager;
+
+	public:
+		MagicMemoGUI(void) {
+			InitializeComponent();
+			magicManager = gcnew MessageManager();
+			setGuiText("display");
+			successMessageLabel->Text = L"Welcome to Magic Memo!";
+		}
+
+	protected:
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		~MagicMemoGUI() {
+			if (components) {
+				delete components;
+				delete magicManager;
+			}
+		}
+	private: System::Windows::Forms::Label^  todayTaskBoxLabel;
+
+	private: System::Windows::Forms::TextBox^  commandInputBox;
+	private: System::Windows::Forms::Label^  allTaskBoxLabel;
+
+	private: System::Windows::Forms::Label^  programHeading;
+	private: System::Windows::Forms::RichTextBox^  todayTaskBox;
+	private: System::Windows::Forms::RichTextBox^  allTaskBox;
+	private: System::Windows::Forms::Label^  successMessageLabel;
+	private: System::Windows::Forms::PictureBox^  pictureBox;
+	private: System::Windows::Forms::PictureBox^  alarmPic;
+
+
+	private: System::ComponentModel::IContainer^  components;
+
+	private:
+		/// <summary>
+		/// Required designer variable.
+
+		/// </summary>
+
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MagicMemoGUI.h
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MagicMemoGUI.h
+	 */
+
+
+	private:
+		System::Void commandInputBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+			if(e->KeyCode == Keys::Enter) {
+				String^ inputText = commandInputBox->Text;
+				setGuiText(inputText);
+
+				magicManager->updateAutoCompleteSource(commandInputBox);
+			}
+
+			// Minimize via Ctrl + W
+			if (e->KeyData == (Keys::Control | Keys::W)) {
+				WindowState = FormWindowState::Minimized;
+			} 
+
+			// Exit via Ctrl + Q
+			if (e->KeyData == (Keys::Control | Keys::Q)) {
+				MessageBox::Show("Good bye!");
+				Application::Exit();
+			}
+
+			// Undo via Ctrl + Z
+			if (e->KeyData == (Keys::Control | Keys::Z)) {
+				setGuiText("undo");
+			}   
+
+			// Redo via Ctrl + R
+			if (e->KeyData == (Keys::Control | Keys::R)) {
+				setGuiText("redo");
+			}
+
+		}
+
+	private: 
+		System::Void commandInputBox_PreviewKeyDown(System::Object^  sender, System::Windows::Forms::PreviewKeyDownEventArgs^  e) {
+			if (e->KeyCode.Equals(Keys::Up)) {
+				commandInputBox->Text = magicManager->getLastInput();
+				commandInputBox->SelectionStart = 100; 
+			} else if (e->KeyCode.Equals(Keys::Down)) {
+				commandInputBox->Text = magicManager->getNextInput();
+				commandInputBox->SelectionStart = 100; 
+			}
+		}
+
+	private: 
+		// return focus to the intput textbox on keypress
+		System::Void allTaskBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+			if((e->KeyCode != Keys::Up) && (e->KeyCode != Keys::Down) && (e->KeyCode != Keys::Left) && (e->KeyCode != Keys::Right)) {
+				commandInputBox->Focus(); 
+			}
+		}
+
+	private: 
+		// return focus to the intput textbox on keypress
+		System::Void lastActionBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+			if((e->KeyCode != Keys::Up) && (e->KeyCode != Keys::Down) && (e->KeyCode != Keys::Left) && (e->KeyCode != Keys::Right)) {
+				commandInputBox->Focus(); 
+			}
+		}
+
+	private: 
+		// Initializes the timer
+		System::Void MagicMemoGUI_Load(System::Object^  sender, System::EventArgs^  e) {
+			Timer^ myTimer = gcnew Timer;
+			myTimer->Tick += gcnew EventHandler(popupNotifications);
+			myTimer->Interval = (TICK_MIN * TICK_SEC * TICK_MS);
+			myTimer->Start();
+		}
+
+	private:
+		// Displays notifications & updates view periodically
+		static void popupNotifications(System::Object^  sender, System::EventArgs^  e) {
+			String^ notifications;
+			if(magicManager->hasNotificationEvent(notifications)) {
+				MessageBox::Show(
+					notifications, 
+					"Events Notifications",
+					MessageBoxButtons::OK, 
+					MessageBoxIcon::Asterisk, 
+					MessageBoxDefaultButton::Button1, 
+					MessageBoxOptions::DefaultDesktopOnly);
+			}
+		}
+
+	private:
+		// Sets success message and fills task boxes
+		System::Void setGuiText(String^ userInput) {
+
+			magicManager->generateMessageOutputs(userInput);
+
+			String^ successMessage = magicManager->getSuccessMessage();
+			successMessageLabel->Text = successMessage;
+
+			allTaskBoxLabel->Text = magicManager->getAllTaskBoxLabel();
+
+			magicManager->toggleTaskBoxSize(allTaskBox, todayTaskBox, pictureBox);
+			magicManager->setNotificationPicture(alarmPic);
+
+			allTaskBox->Text = magicManager->getAllTaskBoxMessage();
+			todayTaskBox->Text = magicManager->getTodayTaskBoxMessage();
+
+			magicManager->colorAllTaskBox(allTaskBox);
+			magicManager->colorTodayTaskBox(todayTaskBox);
+
+			clearCommandBox();
+
+			checkExit(successMessage);
+		}
+
+		System::Void clearCommandBox() {
+			commandInputBox->Text = "";
+			commandInputBox->SelectionStart = 100;
+		}
+
+		System::Void checkExit(String^ input) {
+			if (input == "exit") {
+				MessageBox::Show("Good bye!");
+				Application::Exit();
+			}
+		}
+
+
+	protected:
+		// Restore window from minimized when Ctrl + M is pressed
+		virtual void OnHandleCreated(EventArgs^ e) override {
+			__super::OnHandleCreated(e);
+			RegisterHotKey((HWND)this->Handle.ToPointer(), 1, 
+				MOD_CONTROL, (UINT)Keys::M); 
+		}
+
+	protected:
+		virtual void WndProc(Message% m) override {
+			if (m.Msg == WM_HOTKEY && m.WParam.ToInt32() == 1) {
+				this->WindowState = FormWindowState::Normal;
+				this->BringToFront();
+			}
+			__super::WndProc(m);
+		}
+	private: System::Void programHeading_Click(System::Object^  sender, System::EventArgs^  e) {
+		    }
+
+	};
+
+	// hide the command prompt window
+	#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") 
+
+}
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MagicMemoGUI.h
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MessageManager.cpp
+	 */
+
+MessageManager::MessageManager(void) {
+	magicMemo = new Controller();
+	_allTaskVector = new vector<RESULT>;
+	_todayTaskVector = new vector<RESULT>;
+
+	_allNumberHighlight = new vector<HIGHLIGHT>;
+	_allDateHighlight = new vector<HIGHLIGHT>;
+	_allTimeHighlight = new vector<HIGHLIGHT>;
+	_allEventHighlight = new vector<HIGHLIGHT>;
+	_allCompletedHighlight = new vector<HIGHLIGHT>;
+
+	_todayNumberHighlight = new vector<HIGHLIGHT>;
+	_todayDateHighlight = new vector<HIGHLIGHT>;
+	_todayTimeHighlight = new vector<HIGHLIGHT>;
+	_todayEventHighlight = new vector<HIGHLIGHT>;
+	_todayCompletedHighlight = new vector<HIGHLIGHT>;
+
+	_pastInputStrings = new vector<string>;
+	_nextInputStrings = new vector<string>;
+
+	_isBoxExtended = false;
+	_isCallToPrevious = false;
+	_isCallToForward = false;
+
+	_userInput = "";
+	_successMessage = "";
+	_todayTaskBoxMessage = "";
+	_allTaskBoxMessage = "";
+	_inputBoxMessage = "";
+}
+
+Void MessageManager::generateMessageOutputs(String^ textFromUser) {
+	moveNextStrings();
+	_pastInputStrings->push_back(convertToStdString(textFromUser));
+
+	magicMemo->executeCommand(convertToStdString(textFromUser));
+
+	*_allTaskVector = magicMemo->getOtherResult();
+	*_todayTaskVector = magicMemo->getTodayResult();
+
+	//successMessageLabel
+	_successMessage = convertToSystemString(magicMemo->getSuccessMessage());
+
+	//allTaskBox
+	calculateAllTaskIndexes();
+	_allTaskBoxMessage = toString(_allTaskVector);
+
+	//todayTaskBox
+	calculateTodayTaskIndexes();
+	_todayTaskBoxMessage = toString(_todayTaskVector);
+
+	//Textbox size
+	_isBoxExtended = magicMemo->isWide();
+}
+
+Void MessageManager::calculateAllTaskIndexes() {
+	clearAllTaskIndexVectors();
+	string prevDate = "";
+	int indexCount = 0;
+	for(unsigned int i = 0; i < _allTaskVector->size(); i++) {
+		HIGHLIGHT temp;
+		if(_allTaskVector->at(i).isExpired) {
+			temp.special = "expired";
+		} else if(_allTaskVector->at(i).isClash) {
+			temp.special = "clash";
+		} else {
+			temp.special = "";
+		}
+
+		if(_allTaskVector->at(i).date != prevDate) {
+			temp.index = indexCount;
+			temp.length = _allTaskVector->at(i).date.length();
+			_allDateHighlight->push_back(temp);
+			indexCount = indexCount + temp.length + 1;
+			prevDate = _allTaskVector->at(i).date;
+		}
+
+		int numberPos = indexCount;
+		temp.index = indexCount;
+		temp.length = _allTaskVector->at(i).lineNumber.length();
+		_allNumberHighlight->push_back(temp);
+
+		temp.index = temp.index + temp.length + 1;
+		temp.length = _allTaskVector->at(i).time.length();
+		_allTimeHighlight->push_back(temp);
+
+		if(temp.length > 0) {
+			temp.index++;
+		}
+
+		temp.index = temp.index + temp.length;
+		temp.length = _allTaskVector->at(i).event.length();
+		_allEventHighlight->push_back(temp);
+
+		indexCount = temp.index + temp.length + 1;
+	}
+}
+
+Void MessageManager::calculateTodayTaskIndexes() {
+	clearTodayTaskIndexVectors();
+	string prevDate = "";
+	int indexCount = 0;
+	for(unsigned int i = 0; i < _todayTaskVector->size(); i++) {
+		HIGHLIGHT temp;
+		if(_todayTaskVector->at(i).isExpired) {
+			temp.special = "expired";
+		} else if(_todayTaskVector->at(i).isClash) {
+			temp.special = "clash";
+		} else {
+			temp.special = "";
+		}
+
+		if(_todayTaskVector->at(i).date != prevDate) {
+			temp.index = indexCount;
+			temp.length = _todayTaskVector->at(i).date.length();
+			_todayDateHighlight->push_back(temp);
+			indexCount = indexCount + temp.length + 1;
+			prevDate = _todayTaskVector->at(i).date;
+		}
+
+		temp.index = indexCount;
+		temp.length = _todayTaskVector->at(i).lineNumber.length();
+		_todayNumberHighlight->push_back(temp);
+
+		temp.index = temp.index + temp.length + 1;
+		temp.length = _todayTaskVector->at(i).time.length();
+		_todayTimeHighlight->push_back(temp);
+
+		if(temp.length > 0) {
+			temp.index++;
+		}
+
+		temp.index = temp.index + temp.length;
+		temp.length = _todayTaskVector->at(i).event.length();
+		_todayEventHighlight->push_back(temp);
+
+		indexCount = temp.index + temp.length + 1;
+	}
+}
+
+Void MessageManager::colorAllTaskBox(RichTextBox^ allTaskBox) {
+	colorTextInTaskBox(_allNumberHighlight, _allDateHighlight, _allTimeHighlight, _allEventHighlight, allTaskBox);
+}
+
+Void MessageManager::colorTodayTaskBox(RichTextBox^ todayTaskBox) {
+	colorTextInTaskBox(_todayNumberHighlight, _todayDateHighlight, _todayTimeHighlight, _todayEventHighlight, todayTaskBox);
+}
+
+Void MessageManager::colorTextInTaskBox(
+	vector<HIGHLIGHT>* _numberHighlight, 
+	vector<HIGHLIGHT>* _dateHighlight,
+	vector<HIGHLIGHT>* _timeHighlight,
+	vector<HIGHLIGHT>* _eventHighlight, 
+	RichTextBox^ taskBox) {
+		taskBox->SelectAll();
+		taskBox->SelectionHangingIndent = 20;
+
+		//date
+		for(unsigned int i = 0; i < _dateHighlight->size(); i++) {
+			taskBox->Select(_dateHighlight->at(i).index,_dateHighlight->at(i).length);
+			taskBox->SelectionColor = System::Drawing::Color::DarkBlue;
+			taskBox->SelectionFont = gcnew System::Drawing::Font("Cooper", 10, FontStyle::Bold);
+			taskBox->SelectionAlignment = HorizontalAlignment::Center;
+		}
+
+		//number
+		for(unsigned int i = 0; i < _numberHighlight->size(); i++) {
+			taskBox->Select(_numberHighlight->at(i).index, _numberHighlight->at(i).length);
+			taskBox->SelectionColor = System::Drawing::Color::Black;
+			taskBox->SelectionFont = gcnew System::Drawing::Font("Georgia", 11, FontStyle::Italic);
+			taskBox->SelectionAlignment = HorizontalAlignment::Left;
+		}
+
+		//time and end date
+		for(unsigned int i = 0; i < _timeHighlight->size(); i++) {
+			taskBox->Select(_timeHighlight->at(i).index, _timeHighlight->at(i).length);
+			if(_timeHighlight->at(i).special == "expired") {
+				taskBox->SelectionColor = System::Drawing::Color::Gray;
+			} else if(_timeHighlight->at(i).special == "clash") {
+				taskBox->SelectionColor = System::Drawing::Color::Red;
+			} else {
+				taskBox->SelectionColor = System::Drawing::Color::DarkGreen;
+			}
+			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 10, FontStyle::Regular);
+			taskBox->SelectionAlignment = HorizontalAlignment::Left;
+		}
+
+		//event
+		for(unsigned int i = 0; i < _eventHighlight->size(); i++) {
+			taskBox->Select(_eventHighlight->at(i).index, _eventHighlight->at(i).length);
+			if(_timeHighlight->at(i).special == "clash") {
+				taskBox->SelectionColor = System::Drawing::Color::Red;
+			} else if(_timeHighlight->at(i).special == "expired") {
+				taskBox->SelectionColor = System::Drawing::Color::Gray;
+			} else {
+				taskBox->SelectionColor = System::Drawing::Color::Black;
+			}
+			taskBox->SelectionFont = gcnew System::Drawing::Font("Palatino Linotype", 11, FontStyle::Regular);
+			taskBox->SelectionAlignment = HorizontalAlignment::Left;
+		}
+
+}
+
+Void MessageManager::updateAutoCompleteSource(TextBox^ inputBox) {
+	inputBox->AutoCompleteCustomSource->Clear();
+	vector<string> autoComplete = magicMemo->getInputBank();
+
+	for(unsigned int i = 0; i < autoComplete.size(); i++) {
+		String^ temp = "search " + convertToSystemString(autoComplete[i]);
+		inputBox->AutoCompleteCustomSource->Add(temp);
+	}
+
+}
+
+Void MessageManager::toggleTaskBoxSize(RichTextBox^ allTaskBox, RichTextBox^ todayTaskBox, PictureBox^ pictureBox) {
+	if(_isBoxExtended) {
+		allTaskBox->Location = System::Drawing::Point(315, 22);
+		allTaskBox->Size = System::Drawing::Size(260, 310);
+		todayTaskBox->Location = System::Drawing::Point(16, 22);
+		todayTaskBox->Size = System::Drawing::Size(260, 310);
+
+		pictureBox->Location = System::Drawing::Point(13, 12);
+		pictureBox->Size = System::Drawing::Size(565, 323);
+		pictureBox->Image = System::Drawing::Image::FromFile("resources//notebookTall.png");
+	} else {
+		allTaskBox->Location = System::Drawing::Point(315, 75);
+		allTaskBox->Size = System::Drawing::Size(260, 255);
+		todayTaskBox->Location = System::Drawing::Point(16, 75);
+		todayTaskBox->Size = System::Drawing::Size(260, 255);
+
+		pictureBox->Location = System::Drawing::Point(13, 67);
+		pictureBox->Size = System::Drawing::Size(565, 265);
+		pictureBox->Image = System::Drawing::Image::FromFile("resources//notebookShort.png");
+	}
+}
+
+String^ MessageManager::toString(vector<RESULT>* taskVector) {
+	ostringstream oss;
+	string prevDate = "";
+	for(unsigned int i = 0; i < taskVector->size(); i++) {
+		if(taskVector->at(i).date != prevDate) {
+			oss << taskVector->at(i).date << endl;
+			prevDate = taskVector->at(i).date;
+		}
+		oss << taskVector->at(i).lineNumber << " ";
+
+		if(taskVector->at(i).time != "") {
+			oss << taskVector->at(i).time << " ";
+		}
+
+		oss << taskVector->at(i).event << endl;
+	}
+
+	return convertToSystemString(oss.str());
+}
+
+String^ MessageManager::getSuccessMessage() {
+	return _successMessage;
+}
+
+String^ MessageManager::getTodayTaskBoxMessage() {
+	return _todayTaskBoxMessage;
+}
+
+String^ MessageManager::getAllTaskBoxMessage() {
+	return _allTaskBoxMessage;
+}
+
+String^ MessageManager::getInputBoxMessage() {
+	return _inputBoxMessage;
+}
+
+String^ MessageManager::getAllTaskBoxLabel() {
+	if(magicMemo->isSearch()) {
+		return LABEL_IS_SEARCH;
+	} else if(magicMemo->isHelp()) {
+		return LABEL_IS_HELP;
+	} else if(magicMemo->isFree()) {
+		return LABEL_IS_FREE;
+	} else if(magicMemo->isArchiveSearch()) {
+		return LABEL_IS_ARCHIVE_SEARCH;
+	} else {
+		return LABEL_ALL_TASKS;
+	}
+}
+
+bool MessageManager::hasNotificationEvent(String ^%output) {
+	string notifications = magicMemo->getNotifications();
+	if((magicMemo->isNotificationsOn()) && (notifications != "")) {
+		output = convertToSystemString(notifications);
+		return true;
+	} else {
+		return false;
+	}
+}
+
+void MessageManager::setNotificationPicture(PictureBox^ notificationBox) {
+	if(magicMemo->isNotificationsOn()) {
+		notificationBox->Image = System::Drawing::Image::FromFile("resources//AlarmOn.png");
+	} else {
+		notificationBox->Image = System::Drawing::Image::FromFile("resources//AlarmOff.png");
+	}
+}
+
+Void MessageManager::moveNextStrings() {
+	_isCallToPrevious = false;
+	_isCallToForward = false;
+	while(!_nextInputStrings->empty()) {
+		_pastInputStrings->push_back(_nextInputStrings->back());
+		_nextInputStrings->pop_back();
+	}
+}
+
+String^ MessageManager::getLastInput() {
+	if(_pastInputStrings->empty()) {
+		return "";
+	}
+	string lastInput = _pastInputStrings->back();
+	_nextInputStrings->push_back(lastInput);
+	_pastInputStrings->pop_back();
+
+	if(_isCallToForward && !_pastInputStrings->empty()) {
+		lastInput = _pastInputStrings->back();
+		_nextInputStrings->push_back(lastInput);
+		_pastInputStrings->pop_back();
+		_isCallToForward = false;
+	}
+	_isCallToPrevious = true;
+
+	return convertToSystemString(lastInput);
+}
+
+String^ MessageManager::getNextInput() {
+
+	if(_nextInputStrings->empty()) {
+		return "";
+	}
+	string nextInput = _nextInputStrings->back();
+	_pastInputStrings->push_back(nextInput);
+	_nextInputStrings->pop_back();
+
+	if(_isCallToPrevious && !_nextInputStrings->empty()) {
+		nextInput = _nextInputStrings->back();
+		_pastInputStrings->push_back(nextInput);
+		_nextInputStrings->pop_back();
+		_isCallToPrevious = false;
+	}
+	_isCallToForward = true;
+
+	return convertToSystemString(nextInput);
+
+}
+
+
+Void MessageManager::clearAllTaskIndexVectors() {
+	_allNumberHighlight->clear();
+	_allDateHighlight->clear();
+	_allTimeHighlight->clear();
+	_allEventHighlight->clear();
+	_allCompletedHighlight->clear();
+}
+
+Void MessageManager::clearTodayTaskIndexVectors() {
+	_todayNumberHighlight->clear();
+	_todayDateHighlight->clear();
+	_todayTimeHighlight->clear();
+	_todayEventHighlight->clear();
+	_todayCompletedHighlight->clear();
+}
+
+
+String^ MessageManager::convertToSystemString(string inputString) {
+	return gcnew String(inputString.c_str());
+}
+
+string MessageManager::convertToStdString(String^ inputString) {
+	return msclr::interop::marshal_as< std::string >(inputString);
+}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MessageManager.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MessageManager.h
+	 */
+
+
+#include <vector>
+#include <sstream>
+#include <string>
+#include "Controller.h"
+#include "msclr\marshal_cppstd.h"
+
+using namespace std;
+using namespace System;
+using namespace System::Collections;
+using namespace System::Windows::Forms;
+using namespace System::Drawing;
+
+
+struct HIGHLIGHT {
+	int index;
+	int length;
+	//clash or expired
+	string special;
+};
+
+ref class MessageManager {
+private:
+	static String^ LABEL_IS_SEARCH = "Search Results";
+	static String^ LABEL_IS_HELP = "Help";
+	static String^ LABEL_IS_ARCHIVE_SEARCH = "Archived Events";
+	static String^ LABEL_ALL_TASKS = "Other Tasks";
+	static String^ LABEL_IS_FREE = "Free Timeslots";
+
+	Controller* magicMemo;
+
+	vector<RESULT>* _allTaskVector;
+	vector<RESULT>* _todayTaskVector;
+
+	vector<HIGHLIGHT>* _allNumberHighlight;
+	vector<HIGHLIGHT>* _allDateHighlight;
+	vector<HIGHLIGHT>* _allTimeHighlight;
+	vector<HIGHLIGHT>* _allEventHighlight;
+	vector<HIGHLIGHT>* _allCompletedHighlight;
+
+	vector<HIGHLIGHT>* _todayNumberHighlight;
+	vector<HIGHLIGHT>* _todayDateHighlight;
+	vector<HIGHLIGHT>* _todayTimeHighlight;
+	vector<HIGHLIGHT>* _todayEventHighlight;
+	vector<HIGHLIGHT>* _todayCompletedHighlight;
+
+	vector<string>* _pastInputStrings;
+	vector<string>* _nextInputStrings;
+
+	String^ _userInput;
+	String^ _successMessage;
+	String^ _todayTaskBoxMessage;
+	String^ _allTaskBoxMessage;
+	String^ _inputBoxMessage;
+
+	bool _isBoxExtended;
+	bool _isCallToPrevious;
+	bool _isCallToForward;
+
+
+public:
+	MessageManager(void);
+
+	Void generateMessageOutputs(String^);
+
+	//calculate the indexes for text formatting
+	Void calculateAllTaskIndexes();
+
+	Void calculateTodayTaskIndexes();
+
+	Void colorAllTaskBox(RichTextBox^ taskBox);
+
+	Void colorTodayTaskBox(RichTextBox^ taskBox);
+
+	Void colorTextInTaskBox(
+		vector<HIGHLIGHT>* _numberHighlight, 
+		vector<HIGHLIGHT>* _dateHighlight,
+		vector<HIGHLIGHT>* _timeHighlight,
+		vector<HIGHLIGHT>* _eventHighlight, 
+		RichTextBox^ taskBox);
+
+	//Auto-complete collection
+	Void updateAutoCompleteSource(TextBox^ inputBox);
+
+	//increases/decreases the task box size
+	Void toggleTaskBoxSize(RichTextBox^, RichTextBox^, PictureBox^);
+
+	String^ toString(vector<RESULT>*);
+
+	String^ getSuccessMessage();
+
+	String^ getTodayTaskBoxMessage();
+
+	String^ getAllTaskBoxMessage();
+
+	String^ getInputBoxMessage();
+
+	String^ getAllTaskBoxLabel();
+
+	//returns true if a notification is pending
+	//sets the input string to the notifcation
+	bool hasNotificationEvent(String^%);
+
+	void setNotificationPicture(PictureBox^);
+
+	//transfers all strings from _nextInputStrings to _pastInputStrings
+	void moveNextStrings();
+
+	//returns the previous input
+	String^ getLastInput();
+
+	//returns the next input after previous
+	String^ getNextInput();
+
+	Void clearAllTaskIndexVectors();
+
+	Void clearTodayTaskIndexVectors();
+
+	// convert from std::string to System::String^
+	String^ convertToSystemString(string);
+
+	// convert from System::String^ to std::string
+	string convertToStdString(String^);
+};
+
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MessageManager.h
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTime.cpp
+	 */
+
+
+DateTime::DateTime() {
+	_now = time(0);
+	localtime_s(&_today, &_now);
+}
+
+int DateTime::getCurrentDay() {
+	return (_today.tm_mday);
+}
+
+int DateTime::getCurrentMonth() {
+	return (_today.tm_mon + 1);
+}
+
+int DateTime::getCurrentYear() {
+	return (1900 + _today.tm_year);
+}
+
+int DateTime::getCurrentIntWeekDay() {
+	return _today.tm_wday;
+}
+
+string DateTime::getCurrentWeekDay() {
+	return (WEEKDAY[_today.tm_wday]);
+}
+
+int DateTime::getCurrentMinute() {
+	return (_today.tm_min);
+}
+
+int DateTime::getCurrentHour() {
+	return (_today.tm_hour);
+}
+
+// returns the weekday for the specified day, month and year
+// Sunday = 0, Saturday = 6;
+int DateTime::getIntWeekDay (int day, int month, int year) {
+	static int t[] = { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 };
+	year -= month < 3;
+	int wday = (year + year/4 - year/100 + year/400 + t[month - 1] + day) % 7;
+	return wday;
+}
+
+// returns the weekday name for the specified day, month and year
+// Sunday, Monday, .... Saturday
+string DateTime::getWeekDay (int day, int month, int year) {
+	int wday = getIntWeekDay(day, month, year);
+	return WEEKDAY[wday];
+}
+
+string DateTime::getMonth(const int mon) {
+	if (mon == 0) {
+		return "";
+	}
+	return MONTH[mon - 1];
+}
+
+string DateTime::getMonthFull(const int mon) {
+	if (mon == 0) {
+		return "";
+	}
+	return MONTH_FULL[mon - 1];
+}
+
+bool DateTime::isLeapYear (int year) {
+	return (((year % 400) == 0) || (year % 4) == 0) && (((year % 100) != 0));
+}
+
+int DateTime::numDaysInMonth(const int& month, const int& year) {
+	if((month <= 0) || (month > 12)) {
+		return 0;
+	} else if((month == 4) || (month == 6) || (month == 9) || (month == 11)) {
+		return 30;
+	} else if(month == 2 && isLeapYear(year)) {
+		return 29;
+	} else if(month == 2 && !isLeapYear(year)) {
+		return 28;
+	} else {
+		return 31;
+	}
+}
+
+bool DateTime::isValidDate(int day, int month, int year) {
+	if(year < MIN_YEAR || year > MAX_YEAR) {
+		return false;
+	}
+
+	if((month <= 0) || (month > 12)) {
+		return false;
+	}
+
+	if((day <= 0) || (day > numDaysInMonth(month, year))) {
+		return false;
+	}
+
+	return true;
+}
+
+bool DateTime::isValidTime(int hour, int minute) {
+	return (hour >= 0 && hour <= 24 && minute >= 0 && minute <= 60);
+}
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTime.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTime.h
+	 */
+
+
+#include <ctime>
+#include <string>
+#include <sstream>
+
+using namespace std;
+
+//constants
+const int MIN_YEAR = 2000;
+const int MAX_YEAR = 3000;
+const string WEEKDAY[]={"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+const string MONTH[]={"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+const string MONTH_FULL[]={"January", "February", "March", "April", "May", "June", "July", 
+						"August",	"September", "October", "November", "December"};
+
+class DateTime {
+
+private:
+	time_t _now;
+	tm _today;
+
+public:
+	DateTime();
+
+	int getCurrentDay();
+
+	int getCurrentMonth();
+
+	int getCurrentYear();
+
+	int getCurrentIntWeekDay();
+
+	string getCurrentWeekDay();
+
+	int getCurrentMinute();
+
+	int getCurrentHour();
+
+	// returns the weekday for the specified day, month and year
+	// Sunday = 0, Saturday = 6;
+	int getIntWeekDay (int, int, int);
+
+	// returns the weekday name for the specified day, month and year
+	// Sunday, Monday, .... Saturday
+	string getWeekDay (int, int, int);
+
+	// returns the month name in short form
+	string getMonth(const int);
+	
+	// returns the month name in long form
+	string getMonthFull(const int);
+
+	bool isLeapYear (int);
+
+	int numDaysInMonth(const int& month, const int& year);
+
+	bool isValidDate(int, int, int);
+
+	bool isValidTime(int, int);
+};
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTime.h
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.cpp
+	 */
+
+#include "DateTimeParser.h"
+
+const string DateTimeParser::ERROR_NO_DAY_SPECIFIED = "Invalid input: No day specified after \"next\"";
+const string DateTimeParser::ERROR_NO_TIME_SPECIFIED = "Invalid input: Time expected after \"-\"";
+const string DateTimeParser::ERROR_INVALID_DATE_INPUT = "Invalid date input!";
+const string DateTimeParser::ERROR_INVALID_TIME_INPUT = "Invalid time input!";
+const string DateTimeParser::ERROR_INVALID_END_TIME = "Invalid end time: end time must be greater than start time";
+const int DateTimeParser::NUM_DATE = 10;
+
+DateTimeParser::DateTimeParser(void) {
+	_day = 0;
+	_month = 0;
+	_year = 0;
+	_endDay = 0;
+	_endMonth = 0;
+	_endYear = 0;
+	_startHour = 0;
+	_startMinute = 0;
+	_endHour = 0;
+	_endMinute = 0;
+	_updateDateFlag = false;
+	_updateTimeFlag = false;
+	_isFloating = false;
+	_isDateChangedFromFloat = false;
+}
+
+
+void DateTimeParser::updateItemDateTime(string rawDateTime, Item& item, bool isDeadline) {
+	_isDeadlineEvent = isDeadline;
+	_item = item;
+	resetDateTime();
+	calculateDateTime(rawDateTime);
+	item = _item;
+}
+
+void DateTimeParser::resetDateTime() {
+	_day = 0;
+	_month = 0;
+	_year = 0;
+	_endDay = 0;
+	_endMonth = 0;
+	_endYear = 0;
+	_startHour = 0;
+	_startMinute = 0;
+	_endHour = 0;
+	_endMinute = 0;
+}
+
+void DateTimeParser::resetItemDateTime() {
+	_item.eventDate[0] = 0;
+	_item.eventDate[1] = 0;
+	_item.eventDate[2] = 0;
+	_item.eventEndDate[0] = 0;
+	_item.eventEndDate[1] = 0;
+	_item.eventEndDate[2] = 0;
+	_item.eventStartTime[0] = 0;
+	_item.eventStartTime[1] = 0;
+	_item.eventEndTime[0] = 0;
+	_item.eventEndTime[1] = 0;
+}
+
+void DateTimeParser::updateItemFields() {
+	LOG(INFO) << "Item values after update:";
+	_item.logItemValues();
+
+	if(_item.eventDate[0] == 0) {
+		_item.eventDate[0] = _day;
+	}
+	if(_item.eventDate[1] == 0) {
+		_item.eventDate[1] = _month;
+	}
+	if(_item.eventDate[2] == 0) {
+		_item.eventDate[2] = _year;
+	}
+	if(_item.eventEndDate[0] == 0) {
+		_item.eventEndDate[0] = _endDay;
+	}
+	if(_item.eventEndDate[1] == 0) {
+		_item.eventEndDate[1] = _endMonth;
+	}
+	if(_item.eventEndDate[2] == 0) {
+		_item.eventEndDate[2] = _endYear;
+	}
+	if((_item.eventStartTime[0] == 0) || ((_item.eventStartTime[0] + 12) == _startHour)) {
+		_item.eventStartTime[0] = _startHour;
+	}
+	if(_item.eventStartTime[1] == 0) {
+		_item.eventStartTime[1] = _startMinute;
+	}
+	if((_item.eventEndTime[0] == 0) || ((_item.eventEndTime[0] + 12) == _endHour)) {
+		_item.eventEndTime[0] = _endHour;
+	}
+	if(_item.eventEndTime[1] == 0) {
+		_item.eventEndTime[1] = _endMinute;
+	}
+}
+
+void DateTimeParser::setDate(int day, int month, int year) {
+	_item.eventDate[0] = day;
+	_item.eventDate[1] = month;
+	_item.eventDate[2] = year;
+}
+
+size_t DateTimeParser::findDateDelimiters(string inputLine) {
+	return (inputLine.find_first_of("/._"));
+}
+
+void DateTimeParser::calculateDateTime(string input) {
+	istringstream iss(input);
+	string demarcateDateTime[NUM_DATE];
+	int i = 0;
+	while (iss >> demarcateDateTime[i]) {
+		i++;
+	}
+
+	if(i == 0) {
+		setDate(_dateTime.getCurrentDay(), _dateTime.getCurrentMonth(), _dateTime.getCurrentYear());
+	} else {
+		extractDateTime(demarcateDateTime, i);
+	}
+}
+
+void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
+	bool isNextWeek= false;
+	bool hasDash = false;
+	bool isStartTime = true;
+	bool isEndTime = false;
+	bool isStartDate = true;
+	bool isEndDate = false;
+	_isFloating = false;
+	resetDateTime();
+	resetItemDateTime();
+
+	for(int i = 0; i < arrSize; i++) {
+		LOG(INFO) << "Starting to extract DateTime, round: " << i;
+
+		if((inputArray[i] == "next") || (inputArray[i] == "nex")) {
+			isNextWeek = true;
+			LOG(INFO) << "NEXT";
+		} else if((inputArray[i] == "-") || (inputArray[i] == "to")) {
+			hasDash = true;
+			LOG(INFO) << "DASH";
+		} else if(isStartDate && mapMonth(inputArray[i]) != -1) {
+			isStartDate = false;
+			isStartTime = true;
+			updateHrDayMon(mapMonth(inputArray[i]), _startHour, _day, _month, _year, _item.eventStartTime[0]);
+			LOG(INFO) << "MONTH";
+		} else if(isStartDate && (mapWeekDay(inputArray[i]) != -1)) {
+			isStartDate = false;
+			setDateFromWeekDay(mapWeekDay(inputArray[i]), _day, _month, _year);
+			if(isNextWeek) {
+				handleNextWeekDay(_day, _month, _year);
+			}
+			LOG(INFO) << "START WEEKDAY";
+		} else if(isStartDate && isDelimitedDate(inputArray[i])) {
+			isStartDate = false;
+			separateDayMonthYear(inputArray[i], _day, _month, _year);
+			LOG(INFO) << "START DELIMITED DATE";
+		} else if(!isStartDate && mapMonth(inputArray[i]) != -1) {
+			if(isEndTime) {
+				updateHrDayMon(mapMonth(inputArray[i]), _endHour, _endDay, _endMonth, _endYear, _item.eventEndTime[0]);
+			} else {
+				updateHrDayMon(mapMonth(inputArray[i]), _startHour, _endDay, _endMonth, _endYear, _item.eventStartTime[0]);
+			}
+			isEndTime = false;
+			LOG(INFO) << "MONTH";
+		} else if(!isStartDate && (mapWeekDay(inputArray[i]) != -1)) {
+			setDateFromWeekDay(mapWeekDay(inputArray[i]), _endDay, _endMonth, _endYear);
+			if(isNextWeek) {
+				handleNextWeekDay(_endDay, _endMonth, _endYear);
+				handleImplicitNext(_day, _month, _year, _endDay, _endMonth, _endYear);
+			}
+			LOG(INFO) << "END WEEKDAY";
+		} else if(!isStartDate && isDelimitedDate(inputArray[i])) {
+			separateDayMonthYear(inputArray[i], _endDay, _endMonth, _endYear);
+			LOG(INFO) << "END DELIMITED DATE";
+		} else if(isStartTime && isPossibleTime(inputArray[i])) {
+			isStartTime = false;
+			separateHourMinute(inputArray[i], _startHour, _startMinute);
+			LOG(INFO) << "START TIME";
+		} else if(!isStartTime && hasDash && isPossibleTime(inputArray[i])) {
+			isEndTime = true;
+			separateHourMinute(inputArray[i], _endHour, _endMinute);
+			LOG(INFO) << "END TIME";
+		} else if(!isStartTime && !hasDash && (convertStringToInteger(inputArray[i]) > 0)) {
+			isEndTime = true;
+			int duration = convertStringToInteger(inputArray[i]);
+			addDuration (duration,
+				_startHour, 
+				_startMinute,
+				_endHour,
+				_endMinute,
+				_day,
+				_month,
+				_year,
+				_endDay,
+				_endMonth,
+				_endYear);
+			LOG(INFO) << "DURATION ADDED FROM START";
+		} else if(!isEndTime && is12Hour(inputArray[i], _startHour)) {
+			LOG(INFO) << "PM OR M, Start Hour";
+		} else if(is12Hour(inputArray[i], _endHour)) {
+			LOG(INFO) << "PM OR M, End Hour";
+		}
+		LOG(INFO) << "********************************************";
+
+		updateItemFields();
+	}
+	verifyAllDateTime();
+}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.cpp
+	 */
+
+void DateTimeParser::handleNextWeekDay(int& day, int& month, int& year) {
+	if(day != 0) {
+		day += 7;
+		handleDayOverflow(day, month, year);
+	}
+}
+
+void DateTimeParser::handleDayOverflow(int& day, int& month, int& year) {
+	if((day > 31) && (month == 12)) {
+		day -= 31;
+		month = 1;
+		year++;
+	}
+
+	if(day > _dateTime.numDaysInMonth(month, year)) {
+		day -= _dateTime.numDaysInMonth(month, year);
+		month++;
+	}
+}
+
+void DateTimeParser::handleImplicitNext(
+	int& startDay,
+	int& startMonth, 
+	int& startYear,
+	int& endDay,
+	int& endMonth,
+	int& endYear) {
+		if((startDay > endDay) && (startMonth >= endMonth) && (startYear >= endYear)) {
+			endDay += 7;
+			handleDayOverflow(endDay, endMonth, endYear);
+		}
+}
+
+void DateTimeParser::updateHrDayMon(int monthNum, int& hour, int& day, int& month, int& year, int& itemHour) {
+	year = _dateTime.getCurrentYear();
+	day = hour;
+	month = monthNum;
+	hour = 0;
+
+	itemHour = 0;
+}
+
+bool DateTimeParser::isDateKeyword(string word) {
+	if(convertStringToInteger(word) != 0) {
+		return true;
+	}
+	for(int i = 0; i < DATE_KEYWORDS_SIZE; i++) {
+		if(word == DATE_KEYWORDS[i]) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool DateTimeParser::isDelimitedDate(string input) {
+	size_t dateDelimiterPos = findDateDelimiters(input);
+	if (dateDelimiterPos == string::npos) {
+		return false;
+	}
+	return true;
+}
+
+bool DateTimeParser::isPossibleTime(string input) {
+	if(isDelimitedDate(input)) {
+		return false;
+	}
+	return (convertStringToInteger(input) != 0) ? true : false;
+}
+
+bool DateTimeParser::is12Hour(char input, int& hour) {
+	if ((input == 'p') || ((input == 'm') && (hour == 12))) {
+		hour += 12;
+		//ignores p for 24hr input
+		if (!_dateTime.isValidTime(hour, 0) || (hour == 24 && input != 'm')) {
+			hour -= 12;
+		}
+		return true;
+	}
+	return false;
+}
+
+bool DateTimeParser::is12Hour(string input, int& hour) {
+	if (((input == "p") || (input == "pm")) || ((input == "m") && (hour == 12))) {
+		hour += 12;
+		//ignores p for 24hr input
+		if (!_dateTime.isValidTime(hour, 0) || (hour == 24 && input != "m")) {
+			hour -= 12;
+		}
+		return true;
+	}
+	return false;
+}
+
+void DateTimeParser::addDuration (
+	int duration,
+	int startHr, 
+	int startMin, 
+	int& endHr, 
+	int& endMin,
+	int startDay,
+	int startMonth,
+	int startYear,
+	int& endDay,
+	int& endMonth,
+	int& endYear) {
+		if((duration > 24) || (startHr == 0)) {
+			return;
+		}
+		endHr = (startHr == 24) ?  duration : startHr + duration;
+		endMin = startMin;
+		if((startDay == 0) && (startMonth == 0) && (startYear == 0)) {
+			startDay = _dateTime.getCurrentDay();
+			startMonth = _dateTime.getCurrentMonth();
+			startYear = _dateTime.getCurrentYear();
+		}
+		if(endHr >= 24) {
+			endHr = (endHr > 24) ? endHr - 24 : endHr;
+			endDay = startDay + 1;
+			endMonth = startMonth;
+			endYear = startYear;
+			handleDayOverflow (endDay, endMonth, endYear);
+		}
+}
+
+
+void DateTimeParser::separateDayMonthYear(string input, int& day, int& month, int& year) {
+	char *intEnd;
+	day = (int)strtol(input.c_str(), &intEnd, 10);
+	month = (int)strtol(intEnd + 1, &intEnd, 10);
+	year = (int)strtol(intEnd + 1, &intEnd, 10);
+
+	if (day != 0 || month!= 0) {
+		_updateDateFlag = true;
+	} else {
+		_updateDateFlag = false;
+	}
+
+	if((*intEnd != 0) || (year == 0)) {
+		year = _dateTime.getCurrentYear();
+	}
+}
+
+void DateTimeParser::separateHourMinute(string hourMinute, int& hour, int& minute) {
+	char *intEnd;
+	bool hasPM = false;
+
+	hour = (int)strtol(hourMinute.c_str(), &intEnd, 10);
+	if(!is12Hour(*intEnd, hour)) {
+		minute = (int)strtol(intEnd + 1, &intEnd, 10);
+		if(is12Hour(*intEnd, hour)) {
+		}
+	}
+
+	_updateTimeFlag = (hour != 0 || minute != 0) ? true : false;
+}
+
+void DateTimeParser::verifyAllDateTime() {
+	verifyItemDate(_item.eventDate[0], _item.eventDate[1], _item.eventDate[2]);
+	verifyItemDate(_item.eventEndDate[0], _item.eventEndDate[1], _item.eventEndDate[2]);
+	verifyItemTime(_item.eventStartTime[0], _item.eventStartTime[1]);
+	verifyItemTime(_item.eventEndTime[0], _item.eventEndTime[1]);
+	updateItemStartDate();
+	verifyStartEnd(
+		_item.eventStartTime[0], 
+		_item.eventStartTime[1], 
+		_item.eventEndTime[0], 
+		_item.eventEndTime[1], 
+		_item.eventDate[0], 
+		_item.eventDate[1], 
+		_item.eventDate[2], 
+		_item.eventEndDate[0], 
+		_item.eventEndDate[1], 
+		_item.eventEndDate[2]);
+}
+
+void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
+	if ((year == 0) && (month != 0) && (day != 0)) {
+		year = _dateTime.getCurrentYear();
+	} else if (year < 2000) {
+		year += 2000;
+	}
+
+	if (!_dateTime.isValidDate(day, month, year)) {
+		day = 0;
+		month = 0;
+		year = 0;
+		throw std::out_of_range(ERROR_INVALID_DATE_INPUT);
+	}
+}
+
+void DateTimeParser::updateItemStartDate() {
+	_isDateChangedFromFloat = false;
+	if(	(_item.eventDate[0] == 0) && 
+		(_item.eventDate[1] == 0) && 
+		(_item.eventDate[2] == 0) &&
+		!_isFloating) {
+			_item.eventDate[0] = _dateTime.getCurrentDay();
+			_item.eventDate[1] = _dateTime.getCurrentMonth();
+			_item.eventDate[2] = _dateTime.getCurrentYear();
+			_isDateChangedFromFloat = true;
+	}
+}
+
+void DateTimeParser::verifyItemTime(int& hour, int& minute) {
+	if (!_dateTime.isValidTime(hour, minute)) {
+		hour = 0;
+		minute = 0;
+	}
+}
+
+void DateTimeParser::verifyStartEnd(
+	int startHr, 
+	int startMin, 
+	int& endHr, 
+	int& endMin,
+	int startDay,
+	int startMonth,
+	int startYear,
+	int& endDay,
+	int& endMonth,
+	int& endYear) {
+
+		int tempStartHr = (startHr == 24) ? 0 : startHr;
+
+		//end (year, month, day, hour, minute) isLess than start
+		bool isLess[5];
+		isLess[0] = (endYear < startYear);
+		isLess[1] = (endMonth < startMonth);
+		isLess[2] = (endDay < startDay);
+		isLess[3] = (endHr < tempStartHr);
+		isLess[4] = (endMin < startMin);
+
+		//end (year, month, day, hour, minute) is less or equal to start
+		bool isLessEq[5];
+		isLessEq[0] = (endYear <= startYear);
+		isLessEq[1] = (endMonth <= startMonth);
+		isLessEq[2] = (endDay <= startDay);
+		isLessEq[3] = (endHr <= tempStartHr);
+		isLessEq[4] = (endMin <= startMin);
+
+		bool isError = false;
+		if(isLess[0] || (isLessEq[0] && isLess[1]) || (isLessEq[0] && isLessEq[1] && isLess[2])) {
+			endYear = 0;
+			endMonth = 0;
+			endDay = 0;
+			isError = true;
+		}
+		_isEndTimeAdjusted = false;
+		if ((isLessEq[0] && isLessEq[1] && isLessEq[2] && isLess[3]) ||
+			(isLessEq[0] && isLessEq[1] && isLessEq[2] && isLessEq[3] && isLess[4])) {
+				if(((startHr > endHr) && ((endHr + 12) >= startHr) && ((endHr + 12) < 24) && (endHr != 0))
+					|| ((startHr < 12) && ((endHr + 12) < 24) && (endHr != 0))) {
+						endHr += 12;
+				} else {
+					_isEndTimeAdjusted = true;
+					addDuration(1, 
+						startHr, 
+						startMin,
+						endHr, 
+						endMin,
+						startDay,
+						startMonth,
+						startYear,
+						endDay,
+						endMonth,
+						endYear);
+					isError = true;
+				}
+		}
+
+		if (!_isDeadlineEvent && (endHr == 0) && (endMin == 0)) {
+			_isEndTimeAdjusted = true;
+			addDuration(1, 
+				startHr, 
+				startMin,
+				endHr, 
+				endMin,
+				startDay,
+				startMonth,
+				startYear,
+				endDay,
+				endMonth,
+				endYear);
+		}
+
+		if(_isDeadlineEvent) {
+			endDay = 0;
+			endMonth = 0;
+			endYear = 0;
+			endHr = 0;
+			endMin = 0;
+		}
+
+		if((startDay == endDay) && (startMonth == endMonth) && (startYear == endYear)) {
+			endDay = 0;
+			endMonth = 0;
+			endYear = 0;
+		}
+
+		if(isError) {
+			throw std::out_of_range(ERROR_INVALID_END_TIME);
+		}
+}
+
+void DateTimeParser::getNextDayDate(int& day, int& month, int& year) {
+	day++;
+	handleDayOverflow(day, month, year);
+}
+
+int DateTimeParser::convertStringToInteger(string numberString) {
+	char *end;
+	return (int)strtol(numberString.c_str(), &end, 10);
+}
+
+DateTimeParser::~DateTimeParser(void) {
+}
+
+Item DateTimeParser::getItem() {
+	return _item;
+}
+
+bool DateTimeParser::getUpdateDateFlag() {
+	return _updateDateFlag;
+}
+
+bool DateTimeParser::getUpdateTimeFlag() {
+	return _updateTimeFlag;
+}
+
+bool DateTimeParser::getIsDateUpdatedFromFloat() {
+	return _isDateChangedFromFloat;
+}
+
+bool DateTimeParser::getEndTimeAdjusted() {
+	return _isEndTimeAdjusted;
+}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.h
+	 */
+
+
+#include <string>
+#include <sstream>
+#include <exception>
+#include <algorithm>
+#include "Item.h"
+#include "DateTime.h"
+#include "..\EasyLoggingpp\easylogging++.h"
+using namespace std;
+
+const int DATE_KEYWORDS_SIZE = 56;
+const string DATE_KEYWORDS[]= {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
+						"sunday", "mon", "tue", "tues", "wed", "thur", "thurs", "fri", "sat", "sun",
+						"january", "february", "march", "april", "may", "june", "july", "august",
+						 "september", "october", "november", "december", "jan", "feb", "mar",
+						 "apr", "may", "jun", "jul", "aug", "sep", "sept", "oct", "nov", "novem",
+						 "dec", "decem", "today", "floating", "float", "tomorrow", "tom", "tmr",
+						 "to", "-", "next", "nex", "p", "pm", "m"};
+
+
+//updateItemDateTime takes in the ITEM to be updated
+//and the unedited date and time input from the user
+//it then updates the date and time fields in ITEM directly
+class DateTimeParser {
+
+private:
+	static const string ERROR_NO_DAY_SPECIFIED;
+	static const string ERROR_NO_TIME_SPECIFIED;
+	static const string ERROR_INVALID_DATE_INPUT;
+	static const string ERROR_INVALID_TIME_INPUT;
+	static const string ERROR_INVALID_END_TIME;
+	static const int NUM_DATE;
+
+	Item _item;
+	DateTime _dateTime;
+
+	int _day;
+	int _month;
+	int _year;
+	int _endDay;
+	int _endMonth;
+	int _endYear;
+	int _startHour;
+	int _startMinute;
+	int _endHour;
+	int _endMinute;
+
+	bool _updateDateFlag;
+	bool _updateTimeFlag;
+	bool _isFloating;
+	bool _isDateChangedFromFloat;
+	bool _isDeadlineEvent;
+	bool _isEndTimeAdjusted;
+
+public:
+	DateTimeParser(void);
+
+	//takes as input the raw date & time string, the Item
+	//to be updated, and boolean isDeadline
+	//updates the item with correct Date and Time fields
+	void updateItemDateTime(string, Item &, bool);
+
+	//reset private date and time fields
+	void resetDateTime();
+
+	//reset item date and time
+	void resetItemDateTime();
+
+	void updateItemFields();
+
+	void setDate(int day, int month, int year);
+
+	size_t findDateDelimiters(string);
+
+	void calculateDateTime(string);
+
+	// extracts the date and time into item's date/time attributes
+	// throws exceptions if invalid dates and times are input
+	void extractDateTime(string [], int);
+
+	//returns the weekday number if a match is found
+	//returns 0 for today, -2 for tomorrow and -3 for floating 
+	//returns -1 if match is not found
+	int mapWeekDay(string);
+
+	//returns the month number if a match is found
+	//returns -1 if match is not found
+	int mapMonth(string);
+
+	//sets the day, month and year from weekday input
+	//-2 taken as tomorrow, -3 taken as floating
+	//invalid weekDayIndex changed to 0
+	void setDateFromWeekDay(int weekDayIndex, int& day, int& month, int& year);
+
+	//accounts for "next" when weekday is specified,
+	//by updating the day, month and year
+	void handleNextWeekDay(int& day, int& month, int& year);
+
+	//only for use after operations such as adding 'next' to day
+	//handles days greater than the number of days in the current month
+	void handleDayOverflow(int& day, int& month, int& year);
+
+	//if end day is less than start day, increment by 7
+	void handleImplicitNext(int&, int&, int&, int&, int&, int&);
+
+	//sets the month, sets the day and resets hour
+	void updateHrDayMon(int monthNum, int& hour, int& day, int& month, int& year, int& itemHour);
+
+	//returns true if the word is a possible date/time keyword
+	bool isDateKeyword(string);
+
+	// returns true if the string is a date of format day/month{/year}
+	bool isDelimitedDate(string);
+
+	//returns true if the string is a possible time
+	bool isPossibleTime(string input);
+
+	//returns true if m, or p is found
+	//updates the date to 24hr format
+	bool is12Hour(char, int&);
+
+	//overloaded function
+	//returns true if m, p, or pm is found
+	//updates the date to 24hr format
+	bool is12Hour(string, int&);
+
+	//sets the end time based on start time + duration
+	//max duration allowed is 24 hours
+	void addDuration(
+		int duration,
+		int startHr, 
+		int startMin, 
+		int& endHr, 
+		int& endMin,
+		int startDay,
+		int startMonth,
+		int startYear,
+		int& endDay,
+		int& endMonth,
+		int& endYear);
+
+	//updates the day, month and year
+	//year taken as current year if not specified
+	void separateDayMonthYear(string, int&, int&, int&);
+
+	//updates the hour and minute
+	void separateHourMinute(string, int&, int&);
+
+	//verifies that the date and time is valid
+	void verifyAllDateTime();
+
+	//throws an out_of_range exception if date is invalid
+	void verifyItemDate(int&, int&, int&);
+
+	//if no start date is set, it is set to today
+	//unless the date is implicitly specified as "floating"
+	void updateItemStartDate();
+
+	//throws an out_of_range exception if time is invalid
+	void verifyItemTime(int&, int&);
+
+	//ensures that the end date and time is always greater or equal to the start
+	//throws an out_of_range exception otherwise, and resets the offending values
+	void verifyStartEnd(	
+		int startHr, 
+		int startMin, 
+		int& endHr, 
+		int& endMin,
+		int startDay,
+		int startMonth,
+		int startYear,
+		int& endDay,
+		int& endMonth,
+		int& endYear);
+
+	void getNextDayDate(int &, int &, int &);
+
+	// returns 0 if unsuccessful (or number is 0)
+	// otherwise returns the converted number
+	int convertStringToInteger(string numberString);
+
+	~DateTimeParser(void);
+
+	//For unit testing
+	Item getItem();
+
+	bool getUpdateDateFlag();
+
+	bool getUpdateTimeFlag();
+
+	bool getIsDateUpdatedFromFloat();
+
+	bool getEndTimeAdjusted();
+};
+
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.h
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	 */
+
+const string Item::MESSAGE_UNDATED_TASK = "Floating";
+
+Item::Item() {
+	initializeItem();
+}
+
+Item::~Item() {
+}
+
+void Item::initializeItem() {
+	event = "";
+	eventDate[0] = 0;
+	eventDate[1] = 0;
+	eventDate[2] = 0;
+	eventEndDate[0] = 0;
+	eventEndDate[1] = 0;
+	eventEndDate[2] = 0;
+	eventStartTime[0] = 0;
+	eventStartTime[1] = 0;
+	eventEndTime[0] = 0;
+	eventEndTime[1] = 0;
+	isDeadlineTask = false;
+}
+
+int Item::getHour(int hour) {
+	if(hour == 24) {
+		return 0;
+	} else if(hour > 12 && hour < 24) {
+		return hour - 12;
+	} else {
+		return hour;
+	}
+}
+
+string Item::get24HrHour(int hour) {
+	if (hour == 24) {
+		return "00";
+	} else if (hour < 10) {
+		return "0" + to_string(hour);
+	} else {
+		return to_string(hour);
+	}
+}
+
+string Item::getMinute(int minute) {
+	if(minute == 0) {
+		return "";
+	} else if (minute < 10) {
+		return (":0" + to_string(minute));
+	} else {
+		return (":" + to_string(minute));
+	}
+}
+
+string Item::get24HrMinute(int minute) {
+	if(minute == 0) {
+		return "00";
+	} else if (minute < 10) {
+		return ("0" + to_string(minute));
+	} else {
+		return (to_string(minute));
+	}
+}
+
+string Item::getPM(int hour) {
+	if (hour >= 12 && hour < 24) {
+		return "p";
+	} else {
+		return "";
+	}
+}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	 */
+
+void Item::logItemValues() {
+	LOG(INFO) << event;
+	LOG(INFO) << eventDate[0];
+	LOG(INFO) << eventDate[1];
+	LOG(INFO) << eventDate[2];
+	LOG(INFO) << eventEndDate[0];
+	LOG(INFO) << eventEndDate[1];
+	LOG(INFO) << eventEndDate[2];
+	LOG(INFO) << eventStartTime[0];
+	LOG(INFO) << eventStartTime[1];
+	LOG(INFO) << eventEndTime[0];
+	LOG(INFO) << eventEndTime[1];
+}
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Parser.cpp
+	 */
+
+#include "Parser.h"
+#include "..\EasyLoggingpp\easylogging++.h"
+
+const string Parser::ERROR_NO_LINE_NUMBER = "No number specified!";
+const string Parser::ERROR_INVALID_LINE_NUMBER = "Invalid number specified!";
+const string Parser::ERROR_SEARCH_STRING_EMPTY = "No search query specified!";
+const string Parser::STRING_FLOATING = "floating";
+
+Parser::Parser() {
+	_userCommand = "";
+	_item.initializeItem();
+	_isDeadline = false;
+	_isDateUpdatedFromFloat = false;
+}
+
+
+void Parser::setStringToParse(string userInput) {
+	LOG(INFO) << "Parsing: " << userInput;
+	_item.initializeItem();
+	_item.event = userInput;
+}
+
+string Parser::getUserCommand() {
+	return _userCommand;
+}
+
+Item Parser::getItem() {
+	_item.isDeadlineTask = _isDeadline;
+	return _item;
+}
+
+vector<int> Parser::getLineOpNumber() {
+	if (_item.event == "") {
+		throw std::out_of_range(ERROR_NO_LINE_NUMBER);
+	}
+
+	int lineNum;
+	vector<int> numVector;
+
+	char *end;
+	lineNum = (int)strtol(_item.event.c_str(), &end, 10);
+
+	LOG(INFO) << "Line number extraction: " << lineNum;
+
+	while(lineNum > 0) {
+		char tempChar = *end;
+		int tempInt = lineNum;
+		numVector.push_back(lineNum);	
+		lineNum = (int)strtol(end + 1, &end, 10);
+		LOG(INFO) << "Line number extraction: " << lineNum;
+		if((tempChar == '-') && (lineNum > tempInt)) {
+			for(int i = 1; i < (lineNum - tempInt); i++) {
+				numVector.push_back(tempInt + i);
+			}
+		}
+	}
+
+	if (numVector.empty() || lineNum < 0) {
+		throw std::out_of_range(ERROR_INVALID_LINE_NUMBER);
+	}
+
+	return numVector;
+}
+
+vector<int> Parser::getLineOpNumberForFree() {
+	if (_item.event == "") {
+		throw std::out_of_range(ERROR_NO_LINE_NUMBER);
+	}
+
+	int lineNum;
+	vector<int> numVector;
+
+	char *end;
+	lineNum = (int)strtol(_item.event.c_str(), &end, 10);
+
+	LOG(INFO) << "Line number extraction: " << lineNum;
+
+	while(lineNum > 0) {
+		char tempChar = *end;
+		int tempInt = lineNum;
+		numVector.push_back(lineNum);	
+		lineNum = (int)strtol(end + 1, &end, 10);
+		LOG(INFO) << "Line number extraction: " << lineNum;
+		if((tempChar == '-') && (lineNum > tempInt)) {
+			for(int i = 1; i < (lineNum - tempInt); i++) {
+				numVector.push_back(tempInt + i);
+			}
+		}
+	}
+	
+	if ((numVector.empty()) || lineNum < 0) {
+		if (end != _item.event) {
+			numVector.push_back(0);
+			return numVector;
+		}
+		throw std::out_of_range(ERROR_INVALID_LINE_NUMBER);
+	}
+
+	return numVector;
+}
+
+void Parser::extractUserCommand() {
+	_item.event = removeSpacePadding(_item.event);
+	if (_item.event == "") {
+		_userCommand = "";
+		return;
+	}
+	size_t spacePos = _item.event.find_first_of(" ");
+	if (spacePos == string::npos) {
+		_userCommand = _item.event;
+		_userCommand = convertStringToLowerCase(_userCommand);
+		_item.event = "";
+	} else {
+		_userCommand = _item.event.substr(0, spacePos);
+		_userCommand = convertStringToLowerCase(_userCommand);
+		_item.event = _item.event.substr(spacePos);
+		spacePos = _item.event.find_first_not_of(" ");
+		_item.event = _item.event.substr(spacePos);
+	}
+	LOG(INFO) << "User Command: " << _userCommand;
+	LOG(INFO) << "Rest of string: " << _item.event;
+}
+
+bool Parser::_isDeadlineEvent() {
+	return _isDeadline;
+}
+
+size_t Parser::findDateKeyWord(string inputLine, string delimiter) {
+	string line = convertStringToLowerCase(inputLine);
+	size_t dateStart = line.rfind(delimiter);
+	string temp;
+	if(dateStart != string::npos) {
+		if(dateStart > 0 && line[(dateStart - 1)] == 'm') { //if mon or monday
+			string temp = line.substr(0, dateStart);
+			dateStart = temp.rfind(delimiter);
+		}
+		if((dateStart != string::npos) && isCorrectDateDelimiter(line, dateStart)) {
+			return dateStart;
+		}
+	}
+
+	return string::npos;
+}
+
+bool Parser::isCorrectDateDelimiter(string inputLine, size_t index) {
+	bool isDate = true;
+	string temp = inputLine.substr(index);
+	size_t spacePos = temp.find_first_of(' ');
+	if(spacePos == string::npos) {
+		return false;
+	}
+	temp = temp.substr(spacePos + 1);
+
+	istringstream iss(temp);
+	string word;
+	while((iss >> word) && isDate) {
+		if(!_dateTimeParse.isDateKeyword(word)) {
+			isDate = false;
+		}
+	}
+	return isDate;
+}
+
+
+void Parser::extractDateAndTime() {
+	size_t delimiterIndex = findDateKeyWord(_item.event, DATE_START_DEADLINE);
+	_isDeadline = (delimiterIndex == string::npos) ? false : true;
+
+	if(delimiterIndex == string::npos) {
+		delimiterIndex = findDateKeyWord(_item.event, DATE_START_1);
+	}
+
+	if(delimiterIndex == string::npos) {
+		delimiterIndex = findDateKeyWord(_item.event, DATE_START_2);
+	}
+
+	if (delimiterIndex != string::npos) {
+		string rawDateTimeChunk = _item.event.substr(delimiterIndex);
+		_item.event = removeSpacePadding(_item.event.substr(0, delimiterIndex));
+		rawDateTimeChunk = convertStringToLowerCase(rawDateTimeChunk);
+
+		try {
+			_dateTimeParse.updateItemDateTime(rawDateTimeChunk, _item, _isDeadline);
+			_isDateUpdatedFromFloat = _dateTimeParse.getIsDateUpdatedFromFloat();
+		} catch (const out_of_range& e) {
+			LOG(ERROR) << e.what();
+		}
+		assertItemValues();
+
+	}
+}
+
+string Parser::removeSpacePadding(string line) {
+	size_t end = line.find_last_not_of(" ");
+	size_t start = line.find_first_not_of(" ");
+	if (start != string::npos) {
+		return line.substr(start, (end - start + 1));
+	} else if (line == "") {
+		return "";
+	} else {
+		return "";
+	}
+}
+
+
+string Parser::convertStringToLowerCase(string inputString) {
+	transform(inputString.begin(), inputString.end(), inputString.begin(), ::tolower);
+	return inputString;
+}
+
+void Parser::assertItemValues() {
+	assert(_item.eventDate[0] >= 0);
+	assert(_item.eventDate[1] >= 0);
+	assert(_item.eventDate[2] >= 0);
+	assert(_item.eventEndDate[0] >= 0);
+	assert(_item.eventEndDate[1] >= 0);
+	assert(_item.eventEndDate[2] >= 0);
+	assert(_item.eventStartTime[0] >= 0);
+	assert(_item.eventStartTime[1] >= 0);
+	assert(_item.eventEndTime[0] >= 0);
+	assert(_item.eventEndTime[1] >= 0);
+}
+
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Parser.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Parser.h
+	 */
+
+
+#include <string>
+#include <sstream>
+#include <exception>
+#include <assert.h>
+#include <algorithm>
+#include <map>
+#include "Item.h"
+#include "../EasyLoggingpp/easylogging++.h"
+#include "DateTimeParser.h"
+
+using namespace std;
+
+//Constants
+const string DATE_START_1 = "from";
+const string DATE_START_2 = "on";
+const string DATE_START_DEADLINE = "by";
+
+class Parser {
+private:
+	static const string ERROR_NO_LINE_NUMBER;
+	static const string ERROR_INVALID_LINE_NUMBER;
+	static const string ERROR_SEARCH_STRING_EMPTY;
+	static const string STRING_FLOATING;
+
+	Item _item;
+	DateTimeParser _dateTimeParse;
+	string _userCommand;
+	bool _isDeadline;
+	bool _isDateUpdatedFromFloat;
+
+public:
+	Parser();
+
+	void setStringToParse(string);
+
+	string getUserCommand();
+
+	Item getItem();
+
+	//returns a vector of line numbers for operations such as delete
+	//throws out_of_range exception if line number is invalid
+	vector<int> getLineOpNumber();
+
+	vector<int> getLineOpNumberForFree();
+
+	//extracts the first word of Item.event
+	//and stores it in _userCommand
+	void extractUserCommand();
+
+	//true if the event is a deadline event
+	bool _isDeadlineEvent();
+
+	//takes input string and keyword
+	//returns the position of the delimiter, string::npos otherwise
+	size_t findDateKeyWord(string, string);
+
+	//returns true if the words after the delimiter are all date/time keywords
+	bool isCorrectDateDelimiter(string inputLine, size_t index);
+
+	//input format is [_day/_month time(24hrs) at the end of the input
+	//if time is input as 12 hr, input p to specify pm
+	//12 is taken as 12 noon. if 12 am, then input m
+	//remove date and time data from commandData
+	void extractDateAndTime();
+
+	//remove leading and ending whitespace of string, if any
+	//if only whitespaces are input, then it returns
+	//an empty string
+	string removeSpacePadding(string);
+
+	string convertStringToLowerCase(string inputString);
+
+	void assertItemValues();
+
+	vector<string> getFragmentedEvent();
+
+	bool checkIsFloating(const Item);
+
+	void clearStartAndEndDate(Item &);
+
+	bool isTimeOrDate(const string);
+
+	bool checkIsValidDate(const string);
+
+	bool checkIsDeadline(const string);
+
+	void extractSearchQuery(Item &);
+
+	bool getIsDateUpdatedFromFloat();
+
+	~Parser(void);
+};
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Parser.h
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	TEST_METHOD(ExtractUserCommandTest1) {
+		Parser parse;
+		string expected = "add";
+
+		parse.setStringToParse("Add testing");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
+
+		parse.setStringToParse("Add   testing");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
+
+		parse.setStringToParse("Add");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
+
+		expected = "";
+		parse.setStringToParse("    ");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
+	}
+
+	/*boundary case for invalid input command "do"*/
+	TEST_METHOD(ExtractUserCommandTest2) {
+		Parser parse;
+		string expected = "do";
+
+		parse.setStringToParse("Do testing");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
+
+		parse.setStringToParse("Do   testing");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
+
+		parse.setStringToParse("DO");
+		parse.extractUserCommand();
+		Assert::AreEqual(expected, parse.getUserCommand());
+	}
+
+	//author A0114613U
+	TEST_METHOD(findDateKeyWordTest1) {
+		Parser parse;
+		string input = "call John from tuesday";
+		size_t expectedPos = input.rfind("from");
+		string delimiter = "from";
+		Assert::AreEqual(expectedPos, parse.findDateKeyWord(input, delimiter));
+
+	}
+
+	TEST_METHOD(findDateKeyWordTest2) {
+		Parser parse;
+		string input = "call John on tuesday";
+		size_t expectedPos = input.rfind("on");
+		string delimiter = "on";
+		Assert::AreEqual(expectedPos, parse.findDateKeyWord(input, delimiter));
+
+	}
+
+	TEST_METHOD(isCorrectDateDelimiterTest1) {
+		Parser parse;
+		string input = "meet John on sunday 17";
+		size_t pos = input.rfind("on");
+		bool isExpectedDel = true;
+		Assert::AreEqual(isExpectedDel,parse.isCorrectDateDelimiter(input,pos));
+
+	}
+	/*boundary case of invalid delimiter "for"*/
+	TEST_METHOD(isCorrectDateDelimiterTest2) {
+		Parser parse;
+		string input = "meet John for good friday 17:00";
+		size_t pos = input.rfind("for");
+		bool isExpectedDel = false;
+		Assert::AreEqual(isExpectedDel,parse.isCorrectDateDelimiter(input,pos));
+	}
+
+	TEST_METHOD(isCorrectDateDelimiterTest3) {
+		Parser parse;
+		string input = "meet John from wed 17:00";
+		size_t pos = input.rfind("from");
+		bool isExpectedDel = true;
+		Assert::AreEqual(isExpectedDel,parse.isCorrectDateDelimiter(input,pos));
+	}
+
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	TEST_METHOD(extractDateAndTimeTest) {
+		string inputString = "testing from 23/4 4:0 - 6:0";
+		Item item;
+		Parser parse;
+		parse.setStringToParse(inputString);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+
+		string expected = "testing";
+		Assert::AreEqual(expected, item.event);
+
+		int expectedDay = 23;
+		Assert::AreEqual(expectedDay, item.eventDate[0]);
+		int expectedMonth = 4;
+		Assert::AreEqual(expectedMonth, item.eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, item.eventDate[2]);
+
+		int expectedStartHour = 4;
+		Assert::AreEqual(expectedStartHour, item.eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, item.eventStartTime[1]);
+		int expectedEndHour = 6;
+		Assert::AreEqual(expectedEndHour, item.eventEndTime[0]);
+		int expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, item.eventEndTime[1]);
+	}
+
+	TEST_METHOD(RemoveSpacePaddingTest1) {
+		Parser parse;
+		string expected = "Testing1";
+		Assert::AreEqual(expected, parse.removeSpacePadding("   Testing1   "));
+	}
+
+	TEST_METHOD(RemoveSpacePaddingTest2) {
+		Parser parse;
+		string expected = "Testing2";
+		Assert::AreEqual(expected, parse.removeSpacePadding("  Testing2"));
+	}
+	TEST_METHOD(RemoveSpacePaddingTest3) {
+		Parser parse;
+		string expected = "Testing3";
+		Assert::AreEqual(expected, parse.removeSpacePadding("Testing3"));
+	}
+
+	TEST_METHOD(RemoveSpacePaddingTest4) {
+		Parser parse;
+		string expected = "";
+		Assert::AreEqual(expected, parse.removeSpacePadding("  "));
+	}
+
+
+	//author A0114613U
+	TEST_METHOD(convertStringToLowerCaseTest1) {
+		Parser parse;
+		string input = "ALL CAPITAL LETTERS";
+		string expected = "all capital letters";
+		Assert::AreEqual(expected, parse.convertStringToLowerCase(input));
+	}
+
+	TEST_METHOD(convertStringToLowerCaseTest2) {
+		Parser parse;
+		string input = "Some Capital lettERS";
+		string expected = "some capital letters";
+		Assert::AreEqual(expected, parse.convertStringToLowerCase(input));
+	}
+
+	TEST_METHOD(convertStringToLowerCaseTest3) {
+		Parser parse;
+		string input = " ";
+		string expected = " ";
+		Assert::AreEqual(expected, parse.convertStringToLowerCase(input));
+	}
+
+	TEST_METHOD(convertStringToLowerCaseTest5) {
+		Parser parse;
+		string input = "all small letters";
+		string expected = "all small letters";
+		Assert::AreEqual(expected, parse.convertStringToLowerCase(input));
+	}
+
+
+
+	TEST_METHOD(getFragmentedEventTest1){
+		string inputString = "meet friends at school from 1/4/2015 17:25 - 19:20";
+		Item item;
+		Parser parse;
+		parse.setStringToParse(inputString);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+
+
+		std::vector<string> testVect = parse.getFragmentedEvent();
+
+		string expectedOut1 = "meet friends at school";
+		Assert::AreEqual(expectedOut1, testVect[0]);
+
+		string expectedOut2 = "friends at school";
+		Assert::AreEqual(expectedOut2, testVect[1]);
+
+		string expectedOut3 = "at school";
+		Assert::AreEqual(expectedOut3, testVect[2]);
+
+		string expectedOut4 = "school";
+		Assert::AreEqual(expectedOut4, testVect[3]);
+
+		string expectedOut5 = "Wednesday";
+		Assert::AreEqual(expectedOut5, testVect[4]);
+
+		string expectedOut6 = "1";
+		Assert::AreEqual(expectedOut6, testVect[5]);
+
+		string expectedOut7 = "4";
+		Assert::AreEqual(expectedOut7, testVect[6]);
+
+		string expectedOut8 = "April";
+		Assert::AreEqual(expectedOut8, testVect[7]);
+
+		string expectedOut9 = "2015";
+		Assert::AreEqual(expectedOut9, testVect[8]);
+
+		string expectedOut10 = "5:25";
+		Assert::AreEqual(expectedOut10, testVect[9]);
+
+		string expectedOut11 = "7:20";
+		Assert::AreEqual(expectedOut11, testVect[10]);
+
+	}
+
+	TEST_METHOD(getFragmentedEventTest2){
+		string inputString = "attend lecture on 10/4 16 ";
+		Item item;
+		Parser parse;
+		parse.setStringToParse(inputString);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+
+
+		std::vector<string> testVect = parse.getFragmentedEvent();
+
+		string expectedOut1 = "attend lecture";
+		Assert::AreEqual(expectedOut1, testVect[0]);
+
+		string expectedOut2 = "lecture";
+		Assert::AreEqual(expectedOut2, testVect[1]);
+
+		string expectedOut3 = "Friday";
+		Assert::AreEqual(expectedOut3, testVect[2]);
+
+		string expectedOut4 = "10";
+		Assert::AreEqual(expectedOut4, testVect[3]);
+
+		string expectedOut5 = "4";
+		Assert::AreEqual(expectedOut5, testVect[4]);
+
+		string expectedOut6 = "April";
+		Assert::AreEqual(expectedOut6, testVect[5]);
+
+		string expectedOut7 = "2015";
+		Assert::AreEqual(expectedOut7, testVect[6]);
+
+		string expectedOut8 = "4";
+		Assert::AreEqual(expectedOut8, testVect[7]);
+
+	}
+
+
+	TEST_METHOD(checkIsFloatingTest1) {
+		string inputString1 = "meet friends on 1/4/2015 17:25 - 19:20";
+		Item item;
+		Parser parse;
+		parse.setStringToParse(inputString1);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		bool isExpectedFloating = false;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+	}
+
+	TEST_METHOD(checkIsFloatingTest2) {
+		Item item;
+		Parser parse;
+		string inputString2 = "meet friends on 1/4 17:25 - 19:20";
+		parse.setStringToParse(inputString2);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		bool isExpectedFloating = false;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+	}
+
+	TEST_METHOD(checkIsFloatingTest3) {
+		Item item;
+		Parser parse;
+		string inputString3 = "meet friends on 5/4 17:25";
+		parse.setStringToParse(inputString3);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		bool isExpectedFloating = false;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+
+	}
+
+	TEST_METHOD(checkIsFloatingTest4) {
+		Item item;
+		Parser parse;
+		string inputString4 = "meet friends on 1/4";
+		parse.setStringToParse(inputString4);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		bool isExpectedFloating = false;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+	}
+
+	TEST_METHOD(checkIsFloatingTest5) {
+		Item item;
+		Parser parse;
+		string inputString5 = "meet friends on saturday 19";
+		parse.setStringToParse(inputString5);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		bool isExpectedFloating = false;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+	}
+
+	TEST_METHOD(checkIsFloatingTest6) {
+		string inputString1 = "meet friends";
+		Item item;
+		Parser parse;
+		parse.setStringToParse(inputString1);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		bool isExpectedFloating = true;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+	}
+	/*boundary case when the task description contains a date word but it's not a real date*/
+	TEST_METHOD(checkIsFloatingTest7) {
+		string inputString1 = "meet friends for good friday";
+		Item item;
+		Parser parse;
+		parse.setStringToParse(inputString1);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		bool isExpectedFloating = true;
+		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
+	}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	TEST_METHOD(clearStartAndEndDateTest1){
+		string inputString1 = "meet friends from 1/4/2015 - 5/4/2015";
+		Item item;
+		Parser parse;
+		parse.setStringToParse(inputString1);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		parse.clearStartAndEndDate(item);
+		for (int i = 0; i < 3; i++) {
+			Assert::AreEqual(0,item.eventDate[i]);
+			Assert::AreEqual(0,item.eventEndDate[i]);
+		}
+	}
+
+	TEST_METHOD(clearStartAndEndDateTest2){
+		Item item;
+		Parser parse;
+		string inputString2 = "meet friends from sun - 17/4";
+		parse.setStringToParse(inputString2);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+		parse.clearStartAndEndDate(item);
+		for (int i = 0; i < 3; i++) {
+			Assert::AreEqual(0,item.eventDate[i]);
+			Assert::AreEqual(0,item.eventEndDate[i]);
+		}
+	}
+
+	/*
+	TEST_METHOD(extractSearchQueryTest){
+
+
+
+	}*/
+
+	};
+
+	TEST_CLASS(DateTimeParserTest) {
+public:
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	/* boundary test for end time less than start time */
+	TEST_METHOD(updateItemDateTest) {
+		string inputString = "12/3/15 6 p - 5:59 p";
+		Item item;
+		DateTimeParser parse;
+
+		try {
+			parse.updateItemDateTime(inputString, item, false);
+		} catch (const out_of_range& e) {	
+			e;
+		}
+
+		int expectedDay = 12;
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = 3;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+		int expectedStartHour = 18;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+
+		int expectedEndHour = 19;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+	TEST_METHOD(updateItemDateTest2) {
+		string inputString = "12/3/15 6 p - 5:59 p";
+		Item item;
+		DateTimeParser parse;
+
+		try {
+			parse.updateItemDateTime(inputString, item, false);
+		} catch (const out_of_range& e) {	
+			e;
+		}
+
+		int expectedDay = 12;
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = 3;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+		int expectedStartHour = 18;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+
+		int expectedEndHour = 19;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	TEST_METHOD(resetItemDateTimeTest) {
+		DateTimeParser parse;
+		Item item;
+
+		int expectedEventDate1 = 0;
+		int expectedEventDate2 = 0;
+		int expectedEventEndDate0 = 0;
+		int expectedEventEndDate1 = 0;
+		int expectedEventEndDate2 = 0;
+		int expectedEventStartTime0 = 0;
+		int expectedEventStartTime1 = 0;
+		int expectedEventEndTime0 = 0;
+		int expectedEventEndTime1 = 0;
+		parse.resetItemDateTime();
+
+		Assert::AreEqual(expectedEventDate1, parse.getItem().eventDate[1]);
+		Assert::AreEqual(expectedEventDate2, parse.getItem().eventDate[2]);
+		Assert::AreEqual(expectedEventEndDate0, parse.getItem().eventEndDate[0]);
+		Assert::AreEqual(expectedEventEndDate1, parse.getItem().eventEndDate[1]);
+		Assert::AreEqual(expectedEventEndDate2, parse.getItem().eventEndDate[2]);
+		Assert::AreEqual(expectedEventStartTime0, parse.getItem().eventStartTime[0]);
+		Assert::AreEqual(expectedEventStartTime1, parse.getItem().eventStartTime[1]);
+		Assert::AreEqual(expectedEventEndTime0,	parse.getItem().eventEndTime[0]);
+		Assert::AreEqual(expectedEventEndTime1,	parse.getItem().eventEndTime[1]);
+
+	}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	TEST_METHOD(extractDateTimeTest1) {
+		string inputArray[] = {"12/3/2015"}; 
+		Item item;
+		DateTimeParser parse;
+
+		try {
+			parse.extractDateTime(inputArray, 1);
+		} catch (const out_of_range& e) {
+			e;
+		}
+
+		int expectedDay = 12;
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = 3;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+		int expectedStartHour = 0;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+		int expectedEndHour = 0;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+	TEST_METHOD(extractDateTimeTest2) {
+		string inputArray[] = {"2:30"}; 
+		Item item;
+		DateTimeParser parse;
+		DateTime today;
+
+		try {
+			parse.extractDateTime(inputArray, 1);
+		} catch (const out_of_range& e) {
+			e;
+		}
+
+		int expectedDay = today.getCurrentDay();
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = today.getCurrentMonth();
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = today.getCurrentYear();
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+		int expectedStartHour = 2;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 30;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+
+		int expectedEndHour = 3;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 30;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+
+	}
+
+	/* case of different date delimiters, with and w/o minutes, and non pm time */
+	TEST_METHOD(extractDateTimeTest3) {
+		string inputArray[] = {"12.5.15", "12:30", "m", "-", "13.5.15", "4"}; 
+		Item item;
+		DateTimeParser parse;
+
+		try {
+			parse.extractDateTime(inputArray, 6);
+		} catch (const out_of_range& e) {	
+			e;
+		}
+		int expectedDay = 12;
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = 5;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+		int expectedEndDay = 13;
+		Assert::AreEqual(expectedEndDay, parse.getItem().eventEndDate[0]);
+		int expectedEndMonth = 5;
+		Assert::AreEqual(expectedEndMonth, parse.getItem().eventEndDate[1]);
+		int expectedEndYear = 2015;
+		Assert::AreEqual(expectedEndYear, parse.getItem().eventEndDate[2]);
+
+		int expectedStartHour = 24;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 30;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+
+		int expectedEndHour = 4;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+	/* boundary cases 12 noon to 11 pm */
+	TEST_METHOD(extractDateTimeTest4) {
+		string inputArray[] = {"12/5/15", "12", "p", "11"}; 
+		Item item;
+		DateTimeParser parse;
+
+		try {
+			parse.extractDateTime(inputArray, 4);
+		} catch (const out_of_range& e) {	
+			e;
+		}
+		int expectedDay = 12;
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = 5;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+		int expectedStartHour = 12;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 00;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+
+		int expectedEndHour = 23;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+	/* boundary case for full range of time values */
+	TEST_METHOD(extractDateTimeTest5) {
+		string inputArray[] = {"12/5/15", "1:00", "-", "11:59", "p"}; 
+		Item item;
+		DateTimeParser parse;
+
+		try {
+			parse.extractDateTime(inputArray, 5);
+		} catch (const out_of_range& e) {	
+			e;
+		}
+		int expectedDay = 12;
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = 5;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+		int expectedStartHour = 1;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+
+		int expectedEndHour = 23;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 59;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+	TEST_METHOD(extractDateTimeTest6) {
+		string inputArray[] = {"12/5/15","1:00", "p", "to", "13/6", "11:59", "p"}; 
+		Item item;
+		DateTimeParser parse;
+
+		try {
+			parse.extractDateTime(inputArray, 7);
+		} catch (const out_of_range& e) {	
+			e;
+		}
+		int expectedDay = 12;
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = 5;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+		int expectedEndDay = 13;
+		Assert::AreEqual(expectedEndDay, parse.getItem().eventEndDate[0]);
+		int expectedEndMonth = 6;
+		Assert::AreEqual(expectedEndMonth, parse.getItem().eventEndDate[1]);
+		int expectedEndYear = 2015;
+		Assert::AreEqual(expectedEndYear, parse.getItem().eventEndDate[2]);
+
+		int expectedStartHour = 13;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+
+		int expectedEndHour = 23;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 59;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+	/* case with 'next', weekday, start time, end time, 2 x pm */ 
+	TEST_METHOD(extractDateTimeTest7) {
+		string inputArray[] = {"next", "friday", "1:00", "p", "to", "wed", "11:59", "p"}; 
+		Item item;
+		DateTimeParser parse;
+
+		try {
+			parse.extractDateTime(inputArray, 8);
+		} catch (const out_of_range& e) {	
+			e;
+		}
+		int expectedDay = 24;
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = 4;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+		int expectedEndDay = 29;
+		Assert::AreEqual(expectedEndDay, parse.getItem().eventEndDate[0]);
+		int expectedEndMonth = 4;
+		Assert::AreEqual(expectedEndMonth, parse.getItem().eventEndDate[1]);
+		int expectedEndYear = 2015;
+		Assert::AreEqual(expectedEndYear, parse.getItem().eventEndDate[2]);
+
+		int expectedStartHour = 13;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+
+		int expectedEndHour = 23;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 59;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+	/* case with day, month, start time, end time, 1 p */
+	TEST_METHOD(extractDateTimeTest8) {
+		string inputArray[] = {"24", "mar", "4", "p", "to", "26", "jun", "5:30"}; 
+		Item item;
+		DateTimeParser parse;
+
+		try {
+			parse.extractDateTime(inputArray, 8);
+		} catch (const out_of_range& e) {	
+			e;
+		}
+		int expectedDay = 24;
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = 3;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+		int expectedEndDay = 26;
+		Assert::AreEqual(expectedEndDay, parse.getItem().eventEndDate[0]);
+		int expectedEndMonth = 6;
+		Assert::AreEqual(expectedEndMonth, parse.getItem().eventEndDate[1]);
+		int expectedEndYear = 2015;
+		Assert::AreEqual(expectedEndYear, parse.getItem().eventEndDate[2]);
+
+		int expectedStartHour = 16;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+
+		int expectedEndHour = 5;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 30;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+	TEST_METHOD(extractDateTimeTest9) {
+		string inputArray[] = {"24", "mar", "6", "p", "-", "6:30"}; 
+		Item item;
+		DateTimeParser parse;
+
+		try {
+			parse.extractDateTime(inputArray, 6);
+		} catch (const out_of_range& e) {	
+			e;
+		}
+		int expectedDay = 24;
+		Assert::AreEqual(expectedDay, parse.getItem().eventDate[0]);
+		int expectedMonth = 3;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+		int expectedEndDay = 0;
+		Assert::AreEqual(expectedEndDay, parse.getItem().eventEndDate[0]);
+		int expectedEndMonth = 0;
+		Assert::AreEqual(expectedEndMonth, parse.getItem().eventEndDate[1]);
+		int expectedEndYear = 0;
+		Assert::AreEqual(expectedEndYear, parse.getItem().eventEndDate[2]);
+
+		int expectedStartHour = 18;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+
+		int expectedEndHour = 18;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 30;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+	//boundary case for cross-day duration
+	TEST_METHOD(addDurationTest) {
+		int duration = 1;
+		int startHr = 23;
+		int startMin = 15; 
+		int endHr;
+		int endMin;
+		int startDay = 15;
+		int startMonth = 4;
+		int startYear = 2015;
+		int endDay;
+		int endMonth;
+		int endYear;
+		Item item;
+		DateTimeParser parse;
+
+		parse.addDuration (duration, 
+			startHr, 
+			startMin,
+			endHr, 
+			endMin,
+			startDay,
+			startMonth,
+			startYear,
+			endDay,
+			endMonth,
+			endYear);
+
+		int expectedEndDay = 16;
+		Assert::AreEqual(expectedEndDay, endDay);
+		int expectedEndMonth = 4;
+		Assert::AreEqual(expectedEndMonth, endMonth);
+		int expectedEndYear = 2015;
+		Assert::AreEqual(expectedEndYear, endYear);
+
+		int expectedEndHour = 24;
+		Assert::AreEqual(expectedEndHour, endHr);
+		int expectedEndMinute = 15;
+		Assert::AreEqual(expectedEndMinute, endMin);
+	}
+
+	//boundary case for duration > 24
+	TEST_METHOD(addDurationTest2) {
+		int duration = 25;
+		int startHr = 23;
+		int startMin = 15; 
+		int endHr;
+		int endMin;
+		int startDay = 15;
+		int startMonth = 4;
+		int startYear = 2015;
+		int endDay;
+		int endMonth;
+		int endYear;
+		Item item;
+		DateTimeParser parse;
+
+		parse.addDuration (duration, 
+			startHr, 
+			startMin,
+			endHr, 
+			endMin,
+			startDay,
+			startMonth,
+			startYear,
+			endDay,
+			endMonth,
+			endYear);
+
+		int expectedEndDay = 0;
+		Assert::AreEqual(expectedEndDay, endDay);
+		int expectedEndMonth = 0;
+		Assert::AreEqual(expectedEndMonth, endMonth);
+		int expectedEndYear = 0;
+		Assert::AreEqual(expectedEndYear, endYear);
+
+		int expectedEndHour = 0;
+		Assert::AreEqual(expectedEndHour, endHr);
+		int expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, endMin);
+	}
+
+	//case of cross-am/pm duration
+	TEST_METHOD(addDurationTest3) {
+		int duration = 5;
+		int startHr = 9;
+		int startMin = 30; 
+		int endHr;
+		int endMin;
+		int startDay = 15;
+		int startMonth = 4;
+		int startYear = 2015;
+		int endDay = 0;
+		int endMonth = 0;
+		int endYear = 0;
+		Item item;
+		DateTimeParser parse;
+
+		parse.addDuration (duration, 
+			startHr, 
+			startMin,
+			endHr, 
+			endMin,
+			startDay,
+			startMonth,
+			startYear,
+			endDay,
+			endMonth,
+			endYear);
+
+		int expectedEndDay = 0;
+		Assert::AreEqual(expectedEndDay, endDay);
+		int expectedEndMonth = 0;
+		Assert::AreEqual(expectedEndMonth, endMonth);
+		int expectedEndYear = 0;
+		Assert::AreEqual(expectedEndYear, endYear);
+
+		int expectedEndHour = 14;
+		Assert::AreEqual(expectedEndHour, endHr);
+		int expectedEndMinute = 30;
+		Assert::AreEqual(expectedEndMinute, endMin);
+	}
+
+	//boundary case, duration = 24
+	TEST_METHOD(addDurationTest4) {
+		int duration = 24;
+		int startHr = 10;
+		int startMin = 30; 
+		int endHr;
+		int endMin;
+		int startDay = 15;
+		int startMonth = 4;
+		int startYear = 2015;
+		int endDay = 0;
+		int endMonth = 0;
+		int endYear = 0;
+		Item item;
+		DateTimeParser parse;
+
+		parse.addDuration (duration, 
+			startHr, 
+			startMin,
+			endHr, 
+			endMin,
+			startDay,
+			startMonth,
+			startYear,
+			endDay,
+			endMonth,
+			endYear);
+
+		int expectedEndDay = 16;
+		Assert::AreEqual(expectedEndDay, endDay);
+		int expectedEndMonth = 4;
+		Assert::AreEqual(expectedEndMonth, endMonth);
+		int expectedEndYear = 2015;
+		Assert::AreEqual(expectedEndYear, endYear);
+
+		int expectedEndHour = 10;
+		Assert::AreEqual(expectedEndHour, endHr);
+		int expectedEndMinute = 30;
+		Assert::AreEqual(expectedEndMinute, endMin);
+	}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	TEST_METHOD(is12HourTest) {
+		DateTimeParser parse;
+		int expected;
+		int hour = 3;
+
+		parse.is12Hour("pm", hour);
+
+		expected = 15;
+		Assert::AreEqual(expected, hour);
+	}
+
+
+	TEST_METHOD(separateDayMonthYearTest1) {
+		DateTimeParser parse;
+		int expected;
+		int day;
+		int month;
+		int year;
+
+		parse.separateDayMonthYear("12/04/15", day, month, year);
+
+		expected = 12;
+		Assert::AreEqual(expected, day);
+		expected = 4;
+		Assert::AreEqual(expected, month);
+		expected = 15;
+		Assert::AreEqual(expected, year);
+	}
+
+	TEST_METHOD(separateDayMonthYearTest2) {
+		DateTimeParser parse;
+		int expected;
+		int day;
+		int month;
+		int year;
+		parse.separateDayMonthYear("22_05", day, month, year);
+		expected = 22;
+		Assert::AreEqual(expected, day);
+		expected = 5;
+		Assert::AreEqual(expected, month);
+		expected = 2015;
+		Assert::AreEqual(expected, year);
+	}
+
+	TEST_METHOD(separateHourMinuteTest1) {
+		DateTimeParser parse;
+		int expected;
+		int hour;
+		int minute;
+		parse.separateHourMinute("2:30", hour, minute);
+		expected = 2;
+		Assert::AreEqual(expected, hour);
+		expected = 30;
+		Assert::AreEqual(expected, minute);
+	}
+
+
+	TEST_METHOD(separateHourMinuteTest2) {
+		DateTimeParser parse;
+		int expected;
+		int hour;
+		int minute;
+		parse.separateHourMinute("4", hour, minute);
+		expected = 4;
+		Assert::AreEqual(expected, hour);
+		expected = 0;
+		Assert::AreEqual(expected, minute);
+	}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	TEST_METHOD(VerifyItemDateTest) {
+		DateTimeParser parse;
+		int expected;
+		int day = 20;
+		int month = 3;
+		int year = 15;
+
+		parse.verifyItemDate(day, month, year);
+
+		expected = 20;
+		Assert::AreEqual(expected, day);
+		expected = 3;
+		Assert::AreEqual(expected, month);
+		expected = 2015;
+		Assert::AreEqual(expected, year);
+
+		day = 0;
+		month = 13;
+		year = 15;
+
+		try {
+			parse.verifyItemDate(day, month, year);
+		} catch (const out_of_range& e) {
+			e;
+		}
+		expected = 0;
+		Assert::AreEqual(expected, day);
+		expected = 0;
+		Assert::AreEqual(expected, month);
+		expected = 0;
+		Assert::AreEqual(expected, year);
+	}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	TEST_METHOD(VerifyItemTimeTest) {
+		DateTimeParser parse;
+		int expected;
+		int hour = 26;
+		int minute = 67;
+
+		try {
+			parse.verifyItemTime(hour, minute);
+		} catch (const out_of_range& e) {
+			e;
+		}
+
+		expected = 0;
+		Assert::AreEqual(expected, hour);
+		expected = 0;
+		Assert::AreEqual(expected, minute);
+	}
+
+	/* boundary condition, end time 1 minute less than start time */
+	TEST_METHOD(VerifyStartEndTimeTest) {
+		DateTimeParser parse;
+		int expected;
+
+		int startHour = 14;
+		int startMinute = 0;
+		int endHour = 13;
+		int endMinute = 59;
+
+		int startDay = 12;
+		int startMonth = 4;
+		int startYear = 2015;
+		int endDay = 12;
+		int endMonth = 4;
+		int endYear = 2015;
+
+		try {
+			parse.verifyStartEnd(
+				startHour,
+				startMinute, 
+				endHour, 
+				endMinute,
+				startDay,
+				startMonth,
+				startYear,
+				endDay,
+				endMonth,
+				endYear);
+		} catch (const out_of_range& e) {
+			e;
+		}
+
+		expected = 0;
+		Assert::AreEqual(expected, endHour);
+		expected = 0;
+		Assert::AreEqual(expected, endMinute);
+
+	}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	TEST_CLASS(DateTimeTest) {
+public:
+
+	TEST_METHOD(getWeekDayTest1) {
+		DateTime dateTest;
+		string expected = "Thursday";
+		Assert::AreEqual(expected, dateTest.getWeekDay(19, 3, 2015));
+	}
+
+	TEST_METHOD(getWeekDayTest2) {
+		DateTime dateTest;	
+		string expected = "Monday";
+		Assert::AreEqual(expected, dateTest.getWeekDay(29, 2, 2016));
+	}
+
+	TEST_METHOD(isLeapYearTest1) {
+		DateTime dateTest;
+		bool expected = true;
+		Assert::AreEqual(expected, dateTest.isLeapYear(2016));
+	}
+
+	TEST_METHOD(isLeapYearTest2) {
+		DateTime dateTest;
+		bool expected = false;
+		Assert::AreEqual(expected, dateTest.isLeapYear(2019));
+	}
+
+	TEST_METHOD(getCurrentMonthTest) {
+		DateTime dateTest;
+		int expected = 4;
+		Assert::AreEqual(expected, dateTest.getCurrentMonth());
+	}
+
+	TEST_METHOD(getCurrentYearTest) {
+		DateTime dateTest;
+		int expected = 2015;
+		Assert::AreEqual(expected, dateTest.getCurrentYear());
+	}
+
+	};
+
+	TEST_CLASS(ITEMTest) {
+public:
+
+	TEST_METHOD(toStringTest1) {
+		Item test;
+
+		test.event = "";
+		test.eventDate[0] = 18;
+		test.eventDate[1] = 3;
+		test.eventDate[2] = 2015;
+		test.eventStartTime[0] = 10;
+		test.eventStartTime[1] = 0;
+		test.eventEndTime[0] = 12;
+		test.eventEndTime[1] = 0;
+		string expected = "Wednesday, 18 Mar 2015";
+		Assert::AreEqual(expected, test.dateToString());
+		expected = "[10-12p]";
+		Assert::AreEqual(expected, test.timeToString());
+	}
+
+	TEST_METHOD(toStringTest2) {
+		Item test;
+		test.eventStartTime[0] = 16;
+		test.eventStartTime[1] = 30;
+		test.eventEndTime[0] = 0;
+		test.eventEndTime[1] = 0;
+		string expected = "[4:30p]";
+		Assert::AreEqual(expected, test.timeToString());
+	}
+
+
+	};
+	TEST_CLASS(CommandTest) {
+public:
+	TEST_METHOD(itemToStringTest) {
+		Item newItem;
+
+		newItem.event = "some event";
+		newItem.eventDate[0] = 25;
+		newItem.eventDate[1] = 3;
+		newItem.eventDate[2] = 2015;
+		newItem.eventStartTime[0] = 11;
+		newItem.eventStartTime[1] = 10;
+		newItem.eventEndTime[0] = 12;
+		newItem.eventEndTime[1] = 10;
+
+		string expectedString = "some event: Wednesday, 25 Mar 2015 [11:10-12:10p]";
+		string actualString = newItem.toString();
+
+		Assert::AreEqual(expectedString, actualString);
+	}
+
+	TEST_METHOD(addItemTest1) {
+		CommandInvoker *invoker = new CommandInvoker;
+		vector<Item> testVector;
+		Item newItem;
+		string message = "";
+
+		newItem.event = "some event";
+		newItem.eventDate[0] = 25;
+		newItem.eventDate[1] = 3;
+		newItem.eventDate[2] = 2015;
+		newItem.eventStartTime[0] = 11;
+		newItem.eventStartTime[1] = 10;
+		newItem.eventEndTime[0] = 12;
+		newItem.eventEndTime[1] = 10;
+
+		AddItem *addItem = new AddItem(newItem);
+		invoker->executeCommand(testVector, addItem, message);
+
+		newItem.event = "some event";
+		newItem.eventDate[0] = 27;
+		newItem.eventDate[1] = 3;
+		newItem.eventDate[2] = 2015;
+		newItem.eventStartTime[0] = 3;
+		newItem.eventStartTime[1] = 30;
+		newItem.eventEndTime[0] = 18;
+		newItem.eventEndTime[1] = 30;
+
+		AddItem *addItem2 = new AddItem(newItem);
+		invoker->executeCommand(testVector, addItem2, message);
+
+		int expectedSize = 2;
+		int actualSize = testVector.size();
+
+		Assert::AreEqual(expectedSize, actualSize);
+
+		string expectedString[2] = {"some event: Wednesday, 25 Mar 2015 [11:10-12:10p]",
+			"some event: Friday, 27 Mar 2015 [3:30-6:30p]"};
+
+		string actualString;
+
+		vector<Item>::iterator iter;
+
+		int i = 0;
+		for (iter = testVector.begin(); iter != testVector.end(); iter++, i++) {
+			actualString = iter->toString();
+			Assert::AreEqual(expectedString[i], actualString);
+		}
+	}
+
+	};
+
+}
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+

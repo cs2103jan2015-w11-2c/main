@@ -1,0 +1,688 @@
+//@author: a0115452n
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.cpp
+	 */
+
+FileStorage::FileStorage(void) {
+	_fileConfigFileName = "FileConfigurations.txt";
+	_defaultFileName = "MagicMemo Task List.txt";
+	_archiveFileName = "Backup.txt";
+	_optionFileName = "Options.txt";
+	_autoCompleteFileName = "Auto-complete.txt";
+
+	_is12Hr = true;
+	_isWide = false;
+	_isNotificationsOn = false;
+	_notifyMin = 10;
+	_sleepHourStart = 23;
+	_sleepMinStart = 0;
+	_sleepHourEnd = 5;
+	_sleepMinEnd = 0;
+
+
+	if(isFileEmpty(_fileConfigFileName)) {
+		initializeFileConfig();
+	}
+
+	getFileConfigInfo();
+	_fullFileName = getFullFileName();
+}
+
+FileStorage*FileStorage::theOne=nullptr;
+
+FileStorage*FileStorage::getInstance() {
+	if(theOne==nullptr) {
+		theOne = new FileStorage();
+	}
+	return theOne;
+}
+
+void FileStorage::setFileName(string newFileName) {
+	_fileName = newFileName;
+}
+
+void FileStorage::setFilePath(string newFilePath) {
+	_filePath = newFilePath;
+}
+
+string FileStorage::getFileName() {
+	return _fileName;
+}
+
+string FileStorage::getFileLocation() {
+	return _filePath;
+}
+
+string FileStorage::getFullFileName() {
+	if(_filePath == "") {
+		return _fileName;
+	} else {
+		return (_filePath + "\\" + _fileName);
+	}
+}
+
+vector<Item> FileStorage::getAllFileData() {
+	vector<Item> tempVector;
+	Parser parse;
+	string content;
+
+	ifstream readFile(getFullFileName());
+	while(getline(readFile, content)) {
+		parse.setStringToParse(content);
+		parse.extractDateAndTime();
+		Item i = parse.getItem();
+		tempVector.push_back(i);
+	}
+	readFile.close();
+
+	return tempVector;
+}
+
+vector<Item> FileStorage::getArchiveData() {
+	vector<Item> tempVector;
+	Parser parse;
+	string content;
+
+	ifstream readFile(_archiveFileName.c_str());
+	while(getline(readFile, content)) {
+		parse.setStringToParse(content);
+		parse.extractDateAndTime();
+		Item i = parse.getItem();
+		tempVector.push_back(i);
+	}
+	readFile.close();
+
+	return tempVector;
+}
+
+vector<string> FileStorage::getAutoCompleteFileData() {
+	vector<string> tempVector;
+	string content;
+
+	ifstream readFile(_autoCompleteFileName.c_str());
+	while(getline(readFile, content)) {
+		tempVector.push_back(content);
+	}
+	readFile.close();
+
+	return tempVector;
+}
+
+vector<int> FileStorage::getOptionFileData() {
+	if(isFileEmpty(_optionFileName)) {
+		updateOptionsFile();
+	}
+
+	vector<int> optionsVector;
+	int content;
+	ifstream readFile(_optionFileName.c_str());
+	while(readFile >> content) {
+		optionsVector.push_back(content);    
+	}
+
+	_is12Hr = (optionsVector[0] != 0);
+	_isWide = (optionsVector[1] != 0);
+	_isNotificationsOn = (optionsVector[2] != 0);
+	_notifyMin = optionsVector[3];
+	_sleepHourStart = optionsVector[4];
+	_sleepMinStart = optionsVector[5];
+	_sleepHourEnd = optionsVector[6];
+	_sleepMinEnd = optionsVector[7];
+
+	readFile.close();
+
+	return optionsVector;
+}
+
+void FileStorage::addLineToFile(Item item) {
+	addLine(item, getFullFileName());
+}
+
+void FileStorage::addLineToArchive(Item item) {
+	addLine(item, _archiveFileName);
+}
+
+void FileStorage::addLine(Item item, const string& fileName) {
+	fstream outFile;
+	ostringstream out;
+	bool setFrom = false;
+	bool setTo = false;
+
+	outFile.open(fileName.c_str(), fstream::out | fstream::app);
+
+	out << item.event;
+
+	if(item.eventDate[0] != 0 && item.eventDate[1] != 0 && item.eventDate[2] != 0) {
+		if (item.isDeadlineTask) {
+			out << " by ";
+		} else {
+			out << " from ";
+		}
+		out << item.eventDate[0] << "/" << item.eventDate[1] << "/" << item.eventDate[2];
+		setFrom = true;
+	}
+
+	if(item.eventStartTime[0] != 0) {
+		if(!setFrom) {
+			out << "from ";
+		}
+		out << " " << item.eventStartTime[0] << ":" << item.eventStartTime[1];
+	}
+
+	if(item.eventEndDate[0] != 0 && item.eventEndDate[1] != 0 && item.eventEndDate[2] != 0) {
+		out << " to " <<item.eventEndDate[0] << "/" << item.eventEndDate[1] << "/" << item.eventEndDate[2];
+		setTo = true;
+	}
+
+	if(item.eventEndTime[0] !=  0) {
+		if(!setTo) {
+			out << " to ";
+		}
+		out << " " << item.eventEndTime[0] << ":" << item.eventEndTime[1];
+	}
+
+	string temp = out.str();
+	outFile << temp << endl;
+	outFile.close();
+}
+
+
+void FileStorage::addLineToAutoCompleteFile(string s) {
+	fstream outFile;
+
+	outFile.open(_autoCompleteFileName.c_str(), fstream::out | fstream::app);
+	outFile << s << endl;
+	outFile.close();
+}
+
+void FileStorage::saveIs12Hr(bool is12Hr) {
+	_is12Hr = is12Hr;
+	updateOptionsFile();
+}
+
+void FileStorage::saveIsWide(bool isWide) {
+	_isWide = isWide;
+	updateOptionsFile();
+}
+
+void FileStorage::saveNotifications(bool isOn, int minsBefore) {
+	_isNotificationsOn = isOn;
+	_notifyMin = minsBefore;
+	updateOptionsFile();
+}
+
+void FileStorage::saveSleepTime(int sleepTime[][2]) {
+	_sleepHourStart = sleepTime[0][0];
+	_sleepMinStart  = sleepTime[0][1];
+	_sleepHourEnd = sleepTime[1][0];
+	_sleepMinEnd = sleepTime[1][1];
+	updateOptionsFile();
+}
+
+void FileStorage::updateOptionsFile() {
+	ofstream outFile(_optionFileName.c_str());
+	outFile << _is12Hr << endl;
+	outFile << _isWide << endl;
+	outFile << _isNotificationsOn << endl;
+	outFile << _notifyMin << endl;
+	outFile << _sleepHourStart << endl;;
+	outFile << _sleepMinStart << endl;;
+	outFile << _sleepHourEnd << endl;;
+	outFile << _sleepMinEnd;
+
+	outFile.close();
+}
+
+bool FileStorage::clearFile() {
+	fstream outFile;
+	outFile.open(getFullFileName(), fstream::out | fstream::trunc);
+	outFile.close();
+	return true;
+}
+
+bool FileStorage::clearArchive() {
+	fstream outFile;
+	outFile.open(_archiveFileName, fstream::out | fstream::trunc);
+	outFile.close();
+	return true;
+}
+
+bool FileStorage::clearAutoCompleteFile() {
+	fstream outFile;
+	outFile.open(_autoCompleteFileName.c_str(), fstream::out | fstream::trunc);
+	outFile.close();
+	return true;
+}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.cpp
+	 */
+
+bool FileStorage::restoreFileInfo() {
+	if(!changeFileName(_defaultFileName.c_str())) {
+		return false;
+	}
+	if(_filePath != getProgramFilePath()) {
+		if(!changeFileLocation(getProgramFilePath())) {
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+FileStorage::~FileStorage(void) {
+}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.h
+	 */
+
+#include <assert.h>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <Windows.h>
+#include "Item.h"
+#include "Parser.h"
+
+using namespace std;
+
+class FileStorage {
+private:
+	string _fileConfigFileName;
+	string _defaultFileName;
+	string _fileName;
+	string _filePath;
+	string _fullFileName;
+	string _archiveFileName;
+	string _optionFileName;
+	string _autoCompleteFileName;
+	bool _is12Hr;
+	bool _isWide;
+	bool _isNotificationsOn;
+	int _notifyMin;
+	int _sleepHourStart;
+	int _sleepMinStart;
+	int _sleepHourEnd;
+	int _sleepMinEnd;
+	static FileStorage* theOne;
+	FileStorage(void);
+
+public:
+
+	static FileStorage* getInstance();
+
+	void setFileName(string);
+
+	void setFilePath(string);
+
+	string getFileName();
+
+	string getFileLocation();
+
+	string getFullFileName();
+
+	vector<Item> getAllFileData();
+
+	vector<Item> getArchiveData();
+
+	//returns a vector of auto-complete bank data
+	vector<string> getAutoCompleteFileData();
+
+	//returns an options vector:
+	//1st element - is12Hr : 1 if true, 0 otherwise;
+	//2nd element - isWide: 1 if true, 0 otherwise;
+	//3rd element - isNotificationsOn
+	//4th element - time for notifications
+	//5th-8th element - time for sleep
+	vector<int> getOptionFileData();
+
+	//main text file
+	void addLineToFile(Item);
+
+	//archive file
+	void addLineToArchive(Item);
+	
+	//general method
+	void addLine(Item, const string&);
+
+	//auto-complete file
+	void addLineToAutoCompleteFile(string); 
+
+	void saveIs12Hr(bool);
+
+	void saveIsWide(bool);
+
+	void saveNotifications(bool, int);
+
+	void saveSleepTime(int [][2]);
+
+	//update options file
+	void updateOptionsFile();
+
+	bool clearFile();
+	
+	bool clearArchive();
+
+	//clear auto-complete file
+	bool clearAutoCompleteFile();
+
+	//returns false if new filename already exists
+	bool changeFileName(string newFileName); 
+
+	//returns false if the file path is wrong or
+	//the file already exists in the new directory
+	bool changeFileLocation(string newFileLocation);
+
+	bool fileExists(const string& fileName);
+
+	bool directoryExists(const string& dirName);
+
+	//returns true if file is empty
+	bool isFileEmpty(string);
+
+	//get pre-set filepath and filename from config file
+	void getFileConfigInfo();
+
+	//initializes the filename and filepath if not previously set
+	void initializeFileConfig();
+
+	//update any filepath or filename changes into config file
+	void updateFileConfigInfo();
+
+	//returns the directory of the program
+	string getProgramFilePath();
+
+	//restore the default filename and filepath
+	bool restoreFileInfo();
+
+	~FileStorage(void);
+};
+
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.h
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	 */
+
+string Item::timeToString() {
+	ostringstream oss;
+	string startTimeOfDay = getPM(eventStartTime[0]);
+	string endTimeOfDay = getPM(eventEndTime[0]);
+
+	if(eventStartTime[0] == 0) {
+		return "";
+	} else {
+		oss << "[" << getHour(eventStartTime[0]);
+		oss << getMinute(eventStartTime[1]) <<  startTimeOfDay;
+
+		if(eventEndTime[0] != 0) {
+			oss << "-" << getHour(eventEndTime[0]);
+			oss << getMinute(eventEndTime[1]) << endTimeOfDay;
+		}
+
+		oss << "]";
+
+		return oss.str();
+	}
+}
+
+string Item::timeAndEndDateToString() {
+	ostringstream oss;
+	string startTimeOfDay = getPM(eventStartTime[0]);
+	string endTimeOfDay = getPM(eventEndTime[0]);
+
+	if(eventStartTime[0] == 0) {
+		return "";
+	} else {
+		oss << "[" << getHour(eventStartTime[0]);
+		oss << getMinute(eventStartTime[1]) <<  startTimeOfDay;
+
+		if(eventEndTime[0] != 0) {
+			oss << "-" << getHour(eventEndTime[0]);
+			oss << getMinute(eventEndTime[1]) << endTimeOfDay;
+		}
+
+		if (eventEndDate[0] != 0 && eventEndDate[1] != 0 && eventEndDate[2] != 0) {
+			oss << ", " << eventEndDate[0] << "/" << eventEndDate[1];
+		}
+
+		oss << "]";
+
+		return oss.str();
+	}
+}
+
+string Item::timeTo24HrString() {
+	ostringstream oss;
+
+	if(eventStartTime[0] == 0) {
+		return "";
+	} else {
+		oss << "[" << get24HrHour(eventStartTime[0]) << get24HrMinute(eventStartTime[1]);;
+		if(eventEndTime[0] != 0) {
+			oss << "-" << get24HrHour(eventEndTime[0]) << get24HrMinute(eventEndTime[1]);
+		}
+
+		if (eventEndDate[0] != 0 && eventEndDate[1] != 0 && eventEndDate[2] != 0) {
+			oss << ", " << eventEndDate[0] << "/" << eventEndDate[1];
+		}
+
+		oss << "]";
+
+		return oss.str();
+	}
+}
+
+string Item::toString() {
+	ostringstream oss;
+	oss << event << ": "<< dateToString() << " " << timeToString();
+	return oss.str();
+}
+
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.h
+	 */
+
+
+#include <iostream>
+#include <sstream>
+#include "..\EasyLoggingpp\easylogging++.h"
+#include "DateTime.h"
+
+using namespace std;
+
+class Item {
+public:
+	static const string MESSAGE_UNDATED_TASK;
+
+	DateTime itemDate;
+	string event;
+	int eventDate[3];
+	int eventEndDate[3];
+	// 24 hour format, 
+	// hour: 1 - 24 (0 == undefined, 24 == 12 am)
+	// minute: 0 - 59
+	int eventStartTime[2];
+	int eventEndTime[2];
+	bool isDeadlineTask;
+
+	Item(void);
+
+	~Item(void);
+
+	void initializeItem();
+
+	int getHour(int hour);
+
+	string get24HrHour(int hour);
+
+	string getMinute(int minute);
+
+	string get24HrMinute(int minute);
+
+	string getPM(int hour);
+
+	string startDateToString();
+
+	string endDateToString();
+
+	string dateToString();
+
+	string timeToString();
+
+	string timeAndEndDateToString();
+
+	string timeTo24HrString();
+
+	string toString();
+
+	bool isFloating();
+
+	bool isDeadline();
+	//for logging
+	void logItemValues();
+};
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.h
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\ControllerTest.cpp
+	 */
+
+		TEST_METHOD(checkDateIsUnsetTest1) {
+			string input = "meeting";
+			Controller control;
+			Item item;
+			Parser parse;
+			parse.setStringToParse(input);
+			parse.extractDateAndTime();
+			item = parse.getItem();
+
+			bool isExpected = true;
+			Assert::AreEqual(isExpected,control.checkDateIsUnset(item.eventDate));
+		}
+
+		TEST_METHOD(checkDateIsUnsetTest2) {
+			string input = "meeting on friday";
+			Controller control;
+			Item item;
+			Parser parse;
+			parse.setStringToParse(input);
+			parse.extractDateAndTime();
+			item = parse.getItem();
+
+			bool isExpected = false;
+			Assert::AreEqual(isExpected, control.checkDateIsUnset(item.eventDate));
+		}
+
+
+		TEST_METHOD(checkIsClashTest1) {
+			string input1 = "dinner on Tuesday 5pm";
+			string input2 = "outing on Tuesday 5pm";
+			Controller control;
+			Item item1, item2;
+			Parser parse;
+			parse.setStringToParse(input1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(input2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+			bool isExpected = true;
+			Assert::AreEqual(isExpected, control.checkIsClash(item1, item2));
+		}
+
+		TEST_METHOD(checkIsClashTest2) {
+			string input1 = "meeting on Tuesday 3pm";
+			string input2 = "having dinner on Tuesday 4pm";
+			Controller control;
+			Item item1, item2;
+			Parser parse;
+			parse.setStringToParse(input1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(input2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+			bool isExpected = false;
+			Assert::AreEqual(isExpected, control.checkIsClash(item1, item2));
+		}
+
+		TEST_METHOD(checkIsExpriedTest1) {
+			Controller control;
+			Item item;
+			Parser parse;
+			string input = "exams on 25/4/2014";
+			parse.setStringToParse(input);
+			parse.extractDateAndTime();
+			item = parse.getItem();
+			bool isExpected = true;
+			Assert::AreEqual(isExpected, control.checkIsExpired(item));
+		}
+
+		TEST_METHOD(checkIsExpriedTest2) {
+			Controller control;
+			Item item;
+			Parser parse;
+			string input = "having class on 4/4/2015";
+			parse.setStringToParse(input);
+			parse.extractDateAndTime();
+			item = parse.getItem();
+			bool isExpected = true;
+			Assert::AreEqual(isExpected, control.checkIsExpired(item));
+		}
+
+		TEST_METHOD(checkIsExpriedTest3) {
+			Controller control;
+			Item item;
+			Parser parse;
+			string input = "having class on 4/5/2015";
+			parse.setStringToParse(input);
+			parse.extractDateAndTime();
+			item = parse.getItem();
+			bool isExpected = false;
+			Assert::AreEqual(isExpected, control.checkIsExpired(item));
+
+		}
+
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\ControllerTest.cpp
+
+
+
+
+

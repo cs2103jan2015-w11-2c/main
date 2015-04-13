@@ -1,0 +1,1091 @@
+//@author: a0114613u
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.cpp
+	 */
+
+int DateTimeParser::mapWeekDay(string weekDay) {
+	int weekDayIndex = -1;
+
+	std::map<string, int> weekDays;
+	weekDays["floating"] = -3;
+	weekDays["float"] = -3;
+	weekDays["tomorrow"] = -2;
+	weekDays["tom"] = -2;
+	weekDays["tmr"] = -2;
+	weekDays["today"] = 0;
+	weekDays["monday"] = 1;
+	weekDays["mon"] = 1;
+	weekDays["tuesday"] = 2;
+	weekDays["tue"] = 2;
+	weekDays["tues"] = 2;
+	weekDays["wednesday"] = 3;
+	weekDays["wed"] = 3;
+	weekDays["thursday"] = 4;
+	weekDays["thur"] = 4;
+	weekDays["thurs"] = 4;
+	weekDays["friday"] = 5;
+	weekDays["fri"] = 5;
+	weekDays["saturday"] = 6;
+	weekDays["sat"] = 6;
+	weekDays["sunday"] = 7;
+	weekDays["sun"] = 7;
+
+	std::map<string, int>::iterator iter = weekDays.begin(); 
+	bool isMatch = false;
+	while((iter != weekDays.end()) && (!isMatch)){
+		if(iter->first == weekDay){
+			weekDayIndex = iter->second;
+			isMatch = true;
+		}
+		iter++;
+	}
+
+	_updateDateFlag = (weekDayIndex == -1) ? false : true;
+
+	return weekDayIndex;
+}
+
+int DateTimeParser::mapMonth(string inputMonth) {
+	std::map<string, int> month;
+	month["january"] = 1;
+	month["jan"] = 1;
+	month["february"] = 2;
+	month["feb"] = 2;
+	month["march"] = 3;
+	month["mar"] = 3;
+	month["april"] = 4;
+	month["apr"] = 4;
+	month ["may"] = 5;
+	month["june"] = 6;
+	month["jun"] = 6;
+	month["july"] = 7;
+	month["jul"] = 7;
+	month["august"] = 8;
+	month["aug"] = 8;
+	month["september"]= 9;
+	month["sep"] = 9;
+	month["sept"] = 9;
+	month["october"] = 10;
+	month["oct"] = 10;
+	month["november"] = 11;
+	month["nov"] = 11;
+	month["novem"] = 11;
+	month ["december"] = 12;
+	month["dec"] = 12;
+	month["decem"] = 12;
+
+	int returnValue = -1;
+	bool isFound = false;
+	std::map<string, int>::iterator it = month.begin(); 
+	while((it!=month.end()) && (!isFound)){
+		if(it->first == inputMonth){
+			returnValue = it->second;
+			isFound = true;
+		}
+		it++;
+	}
+
+	return returnValue;
+}
+
+void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, int& year) {
+	if(weekDayIndex < -3) {
+		weekDayIndex = 0;
+	}
+	day = _dateTime.getCurrentDay();
+	month = _dateTime.getCurrentMonth();
+	year = _dateTime.getCurrentYear();
+	int currentWeekDayIndex = _dateTime.getIntWeekDay(day, month, year);
+
+	if(weekDayIndex == -3) {
+		day = 0;
+		month = 0;
+		year = 0;
+		_isFloating = true;
+		return;
+	}
+
+	int diffInDay = 0;
+	if(weekDayIndex == 0) {
+		diffInDay = 0;
+	} else if(weekDayIndex == -2) {
+		diffInDay = 1;
+	} else if(weekDayIndex == currentWeekDayIndex) {
+		diffInDay = 7;
+	} else {
+		diffInDay = (weekDayIndex - currentWeekDayIndex + 7) % 7;
+	}
+
+	day += diffInDay; 
+	handleDayOverflow(day, month, year);
+}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	 */
+
+string Item::dateToString() {
+	if((eventDate[0] == 0) && (eventDate[1] == 0) && (eventDate[1] == 0)) {
+		return MESSAGE_UNDATED_TASK;
+	} else {
+		ostringstream oss;
+		oss << itemDate.getWeekDay(eventDate[0], eventDate[1], eventDate[2]);
+		oss << ", " << eventDate[0] << " ";
+		oss << itemDate.getMonth(eventDate[1]) << " " << eventDate[2];
+		return oss.str();
+	}
+}
+
+string Item::startDateToString() {
+	ostringstream oss;
+	oss << "[" << eventDate[0] << "/" << eventDate[1] << "/" << eventDate[2] << "]";
+	return oss.str();
+}
+
+string Item::endDateToString() {
+	if (eventEndDate[0] == 0 && eventEndDate[1] == 0 && eventEndDate[2] == 0) {
+		return "";
+	}
+	ostringstream oss;
+	oss << "[" << eventEndDate[0] << "/" << eventEndDate[1] << "]";
+	return oss.str();
+}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Parser.cpp
+	 */
+
+vector <string> Parser::getFragmentedEvent(){
+	vector<string> outputVec;
+
+	string wholeEvent = _item.event;
+	outputVec.push_back(wholeEvent); 
+	size_t spacePos = wholeEvent.find_first_of(" ");
+
+	while(spacePos != string::npos){
+		outputVec.push_back(wholeEvent.substr(wholeEvent.find_first_not_of(" ", spacePos+1))); 
+		wholeEvent = wholeEvent.substr(wholeEvent.find_first_not_of(" ", spacePos+1));
+		spacePos = wholeEvent.find_first_of(" ");
+	}
+
+	int startHour = _item.getHour(_item.eventStartTime[0]);
+	string startHr = std::to_string(startHour);
+	string startMin = _item.getMinute(_item.eventStartTime[1]);
+	string startTime = startHr  + startMin;
+
+	int endHour = _item.getHour(_item.eventEndTime[0]);
+	string endHr = std::to_string(endHour);
+	string endMin = _item.getMinute(_item.eventEndTime[1]);
+	string endTime = endHr + endMin;
+
+	string monthStr = _item.itemDate.getMonthFull(_item.eventDate[1]);
+	string weekDay;
+	weekDay = _item.itemDate.getWeekDay(_item.eventDate[0], _item.eventDate[1], _item.eventDate[2]);
+
+	//in sequence, the vector contains:
+	//weekday, day, integer month, 
+	//month, year, start time, end time.
+	if(weekDay != ""){
+		outputVec.push_back(weekDay);
+	}
+
+	if(_item.eventDate[0] != 0){
+		std::string tempStr1 = std::to_string(_item.eventDate[0]);
+		outputVec.push_back(tempStr1);
+	}
+
+	if(_item.eventDate[1] != 0){
+		std::string tempStr2 = std::to_string(_item.eventDate[1]);
+		outputVec.push_back(tempStr2);
+	}
+
+	if(monthStr != ""){
+		outputVec.push_back(monthStr);
+	}
+
+	if(_item.eventDate[2] != 0){
+		std::string tempStr3 = std::to_string(_item.eventDate[2]);
+		outputVec.push_back(tempStr3);
+	}
+
+	if(startTime != "0"){
+		outputVec.push_back(startTime);
+	}
+
+	if(endTime != "0"){
+		outputVec.push_back(endTime);
+	}
+
+	return outputVec;
+}
+
+bool Parser::checkIsFloating(const Item item) {
+	for (int i = 0; i < 3; i++) {
+		if (item.eventDate[i] != 0) {
+			return false;
+		}
+	}
+	for (int i = 0; i < 3; i++) {
+		if (item.eventEndDate[i] != 0) {
+			return false;
+		}
+	}
+	for (int i = 0; i < 2; i++) {
+		if (item.eventStartTime[i] != 0) {
+			return false;
+		}
+	}
+	for (int i = 0; i < 2; i++) {
+		if (item.eventEndTime[i] != 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
+void Parser::clearStartAndEndDate(Item &item) {
+	for (int i = 0; i < 3; i++) {
+		item.eventDate[i] = 0;
+	}
+	for (int i = 0; i < 3; i++) {
+		item.eventEndDate[i] = 0;
+	}
+}
+
+bool Parser::checkIsValidDate(const string input) {
+	int day = 0;
+	int mon = 0;
+	int year = 0;
+
+	DateTime dateTime;
+	string temp = input;
+	size_t pos = temp.find_first_of("/");
+	if (pos == string::npos) {
+		return false;
+	}
+	day = stoi(temp.substr(0, pos + 1), NULL, 10);
+
+	if (day == 0) {
+		return false;
+	}
+
+	temp = temp.substr(pos + 1);
+
+	pos = temp.find_first_of("/");
+	if (pos == string::npos) {
+		year = dateTime.getCurrentYear();
+	} else {
+		mon = stoi(temp.substr(0, pos + 1), NULL, 10);
+		if (mon == 0) {
+			return false;
+		}
+
+		temp = temp.substr(pos + 1);
+		
+		year = stoi(temp, NULL, 10);
+		if (year == 0) {
+			return false;
+		}
+	}
+	return dateTime.isValidDate(day, mon, year);
+}
+
+bool Parser::checkIsDeadline(const string input) {
+	istringstream iss(input);
+	int i = 0;
+	string temp = "";
+
+	while (iss >> temp) {
+		if (temp != "") {
+			i++;
+		}
+	}
+
+	if (i == 1) {
+		return true;
+	}
+	return false;
+}
+
+void Parser::extractSearchQuery(Item &item) {
+	Item temp = item;
+	if(item.event == "") {
+		throw std::out_of_range(ERROR_SEARCH_STRING_EMPTY);
+	}
+	//if(checkIsFloating(temp)) {
+		DateTimeParser dateTimeParser;
+
+		string itemEvent = temp.event;
+		if (itemEvent != STRING_FLOATING) {
+			itemEvent = convertStringToLowerCase(itemEvent);
+			string tempEvent = "from " + item.event.substr(item.event.find_first_not_of("\t\n"));
+			if (isCorrectDateDelimiter(tempEvent, 0) || checkIsValidDate(item.event)){
+				dateTimeParser.updateItemDateTime(itemEvent, temp, checkIsDeadline(item.event));
+			}
+
+			if (/*!dateTimeParser.getIsDateUpdatedFromFloat() &&*/
+				(dateTimeParser.getUpdateDateFlag() || dateTimeParser.getUpdateTimeFlag())) {
+					temp.event = "";
+			}
+			//if (!dateTimeParser.getUpdateDateFlag()) {
+				//clearStartAndEndDate(temp);
+			//}
+			if (dateTimeParser.getEndTimeAdjusted()) {
+				temp.eventEndTime[0] = 0;
+				temp.eventEndTime[1] = 0;
+			}
+		} else {
+			temp.initializeItem();
+		}
+		item = temp;
+//	}
+}
+
+bool Parser::getIsDateUpdatedFromFloat() {
+	return _isDateUpdatedFromFloat;
+}
+
+Parser::~Parser(void) {
+}
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Parser.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\ControllerTest.cpp
+	 */
+
+		TEST_METHOD(sortAlphabeticalTest) {
+
+		}
+
+		/*	TEST_METHOD(searchTest) {
+		Controller controller;
+		string inputString = "testing from 23/4/2015 14:0 - 16:0";
+		Item item;
+		Parser parse;
+		parse.setStringToParse(inputString);
+		parse.extractDateAndTime();
+		item = parse.getItem();
+
+
+		}*/
+
+		TEST_METHOD(copyTest) {
+		}
+		TEST_METHOD(editTest) {}
+		TEST_METHOD(renameTest) {}
+		TEST_METHOD(moveTest) {}
+		TEST_METHOD(undoTest) {}
+		TEST_METHOD(redoTest) {}
+		TEST_METHOD(gethelpTest) {}
+		/*test for the case when first item has a time but second item only has a date*/
+		TEST_METHOD(swapTest1) {
+			Controller controller;
+			string inputString1 = "testing from 23/4/2015 14:0 - 16:0";
+			string inputString2 = "projec meeting from friday to sunday";
+			Item item1;
+			Item item2;
+			Parser parse;
+			parse.setStringToParse(inputString1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(inputString2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+
+			string expectedEvent2 = item1.event;
+			int expectedEventDay2 = item1.eventDate[0];
+			int expectedEventMonth2 = item1.eventDate[1];
+			int expectedStartTimeHour2 = item1.eventStartTime[0];
+			int expectedStartTimeMin2 = item1.eventStartTime[1];
+			string expectedEvent1 = item2.event;
+			int expectedEventDay1 = item2.eventDate[0];
+			int expectedEventMonth1 = item2.eventDate[1];
+			int expectedStartTimeHour1 = item2.eventStartTime[0];
+			int expectedStartTimeMin1 = item2.eventStartTime[1];
+			controller.swap(item1, item2);
+
+			Assert::AreEqual(expectedEvent2, item2.event);
+			Assert::AreEqual(expectedEvent1, item1.event);
+			Assert::AreEqual(expectedEventDay2, item2.eventDate[0]);
+			Assert::AreEqual(expectedEventDay1, item1.eventDate[0]);
+			Assert::AreEqual(expectedEventMonth2, item2.eventDate[1]);
+			Assert::AreEqual(expectedEventMonth1, item1.eventDate[1]);
+			Assert::AreEqual(expectedStartTimeHour2, item2.eventStartTime[0]);
+			Assert::AreEqual(expectedStartTimeHour1, item1.eventStartTime[0]);
+			Assert::AreEqual(expectedStartTimeMin2, item2.eventStartTime[1]);
+			Assert::AreEqual(expectedStartTimeMin1, item1.eventStartTime[1]);
+		}
+
+		/*test for the case when first item has a time,date but second item only has description*/
+		TEST_METHOD(swapTest2) {
+			Controller controller;
+			Item item1;
+			Item item2;
+			Parser parse;
+			string inputString1 = "testing from 23/4/2015 14:0 - 16:0";
+			string inputString2 = "project meeting";		
+			parse.setStringToParse(inputString1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(inputString2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+
+			string expectedEvent2 = item1.event;
+			int expectedEventDay2 = item1.eventDate[0];
+			int expectedEventMonth2 = item1.eventDate[1];
+			int expectedStartTimeHour2 = item1.eventStartTime[0];
+			int expectedStartTimeMin2 = item1.eventStartTime[1];
+			string expectedEvent1 = item2.event;
+			int expectedEventDay1 = item2.eventDate[0];
+			int expectedEventMonth1 = item2.eventDate[1];
+			int expectedStartTimeHour1 = item2.eventStartTime[0];
+			int expectedStartTimeMin1 = item2.eventStartTime[1];
+			controller.swap(item1, item2);
+
+			Assert::AreEqual(expectedEvent2, item2.event);
+			Assert::AreEqual(expectedEvent1, item1.event);
+			Assert::AreEqual(expectedEventDay2, item2.eventDate[0]);
+			Assert::AreEqual(expectedEventDay1, item1.eventDate[0]);
+			Assert::AreEqual(expectedEventMonth2, item2.eventDate[1]);
+			Assert::AreEqual(expectedEventMonth1, item1.eventDate[1]);
+			Assert::AreEqual(expectedStartTimeHour2, item2.eventStartTime[0]);
+			Assert::AreEqual(expectedStartTimeHour1, item1.eventStartTime[0]);
+			Assert::AreEqual(expectedStartTimeMin2, item2.eventStartTime[1]);
+			Assert::AreEqual(expectedStartTimeMin1, item1.eventStartTime[1]);
+		}
+
+		/*test for the case where two event are not in the same month,event 1 is earlier than 2*/
+		TEST_METHOD(compareEarlierThanTest1) {
+			Controller controller;
+			string inputString1 = "presentation on 14/4/2015 14:30 ";
+			string inputString2 = "study on 3/5/2015 17:00";
+			Item item1;
+			Item item2;
+			Parser parse;
+			parse.setStringToParse(inputString1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(inputString2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+
+			int expectedResult = -1;
+			Assert::AreEqual(expectedResult, controller.compareEarlierThan(item1, item2));
+		}
+
+
+		/*test for the case where two event are not in the same year,event 1 is earlier than 2*/
+		TEST_METHOD(compareEarlierThanTest2) {
+			Controller controller;
+			Item item1;
+			Item item2;
+			Parser parse;
+			string inputString1 = "presentation on 14/4/2015 14:30 ";
+			string inputString2 = "study on 3/5/2017 17:00";
+			parse.setStringToParse(inputString1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(inputString2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+
+			int expectedResult = -1;
+			Assert::AreEqual(expectedResult, controller.compareEarlierThan(item1, item2));
+		}
+
+
+		/*test for the case where two event are in the same month,diff day*/
+		/*event 1 is earlier than 2*/
+		TEST_METHOD(compareEarlierThanTest3) {
+			Controller controller;
+			Item item1;
+			Item item2;
+			Parser parse;
+			string inputString1 = "presentation on 14/4/2015 14:30 ";
+			string inputString2 = "study on 22/4/2015 17:00";
+
+			parse.setStringToParse(inputString1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(inputString2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+
+			int expectedResult = -1;
+			Assert::AreEqual(expectedResult, controller.compareEarlierThan(item1, item2));
+		}
+
+
+		/*test for the case where two event are on the same day,diff start hour*/
+		/*event 1 is earlier than 2*/
+		TEST_METHOD(compareEarlierThanTest4) {
+			Controller controller;
+			Item item1;
+			Item item2;
+			Parser parse;
+			string inputString1 = "presentation on 11/4/2015 14:30 ";
+			string inputString2 = "study on 11/4/2015 17:00";
+			parse.setStringToParse(inputString1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(inputString2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+
+			int expectedResult = -1;
+			Assert::AreEqual(expectedResult, controller.compareEarlierThan(item1, item2));
+		}
+
+		//test for the case where two event are on same start hour, diff start min
+		//event 1 is earlier than 2
+		TEST_METHOD(compareEarlierThanTest5) {
+			Controller controller;
+			Item item1;
+			Item item2;
+			Parser parse;
+			string inputString1 = "presentation on 11/4/2015 14:30 ";
+			string inputString2 = "study on 11/4/2015 14:54";
+			parse.setStringToParse(inputString1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(inputString2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+
+			int expectedResult = -1;
+			Assert::AreEqual(expectedResult, controller.compareEarlierThan(item1, item2));
+		}
+		/*test for the case where two event are at same start time*/
+		TEST_METHOD(compareEarlierThanTest6) {
+			Controller controller;
+			Item item1;
+			Item item2;
+			Parser parse;
+			string inputString1 = "presentation on 11/4/2015 14:54";
+			string inputString2 = "study on 11/4/2015 14:54";
+			parse.setStringToParse(inputString1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(inputString2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+
+			int expectedResult = 0;
+			Assert::AreEqual(expectedResult, controller.compareEarlierThan(item1, item2));
+		}
+
+
+		/*test for the case where two event are not at same time,but diff duration*/
+		TEST_METHOD(compareEarlierThanTest7) {
+			Controller controller;
+			Item item1;
+			Item item2;
+			Parser parse;	
+			string inputString1 = "presentation on 11/4/2015 14:30 - 14:50";
+			string inputString2 = "study on 11/4/2015 14:30 - 17:00";
+			parse.setStringToParse(inputString1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(inputString2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+
+			int expectedResult = 0;
+			Assert::AreEqual(expectedResult, controller.compareEarlierThan(item1, item2));
+		}
+
+
+		/*test for the case where two event areat same time,with same duration*/
+		/*event 1 is earlier than 2*/
+		TEST_METHOD(compareEarlierThanTest8) {
+			Controller controller;
+			Item item1;
+			Item item2;
+			Parser parse;
+			string inputString1 = "presentation on 11/4/2015 14:30 - 15:50";
+			string inputString2 = "study on 11/4/2015 14:30 - 15:50";
+			parse.setStringToParse(inputString1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			parse.setStringToParse(inputString2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+
+			int expectedResult = 0;
+			Assert::AreEqual(expectedResult, controller.compareEarlierThan(item1, item2));
+		}
+
+		/*
+		TEST_METHOD(chronoSortTest) {
+			vector<Item> vectorStore;
+			Controller controller;
+			Item item1;
+			Item item2;
+			Item item3;
+			Item item4;
+			Item temp1;
+			Item temp2;
+			Item temp3;
+			Item temp4;
+			Parser parse;
+			string inputString1 = "presentation on 19/4/2015 ";
+			string inputString2 = "study on 14/5/2015 ";
+			string inputString3 = "presentation on 17/4/2015 2pm";
+			string inputString4 = "meet ann on 21/8/2015 12 to 14";
+			parse.setStringToParse(inputString1);
+			parse.extractDateAndTime();
+			item1 = parse.getItem();
+			vectorStore.push_back(item1);
+			parse.setStringToParse(inputString2);
+			parse.extractDateAndTime();
+			item2 = parse.getItem();
+			vectorStore.push_back(item2);
+			parse.setStringToParse(inputString3);
+			parse.extractDateAndTime();
+			item3 = parse.getItem();
+			vectorStore.push_back(item3);
+			parse.setStringToParse(inputString4);
+			parse.extractDateAndTime();
+			item4 = parse.getItem();
+			vectorStore.push_back(item4); 
+			temp1 = item1;
+			temp2 = item3;
+			temp3 = item2;
+			temp4 = item4;
+			controller.chronoSort(vectorStore);
+			item1 = vectorStore.at(0);
+			item2 = vectorStore.at(1);
+			item3 = vectorStore.at(2);
+			item4 = vectorStore.at(3);
+
+			Assert::AreEqual(temp1, item1);
+			Assert::AreEqual(temp2, item2);
+			Assert::AreEqual(temp3, item3);
+			Assert::AreEqual(temp4, item4);
+		}
+		*/
+
+		TEST_METHOD(addToInputBankTest) {}
+		TEST_METHOD(setClockTo12HourTest) {}
+		TEST_METHOD(setClockTo24HourTest) {}
+
+	};
+}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\ControllerTest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	TEST_METHOD(setStringToParseTest) {
+		Parser parse;
+		string input = "Add dinner with friends today";
+		parse.setStringToParse(input);
+		string expected = "Add dinner with friends today";
+		Assert::AreEqual(expected, parse.getItem().event);
+
+		input = " ";
+		parse.setStringToParse(input);
+		expected = " ";
+		Assert::AreEqual(expected, parse.getItem().event);
+	}
+
+
+	TEST_METHOD(getUserCommandTest1) {
+		Parser parse;
+		parse.setStringToParse("delete task1");
+		parse.extractUserCommand();
+		string expectedOutput = "delete";
+		string output = parse.getUserCommand();
+		Assert::AreEqual(expectedOutput, output);
+
+	}
+
+	TEST_METHOD(getUserCommandTest2) {
+		Parser parse;
+		parse.setStringToParse("display");
+		parse.extractUserCommand();
+		string expectedOutput = "display";
+		string output = parse.getUserCommand();
+		Assert::AreEqual(expectedOutput, output);
+	}
+
+	TEST_METHOD(getUserCommandTest3) {
+		Parser parse;
+		parse.setStringToParse("add task1 have lunch on tues");
+		parse.extractUserCommand();
+		string expectedOutput = "add";
+		string output = parse.getUserCommand();
+		Assert::AreEqual(expectedOutput, output);}
+
+	TEST_METHOD(getUserCommandTest4) {
+		Parser parse;
+		parse.setStringToParse("edit task1 have lunch on tues");
+		parse.extractUserCommand();
+		string expectedOutput = "edit";
+		string output = parse.getUserCommand();
+		Assert::AreEqual(expectedOutput, output);	
+	}
+
+	/*boundary case of invalid input user command*/
+	TEST_METHOD(getUserCommandTest5) {
+		Parser parse;
+		parse.setStringToParse("test invalid input on monday");
+		parse.extractUserCommand();
+		string expectedOutput = "test";
+		string output = parse.getUserCommand();
+		Assert::AreEqual(expectedOutput, output);	
+	}
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	TEST_METHOD(isDateKeywordTest) {
+		DateTimeParser parse;
+
+		bool isExpectedBool = false;
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("on"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("from"));
+
+		isExpectedBool = true;
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("tuesday"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("mon"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("-"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("today"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("tomorrow"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("next"));
+		Assert::AreEqual(isExpectedBool,parse.isDateKeyword("pm"));
+
+	}
+
+	TEST_METHOD(setDateTest) {
+		DateTimeParser parse;
+		Item item;
+		int day = 9;
+		int month = 4;
+		int year = 2015;
+		parse.setDate(day, month, year);
+		int expectedEventDate1 = 9;
+		int expectedEventDate2 = 4;
+		int expectedEventDate3 = 2015;
+
+		Assert::AreEqual(expectedEventDate1, parse.getItem().eventDate[0]);
+		Assert::AreEqual(expectedEventDate2, parse.getItem().eventDate[1]);
+		Assert::AreEqual(expectedEventDate3, parse.getItem().eventDate[2]);
+
+		day = 1;
+		month = 0;
+		year = 0;
+		parse.setDate(day, month, year);
+		expectedEventDate1 = 1;
+		expectedEventDate2 = 0;
+		expectedEventDate3 = 0;
+
+		Assert::AreEqual(expectedEventDate1, parse.getItem().eventDate[0]);
+		Assert::AreEqual(expectedEventDate2, parse.getItem().eventDate[1]);
+		Assert::AreEqual(expectedEventDate3, parse.getItem().eventDate[2]);
+
+	}
+
+	TEST_METHOD(findDateDelimetersTest1) {
+		DateTimeParser parse;
+		string input = "19/4/2015";
+		size_t expectedPos = 2;
+		Assert::AreEqual(expectedPos, parse.findDateDelimiters(input));
+	}
+
+	TEST_METHOD(findDateDelimetersTest2) {
+		DateTimeParser parse;
+		string input = "19/4 19:00 - 20:00";
+		size_t expectedPos = 2;
+		Assert::AreEqual(expectedPos, parse.findDateDelimiters(input));
+	}
+
+	TEST_METHOD(findDateDelimetersTest3) {
+		DateTimeParser parse;
+		string input = "17:00 - 20";
+		size_t expectedPos = string::npos;
+		Assert::AreEqual(expectedPos, parse.findDateDelimiters(input));
+	}
+
+	TEST_METHOD(findDateDelimetersTest4) {
+		DateTimeParser parse;
+		string input = "tuesday";
+		size_t expectedPos = string::npos;
+		Assert::AreEqual(expectedPos, parse.findDateDelimiters(input));
+	}
+
+	/*boundary case of an invalid empty input*/
+	TEST_METHOD(findDateDelimetersTest5) {
+		DateTimeParser parse;
+		string input = "*()aha$31";
+		size_t expectedPos = string::npos;
+		Assert::AreEqual(expectedPos, parse.findDateDelimiters(input));
+	}
+
+	/*test for the case when the input contains date and start and invalid end time of event*/
+	TEST_METHOD(calculateDateTimeTest1) {
+
+		string input = "27/5/2015 12:30 - 24:00"; 
+		Item item;
+		DateTimeParser parse;
+		parse.calculateDateTime(input);
+		int expectedDate = 27;
+		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
+		int expectedMonth = 5;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+		int expectedStartHour = 12;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 30;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+		int expectedEndHour = 0;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+
+	}
+
+
+	/*test for the case where there is no year and end time*/
+	TEST_METHOD(calculateDateTimeTest2) {
+		Item item;
+		DateTimeParser parse;
+		string input = "27/6 12:00"; 
+		parse.calculateDateTime(input);
+		int expectedDate = 27;
+		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
+		int expectedMonth = 6;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+		int expectedStartHour = 12;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+		int expectedEndHour = 0;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+	/*test for the case where there is no year and no time*/
+	TEST_METHOD(calculateDateTimeTest3) {
+		Item item;
+		DateTimeParser parse;
+		string input = "27/6"; 
+		parse.calculateDateTime(input);
+		int expectedDate = 27;
+		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
+		int expectedMonth = 6;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+		int expectedStartHour = 0;
+		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
+		int expectedStartMinute = 0;
+		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
+		int expectedEndHour = 0;
+		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
+		int expectedEndMinute = 0;
+		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
+	}
+
+	/*test for the boundary case when the input dateTimestring is empty*/
+	TEST_METHOD(calculateDateTimeTest4) {
+		Item item;
+		DateTimeParser parse;
+		string input = ""; 
+		parse.calculateDateTime(input);
+		int expectedDate = 13;
+		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
+		int expectedMonth = 4;
+		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
+		int expectedYear = 2015;
+		Assert::AreEqual(expectedYear, parse.getItem().eventDate[2]);
+
+	}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	TEST_METHOD(VerifyAllDateTimeTest1) {
+		DateTimeParser parse;
+		Item item;
+		string input = "25/5/2015 10:00 - 21:45" ;
+		parse.updateItemStartDate();
+		parse.updateItemDateTime(input, item, false);
+		parse.getItem();
+
+		int expectedEventStartTime0 =  10 ;
+		int expectedEventStartTime1 = 0; 
+		int expectedEventEndTime0 = 21; 
+		int expectedEventEndTime1 = 45; 
+		int expectedEventDate0 = 25; 
+		int expectedEventDate1 = 5; 
+		int expectedEventDate2 = 2015; 
+		int expectedEventEndDate0 = 0;
+		int expectedEventEndDate1 = 0;
+		int expectedEventEndDate2 = 0;
+		parse.verifyAllDateTime();
+		Assert::AreEqual(expectedEventStartTime0, parse.getItem().eventStartTime[0]);
+		Assert::AreEqual(expectedEventStartTime1, parse.getItem().eventStartTime[1]);
+		Assert::AreEqual(expectedEventEndTime0, parse.getItem().eventEndTime[0]);
+		Assert::AreEqual(expectedEventEndTime1, parse.getItem().eventEndTime[1]);
+		Assert::AreEqual(expectedEventDate0, parse.getItem().eventDate[0]);
+		Assert::AreEqual(expectedEventDate1, parse.getItem().eventDate[1]);
+		Assert::AreEqual(expectedEventDate2, parse.getItem().eventDate[2]);
+		Assert::AreEqual(expectedEventEndDate0, parse.getItem().eventEndDate[0]);
+		Assert::AreEqual(expectedEventEndDate1, parse.getItem().eventEndDate[1]);
+		Assert::AreEqual(expectedEventEndDate2, parse.getItem().eventEndDate[2]);
+	}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	/*test for the case where all three day/month/year are present*/
+	TEST_METHOD(UpdateItemStartDateTest1) {
+		DateTimeParser parse;	
+		Item item;
+		item.eventDate[0] = 23;
+		item.eventDate[1] = 12;
+		item.eventDate[2] = 2015;
+		parse.updateItemStartDate();
+		int expectedEventDate0 = 23; 
+		int expectedEventDate1 = 12; 
+		int expectedEventDate2 = 2015; 
+		Assert::AreEqual(expectedEventDate0, item.eventDate[0]);
+		Assert::AreEqual(expectedEventDate1, item.eventDate[1]);
+		Assert::AreEqual(expectedEventDate2, item.eventDate[2]);
+	}
+
+	/*test for the case where one or two of day/month/year is zero*/
+	TEST_METHOD(UpdateItemStartDateTest2) {
+		DateTimeParser parse;	
+		Item item;
+		item.eventDate[0] = 12;
+		item.eventDate[1] = 6;
+		item.eventDate[2] = 0;
+		parse.updateItemStartDate();
+		int expectedEventDate0 = 12; 
+		int expectedEventDate1 = 6; 
+		int expectedEventDate2 = 0; 
+		Assert::AreEqual(expectedEventDate0, item.eventDate[0]);
+		Assert::AreEqual(expectedEventDate1, item.eventDate[1]);
+		Assert::AreEqual(expectedEventDate2, item.eventDate[2]);
+	}
+
+	/*boundary case where all of day/month/year are zeros*/
+	TEST_METHOD(UpdateItemStartDateTest3) {
+		DateTimeParser parse;	
+		DateTime datetime;
+		Item item;
+		item.eventDate[0] = 0;
+		item.eventDate[1] = 0;
+		item.eventDate[2] = 0;
+		parse.resetItemDateTime();
+		parse.updateItemStartDate();
+		int expectedEventDate0 = datetime.getCurrentDay(); 
+		int expectedEventDate1 = datetime.getCurrentMonth(); 
+		int expectedEventDate2 = datetime.getCurrentYear(); 
+		Assert::AreEqual(expectedEventDate0, parse.getItem().eventDate[0]);
+		Assert::AreEqual(expectedEventDate1, parse.getItem().eventDate[1]);
+		Assert::AreEqual(expectedEventDate2, parse.getItem().eventDate[2]);
+	}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 */
+
+	/*test for the case where the input string is a number string*/
+	TEST_METHOD(convertStringToIntegerTest1) {
+		DateTimeParser parse;
+		string input = "1235";
+		int expectedOutput = 1235;
+		Assert::AreEqual(expectedOutput, parse.convertStringToInteger(input));
+	}
+
+	/*test for the case where the input string contains 1 non-integer*/
+	TEST_METHOD(convertStringToIntegerTest2) {
+		DateTimeParser parse;	
+		string input = "12a34";
+		int expectedOutput = 12;
+		Assert::AreEqual(expectedOutput, parse.convertStringToInteger(input));
+	}
+	/*test for the case where the input string contains only 1 integer*/
+	TEST_METHOD(convertStringToIntegerTest3) {
+		DateTimeParser parse;
+		string input = "a3f";
+		int expectedOutput = 0;
+		Assert::AreEqual(expectedOutput, parse.convertStringToInteger(input));
+	}
+
+	/*test for the case where the input stringhas no integer*/
+	TEST_METHOD(convertStringToIntegerTest4) {
+		DateTimeParser parse;		
+		string input = "avdd";
+		int expectedOutput = 0;
+		Assert::AreEqual(expectedOutput, parse.convertStringToInteger(input));
+	}
+
+
+	};
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+
+
+
+
+
