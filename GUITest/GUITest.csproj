@@ -54,6 +54,8 @@
   <ItemGroup>
     <Compile Include="AddMethod.cs" />
     <Compile Include="ClearMethod.cs" />
+    <Compile Include="InvalidAddMethod.cs" />
+    <Compile Include="FreeSlotMethod.cs" />
     <Compile Include="TwentyfourHrMethod.cs" />
     <Compile Include="InvalidSearchMethod.cs" />
     <Compile Include="TwelveHrMethod.cs" />

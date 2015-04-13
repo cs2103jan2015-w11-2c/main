@@ -21,6 +21,7 @@ public:
 	// minute: 0 - 59
 	int eventStartTime[2];
 	int eventEndTime[2];
+	bool isDeadlineTask;
 
 	Item(void);
 

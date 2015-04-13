@@ -15,6 +15,8 @@ const string TIME_UNIT_HOURS = " hours";
 const string TIME_UNIT_MINUTES = " minutes";
 const string STRING_FREE_SLOTS = "Free Slots";
 
+static const string DEADLINE_HEADING = "Deadline Events";
+
 using namespace std;
 
 struct SEARCHRESULT {
@@ -22,14 +24,14 @@ struct SEARCHRESULT {
 	RESULT result;
 };
 
-class SearchItem :public Command {
+class SearchItem : public Command {
 private:
 	Item _input;
 	string _message;
 	vector<RESULT> *_otherResult;
 	int _sleepTime[2][2];
 	bool _searchFree;
-
+	bool _is12HourFormat;
 public:
 	SearchItem() {
 		_message = "";
@@ -40,7 +42,7 @@ public:
 		_searchFree = false;
 	}
 
-	SearchItem(const Item input, const string message, vector<RESULT> *otherResult, int sleepTime[][2], bool free) {
+	SearchItem(const Item input, const string message, vector<RESULT> *otherResult, int sleepTime[][2], bool free, bool is12HourFormat) {
 		_input = input;
 		_message = message;
 		_otherResult = otherResult;
@@ -49,10 +51,173 @@ public:
 		_sleepTime[1][0] = sleepTime[1][0];
 		_sleepTime[1][1] = sleepTime[1][1];
 		_searchFree = free;
+		_is12HourFormat = is12HourFormat;
 	}
 
 	~SearchItem() {
 	}
+
+	long getTimePos(const int date[3], const int time[2]) {
+		long timePos = 0;
+
+		timePos += date[2];
+		timePos *= 12;
+		timePos += date[1];
+		timePos *= 31;
+		timePos += date[0];
+		timePos *= 24;
+		timePos += time[1];
+		timePos *= 60;
+		timePos += time[0];
+
+		return timePos;
+	}
+
+	bool checkIsClash(Item item1, Item item2) {
+		long startTimePos1 = getTimePos(item1.eventDate, item1.eventStartTime);
+		long endTimePos1;
+		if (dateIsSpecified(item1.eventDate) && !dateIsSpecified(item1.eventEndDate)) {
+			Item temp;
+			temp.eventEndDate[0] = item1.eventDate[0];
+			temp.eventEndDate[1] = item1.eventDate[1];
+			temp.eventEndDate[2] = item1.eventDate[2];
+			temp.eventEndTime[0] = item1.eventEndTime[0];
+			temp.eventEndTime[1] = item1.eventEndTime[1];
+			endTimePos1 =  getTimePos(temp.eventEndDate, temp.eventEndTime);
+		} else {
+			endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventEndTime);
+		}
+
+		long startTimePos2 = getTimePos(item2.eventDate, item2.eventStartTime);
+		long endTimePos2;
+		if (dateIsSpecified(item2.eventDate) && !dateIsSpecified(item2.eventEndDate)) {
+			Item temp;
+			temp.eventEndDate[0] = item2.eventDate[0];
+			temp.eventEndDate[1] = item2.eventDate[1];
+			temp.eventEndDate[2] = item2.eventDate[2];
+			temp.eventEndTime[0] = item2.eventEndTime[0];
+			temp.eventEndTime[1] = item2.eventEndTime[1];
+			endTimePos2 =  getTimePos(temp.eventEndDate, temp.eventEndTime);
+		} else {
+			endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
+		}
+
+		bool isDeadline1 = item1.isDeadline();
+		bool isDeadline2 = item2.isDeadline();
+
+		if (isDeadline1 && isDeadline2) {
+			if (startTimePos1 != startTimePos2) {
+				return false;
+			}
+			return true;
+		} else if (isDeadline1) {
+			if (startTimePos1 <= startTimePos2 || startTimePos1 >= endTimePos2) {
+				return false;
+			} 
+			return true;
+		} else if (isDeadline2) {
+			if (startTimePos2 <= startTimePos1 || startTimePos2 >= endTimePos1) {
+				return false;
+			} 
+			return true;
+		}
+
+		if (endTimePos2 <= startTimePos1) {
+			return false;
+		}
+		if (endTimePos1 <= startTimePos2) {
+			return false;
+		}
+		return true;
+	}
+
+	bool checkIsExpired(Item item) {
+		DateTime dateTime;
+
+		if (item.isDeadline()) {
+			if (item.eventDate[2] < dateTime.getCurrentYear()) {
+				return true;
+			} else if (item.eventDate[2] == dateTime.getCurrentYear()) {
+				if (item.eventDate[1] < dateTime.getCurrentMonth()) {
+					return true;
+				} else if (item.eventDate[1] == dateTime.getCurrentMonth()) {
+					if (item.eventDate[0] < dateTime.getCurrentDay()) {
+						return true;
+					} else if (item.eventDate[0] == dateTime.getCurrentDay()) {
+						if (item.eventStartTime[0] < dateTime.getCurrentHour()) {
+							return true;
+						} else if (item.eventStartTime[0] == dateTime.getCurrentHour()) {
+							if (item.eventStartTime[1] < dateTime.getCurrentMinute()) {
+								return true;
+							} else {
+								return false;
+							}
+						}
+					}
+				}
+			}
+		} else if (!dateIsSpecified(item.eventEndDate)){
+			if (item.eventDate[2] < dateTime.getCurrentYear()) {
+				return true;
+			} else if (item.eventDate[2] == dateTime.getCurrentYear()) {
+				if (item.eventDate[1] < dateTime.getCurrentMonth()) {
+					return true;
+				} else if (item.eventDate[1] == dateTime.getCurrentMonth()) {
+					if (item.eventDate[0] < dateTime.getCurrentDay()) {
+						return true;
+					} else if (item.eventDate[0] == dateTime.getCurrentDay()) {
+						if (item.eventEndTime[0] < dateTime.getCurrentHour()) {
+							return true;
+						} else if (item.eventEndTime[0] == dateTime.getCurrentHour()) {
+							if (item.eventEndTime[1] < dateTime.getCurrentMinute()) {
+								return true;
+							} else {
+								return false;
+							}
+						}
+					}
+				}
+			}
+		} else if (item.eventEndTime[0] == 0 && item.eventEndTime[1] == 0){
+			if (item.eventEndDate[2] < dateTime.getCurrentYear()) {
+				return true;
+			} else if (item.eventEndDate[2] == dateTime.getCurrentYear()) {
+				if (item.eventEndDate[1] < dateTime.getCurrentMonth()) {
+					return true;
+				} else if (item.eventEndDate[1] == dateTime.getCurrentMonth()) {
+					if (item.eventEndDate[0] < dateTime.getCurrentDay()) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			}
+		} else {
+			if (item.eventEndDate[2] < dateTime.getCurrentYear()) {
+				return true;
+			} else if (item.eventEndDate[2] == dateTime.getCurrentYear()) {
+				if (item.eventEndDate[1] < dateTime.getCurrentMonth()) {
+					return true;
+				} else if (item.eventEndDate[1] == dateTime.getCurrentMonth()) {
+					if (item.eventEndDate[0] < dateTime.getCurrentDay()) {
+						return true;
+					} else if (item.eventEndDate[0] == dateTime.getCurrentDay()) {
+						if (item.eventEndTime[0] < dateTime.getCurrentHour()) {
+							return true;
+						} else if (item.eventEndTime[0] == dateTime.getCurrentHour()) {
+							if (item.eventEndTime[1] < dateTime.getCurrentMinute()) {
+								return true;
+							} else {
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 
 	//Levenshtein's Algorithm to get edit distance between two words
 	int getEditDist(const string input, const string item) {
@@ -234,9 +399,11 @@ public:
 		}
 	}
 
-	bool isSameStartDateAndTime(const Item item, const Item input) {
+	bool isSameStartOrEndDateAndTime(const Item item, const Item input) {
 		DateTimeParser dateTimeParser;
 		
+		bool isEndMatched = true;
+
 		int day = input.eventDate[0];
 		int mon = input.eventDate[1];
 		int year = input.eventDate[2];
@@ -248,7 +415,7 @@ public:
 		int afterNextDayDate[3] = {day, mon, year};
 
 		//If deadline event, allow comparisons up to 2 days ahead, else only current day
-		if (item.eventEndTime[0] == 0 && item.eventEndTime[1] == 0) {
+		if (item.isDeadlineTask) {
 			for (int i = 0; i < 3; i++) {
 				if(item.eventDate[i] != input.eventDate[i] &&
 					item.eventDate[i] != nextDayDate[i] &&
@@ -258,13 +425,22 @@ public:
 			}
 		} else {
 			for (int i = 0; i < 3; i++) {
-				if(item.eventDate[i] != input.eventDate[i]) {
+				if(item.eventDate[i] != input.eventDate[i] && item.eventEndDate[i] != input.eventDate[i]) {
 					return false;
 				}
 			}
 		}
 
-		if (item.eventEndTime[0] == 0 && item.eventEndTime[1] == 0) {
+		//check to see whether if the start or the end of the timed task is matched with the input
+		for (int i = 0; i < 3; i++) {
+			if (item.eventEndDate[i] != input.eventDate[i]) {
+				isEndMatched = false;
+				break;
+			}
+		}
+
+		//if IsDeadline, check against next 2 days, else check if if time matches the previously matched date
+		if (item.isDeadlineTask) {
 			for (int i = 0; i < 2; i++) {
 				if((input.eventStartTime[i] != 0 && item.eventStartTime[i] != input.eventStartTime[i]) &&
 					item.eventDate[i] != nextDayDate[i] &&
@@ -274,7 +450,9 @@ public:
 			}
 		} else {
 			for (int i = 0; i < 2; i++) {
-				if(input.eventStartTime[i] != 0 && item.eventStartTime[i] != input.eventStartTime[i]) {
+				if(input.eventStartTime[i] != 0 
+					&& ((!isEndMatched && item.eventStartTime[i] != input.eventStartTime[i])
+					|| (isEndMatched && item.eventEndTime[i] != input.eventStartTime[i]))) {
 					return false;
 				}
 			}
@@ -313,9 +491,19 @@ public:
 		}
 		return 1;
 	}
-
+	
+	//Returns true if any date field is non_zero to check if date has been set
+	bool dateIsSpecified(const int dateArray[3]) {
+		for (int i = 0; i < 2; i++) {
+			if (dateArray[i] != 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	//Returns true if any time field is non_zero to check if time has been set
-	bool timeIsSpecified(const int timeArray[2]) {
+	bool timeIsSpecified(const int timeArray[3]) {
 		for (int i = 0; i < 2; i++) {
 			if (timeArray[i] != 0) {
 				return true;
@@ -326,33 +514,58 @@ public:
 
 	//Returns true if an item occurs within range specified by input
 	bool isWithinRange(const Item item, const Item input) {
+
+		DateTimeParser dateTimeParser;
+
+		int day;
+		int mon;
+		int year;
+
+
+		if (!dateIsSpecified(item.eventEndDate)) {
+			day = input.eventDate[0];
+			mon = input.eventDate[1];
+			year = input.eventDate[2];
+		} else {
+			day = input.eventEndDate[0];
+			mon = input.eventEndDate[1];
+			year = input.eventEndDate[2];
+		}
+
+		dateTimeParser.getNextDayDate(day, mon, year);
+		int nextDayDate[3] = {day, mon, year};
+
+		dateTimeParser.getNextDayDate(day, mon, year);
+		int afterNextDayDate[3] = {day, mon, year};
+
+		//If item is a deadline task, then check against the next 2 days. If there is a match, return true 
+		if (item.isDeadlineTask) {
+			bool isMatch = true;
 		
+			for ( int i = 0; i < 3; i++) {
+				if (item.eventDate[i] != nextDayDate[i] && item.eventDate[i] != afterNextDayDate[i]) {
+					isMatch = false;
+					break;
+				}
+			}
+			if (isMatch) {
+				return true;
+			}
+		}
+
 		//check if item starts earlier than input start date
 		if(compareDateEarlierThan(item.eventDate, input.eventDate) == -1) {
 			return false;
 		}
 
-		//check if item ends later than input end date
-		if (input.eventEndDate[0] == 0 && input.eventEndDate[1] == 0 && input.eventEndDate[2] == 0) {
+		//check if item ends later than input end date. If end date unspecified, then compare with input start date
+		if (!dateIsSpecified(input.eventEndDate)) {
 			if(compareDateEarlierThan(item.eventEndDate, input.eventDate) == 1) {
 				return false;
 			}
 		} else {
 			if(compareDateEarlierThan(item.eventEndDate, input.eventEndDate) == 1) {
 				return false;
-			}
-		}
-
-		//If the item is a deadline item, then the start date is compared to the input end date
-		if (!timeIsSpecified(item.eventEndTime)) {
-			if (input.eventEndDate[0] == 0 && input.eventEndDate[1] == 0 && input.eventEndDate[2] == 0) {
-				if (compareDateEarlierThan(item.eventDate, input.eventDate) == 1) {
-					return false;
-				}
-			} else {
-				if (compareDateEarlierThan(item.eventDate, input.eventEndDate) == 1) {
-					return false;
-				}
 			}
 		}
 
@@ -364,9 +577,7 @@ public:
 		}
 		
 		//check if item ends later than input end time and is specified
-		//Since parser automatically sets the end time to be 1 hour after start, we use the start time
-		//as an indicator for whether time has been specified
-		if (timeIsSpecified(input.eventStartTime)) { //there is an end time
+		if (timeIsSpecified(input.eventEndTime)) { 
 			if (timeIsSpecified(item.eventEndTime)) {
 				if (compareTimeEarlierThan(item.eventEndTime, input.eventEndTime) == 1) {
 					return false;
@@ -384,29 +595,92 @@ public:
 	//Both start and end specified: excludes events not within range
 	//Only start specified, searches for items with the same start time
 	//Nothing specified, nothing excluded
-	void filterDateAndTime(vector<Item> &vectorStore, bool hasStartDate, bool hasEndDate) {
+	void filterDateAndTime(vector<Item> vectorStore, bool hasStartDate, bool hasEndDate) {
+		vector<RESULT> floatingRes;
+		vector<RESULT> deadlineRes;
+		vector<RESULT> otherRes;
+
 		_otherResult->clear();
 
 		if (!hasStartDate && !hasEndDate) {
 			for (unsigned int i = 0; i < vectorStore.size(); i++) {
 				RESULT temp;
 				temp.event = vectorStore[i].event;
-				temp.date = vectorStore[i].dateToString();
-				temp.time = vectorStore[i].timeToString();
 				temp.lineNumber = to_string(i + 1) + ".";
-				
-				_otherResult->push_back(temp);
+				temp.isClash = false;
+				for (unsigned int j = 0; j < vectorStore.size(); j++) {
+					if (i != j && checkIsClash(vectorStore[i], vectorStore[j])) {
+						temp.isClash = true;
+						break;
+					}
+				}
+				temp.isExpired = checkIsExpired(vectorStore[i]);
+				if (vectorStore[i].isDeadline()) {
+					temp.date = DEADLINE_HEADING;
+					vectorStore[i].eventEndDate[0] = vectorStore[i].eventDate[0];
+					vectorStore[i].eventEndDate[1] = vectorStore[i].eventDate[1];
+					vectorStore[i].eventEndDate[2] = vectorStore[i].eventDate[2];
+					if (_is12HourFormat) {
+						temp.time = vectorStore[i].timeAndEndDateToString();
+					} else {
+						temp.time = vectorStore[i].timeTo24HrString();
+					}
+					deadlineRes.push_back(temp);
+				} else {
+					temp.date = vectorStore[i].dateToString();
+					if (_is12HourFormat) {
+						temp.time = vectorStore[i].timeAndEndDateToString();
+					} else {
+						temp.time = vectorStore[i].timeTo24HrString();
+					}
+					if (vectorStore[i].isFloating()) {
+						floatingRes.push_back(temp);
+					} else {
+						_otherResult->push_back(temp);
+					}				
+				}
 			}
 		} else if (!hasEndDate) {
 			for (unsigned int i = 0; i < vectorStore.size(); i++) {
-				if (isSameStartDateAndTime(vectorStore[i], _input)) {
+				if (isSameStartOrEndDateAndTime(vectorStore[i], _input)) {
 					RESULT temp;
 					temp.event = vectorStore[i].event;
-					temp.date = vectorStore[i].dateToString();
-					temp.time = vectorStore[i].timeToString();
 					temp.lineNumber = to_string(i + 1) + ".";
-				
-					_otherResult->push_back(temp);
+					
+					temp.isClash = false;
+					for (unsigned int j = 0; j < vectorStore.size(); j++) {
+						if (i != j && checkIsClash(vectorStore[i], vectorStore[j])) {
+							temp.isClash = true;
+							break;
+						}
+					}
+					
+					temp.isExpired = checkIsExpired(vectorStore[i]);
+					
+					if (vectorStore[i].isDeadline()) {
+						temp.date = DEADLINE_HEADING;
+						vectorStore[i].eventEndDate[0] = vectorStore[i].eventDate[0];
+						vectorStore[i].eventEndDate[1] = vectorStore[i].eventDate[1];
+						vectorStore[i].eventEndDate[2] = vectorStore[i].eventDate[2];
+						if (_is12HourFormat) {
+							temp.time = vectorStore[i].timeAndEndDateToString();
+						} else {
+							temp.time = vectorStore[i].timeTo24HrString();
+						}
+						deadlineRes.push_back(temp);
+					} else {
+						temp.date = vectorStore[i].dateToString();
+						if (_is12HourFormat) {
+							temp.time = vectorStore[i].timeAndEndDateToString();
+						} else {
+							temp.time = vectorStore[i].timeTo24HrString();
+						}
+						if (vectorStore[i].isFloating()) {
+							floatingRes.push_back(temp);
+						} else {
+							_otherResult->push_back(temp);
+						}				
+					}
 				}
 			}	
 		} else if (hasStartDate) {
@@ -414,14 +688,46 @@ public:
 				if (isWithinRange(vectorStore[i], _input)) {
 					RESULT temp;
 					temp.event = vectorStore[i].event;
-					temp.date = vectorStore[i].dateToString();
-					temp.time = vectorStore[i].timeToString();
 					temp.lineNumber = to_string(i + 1) + ".";
-				
-					_otherResult->push_back(temp);
+					temp.isClash = false;
+					for (unsigned int j = 0; j < vectorStore.size(); j++) {
+						if (i != j && checkIsClash(vectorStore[i], vectorStore[j])) {
+							temp.isClash = true;
+							break;
+						}
+					}
+			
+					temp.isExpired = checkIsExpired(vectorStore[i]);
+					
+					if (vectorStore[i].isDeadline()) {
+						temp.date = DEADLINE_HEADING;
+						vectorStore[i].eventEndDate[0] = vectorStore[i].eventDate[0];
+						vectorStore[i].eventEndDate[1] = vectorStore[i].eventDate[1];
+						vectorStore[i].eventEndDate[2] = vectorStore[i].eventDate[2];
+						if (_is12HourFormat) {
+							temp.time = vectorStore[i].timeAndEndDateToString();
+						} else {
+							temp.time = vectorStore[i].timeTo24HrString();
+						}
+						deadlineRes.push_back(temp);
+					} else {
+						temp.date = vectorStore[i].dateToString();
+						if (_is12HourFormat) {
+							temp.time = vectorStore[i].timeAndEndDateToString();
+						} else {
+							temp.time = vectorStore[i].timeTo24HrString();
+						}
+						if (vectorStore[i].isFloating()) {
+							floatingRes.push_back(temp);
+						} else {
+							_otherResult->push_back(temp);
+						}				
+					}
 				}
 			}
 		}
+		_otherResult->insert(_otherResult->begin(), deadlineRes.begin(), deadlineRes.end());
+		_otherResult->insert(_otherResult->begin(), floatingRes.begin(), floatingRes.end());
 	}
 
 	//Only includes floating items for the case where search query is "float" or "floating"
@@ -499,19 +805,28 @@ public:
 							tempItem.eventEndTime[0] = 24;
 						}
 						tempItem.eventEndTime[1] = i % 60;
-						tempItem.eventEndDate[0] = _input.eventDate[0];
-						tempItem.eventEndDate[1] = _input.eventDate[1];
-						tempItem.eventEndDate[2] = _input.eventDate[2];
+						
+						tempItem.eventEndDate[0] = 0;
+						tempItem.eventEndDate[1] = 0;
+						tempItem.eventEndDate[2] = 0;
 
 						int duration = i - startMin;
 						temp.event = to_string(duration/60) + TIME_UNIT_HOURS;
 						if (duration % 60 != 0) {
-							temp.event += ", " + to_string(duration%60) + TIME_UNIT_MINUTES;
+							temp.event += ", " + to_string(duration % 60) + TIME_UNIT_MINUTES;
 						}
-						temp.date = STRING_FREE_SLOTS;
-						temp.time = tempItem.timeAndEndDateToString();
+						temp.date = _input.dateToString();
+						if (_is12HourFormat) {
+							temp.time = tempItem.timeAndEndDateToString();
+						} else {
+							temp.time = tempItem.timeTo24HrString();
+						}
 						temp.lineNumber = to_string(index + 1) + ".";
-					
+						
+						temp.isClash = false;
+						temp.isDeadline = false;
+						temp.isExpired = false;
+
 						index++;
 
 						_otherResult->push_back(temp);
@@ -581,7 +896,7 @@ public:
 			if(_input.event != "") {
 				if (_input.isFloating()) {
 					filterDateAndTime(vectorStore, false, false);
-				} else if (_input.isDeadline()) {
+				} else if (!dateIsSpecified(_input.eventEndDate)) {
 					filterDateAndTime(vectorStore, true, false);
 				} else {
 					filterDateAndTime(vectorStore, true, true);
@@ -590,7 +905,7 @@ public:
 			} else {
 				if (_input.isFloating()) {
 					filterForFloating(vectorStore);
-				} else if (_input.isDeadline()) {
+				} else if (!dateIsSpecified(_input.eventEndDate)) {
 					filterDateAndTime(vectorStore, true, false);
 				} else {
 					filterDateAndTime(vectorStore, true, true);

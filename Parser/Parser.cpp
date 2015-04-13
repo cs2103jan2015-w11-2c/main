@@ -25,6 +25,7 @@ string Parser::getUserCommand() {
 }
 
 Item Parser::getItem() {
+	_item.isDeadlineTask = _isDeadline;
 	return _item;
 }
 

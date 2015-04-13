@@ -29,8 +29,6 @@ namespace GUITest
             // For more information on generated code, see http://go.microsoft.com/fwlink/?LinkId=179463
             this.UIMap.UndoMethod1();
             this.UIMap.AssertUndoMethod1();
-            this.UIMap.UndoMethod2();
-            this.UIMap.AssertUndoMethod2();
         }
 
         #region Additional test attributes

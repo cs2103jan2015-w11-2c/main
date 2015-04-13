@@ -41,6 +41,11 @@
   </Configuration>
   <InitializeActions />
   <ExecuteActions>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>Last mouse action was not recorded.</Message>
+    </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
       <ParameterName />
       <Value Encoded="false">clear</Value>
@@ -50,11 +55,11 @@
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
+      <Text Encoded="false">{Back}{Enter}</Text>
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task1 on 14/4/2015</Value>
+      <Value Encoded="false">add task1 on 27/4/2015 19:0</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
@@ -63,9 +68,14 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task2 on tuesday 18</Value>
+      <Value Encoded="false">add task2 on 22/4/2015 10 to 3p</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
@@ -76,7 +86,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task3 on next sun 7 - 9p</Value>
+      <Value Encoded="false">add task3 on next sunday 3p to 4:32p</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
@@ -87,7 +97,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task4 on 6p to 10p</Value>
+      <Value Encoded="false">add task4 on 2/5 3pm to 5:30pm</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
@@ -96,7 +106,43 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="AddMethod1">
+    <MouseAction UIObjectName="UIMap.UIMagicMemoWindow.UIMagicMemoClient.UIPictureBoxWindow">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Location X="560" Y="240" />
+      <WheelDirection>0</WheelDirection>
+      <ActionType>Click</ActionType>
+      <MouseButton>Left</MouseButton>
+    </MouseAction>
+    <MouseAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Location X="157" Y="216" />
+      <WheelDirection>0</WheelDirection>
+      <ActionType>Click</ActionType>
+      <MouseButton>Left</MouseButton>
+    </MouseAction>
+    <MouseAction UIObjectName="UIMap.UIMagicMemoWindow.UITodayTaskBoxWindow.UITodayTaskBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Location X="44" Y="194" />
+      <WheelDirection>0</WheelDirection>
+      <ActionType>Click</ActionType>
+      <MouseButton>Left</MouseButton>
+    </MouseAction>
+    <MouseAction UIObjectName="UIMap.UIMagicMemoWindow.UITodayTaskBoxWindow.UITodayTaskBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Location X="44" Y="194" />
+      <WheelDirection>0</WheelDirection>
+      <ActionType>Click</ActionType>
+      <MouseButton>Left</MouseButton>
+    </MouseAction>
+    <TestStepMarkerAction Comment="&quot;on&quot;" MarkerInformation="AddMethod1">
       <ParameterName />
       <StepId>-1</StepId>
       <Direction>Start</Direction>
@@ -135,7 +181,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task1 from monday to 19/4/2015</Value>
+      <Value Encoded="false">add task1 from 21/4 10 to 25/4 3pm</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
@@ -146,43 +192,10 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task2 from tuesday to friday</Value>
+      <Value Encoded="false">add task2 from next sat to next sun 12p</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add task3 from next tuesday to next sunday</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Left}{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add task4 from 15/4 6p to 19/4 12:0</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add task5 from 15/4 9p to next sunday 11:0</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
@@ -197,28 +210,6 @@
       <WorkItemId>0</WorkItemId>
       <MarkerRegionType>Action</MarkerRegionType>
     </TestStepMarkerAction>
-    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
-      <ParameterName />
-      <PropertyName>Text</PropertyName>
-      <ExpectedValue>Monday, 13 Apr 20151. task1Tuesday, 14 Apr 20152. task2Wednesday, 15 Apr 20153. [6p-12p, 19/4] task44. [9p-11, 19/4] task5Tuesday, 21 Apr 20155. task3</ExpectedValue>
-      <MessageOnValidationFailure />
-      <Type>String</Type>
-      <PropertyCondition>AreEqual</PropertyCondition>
-    </AssertAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="AssertAddMethod2">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Assertion</MarkerRegionType>
-    </TestStepMarkerAction>
-    <ErrorAction>
-      <ContinueOnError>True</ContinueOnError>
-      <ParameterName />
-      <Message>Last mouse action was not recorded.</Message>
-    </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
       <ParameterName />
       <Value Encoded="false">clear</Value>
@@ -232,7 +223,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task1 by next tuesday 13:0</Value>
+      <Value Encoded="false">add task1 by 4/5/2015 11:59pm</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
@@ -243,7 +234,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task2 by 13/4/2015 9:0</Value>
+      <Value Encoded="false">add task2 by next sunday 1pm</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
@@ -254,21 +245,10 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task3 by tuesday 9</Value>
+      <Value Encoded="false">add task3 by 24/4/2015 11 </Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add task4 by 14/4 6:0</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
@@ -283,23 +263,6 @@
       <WorkItemId>0</WorkItemId>
       <MarkerRegionType>Action</MarkerRegionType>
     </TestStepMarkerAction>
-    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
-      <ParameterName />
-      <PropertyName>Text</PropertyName>
-      <ExpectedValue>Deadline Events1. [9, 13/4] task22. [6, 14/4] task43. [9, 14/4] task34. [1p, 21/4] task1</ExpectedValue>
-      <MessageOnValidationFailure />
-      <Type>String</Type>
-      <PropertyCondition>AreEqual</PropertyCondition>
-    </AssertAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="AssertAddMethod3">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Assertion</MarkerRegionType>
-    </TestStepMarkerAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
       <ParameterName />
       <Value Encoded="false">clear</Value>
@@ -313,18 +276,28 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task1 on monday 13:0</Value>
+      <Value Encoded="false">add task1 on 2/5 16</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Right}{Enter}</Text>
+      <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>Last mouse action was not recorded.</Message>
+    </ErrorAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>Last mouse action was not recorded.</Message>
+    </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task2 on tues 14 - 15</Value>
+      <Value Encoded="false">add task2 on 4/5/2015 7 to 3pm</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
@@ -335,7 +308,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task3 on 16/4 </Value>
+      <Value Encoded="false">add task3 from 3/5 to 8/5 11</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
@@ -346,7 +319,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">ass task4 by next monday</Value>
+      <Value Encoded="false">add task4 by next sun 16</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
@@ -357,7 +330,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task5 by next friday 16:0</Value>
+      <Value Encoded="false">add task5 by 7/6 12p</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
@@ -366,31 +339,21 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add task4 by next monday 17</Value>
-      <Type>String</Type>
-    </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
+      <Text Encoded="false">delete 1{Enter}</Text>
     </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">delete 1</Value>
-      <Type>String</Type>
-    </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit">
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
+      <Text Encoded="false">d 1 4{Enter}</Text>
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow8.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">delete 1 3</Value>
+      <Value Encoded="false">add task6 on 9/5 12</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow8.UICommandInputBoxEdit">
@@ -399,15 +362,30 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow9.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task7 from 3/6 to 9/6 19</Value>
+      <Type>String</Type>
+    </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow9.UICommandInputBoxEdit">
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">delete 7{Enter}</Text>
+      <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow10.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">delete 1 2</Value>
+      <Value Encoded="false">delete 1-4</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow10.UICommandInputBoxEdit">
@@ -425,23 +403,6 @@
       <WorkItemId>0</WorkItemId>
       <MarkerRegionType>Action</MarkerRegionType>
     </TestStepMarkerAction>
-    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
-      <ParameterName />
-      <PropertyName>Text</PropertyName>
-      <ExpectedValue></ExpectedValue>
-      <MessageOnValidationFailure />
-      <Type>String</Type>
-      <PropertyCondition>AreEqual</PropertyCondition>
-    </AssertAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="AssertDeleteMethod1">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Assertion</MarkerRegionType>
-    </TestStepMarkerAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
       <ParameterName />
       <Value Encoded="false">clear</Value>
@@ -455,7 +416,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add meet ann for lunch on next fri 12</Value>
+      <Value Encoded="false">add have lunch on 23/4 11 to 13</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
@@ -466,7 +427,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add exam prep by 16/4 19:0</Value>
+      <Value Encoded="false">add project meeting 4/5 12</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
@@ -475,9 +436,14 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>Last mouse action was not recorded.</Message>
+    </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add Cs project by monday 23:59</Value>
+      <Value Encoded="false">add firt paper on 25/4 7p</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
@@ -488,10 +454,37 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">edit 2 exam prep by 25/4 7p</Value>
+      <Value Encoded="false">edit 3 first paper on 25/4 7 to 9:30</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add vacation on 9/5 1</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">edit 1 project meeting on 6/5 12</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
@@ -506,71 +499,82 @@
       <WorkItemId>0</WorkItemId>
       <MarkerRegionType>Action</MarkerRegionType>
     </TestStepMarkerAction>
-    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
       <ParameterName />
-      <PropertyName>Text</PropertyName>
-      <ExpectedValue>Deadline Events1. [11:59p, 13/4] Cs project3. [7p, 25/4] exam prepFriday, 24 Apr 20152. [12p-1p] meet ann for lunch</ExpectedValue>
-      <MessageOnValidationFailure />
+      <Value Encoded="false">clear</Value>
       <Type>String</Type>
-      <PropertyCondition>AreEqual</PropertyCondition>
-    </AssertAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="AssertEditMethod1">
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task1 on 5/6 12</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task 2 on 5/6 7 to 7:30</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task3 on 5/6 9 to 11</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task4 on 5/6 13 to2pm</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="trash1">
       <ParameterName />
       <StepId>-1</StepId>
       <Direction>Start</Direction>
       <Outcome />
       <Disabled>false</Disabled>
       <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Assertion</MarkerRegionType>
+      <MarkerRegionType>Action</MarkerRegionType>
     </TestStepMarkerAction>
-    <ErrorAction>
-      <ContinueOnError>True</ContinueOnError>
+    <MouseAction UIObjectName="UIMap.UIMagicMemoWindow.UIMagicMemoClient.UICommandInputBoxWindow">
       <ParameterName />
-      <Message>Last mouse action was not recorded.</Message>
-    </ErrorAction>
-    <ErrorAction>
-      <ContinueOnError>True</ContinueOnError>
-      <ParameterName />
-      <Message>Last mouse action was not recorded.</Message>
-    </ErrorAction>
-    <ErrorAction>
-      <ContinueOnError>True</ContinueOnError>
-      <ParameterName />
-      <Message>Last mouse action was not recorded.</Message>
-    </ErrorAction>
-    <ErrorAction>
-      <ContinueOnError>True</ContinueOnError>
-      <ParameterName />
-      <Message>Last mouse action was not recorded.</Message>
-    </ErrorAction>
-    <ErrorAction>
-      <ContinueOnError>True</ContinueOnError>
-      <ParameterName />
-      <Message>Last mouse action was not recorded.</Message>
-    </ErrorAction>
-    <ErrorAction>
-      <ContinueOnError>True</ContinueOnError>
-      <ParameterName />
-      <Message>Last mouse action was not recorded.</Message>
-    </ErrorAction>
-    <ErrorAction>
-      <ContinueOnError>True</ContinueOnError>
-      <ParameterName />
-      <Message>Last mouse action was not recorded.</Message>
-    </ErrorAction>
-    <ErrorAction>
-      <ContinueOnError>True</ContinueOnError>
-      <ParameterName />
-      <Message>Last mouse action was not recorded.</Message>
-    </ErrorAction>
-    <ErrorAction>
-      <ContinueOnError>True</ContinueOnError>
-      <ParameterName />
-      <Message>Last mouse action was not recorded.</Message>
-    </ErrorAction>
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Location X="439" Y="25" />
+      <WheelDirection>0</WheelDirection>
+      <ActionType>Click</ActionType>
+      <MouseButton>Left</MouseButton>
+    </MouseAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task1 on 23/5/2015</Value>
+      <Value Encoded="false">clear</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
@@ -586,32 +590,7 @@
     </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task2 on</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="trash1">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Action</MarkerRegionType>
-    </TestStepMarkerAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">clear</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add task1 on monday 12</Value>
+      <Value Encoded="false">add task 1meaningless on 12/5 12p to 12:46</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
@@ -622,7 +601,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task2 on monday 12 to 14</Value>
+      <Value Encoded="false">add task2 meaningless on 3/7 11 </Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
@@ -631,11 +610,49 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task3 meaningless by 19/5 11:59p</Value>
+      <Type>String</Type>
+    </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">undo {Enter}</Text>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">undo</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">undo</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">undo</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
     <TestStepMarkerAction Comment="" MarkerInformation="UndoMethod1">
       <ParameterName />
@@ -645,23 +662,6 @@
       <Disabled>false</Disabled>
       <WorkItemId>0</WorkItemId>
       <MarkerRegionType>Action</MarkerRegionType>
-    </TestStepMarkerAction>
-    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
-      <ParameterName />
-      <PropertyName>Text</PropertyName>
-      <ExpectedValue>Monday, 13 Apr 20151. [12p-1p] task1</ExpectedValue>
-      <MessageOnValidationFailure />
-      <Type>String</Type>
-      <PropertyCondition>AreEqual</PropertyCondition>
-    </AssertAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="AssertUndoMethod1">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Assertion</MarkerRegionType>
     </TestStepMarkerAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
       <ParameterName />
@@ -780,7 +780,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task1 on monday 18</Value>
+      <Value Encoded="false">add task1 on 7/7 12p</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
@@ -791,7 +791,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task2 on thursday 11 to 18</Value>
+      <Value Encoded="false">add task2 on 19/5 3pm to 8p</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
@@ -800,14 +800,9 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
-    <ErrorAction>
-      <ContinueOnError>True</ContinueOnError>
-      <ParameterName />
-      <Message>The control for this action was not recorded.</Message>
-    </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task3 friday </Value>
+      <Value Encoded="false">add task3 on 4/5 12</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
@@ -816,22 +811,40 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task4 by 7/5 12p</Value>
+      <Type>String</Type>
+    </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">undo{Enter}</Text>
     </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">redo</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
+      <Text Encoded="false">u{Enter}</Text>
+    </SendKeysAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">r{Enter}</Text>
+    </SendKeysAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow8.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">redo{Enter}</Text>
     </SendKeysAction>
     <TestStepMarkerAction Comment="" MarkerInformation="RedoMethod1">
       <ParameterName />
@@ -935,23 +948,11 @@
       <WorkItemId>0</WorkItemId>
       <MarkerRegionType>Action</MarkerRegionType>
     </TestStepMarkerAction>
-    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
       <ParameterName />
-      <PropertyName>Text</PropertyName>
-      <ExpectedValue>Deadline Events1. [11:59p, 12/4] task22. [6p, 17/4] task1</ExpectedValue>
-      <MessageOnValidationFailure />
-      <Type>String</Type>
-      <PropertyCondition>AreEqual</PropertyCondition>
-    </AssertAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="AssertRedoMethod2">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Assertion</MarkerRegionType>
-    </TestStepMarkerAction>
+      <Message>Last mouse action was not recorded.</Message>
+    </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
       <ParameterName />
       <Value Encoded="false">clear</Value>
@@ -965,7 +966,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add sdnjasdh on monday </Value>
+      <Value Encoded="false">add task1 on 4/5 12</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
@@ -974,9 +975,14 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add sdua 18</Value>
+      <Value Encoded="false">add task2 by 7/5 12p</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
@@ -987,7 +993,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add meaningless on next friday</Value>
+      <Value Encoded="false">add task3 from 5/5 6p to6/5 7p</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
@@ -1003,20 +1009,25 @@
     </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add meaningless2 by next sun 19</Value>
+      <Value Encoded="false">add task4 from 4/5 to 9/5 12p</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
+      <Text Encoded="false">{Left}{Enter}</Text>
     </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">clear{Enter}</Text>
+      <Text Encoded="false">l{Enter}</Text>
     </SendKeysAction>
     <TestStepMarkerAction Comment="" MarkerInformation="ClearMethod1">
       <ParameterName />
@@ -1026,23 +1037,6 @@
       <Disabled>false</Disabled>
       <WorkItemId>0</WorkItemId>
       <MarkerRegionType>Action</MarkerRegionType>
-    </TestStepMarkerAction>
-    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
-      <ParameterName />
-      <PropertyName>Text</PropertyName>
-      <ExpectedValue></ExpectedValue>
-      <MessageOnValidationFailure />
-      <Type>String</Type>
-      <PropertyCondition>AreEqual</PropertyCondition>
-    </AssertAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="AssertClearMethod1">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Assertion</MarkerRegionType>
     </TestStepMarkerAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
       <ParameterName />
@@ -1057,7 +1051,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add meeting on friday 19 to 22</Value>
+      <Value Encoded="false">add basketball with friends on 8/5 12 to 14:00</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
@@ -1068,7 +1062,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add greeting mom on 22/4 14</Value>
+      <Value Encoded="false">add group meeting on 11/5 12</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
@@ -1079,7 +1073,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add exam prep on 22/4 10 to 19</Value>
+      <Value Encoded="false">add meet ann at school on 17/5 10</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
@@ -1090,7 +1084,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add lunch with ann on next weds 12 </Value>
+      <Value Encoded="false">add prepare for exam from 19/4 to 28/4 12p</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
@@ -1101,7 +1095,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">search ing</Value>
+      <Value Encoded="false">search school</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
@@ -1121,113 +1115,9 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">search ann{Enter}</Text>
-    </SendKeysAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="SearchMethod1">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Action</MarkerRegionType>
-    </TestStepMarkerAction>
-    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
-      <ParameterName />
-      <PropertyName>Text</PropertyName>
-      <ExpectedValue>Floating1. lunch with ann on next weds 12</ExpectedValue>
-      <MessageOnValidationFailure />
-      <Type>String</Type>
-      <PropertyCondition>AreEqual</PropertyCondition>
-    </AssertAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="AssertSearchMethod1">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Assertion</MarkerRegionType>
-    </TestStepMarkerAction>
-    <ErrorAction>
-      <ContinueOnError>True</ContinueOnError>
-      <ParameterName />
-      <Message>Last mouse action was not recorded.</Message>
-    </ErrorAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">clear</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add meeting with ann on next sunday 19 to 20</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add swimming on 20/4 6</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add lunch with friends on tuesday 12 </Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add go to church by sunday 10</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">search churc{Enter}</Text>
-    </SendKeysAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">display {Enter}</Text>
-    </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">search12/4</Value>
+      <Value Encoded="false">search meet</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit">
@@ -1238,7 +1128,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow8.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">search tuesday</Value>
+      <Value Encoded="false">display</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow8.UICommandInputBoxEdit">
@@ -1249,7 +1139,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow9.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">display</Value>
+      <Value Encoded="false">search for with at</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow9.UICommandInputBoxEdit">
@@ -1260,7 +1150,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow10.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">search 19/4</Value>
+      <Value Encoded="false">display</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow10.UICommandInputBoxEdit">
@@ -1271,7 +1161,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow11.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">display</Value>
+      <Value Encoded="false">search nn</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow11.UICommandInputBoxEdit">
@@ -1280,12 +1170,71 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow12.UICommandInputBoxEdit">
+    <TestStepMarkerAction Comment="" MarkerInformation="SearchMethod1">
       <ParameterName />
-      <Value Encoded="false">search 12p-1p 14/4</Value>
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Action</MarkerRegionType>
+    </TestStepMarkerAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">display</Value>
       <Type>String</Type>
     </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow12.UICommandInputBoxEdit">
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add clean the room on 17/5 13 to 4p</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add finish report by 5/5 11:59pm</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Left}{Left}{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">display </Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">search 17/5</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
@@ -1299,23 +1248,6 @@
       <Disabled>false</Disabled>
       <WorkItemId>0</WorkItemId>
       <MarkerRegionType>Action</MarkerRegionType>
-    </TestStepMarkerAction>
-    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
-      <ParameterName />
-      <PropertyName>Text</PropertyName>
-      <ExpectedValue>Tuesday, 14 Apr 20152. [12p-1p] lunch with friends</ExpectedValue>
-      <MessageOnValidationFailure />
-      <Type>String</Type>
-      <PropertyCondition>AreEqual</PropertyCondition>
-    </AssertAction>
-    <TestStepMarkerAction Comment="search for time and date" MarkerInformation="AssertSearchMethod2">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Assertion</MarkerRegionType>
     </TestStepMarkerAction>
     <ErrorAction>
       <ContinueOnError>True</ContinueOnError>
@@ -1411,31 +1343,9 @@
       <WorkItemId>0</WorkItemId>
       <MarkerRegionType>Action</MarkerRegionType>
     </TestStepMarkerAction>
-    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
-      <ParameterName />
-      <PropertyName>Text</PropertyName>
-      <ExpectedValue></ExpectedValue>
-      <MessageOnValidationFailure />
-      <Type>String</Type>
-      <PropertyCondition>AreEqual</PropertyCondition>
-    </AssertAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="AssertInvalidDeleteMethod">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Assertion</MarkerRegionType>
-    </TestStepMarkerAction>
-    <ErrorAction>
-      <ContinueOnError>True</ContinueOnError>
-      <ParameterName />
-      <Message>Last mouse action was not recorded.</Message>
-    </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add class photo on friday 17 </Value>
+      <Value Encoded="false">add task1 on 6/7 17 to 18</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
@@ -1444,9 +1354,14 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>Last mouse action was not recorded.</Message>
+    </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add examrevise by 25/4 22</Value>
+      <Value Encoded="false">clear</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
@@ -1457,7 +1372,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add clean room by next sunday </Value>
+      <Value Encoded="false">add task1 on 7/6 17 to 18</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
@@ -1468,7 +1383,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add dinner with ann 19 to 22:30</Value>
+      <Value Encoded="false">add meeting with friends on next sun 11 to 19</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
@@ -1479,7 +1394,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add dinner on 19 to 22</Value>
+      <Value Encoded="false">add study for exam by 19/4 12p</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
@@ -1490,7 +1405,7 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">search cl ro</Value>
+      <Value Encoded="false">search y f</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
@@ -1499,9 +1414,14 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">display </Value>
+      <Value Encoded="false">display</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
@@ -1510,72 +1430,29 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">search shdiaonsun</Value>
+      <Type>String</Type>
+    </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit">
       <ParameterName />
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">search s ph{Enter}</Text>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow8.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">display</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow8.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
     <TestStepMarkerAction Comment="" MarkerInformation="InvalidSearchMethod">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Action</MarkerRegionType>
-    </TestStepMarkerAction>
-    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
-      <ParameterName />
-      <PropertyName>Text</PropertyName>
-      <ExpectedValue></ExpectedValue>
-      <MessageOnValidationFailure />
-      <Type>String</Type>
-      <PropertyCondition>AreEqual</PropertyCondition>
-    </AssertAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="AssertInvalidSearchMethod">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Assertion</MarkerRegionType>
-    </TestStepMarkerAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">clear</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add task1 on friday 6 to 19:32</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add task2 on 16/4/2015 22:35</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="TwelveHrMethod">
       <ParameterName />
       <StepId>-1</StepId>
       <Direction>Start</Direction>
@@ -1603,7 +1480,7 @@
     </TestStepMarkerAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">clear </Value>
+      <Value Encoded="false">clear</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
@@ -1611,91 +1488,15 @@
       <ModifierKeys>None</ModifierKeys>
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add task1 by sunday 12p</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add task2 on sun 6 to 3pm</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add task on friday 7pm to 7:55pm</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add task by next wed by 0:0</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">{Enter}</Text>
-    </SendKeysAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="TwentyfourHrMethod">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Action</MarkerRegionType>
-    </TestStepMarkerAction>
-    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
-      <ParameterName />
-      <PropertyName>Text</PropertyName>
-      <ExpectedValue>Floating1. task by next wed by 0:0Deadline Events3. [12p, 12/4] task1Friday, 17 Apr 20154. [7p-7:55p] task</ExpectedValue>
-      <MessageOnValidationFailure />
-      <Type>String</Type>
-      <PropertyCondition>AreEqual</PropertyCondition>
-    </AssertAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="AssertTwentyfourHrMethod">
-      <ParameterName />
-      <StepId>-1</StepId>
-      <Direction>Start</Direction>
-      <Outcome />
-      <Disabled>false</Disabled>
-      <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Assertion</MarkerRegionType>
-    </TestStepMarkerAction>
-    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Text Encoded="false">c</Text>
     </SendKeysAction>
     <ErrorAction>
       <ContinueOnError>True</ContinueOnError>
       <ParameterName />
-      <Message>Last mouse action was not recorded.</Message>
+      <Message>The control for this action was not recorded.</Message>
     </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task1 on monday 11 to 18</Value>
+      <Value Encoded="false">add task1 on 23</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
@@ -1711,7 +1512,7 @@
     </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task2 on monday 9 to 10</Value>
+      <Value Encoded="false">add task1 on 7/5 13</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
@@ -1720,32 +1521,14 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">add task3 on monday</Value>
-      <Type>String</Type>
-    </SetValueAction>
-    <MouseAction UIObjectName="UIMap.UIMagicMemoWindow.UITodayTaskBoxWindow.UITodayTaskBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Location X="257" Y="163" />
-      <WheelDirection>0</WheelDirection>
-      <ActionType>Click</ActionType>
-      <MouseButton>Left</MouseButton>
-    </MouseAction>
-    <MouseAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
-      <ParameterName />
-      <ModifierKeys>None</ModifierKeys>
-      <IsGlobalHotkey>false</IsGlobalHotkey>
-      <Location X="73" Y="170" />
-      <WheelDirection>0</WheelDirection>
-      <ActionType>Click</ActionType>
-      <MouseButton>Left</MouseButton>
-    </MouseAction>
-    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
-      <ParameterName />
-      <Value Encoded="false">add task3 on monday 19 to 22</Value>
+      <Value Encoded="false">add task2 on 4/6 19 to 19:30</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
@@ -1754,9 +1537,14 @@
       <IsGlobalHotkey>false</IsGlobalHotkey>
       <Text Encoded="false">{Enter}</Text>
     </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false">free 1</Value>
+      <Value Encoded="false">add tsk3 by 7/5 24:59</Value>
       <Type>String</Type>
     </SetValueAction>
     <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
@@ -1767,10 +1555,38 @@
     </SendKeysAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
       <ParameterName />
-      <Value Encoded="false" />
+      <Value Encoded="false">add task5 by 8/5 0</Value>
       <Type>String</Type>
     </SetValueAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="FreeSlotMethod">
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task5 by 7/5 19:0</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">delete 1</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="TwentyfourHrMethod">
       <ParameterName />
       <StepId>-1</StepId>
       <Direction>Start</Direction>
@@ -1779,22 +1595,249 @@
       <WorkItemId>0</WorkItemId>
       <MarkerRegionType>Action</MarkerRegionType>
     </TestStepMarkerAction>
-    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
       <ParameterName />
-      <PropertyName>Text</PropertyName>
-      <ExpectedValue>Free Slots1. [10p-11p] 1 hours</ExpectedValue>
-      <MessageOnValidationFailure />
+      <Value Encoded="false">clear</Value>
       <Type>String</Type>
-      <PropertyCondition>AreEqual</PropertyCondition>
-    </AssertAction>
-    <TestStepMarkerAction Comment="" MarkerInformation="AssertFreeSlotMethod">
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task1 on 5/5 7 to 8</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task2 on 5/5 8:30 to 9</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task3 on 5/5 10 to 12:00</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task4 on 5/5 14 to 14:30</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task5 5:30pm to 6pm</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task5 on 5/5 5:30p to 6pm</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task6 on 5/5 10p to 11:30pm</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow8.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">free 1 5/5</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow8.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow9.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">free 3 5/5</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow9.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow10.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">free 4 5/5</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow10.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow11.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">free 5 5/5</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow11.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow12.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">display</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow12.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow13.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">delete 6 7</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow13.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow14.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">free 6 5/5</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow14.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow15.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">display</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow15.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow16.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">delete 1 2 3 </Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow16.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow17.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task5 on 5/5 3pm to 12p</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow17.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow18.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">free 2 5/5</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow18.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow19.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">display</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow19.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="FreeSlotMethod">
       <ParameterName />
       <StepId>-1</StepId>
       <Direction>Start</Direction>
       <Outcome />
       <Disabled>false</Disabled>
       <WorkItemId>0</WorkItemId>
-      <MarkerRegionType>Assertion</MarkerRegionType>
+      <MarkerRegionType>Action</MarkerRegionType>
     </TestStepMarkerAction>
     <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
       <ParameterName />
@@ -2045,6 +2088,414 @@
       <Disabled>false</Disabled>
       <WorkItemId>0</WorkItemId>
       <MarkerRegionType>Action</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue>Wednesday, 22 Apr 20151. [10-3p] task2Sunday, 26 Apr 20152. [3p-4:32p] task3Monday, 27 Apr 20153. [7p-8p] task1Saturday, 2 May 20154. [3p-5:30p] task4</ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertAddMethod1">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue>Tuesday, 21 Apr 20151. [10-3p, 25/4] task1Saturday, 25 Apr 20152. [12p-1p, 26/4] task2</ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertAddMethod2">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue>Deadline Events1. [11][24/4] task32. [1p][26/4] task23. [11:59p][4/5] task1</ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertAddMethod3">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">delete 100</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task1 by 7/</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task1 by 7/5</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">d{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">add task4 from 7/5 4p to 17/5 </Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">delete 100</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">delete 1 to100</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow8.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">delete 1to100</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow8.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Left}{Left}{Left}{Enter}</Text>
+    </SendKeysAction>
+    <ErrorAction>
+      <ContinueOnError>True</ContinueOnError>
+      <ParameterName />
+      <Message>The control for this action was not recorded.</Message>
+    </ErrorAction>
+    <SetValueAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow9.UICommandInputBoxEdit">
+      <ParameterName />
+      <Value Encoded="false">delete all</Value>
+      <Type>String</Type>
+    </SetValueAction>
+    <SendKeysAction UIObjectName="UIMap.UIMagicMemoWindow.UICommandInputBoxWindow9.UICommandInputBoxEdit">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Text Encoded="false">{Enter}</Text>
+    </SendKeysAction>
+    <MouseAction UIObjectName="UIMap.UIMagicMemoWindow.UIDeletedlinenumbers12Window.UIInvalidnumberspecifiText">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Location X="204" Y="11" />
+      <WheelDirection>0</WheelDirection>
+      <ActionType>Click</ActionType>
+      <MouseButton>Left</MouseButton>
+    </MouseAction>
+    <MouseAction UIObjectName="UIMap.UIMagicMemoWindow.UIDeletedlinenumbers12Window.UIInvalidnumberspecifiText1">
+      <ParameterName />
+      <ModifierKeys>None</ModifierKeys>
+      <IsGlobalHotkey>false</IsGlobalHotkey>
+      <Location X="203" Y="11" />
+      <WheelDirection>0</WheelDirection>
+      <ActionType>DoubleClick</ActionType>
+      <MouseButton>Left</MouseButton>
+    </MouseAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="InvalidAddMethod1">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Action</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue>Floating1. task next monday2. task2 at 25/5/2015Friday, 19 Jun 20153. task3</ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertInvalidAddMethod1">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue></ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertDeleteMethod1">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue></ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertClearMethod1">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue>Thursday, 23 Apr 20151. [11-1p] have lunchSaturday, 25 Apr 20152. [7-9] first paperWednesday, 6 May 20153. [12p-1p] project meetingSaturday, 9 May 20154. [1:09-2:09] vacation</ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertEditMethod1">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue>Deadline Events2. [11p][6/7] task2Sunday, 17 May 20151. [12p-1p] task3</ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertInvalidDeleteMethod">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue>Deadline Events1. [12p][19/4] study for examSunday, 26 Apr 20152. [11-7p] meeting with friendsSunday, 7 Jun 20153. [5p-6p] task1</ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertInvalidSearchMethod">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue>Deadline Events2. [12p][7/5] task4Monday, 4 May 20151. [12p-1p] task3Tuesday, 19 May 20153. [3p-8p] task2Tuesday, 7 Jul 20154. [12p-1p] task1</ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertRedoMethod2">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue>Sunday, 17 May 20154. [10-11] meet ann at school</ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertSearchMethod1">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue>Sunday, 17 May 20155. [10-11] meet ann at school6. [1p-4p] clean the room</ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertSearchMethod2">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue>Deadline Events5. [2p][7/7] task2Sunday, 26 Apr 20151. [12p-1p] task4Monday, 4 May 20152. [12:30p-1:30p] task5Tuesday, 5 May 20153. [3p-4p] task1Thursday, 7 May 20154. [7:09-7p] task3</ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="TwelveHrMethod">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue>Deadline Events3. [7p][7/5] task54. [0:59][7/5] tsk3Thursday, 7 May 20152. [1p-2p] task1Thursday, 4 Jun 20155. [7p-7:30p] task2</ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertTwentyfourHrMethod">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue></ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertUndoMethod1">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
+    </TestStepMarkerAction>
+    <AssertAction UIObjectName="UIMap.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit">
+      <ParameterName />
+      <PropertyName>Text</PropertyName>
+      <ExpectedValue>Tuesday, 5 May 20151. [10-12p] task32. [2p-2:30p] task43. [3p-4p] task5</ExpectedValue>
+      <MessageOnValidationFailure />
+      <Type>String</Type>
+      <PropertyCondition>AreEqual</PropertyCondition>
+    </AssertAction>
+    <TestStepMarkerAction Comment="" MarkerInformation="AssertFreeSlotMethod">
+      <ParameterName />
+      <StepId>-1</StepId>
+      <Direction>Start</Direction>
+      <Outcome />
+      <Disabled>false</Disabled>
+      <WorkItemId>0</WorkItemId>
+      <MarkerRegionType>Assertion</MarkerRegionType>
     </TestStepMarkerAction>
   </ExecuteActions>
   <CleanupActions />
@@ -2560,6 +3011,36 @@
                   <SupportLevel>0</SupportLevel>
                   <Descendants />
                 </UIObject>
+                <UIObject ControlType="Text" Id="UIInvalidnumberspecifiText" FriendlyName="Invalid number specified!" SpecialControlType="None">
+                  <TechnologyName>MSAA</TechnologyName>
+                  <WindowTitles>
+                    <WindowTitle>Magic Memo</WindowTitle>
+                  </WindowTitles>
+                  <SearchConfigurations>
+                    <SearchConfiguration>VisibleOnly</SearchConfiguration>
+                  </SearchConfigurations>
+                  <AndCondition Id="SearchCondition">
+                    <PropertyCondition Name="Name">Invalid number specified!</PropertyCondition>
+                    <PropertyCondition Name="ControlType">Text</PropertyCondition>
+                  </AndCondition>
+                  <SupportLevel>0</SupportLevel>
+                  <Descendants />
+                </UIObject>
+                <UIObject ControlType="Text" Id="UIInvalidnumberspecifiText1" FriendlyName="Invalid number specified!" SpecialControlType="None">
+                  <TechnologyName>MSAA</TechnologyName>
+                  <WindowTitles>
+                    <WindowTitle>Magic Memo</WindowTitle>
+                  </WindowTitles>
+                  <SearchConfigurations>
+                    <SearchConfiguration>VisibleOnly</SearchConfiguration>
+                  </SearchConfigurations>
+                  <AndCondition Id="SearchCondition">
+                    <PropertyCondition Name="Name">Invalid number specified!</PropertyCondition>
+                    <PropertyCondition Name="ControlType">Text</PropertyCondition>
+                  </AndCondition>
+                  <SupportLevel>0</SupportLevel>
+                  <Descendants />
+                </UIObject>
               </Descendants>
             </UIObject>
             <UIObject ControlType="Window" Id="UITodayTaskBoxWindow" FriendlyName="todayTaskBox" SpecialControlType="None">
@@ -2605,7 +3086,258 @@
                 <PropertyCondition Name="ControlType">Client</PropertyCondition>
               </AndCondition>
               <SupportLevel>0</SupportLevel>
-              <Descendants />
+              <Descendants>
+                <UIObject ControlType="Window" Id="UIPictureBoxWindow" FriendlyName="pictureBox" SpecialControlType="None">
+                  <TechnologyName>MSAA</TechnologyName>
+                  <WindowTitles>
+                    <WindowTitle>Magic Memo</WindowTitle>
+                  </WindowTitles>
+                  <SearchConfigurations>
+                    <SearchConfiguration>VisibleOnly</SearchConfiguration>
+                  </SearchConfigurations>
+                  <AndCondition Id="SearchCondition">
+                    <PropertyCondition Name="AccessibleName">Added line: "task4"</PropertyCondition>
+                    <PropertyCondition Name="ClassName" Operator="Contains">WindowsForms10.Window</PropertyCondition>
+                    <PropertyCondition Name="ControlType">Window</PropertyCondition>
+                    <PropertyCondition Name="Instance">2</PropertyCondition>
+                  </AndCondition>
+                  <SupportLevel>0</SupportLevel>
+                  <Descendants />
+                </UIObject>
+                <UIObject ControlType="Window" Id="UICommandInputBoxWindow" FriendlyName="commandInputBox" SpecialControlType="None">
+                  <TechnologyName>MSAA</TechnologyName>
+                  <WindowTitles>
+                    <WindowTitle>Magic Memo</WindowTitle>
+                  </WindowTitles>
+                  <SearchConfigurations>
+                    <SearchConfiguration>VisibleOnly</SearchConfiguration>
+                  </SearchConfigurations>
+                  <AndCondition Id="SearchCondition">
+                    <PropertyCondition Name="AccessibleName">Upcoming Tasks</PropertyCondition>
+                    <PropertyCondition Name="ClassName" Operator="Contains">WindowsForms10.EDIT</PropertyCondition>
+                    <PropertyCondition Name="ControlType">Window</PropertyCondition>
+                  </AndCondition>
+                  <SupportLevel>0</SupportLevel>
+                  <Descendants />
+                </UIObject>
+              </Descendants>
+            </UIObject>
+            <UIObject ControlType="Window" Id="UICommandInputBoxWindow13" FriendlyName="commandInputBox" SpecialControlType="None">
+              <TechnologyName>MSAA</TechnologyName>
+              <WindowTitles>
+                <WindowTitle>Magic Memo</WindowTitle>
+              </WindowTitles>
+              <SearchConfigurations>
+                <SearchConfiguration>VisibleOnly</SearchConfiguration>
+              </SearchConfigurations>
+              <AndCondition Id="SearchCondition">
+                <PropertyCondition Name="ControlName">commandInputBox</PropertyCondition>
+                <PropertyCondition Name="ControlType">Window</PropertyCondition>
+              </AndCondition>
+              <SupportLevel>0</SupportLevel>
+              <Descendants>
+                <UIObject ControlType="Edit" Id="UICommandInputBoxEdit" FriendlyName="commandInputBox" SpecialControlType="None">
+                  <TechnologyName>MSAA</TechnologyName>
+                  <WindowTitles>
+                    <WindowTitle>Magic Memo</WindowTitle>
+                  </WindowTitles>
+                  <SearchConfigurations>
+                    <SearchConfiguration>VisibleOnly</SearchConfiguration>
+                  </SearchConfigurations>
+                  <AndCondition Id="SearchCondition">
+                    <PropertyCondition Name="Name">Upcoming Tasks</PropertyCondition>
+                    <PropertyCondition Name="ControlType">Edit</PropertyCondition>
+                  </AndCondition>
+                  <SupportLevel>0</SupportLevel>
+                  <Descendants />
+                </UIObject>
+              </Descendants>
+            </UIObject>
+            <UIObject ControlType="Window" Id="UICommandInputBoxWindow14" FriendlyName="commandInputBox" SpecialControlType="None">
+              <TechnologyName>MSAA</TechnologyName>
+              <WindowTitles>
+                <WindowTitle>Magic Memo</WindowTitle>
+              </WindowTitles>
+              <SearchConfigurations>
+                <SearchConfiguration>VisibleOnly</SearchConfiguration>
+              </SearchConfigurations>
+              <AndCondition Id="SearchCondition">
+                <PropertyCondition Name="ControlName">commandInputBox</PropertyCondition>
+                <PropertyCondition Name="ControlType">Window</PropertyCondition>
+              </AndCondition>
+              <SupportLevel>0</SupportLevel>
+              <Descendants>
+                <UIObject ControlType="Edit" Id="UICommandInputBoxEdit" FriendlyName="commandInputBox" SpecialControlType="None">
+                  <TechnologyName>MSAA</TechnologyName>
+                  <WindowTitles>
+                    <WindowTitle>Magic Memo</WindowTitle>
+                  </WindowTitles>
+                  <SearchConfigurations>
+                    <SearchConfiguration>VisibleOnly</SearchConfiguration>
+                  </SearchConfigurations>
+                  <AndCondition Id="SearchCondition">
+                    <PropertyCondition Name="Name">Upcoming Tasks</PropertyCondition>
+                    <PropertyCondition Name="ControlType">Edit</PropertyCondition>
+                  </AndCondition>
+                  <SupportLevel>0</SupportLevel>
+                  <Descendants />
+                </UIObject>
+              </Descendants>
+            </UIObject>
+            <UIObject ControlType="Window" Id="UICommandInputBoxWindow15" FriendlyName="commandInputBox" SpecialControlType="None">
+              <TechnologyName>MSAA</TechnologyName>
+              <WindowTitles>
+                <WindowTitle>Magic Memo</WindowTitle>
+              </WindowTitles>
+              <SearchConfigurations>
+                <SearchConfiguration>VisibleOnly</SearchConfiguration>
+              </SearchConfigurations>
+              <AndCondition Id="SearchCondition">
+                <PropertyCondition Name="ControlName">commandInputBox</PropertyCondition>
+                <PropertyCondition Name="ControlType">Window</PropertyCondition>
+              </AndCondition>
+              <SupportLevel>0</SupportLevel>
+              <Descendants>
+                <UIObject ControlType="Edit" Id="UICommandInputBoxEdit" FriendlyName="commandInputBox" SpecialControlType="None">
+                  <TechnologyName>MSAA</TechnologyName>
+                  <WindowTitles>
+                    <WindowTitle>Magic Memo</WindowTitle>
+                  </WindowTitles>
+                  <SearchConfigurations>
+                    <SearchConfiguration>VisibleOnly</SearchConfiguration>
+                  </SearchConfigurations>
+                  <AndCondition Id="SearchCondition">
+                    <PropertyCondition Name="Name">Upcoming Tasks</PropertyCondition>
+                    <PropertyCondition Name="ControlType">Edit</PropertyCondition>
+                  </AndCondition>
+                  <SupportLevel>0</SupportLevel>
+                  <Descendants />
+                </UIObject>
+              </Descendants>
+            </UIObject>
+            <UIObject ControlType="Window" Id="UICommandInputBoxWindow16" FriendlyName="commandInputBox" SpecialControlType="None">
+              <TechnologyName>MSAA</TechnologyName>
+              <WindowTitles>
+                <WindowTitle>Magic Memo</WindowTitle>
+              </WindowTitles>
+              <SearchConfigurations>
+                <SearchConfiguration>VisibleOnly</SearchConfiguration>
+              </SearchConfigurations>
+              <AndCondition Id="SearchCondition">
+                <PropertyCondition Name="ControlName">commandInputBox</PropertyCondition>
+                <PropertyCondition Name="ControlType">Window</PropertyCondition>
+              </AndCondition>
+              <SupportLevel>0</SupportLevel>
+              <Descendants>
+                <UIObject ControlType="Edit" Id="UICommandInputBoxEdit" FriendlyName="commandInputBox" SpecialControlType="None">
+                  <TechnologyName>MSAA</TechnologyName>
+                  <WindowTitles>
+                    <WindowTitle>Magic Memo</WindowTitle>
+                  </WindowTitles>
+                  <SearchConfigurations>
+                    <SearchConfiguration>VisibleOnly</SearchConfiguration>
+                  </SearchConfigurations>
+                  <AndCondition Id="SearchCondition">
+                    <PropertyCondition Name="Name">Upcoming Tasks</PropertyCondition>
+                    <PropertyCondition Name="ControlType">Edit</PropertyCondition>
+                  </AndCondition>
+                  <SupportLevel>0</SupportLevel>
+                  <Descendants />
+                </UIObject>
+              </Descendants>
+            </UIObject>
+            <UIObject ControlType="Window" Id="UICommandInputBoxWindow17" FriendlyName="commandInputBox" SpecialControlType="None">
+              <TechnologyName>MSAA</TechnologyName>
+              <WindowTitles>
+                <WindowTitle>Magic Memo</WindowTitle>
+              </WindowTitles>
+              <SearchConfigurations>
+                <SearchConfiguration>VisibleOnly</SearchConfiguration>
+              </SearchConfigurations>
+              <AndCondition Id="SearchCondition">
+                <PropertyCondition Name="ControlName">commandInputBox</PropertyCondition>
+                <PropertyCondition Name="ControlType">Window</PropertyCondition>
+              </AndCondition>
+              <SupportLevel>0</SupportLevel>
+              <Descendants>
+                <UIObject ControlType="Edit" Id="UICommandInputBoxEdit" FriendlyName="commandInputBox" SpecialControlType="None">
+                  <TechnologyName>MSAA</TechnologyName>
+                  <WindowTitles>
+                    <WindowTitle>Magic Memo</WindowTitle>
+                  </WindowTitles>
+                  <SearchConfigurations>
+                    <SearchConfiguration>VisibleOnly</SearchConfiguration>
+                  </SearchConfigurations>
+                  <AndCondition Id="SearchCondition">
+                    <PropertyCondition Name="Name">Upcoming Tasks</PropertyCondition>
+                    <PropertyCondition Name="ControlType">Edit</PropertyCondition>
+                  </AndCondition>
+                  <SupportLevel>0</SupportLevel>
+                  <Descendants />
+                </UIObject>
+              </Descendants>
+            </UIObject>
+            <UIObject ControlType="Window" Id="UICommandInputBoxWindow18" FriendlyName="commandInputBox" SpecialControlType="None">
+              <TechnologyName>MSAA</TechnologyName>
+              <WindowTitles>
+                <WindowTitle>Magic Memo</WindowTitle>
+              </WindowTitles>
+              <SearchConfigurations>
+                <SearchConfiguration>VisibleOnly</SearchConfiguration>
+              </SearchConfigurations>
+              <AndCondition Id="SearchCondition">
+                <PropertyCondition Name="ControlName">commandInputBox</PropertyCondition>
+                <PropertyCondition Name="ControlType">Window</PropertyCondition>
+              </AndCondition>
+              <SupportLevel>0</SupportLevel>
+              <Descendants>
+                <UIObject ControlType="Edit" Id="UICommandInputBoxEdit" FriendlyName="commandInputBox" SpecialControlType="None">
+                  <TechnologyName>MSAA</TechnologyName>
+                  <WindowTitles>
+                    <WindowTitle>Magic Memo</WindowTitle>
+                  </WindowTitles>
+                  <SearchConfigurations>
+                    <SearchConfiguration>VisibleOnly</SearchConfiguration>
+                  </SearchConfigurations>
+                  <AndCondition Id="SearchCondition">
+                    <PropertyCondition Name="Name">Upcoming Tasks</PropertyCondition>
+                    <PropertyCondition Name="ControlType">Edit</PropertyCondition>
+                  </AndCondition>
+                  <SupportLevel>0</SupportLevel>
+                  <Descendants />
+                </UIObject>
+              </Descendants>
+            </UIObject>
+            <UIObject ControlType="Window" Id="UICommandInputBoxWindow19" FriendlyName="commandInputBox" SpecialControlType="None">
+              <TechnologyName>MSAA</TechnologyName>
+              <WindowTitles>
+                <WindowTitle>Magic Memo</WindowTitle>
+              </WindowTitles>
+              <SearchConfigurations>
+                <SearchConfiguration>VisibleOnly</SearchConfiguration>
+              </SearchConfigurations>
+              <AndCondition Id="SearchCondition">
+                <PropertyCondition Name="ControlName">commandInputBox</PropertyCondition>
+                <PropertyCondition Name="ControlType">Window</PropertyCondition>
+              </AndCondition>
+              <SupportLevel>0</SupportLevel>
+              <Descendants>
+                <UIObject ControlType="Edit" Id="UICommandInputBoxEdit" FriendlyName="commandInputBox" SpecialControlType="None">
+                  <TechnologyName>MSAA</TechnologyName>
+                  <WindowTitles>
+                    <WindowTitle>Magic Memo</WindowTitle>
+                  </WindowTitles>
+                  <SearchConfigurations>
+                    <SearchConfiguration>VisibleOnly</SearchConfiguration>
+                  </SearchConfigurations>
+                  <AndCondition Id="SearchCondition">
+                    <PropertyCondition Name="Name">Upcoming Tasks</PropertyCondition>
+                    <PropertyCondition Name="ControlType">Edit</PropertyCondition>
+                  </AndCondition>
+                  <SupportLevel>0</SupportLevel>
+                  <Descendants />
+                </UIObject>
+              </Descendants>
             </UIObject>
           </Descendants>
         </TopLevelWindow>
@@ -2654,6 +3386,101 @@
                   <AndCondition Id="SearchCondition">
                     <PropertyCondition Name="Name">Quit</PropertyCondition>
                     <PropertyCondition Name="ControlType">Button</PropertyCondition>
+                  </AndCondition>
+                  <SupportLevel>0</SupportLevel>
+                  <Descendants />
+                </UIObject>
+              </Descendants>
+            </UIObject>
+          </Descendants>
+        </TopLevelWindow>
+        <TopLevelWindow ControlType="Window" Id="UIMicrosoftVisualCRuntWindow" FriendlyName="Microsoft Visual C++ Runtime Library" SpecialControlType="None" SessionId="2557414">
+          <TechnologyName>MSAA</TechnologyName>
+          <WindowTitles>
+            <WindowTitle>Microsoft Visual C++ Runtime Library</WindowTitle>
+          </WindowTitles>
+          <SearchConfigurations>
+            <SearchConfiguration>VisibleOnly</SearchConfiguration>
+          </SearchConfigurations>
+          <AndCondition Id="SearchCondition">
+            <PropertyCondition Name="Name">Microsoft Visual C++ Runtime Library</PropertyCondition>
+            <PropertyCondition Name="ClassName">#32770</PropertyCondition>
+            <PropertyCondition Name="ControlType">Window</PropertyCondition>
+          </AndCondition>
+          <SupportLevel>0</SupportLevel>
+          <Descendants>
+            <UIObject ControlType="Window" Id="UI重试RWindow" FriendlyName="重试(&amp;R)" SpecialControlType="None">
+              <TechnologyName>MSAA</TechnologyName>
+              <WindowTitles>
+                <WindowTitle>Microsoft Visual C++ Runtime Library</WindowTitle>
+              </WindowTitles>
+              <SearchConfigurations>
+                <SearchConfiguration>VisibleOnly</SearchConfiguration>
+              </SearchConfigurations>
+              <AndCondition Id="SearchCondition">
+                <PropertyCondition Name="ControlId">4</PropertyCondition>
+                <PropertyCondition Name="ControlType">Window</PropertyCondition>
+              </AndCondition>
+              <SupportLevel>0</SupportLevel>
+              <Descendants>
+                <UIObject ControlType="Button" Id="UI重试RButton" FriendlyName="重试(&amp;R)" SpecialControlType="None">
+                  <TechnologyName>MSAA</TechnologyName>
+                  <WindowTitles>
+                    <WindowTitle>Microsoft Visual C++ Runtime Library</WindowTitle>
+                  </WindowTitles>
+                  <SearchConfigurations>
+                    <SearchConfiguration>VisibleOnly</SearchConfiguration>
+                  </SearchConfigurations>
+                  <AndCondition Id="SearchCondition">
+                    <PropertyCondition Name="Name">重试(R)</PropertyCondition>
+                    <PropertyCondition Name="ControlType">Button</PropertyCondition>
+                  </AndCondition>
+                  <SupportLevel>0</SupportLevel>
+                  <Descendants />
+                </UIObject>
+              </Descendants>
+            </UIObject>
+          </Descendants>
+        </TopLevelWindow>
+        <TopLevelWindow ControlType="Window" Id="UIMainControllerTestcpWindow" FriendlyName="main/ControllerTest.cpp at master · cs2103jan2015-..." SpecialControlType="None" SessionId="132050">
+          <TechnologyName>MSAA</TechnologyName>
+          <WindowTitles>
+            <WindowTitle>main/ControllerTest.cpp at master · cs2103jan2015-w11-2c/main - Google Chrome</WindowTitle>
+          </WindowTitles>
+          <SearchConfigurations>
+            <SearchConfiguration>VisibleOnly</SearchConfiguration>
+          </SearchConfigurations>
+          <AndCondition Id="SearchCondition">
+            <PropertyCondition Name="Name">main/ControllerTest.cpp at master · cs2103jan2015-w11-2c/main - Google Chrome</PropertyCondition>
+            <PropertyCondition Name="ClassName">Chrome_WidgetWin_1</PropertyCondition>
+            <PropertyCondition Name="ControlType">Window</PropertyCondition>
+          </AndCondition>
+          <SupportLevel>0</SupportLevel>
+          <Descendants>
+            <UIObject ControlType="Window" Id="UIChromeLegacyWindowWindow" FriendlyName="Chrome Legacy Window" SpecialControlType="None">
+              <TechnologyName>MSAA</TechnologyName>
+              <WindowTitles>
+                <WindowTitle>main/ControllerTest.cpp at master · cs2103jan2015-w11-2c/main - Google Chrome</WindowTitle>
+              </WindowTitles>
+              <SearchConfigurations>
+                <SearchConfiguration>VisibleOnly</SearchConfiguration>
+              </SearchConfigurations>
+              <AndCondition Id="SearchCondition">
+                <PropertyCondition Name="ControlId">271532200</PropertyCondition>
+                <PropertyCondition Name="ControlType">Window</PropertyCondition>
+              </AndCondition>
+              <SupportLevel>0</SupportLevel>
+              <Descendants>
+                <UIObject ControlType="Document" Id="UIMainControllerTestcpDocument" FriendlyName="main/ControllerTest.cpp at master · cs2103jan2015-..." SpecialControlType="None">
+                  <TechnologyName>MSAA</TechnologyName>
+                  <WindowTitles>
+                    <WindowTitle>main/ControllerTest.cpp at master · cs2103jan2015-w11-2c/main - Google Chrome</WindowTitle>
+                  </WindowTitles>
+                  <SearchConfigurations>
+                    <SearchConfiguration>VisibleOnly</SearchConfiguration>
+                  </SearchConfigurations>
+                  <AndCondition Id="SearchCondition">
+                    <PropertyCondition Name="ControlType">Document</PropertyCondition>
                   </AndCondition>
                   <SupportLevel>0</SupportLevel>
                   <Descendants />

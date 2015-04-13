@@ -38,17 +38,6 @@ public:
 		Assert::AreEqual(isExpected, control.checkIsDeadline(item));
 	}
 
-	TEST_METHOD(checkIsDeadLineTest2) {
-		string input = "travelling by 5/5";
-		Item item;
-		Controller control;
-		Parser parse;
-		parse.setStringToParse(input);
-		parse.extractDateAndTime();
-		item = parse.getItem();
-		bool isExpected = true;
-		Assert::AreEqual(isExpected, control.checkIsDeadline(item));
-	}
 
 	TEST_METHOD(checkDateIsUnsetTest1) {
 		string input = "meeting";
@@ -74,7 +63,6 @@ public:
 
 		bool isExpected = false;
 		Assert::AreEqual(isExpected, control.checkDateIsUnset(item.eventDate));
-
 	}
 
 
@@ -144,6 +132,135 @@ public:
 		item = parse.getItem();
 		bool isExpected = false;
 		Assert::AreEqual(isExpected, control.checkIsExpired(item));
+
+	}
+
+
+	//@author A0114613U
+	TEST_METHOD(sortAlphabeticalTest) {
+
+	}
+
+	/*	TEST_METHOD(searchTest) {
+	Controller controller;
+	string inputString = "testing from 23/4/2015 14:0 - 16:0";
+	>>>>>>> master
+	Item item;
+	Parser parse;
+	Controller control;
+	parse.setStringToParse(input);
+	parse.extractDateAndTime();
+	item = parse.getItem();
+	bool isExpected = false;
+	Assert::AreEqual(isExpected, control.checkIsDeadline(item));
+	}
+
+	TEST_METHOD(checkIsDeadLineTest2) {
+	string input = "travelling by 5/5";
+	Item item;
+	Controller control;
+	Parser parse;
+	parse.setStringToParse(input);
+	parse.extractDateAndTime();
+	item = parse.getItem();
+	bool isExpected = true;
+	Assert::AreEqual(isExpected, control.checkIsDeadline(item));
+	}
+
+	TEST_METHOD(checkDateIsUnsetTest1) {
+	string input = "meeting";
+	Controller control;
+	Item item;
+	Parser parse;
+	parse.setStringToParse(input);
+	parse.extractDateAndTime();
+	item = parse.getItem();
+
+	bool isExpected = true;
+	Assert::AreEqual(isExpected,control.checkDateIsUnset(item.eventDate));
+	}
+
+	TEST_METHOD(checkDateIsUnsetTest2) {
+	string input = "meeting on friday";
+	Controller control;
+	Item item;
+	Parser parse;
+	parse.setStringToParse(input);
+	parse.extractDateAndTime();
+	item = parse.getItem();
+
+	bool isExpected = false;
+	Assert::AreEqual(isExpected, control.checkDateIsUnset(item.eventDate));
+
+	}
+
+
+	TEST_METHOD(checkIsClashTest1) {
+	string input1 = "dinner on Tuesday 5pm";
+	string input2 = "outing on Tuesday 5pm";
+	Controller control;
+	Item item1, item2;
+	Parser parse;
+	parse.setStringToParse(input1);
+	parse.extractDateAndTime();
+	item1 = parse.getItem();
+	parse.setStringToParse(input2);
+	parse.extractDateAndTime();
+	item2 = parse.getItem();
+	bool isExpected = true;
+	Assert::AreEqual(isExpected, control.checkIsClash(item1, item2));
+	}
+
+	TEST_METHOD(checkIsClashTest2) {
+	string input1 = "meeting on Tuesday 3pm";
+	string input2 = "having dinner on Tuesday 4pm";
+	Controller control;
+	Item item1, item2;
+	Parser parse;
+	parse.setStringToParse(input1);
+	parse.extractDateAndTime();
+	item1 = parse.getItem();
+	parse.setStringToParse(input2);
+	parse.extractDateAndTime();
+	item2 = parse.getItem();
+	bool isExpected = false;
+	Assert::AreEqual(isExpected, control.checkIsClash(item1, item2));
+	}
+
+	TEST_METHOD(checkIsExpriedTest1) {
+	Controller control;
+	Item item;
+	Parser parse;
+	string input = "exams on 25/4/2014";
+	parse.setStringToParse(input);
+	parse.extractDateAndTime();
+	item = parse.getItem();
+	bool isExpected = true;
+	Assert::AreEqual(isExpected, control.checkIsExpired(item));
+	}
+
+	TEST_METHOD(checkIsExpriedTest2) {
+	Controller control;
+	Item item;
+	Parser parse;
+	string input = "having class on 4/4/2015";
+	parse.setStringToParse(input);
+	parse.extractDateAndTime();
+	item = parse.getItem();
+	bool isExpected = true;
+	Assert::AreEqual(isExpected, control.checkIsExpired(item));
+	}
+
+	TEST_METHOD(checkIsExpriedTest3) {
+	Controller control;
+	Item item;
+	Parser parse;
+	string input = "having class on 4/5/2015";
+	parse.setStringToParse(input);
+	parse.extractDateAndTime();
+	item = parse.getItem();
+	bool isExpected = false;
+	Assert::AreEqual(isExpected, control.checkIsExpired(item));
 
 	}
 
@@ -551,69 +668,69 @@ public:
 
 	/*test for event with single word description
 	TEST_METHOD(addToInputBankTest) {
-		Controller controller;
-		Item item;
-		Parser parse;
-		vector <string> _inputbank;
-		string inputString = "presentation on 11/5/2015 14:30 ";
-		parse.setStringToParse(inputString);
-		parse.extractDateAndTime();
-		item = parse.getItem();
-		controller.addToInputBank();
+	Controller controller;
+	Item item;
+	Parser parse;
+	vector <string> _inputbank;
+	string inputString = "presentation on 11/5/2015 14:30 ";
+	parse.setStringToParse(inputString);
+	parse.extractDateAndTime();
+	item = parse.getItem();
+	controller.addToInputBank();
 
-		string expected = "presentation";
-        Assert::AreEqual(expected, _inputbank.at(0));
-		expected = "monday";
-        Assert::AreEqual(expected, _inputbank.at(1));
-		 expected = "11";
-        Assert::AreEqual(expected, _inputbank.at(2));
-		 expected = "5";
-        Assert::AreEqual(expected, _inputbank.at(3));
-		 expected = "may";
-        Assert::AreEqual(expected, _inputbank.at(4));
-		 expected = "2015";
-        Assert::AreEqual(expected, _inputbank.at(5));
-		 string expected = "2:30";
-        Assert::AreEqual(expected, _inputbank.at(6));
+	string expected = "presentation";
+	Assert::AreEqual(expected, _inputbank.at(0));
+	expected = "monday";
+	Assert::AreEqual(expected, _inputbank.at(1));
+	expected = "11";
+	Assert::AreEqual(expected, _inputbank.at(2));
+	expected = "5";
+	Assert::AreEqual(expected, _inputbank.at(3));
+	expected = "may";
+	Assert::AreEqual(expected, _inputbank.at(4));
+	expected = "2015";
+	Assert::AreEqual(expected, _inputbank.at(5));
+	string expected = "2:30";
+	Assert::AreEqual(expected, _inputbank.at(6));
 	}*/
 
 	/*test for event with multiple-words description*/
-	
-	/*TEST_METHOD(addToInputBankTest) {
-		Controller controller;
-		Item item;
-		Parser parse;
-		vector <string> _inputbank;
-		string inputString = "meet friends at church on 11/5/2015 14:30 ";
-		parse.setStringToParse(inputString);
-		parse.extractDateAndTime();
-		item = parse.getItem();
-		controller.addToInputBank();
 
-		string expected = "meet friends at church";
-        Assert::AreEqual(expected, _inputbank.at(0));
-		expected = "friends at church";
-        Assert::AreEqual(expected, _inputbank.at(1));
-		expected = "at church";
-        Assert::AreEqual(expected, _inputbank.at(2));
-		 expected = "church";
-        Assert::AreEqual(expected, _inputbank.at(3));
-		 expected = "monday";
-        Assert::AreEqual(expected, _inputbank.at(4));
-		 expected = "11";
-        Assert::AreEqual(expected, _inputbank.at(5));
-		 expected = "5";
-        Assert::AreEqual(expected, _inputbank.at(6));
-		 expected = "may";
-        Assert::AreEqual(expected, _inputbank.at(7));
-		 expected = "2015";
-        Assert::AreEqual(expected, _inputbank.at(8));
-		 string expected = "2:30";
-        Assert::AreEqual(expected, _inputbank.at(9));
+	/*TEST_METHOD(addToInputBankTest) {
+	Controller controller;
+	Item item;
+	Parser parse;
+	vector <string> _inputbank;
+	string inputString = "meet friends at church on 11/5/2015 14:30 ";
+	parse.setStringToParse(inputString);
+	parse.extractDateAndTime();
+	item = parse.getItem();
+	controller.addToInputBank();
+
+	string expected = "meet friends at church";
+	Assert::AreEqual(expected, _inputbank.at(0));
+	expected = "friends at church";
+	Assert::AreEqual(expected, _inputbank.at(1));
+	expected = "at church";
+	Assert::AreEqual(expected, _inputbank.at(2));
+	expected = "church";
+	Assert::AreEqual(expected, _inputbank.at(3));
+	expected = "monday";
+	Assert::AreEqual(expected, _inputbank.at(4));
+	expected = "11";
+	Assert::AreEqual(expected, _inputbank.at(5));
+	expected = "5";
+	Assert::AreEqual(expected, _inputbank.at(6));
+	expected = "may";
+	Assert::AreEqual(expected, _inputbank.at(7));
+	expected = "2015";
+	Assert::AreEqual(expected, _inputbank.at(8));
+	string expected = "2:30";
+	Assert::AreEqual(expected, _inputbank.at(9));
 	}
 	*/
 
-	
+
 	/*TEST_METHOD(calculateTargetDateTimeTest) {
 	Controller controller;
 	DateTime today;
@@ -649,8 +766,8 @@ public:
 	//	Assert::AreEqual(expTargetMon, targetMon);
 	Assert::AreEqual(expTargetYr, targetYr);
 	}
-*/
+	*/
 
-	
+
 	};
 }
