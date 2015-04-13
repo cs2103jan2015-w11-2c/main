@@ -157,6 +157,10 @@ void Controller::initializeOptions() {
 	_isWide = (options[1] == 1) ? true : false;
 	_isNotificationsOn = (options[2] == 1) ? true : false;
 	_notifyTime = options[3];
+	_sleepTime[0][0] = options[4];
+	_sleepTime[0][1] = options[5];
+	_sleepTime[1][0] = options[6];
+	_sleepTime[1][1] = options[7];
 }
 
 long Controller::getTimePos(const int date[3], const int time[2]) {
@@ -793,39 +797,6 @@ void Controller::setSleepTime(Item data) {
 	_sleepTime[1][0] = data.eventEndTime[0];
 	_sleepTime[1][1] = data.eventEndTime[1];
 	
-	/*
-	string timeString = data.event;
-	vector<int> sleepParam;
-	istringstream iss(timeString);
-	int timeArg;
-	bool isHour = true;
-
-	while (iss >> timeArg) {
-		if (isHour) {
-			if (timeArg > 0  && timeArg <= 24) {
-				sleepParam .push_back(timeArg);
-			} else {
-				setSuccessMessage(ERROR_INCORRECT_ARGUMENTS);
-				return;
-			}
-		} else {
-			if (timeArg % 60 == 0 && timeArg >= 0) {
-				sleepParam .push_back(timeArg);
-			} else {
-				setSuccessMessage(ERROR_INCORRECT_ARGUMENTS);
-				return;
-			}
-		}
-		isHour = !isHour;
-	}
-
-	for (int i = 0 ; i < 2 ; i++) {
-		for (int j = 0 ; j < 2 ; j++) {
-			_sleepTime[i][j] = sleepParam[i * 2 + j];
-		}
-	}
-	*/
-
 	char buffer[1000];
 	string startMins = to_string(_sleepTime[0][1]);
 	if (_sleepTime[0][1] < 10) {
