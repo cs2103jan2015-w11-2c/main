@@ -628,7 +628,7 @@ public:
 		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
 		int expectedStartMinute = 30;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
-		int expectedEndHour = 24;
+		int expectedEndHour = 0;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
 		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
@@ -652,7 +652,7 @@ public:
 		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
 		int expectedStartMinute = 0;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
-		int expectedEndHour = 13;
+		int expectedEndHour = 0;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
 		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
@@ -686,7 +686,7 @@ public:
 		DateTimeParser parse;
 		string input = ""; 
 		parse.calculateDateTime(input);
-		int expectedDate = 15;
+		int expectedDate = 13;
 		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
 		int expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
@@ -718,7 +718,7 @@ public:
 		Assert::AreEqual(expectedStartHour, parse.getItem().eventStartTime[0]);
 		int expectedStartMinute = 0;
 		Assert::AreEqual(expectedStartMinute, parse.getItem().eventStartTime[1]);
-		int expectedEndHour = 1;
+		int expectedEndHour = 0;
 		Assert::AreEqual(expectedEndHour, parse.getItem().eventEndTime[0]);
 		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, parse.getItem().eventEndTime[1]);
@@ -1060,16 +1060,16 @@ public:
 			endMonth,
 			endYear);
 
-		int expectedEndDay = 15;
+		int expectedEndDay = 0;
 		Assert::AreEqual(expectedEndDay, endDay);
-		int expectedEndMonth = 4;
+		int expectedEndMonth = 0;
 		Assert::AreEqual(expectedEndMonth, endMonth);
-		int expectedEndYear = 2015;
+		int expectedEndYear = 0;
 		Assert::AreEqual(expectedEndYear, endYear);
 
-		int expectedEndHour = 23;
+		int expectedEndHour = 0;
 		Assert::AreEqual(expectedEndHour, endHr);
-		int expectedEndMinute = 30;
+		int expectedEndMinute = 0;
 		Assert::AreEqual(expectedEndMinute, endMin);
 	}
 
@@ -1304,7 +1304,7 @@ public:
 		int day;
 		int month;
 		int year;
-		int expectedDay = 12;
+		int expectedDay = 19;
 		int expectedMonth = 4;
 		int expectedYear = 2015;
 		parse.setDateFromWeekDay(7, day, month, year);
@@ -1336,7 +1336,7 @@ public:
 		int day;
 		int month;
 		int year;
-		int expectedDay = 12;
+		int expectedDay = 13;
 		int expectedMonth = 4;
 		int expectedYear = 2015;
 		parse.setDateFromWeekDay(-5, day, month, year);
