@@ -7,6 +7,7 @@
 #include <cassert>
 #include "Item.h"
 #include "Command.h"
+#include "FileStorage.h"
 
 using namespace std;
 
@@ -16,16 +17,19 @@ private:
 	string _message;
 	vector<Item> _deletedItems;
 	bool _isMarkDone;
+	FileStorage *_outputFile;
 public:
 	DeleteItem() {
 		_message = "";
 		_isMarkDone = false;
+		_outputFile = FileStorage::getInstance();
 	}
 
-	DeleteItem(const vector<int> input, const bool isMarkDone) {
+	DeleteItem(const vector<int> input, const bool isMarkDone, FileStorage * outputFile) {
 		_lineNumbers = input;
 		_message = "";
 		_isMarkDone = isMarkDone;
+		_outputFile = outputFile;
 	}
 
 	~DeleteItem() {
@@ -33,6 +37,29 @@ public:
 
 	vector<Item> getMarkedItems() {
 		return _deletedItems;
+	}
+
+	bool isMatch(const Item item1, const Item item2) {
+		if (item1.event != item2.event) {
+			return false;
+		}
+		for (int i = 0; i < 3; i++) {
+			if (item1.eventDate[i] != item2.eventDate[i]) {
+				return false;
+			} 
+			if (item1.eventEndDate[i] != item2.eventEndDate[i]) {
+				return false;
+			} 
+		}
+		for (int i = 0; i < 2; i++) {
+			if (item1.eventStartTime[i] != item2.eventStartTime[i]) {
+				return false;
+			} 
+			if (item1.eventStartTime[i] != item2.eventStartTime[i]) {
+				return false;
+			} 
+		}	
+		return true;
 	}
 
 	void executeAction(vector<Item>& vectorStore) {
@@ -98,9 +125,23 @@ public:
 	}
 
 	void negateAction(vector<Item> &vectorStore) {
+		if (_isMarkDone) {
+			vector<Item> temp = _outputFile->getArchiveData();
+			if (!temp.empty()) {
+				_outputFile->clearArchive();
+			} 
+			for (unsigned int i = 0; i < temp.size(); i++) {
+				for (unsigned int j = 0; j < _deletedItems.size(); j++) {
+					if (!isMatch(temp[i], _deletedItems[j])) {
+						_outputFile->addLineToArchive(temp[i]);
+					}
+				}
+			}
+		}
 		for (unsigned int i = 0; i < _deletedItems.size(); i++) {
 			vectorStore.push_back(_deletedItems[i]);
 		}
+
 		_deletedItems.clear();
 	}
 };

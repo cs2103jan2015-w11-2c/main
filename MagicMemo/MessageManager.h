@@ -27,6 +27,7 @@ private:
 	static String^ LABEL_IS_HELP = "Help";
 	static String^ LABEL_IS_ARCHIVE_SEARCH = "Archived Events";
 	static String^ LABEL_ALL_TASKS = "Other Tasks";
+	static String^ LABEL_IS_FREE = "Free Timeslots";
 
 	Controller* magicMemo;
 

@@ -119,7 +119,8 @@ void Controller::executeCommand(string inputText) {
 	} else if (userCommand == "done" || userCommand == "mark") {
 		markAsComplete();
 	} else if (userCommand == "archive") {
-		viewArchive();
+		_isArchiveSearch = true;
+		viewArchive(data, searchQuery);
 	} else if (userCommand == "restore") {
 		restoreDefaultFileInfo();
 	} else if (userCommand == "exit") {
@@ -156,6 +157,10 @@ void Controller::initializeOptions() {
 	_isWide = (options[1] == 1) ? true : false;
 	_isNotificationsOn = (options[2] == 1) ? true : false;
 	_notifyTime = options[3];
+	_sleepTime[0][0] = options[4];
+	_sleepTime[0][1] = options[5];
+	_sleepTime[1][0] = options[6];
+	_sleepTime[1][1] = options[7];
 }
 
 long Controller::getTimePos(const int date[3], const int time[2]) {
@@ -426,7 +431,7 @@ void Controller::addData(Item item) {
 void Controller::deleteData() {
 	DeleteItem *deleteItemCommand;
 	try {
-		deleteItemCommand = new DeleteItem(_parser->getLineOpNumber(), false);
+		deleteItemCommand = new DeleteItem(_parser->getLineOpNumber(), false, _outputFile);
 	} catch (const out_of_range& e) {
 		setSuccessMessage(e.what());
 		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
@@ -471,7 +476,9 @@ void Controller::search(Item data, string message) {
 	vector<Item> tempVector = _vectorStore;
 
 	try {
-		_parser->extractSearchQuery(data);
+		if (data.event != "" && data.isFloating()) { 
+			_parser->extractSearchQuery(data);
+		}
 	} catch (const out_of_range& e) {
 		setSuccessMessage(e.what());
 		LOG(INFO) << e.what();
@@ -745,36 +752,51 @@ void Controller::setClockTo24Hour() {
 }
 
 void Controller::setSleepTime(Item data) {
-	string timeString = data.event;
-	vector<int> sleepParam;
-	istringstream iss(timeString);
-	int timeArg;
-	bool isHour = true;
-
-	while (iss >> timeArg) {
-		if (isHour) {
-			if (timeArg > 0  && timeArg <= 24) {
-				sleepParam .push_back(timeArg);
-			} else {
-				setSuccessMessage(ERROR_INCORRECT_ARGUMENTS);
-				return;
-			}
-		} else {
-			if (timeArg % 60 == 0 && timeArg >= 0) {
-				sleepParam .push_back(timeArg);
-			} else {
-				setSuccessMessage(ERROR_INCORRECT_ARGUMENTS);
-				return;
-			}
-		}
-		isHour = !isHour;
+	try {
+		_parser->extractSearchQuery(data);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+		return;
 	}
+	
+	bool startIsSet = false;
+	bool endIsSet = false;
 
-	for (int i = 0 ; i < 2 ; i++) {
-		for (int j = 0 ; j < 2 ; j++) {
-			_sleepTime[i][j] = sleepParam[i * 2 + j];
+	for (int i = 0; i < 2; i++) {
+		if (data.eventStartTime[i] != 0) {
+			startIsSet = true;
+		
+		}
+		if (data.eventEndTime[i] != 0) {
+			endIsSet = true;
+		}
+		if (startIsSet && endIsSet) {
+			break;
 		}
 	}
+
+	if (!startIsSet || !endIsSet) {
+		setSuccessMessage(ERROR_INCORRECT_ARGUMENTS);
+		return;
+	}
+
+	if (data.eventStartTime[0] < 12) {
+		data.eventStartTime[0] += 12;
+	} else if (data.eventStartTime[0] == 12) {
+		data.eventStartTime[0] = 23;
+		data.eventStartTime[1] = 59;
+	}
+	
+	if (data.eventEndTime[0] > 12) {
+		data.eventEndTime[0] -= 12;
+	}
+
+	_sleepTime[0][0] = data.eventStartTime[0];
+	_sleepTime[0][1] = data.eventStartTime[1];
+	_sleepTime[1][0] = data.eventEndTime[0];
+	_sleepTime[1][1] = data.eventEndTime[1];
+	
 	char buffer[1000];
 	string startMins = to_string(_sleepTime[0][1]);
 	if (_sleepTime[0][1] < 10) {
@@ -784,9 +806,11 @@ void Controller::setSleepTime(Item data) {
 	if (_sleepTime[1][1] < 10) {
 		endMins = "0" + endMins;
 	}
+	
 	sprintf_s(buffer, SUCCESS_SLEEP.c_str(), _sleepTime[0][0], startMins.c_str(), _sleepTime[1][0], endMins.c_str()); 
 	setSuccessMessage(buffer);
 	_outputFile->saveSleepTime(_sleepTime);
+	
 }
 
 //@author A0111951N
@@ -907,7 +931,7 @@ void Controller::markAsComplete() {
 
 	DeleteItem *deleteItemCommand;
 	try {
-		deleteItemCommand = new DeleteItem(_parser->getLineOpNumber(), true);
+		deleteItemCommand = new DeleteItem(_parser->getLineOpNumber(), true, _outputFile);
 	} catch (const out_of_range& e) {
 		setSuccessMessage(e.what());
 		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
@@ -928,56 +952,22 @@ void Controller::markAsComplete() {
 	generateResults(_vectorStore);
 }
 
-void Controller::generateArchive(const vector<Item> archiveData) {
-	vector<Item> inputVector = archiveData;
-	vector<RESULT> floatResult;
-	vector<RESULT> deadlineResult;
-	vector<RESULT> otherResult;
-	
-	DateTime newDateTime;
+void Controller::viewArchive(Item data, string message) {
+	vector<Item> tempVector = _outputFile->getArchiveData();
 
-	for (unsigned int i = 0; i < inputVector.size(); i++) {
-		RESULT temp;
-
-		temp.isDeadline = inputVector[i].isDeadline();
-		temp.isClash = false;
-		temp.lineNumber = to_string(i + 1) + ".";
-		temp.date = inputVector[i].dateToString();
-		if (_is12HourFormat) {
-			temp.time = inputVector[i].timeAndEndDateToString();
-		} else {
-			temp.time = inputVector[i].timeTo24HrString();
-		}
-		temp.event = inputVector[i].event;
-		temp.isExpired = false;
-		if (inputVector[i].isFloating()) {
-			floatResult.push_back(temp);
-		} else if (temp.isDeadline) {
-			for (int j = 0; j < 3; j++) {
-				inputVector[i].eventEndDate[j] = inputVector[i].eventDate[j];
-			}
-			if (_is12HourFormat) {
-				temp.time = inputVector[i].timeAndEndDateToString();
-			} else {
-				temp.time = inputVector[i].timeTo24HrString();
-			}
-			temp.date = DEADLINE_HEADER;
-			
-			deadlineResult.push_back(temp);
-		} else {
-			otherResult.push_back(temp);
-		}
+	try {
+		_parser->extractSearchQuery(data);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+		return;
 	}
+	SearchItem *searchItemCommand;
 
-	otherResult.insert(otherResult.begin(), deadlineResult.begin(), deadlineResult.end());
-	otherResult.insert(otherResult.begin(), floatResult.begin(), floatResult.end());
-	_otherResult = otherResult;
+	searchItemCommand= new SearchItem(data, message, &_otherResult, _sleepTime, false, _is12HourFormat);
 
-	_isArchiveSearch = true;
-}
-
-void Controller::viewArchive() {
-	generateArchive(_outputFile->getArchiveData());
+	_invoker->disableUndo();
+	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
 }
 
 bool Controller::isArchiveSearch() {

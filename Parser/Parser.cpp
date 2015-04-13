@@ -93,7 +93,7 @@ size_t Parser::findDateKeyWord(string inputLine, string delimiter) {
 	size_t dateStart = line.rfind(delimiter);
 	string temp;
 	if(dateStart != string::npos) {
-		if(line[(dateStart - 1)] == 'm') { //if mon or monday
+		if(dateStart > 0 && line[(dateStart - 1)] == 'm') { //if mon or monday
 			string temp = line.substr(0, dateStart);
 			dateStart = temp.rfind(delimiter);
 		}
