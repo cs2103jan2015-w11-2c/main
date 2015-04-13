@@ -589,6 +589,383 @@ namespace GUITest
             Assert.AreEqual(this.AssertRedoMethodExpectedValues.UIAllTaskBoxEditText, uIAllTaskBoxEdit.Text);
         }
         
+        /// <summary>
+        /// SearchMethod - Use 'SearchMethodParams' to pass parameters into this method.
+        /// </summary>
+        public void SearchMethod()
+        {
+            #region Variable Declarations
+            WinEdit uICommandInputBoxEdit = this.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit1 = this.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit2 = this.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit3 = this.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit4 = this.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit5 = this.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit6 = this.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit7 = this.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit8 = this.UIMagicMemoWindow.UICommandInputBoxWindow8.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit9 = this.UIMagicMemoWindow.UICommandInputBoxWindow9.UICommandInputBoxEdit;
+            #endregion
+
+            // Last mouse action was not recorded.
+
+            // Type 'clear' in 'commandInputBox' text box
+            uICommandInputBoxEdit.Text = this.SearchMethodParams.UICommandInputBoxEditText;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit, this.SearchMethodParams.UICommandInputBoxEditSendKeys, ModifierKeys.None);
+
+            // Type 'add project meeting on 6/5 12 to 18:30' in 'commandInputBox' text box
+            uICommandInputBoxEdit1.Text = this.SearchMethodParams.UICommandInputBoxEditText1;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit1, this.SearchMethodParams.UICommandInputBoxEditSendKeys1, ModifierKeys.None);
+
+            // Type 'add meet friends in school on 19/5 11 to 3pm' in 'commandInputBox' text box
+            uICommandInputBoxEdit2.Text = this.SearchMethodParams.UICommandInputBoxEditText2;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit2, this.SearchMethodParams.UICommandInputBoxEditSendKeys2, ModifierKeys.None);
+
+            // Type 'add have lunch with Ann from 15/5 3pm to 15/5 5pm' in 'commandInputBox' text box
+            uICommandInputBoxEdit3.Text = this.SearchMethodParams.UICommandInputBoxEditText3;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit3, this.SearchMethodParams.UICommandInputBoxEditSendKeys3, ModifierKeys.None);
+
+            // Last mouse action was not recorded.
+
+            // Type 'add clean the room by 13/5 12pm' in 'commandInputBox' text box
+            uICommandInputBoxEdit4.Text = this.SearchMethodParams.UICommandInputBoxEditText4;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit4, this.SearchMethodParams.UICommandInputBoxEditSendKeys4, ModifierKeys.None);
+
+            // Type 'search clean room' in 'commandInputBox' text box
+            uICommandInputBoxEdit5.Text = this.SearchMethodParams.UICommandInputBoxEditText5;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit5, this.SearchMethodParams.UICommandInputBoxEditSendKeys5, ModifierKeys.None);
+
+            // Type 'display' in 'commandInputBox' text box
+            uICommandInputBoxEdit6.Text = this.SearchMethodParams.UICommandInputBoxEditText6;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit6, this.SearchMethodParams.UICommandInputBoxEditSendKeys6, ModifierKeys.None);
+
+            // The control for this action was not recorded.
+
+            // Type 'search the in lun' in 'commandInputBox' text box
+            uICommandInputBoxEdit7.Text = this.SearchMethodParams.UICommandInputBoxEditText7;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit7, this.SearchMethodParams.UICommandInputBoxEditSendKeys7, ModifierKeys.None);
+
+            // Type 'search lun' in 'commandInputBox' text box
+            uICommandInputBoxEdit8.Text = this.SearchMethodParams.UICommandInputBoxEditText8;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit8, this.SearchMethodParams.UICommandInputBoxEditSendKeys8, ModifierKeys.None);
+
+            // Type 'search ing' in 'commandInputBox' text box
+            uICommandInputBoxEdit9.Text = this.SearchMethodParams.UICommandInputBoxEditText9;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit9, this.SearchMethodParams.UICommandInputBoxEditSendKeys9, ModifierKeys.None);
+        }
+        
+        /// <summary>
+        /// AssertSerachMethod - Use 'AssertSerachMethodExpectedValues' to pass parameters into this method.
+        /// </summary>
+        public void AssertSerachMethod()
+        {
+            #region Variable Declarations
+            WinEdit uIAllTaskBoxEdit = this.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit;
+            #endregion
+
+            // Verify that the 'Text' property of 'allTaskBox' text box equals 'Tuesday, 19 May 2015            //4. [11-3p] meet friends in school            //Wednesday, 6 May 2015            //1. [12p-6:30p] project meeting            //            //'
+            Assert.AreEqual(this.AssertSerachMethodExpectedValues.UIAllTaskBoxEditText, uIAllTaskBoxEdit.Text);
+        }
+        
+        /// <summary>
+        /// SearchMethod2 - Use 'SearchMethod2Params' to pass parameters into this method.
+        /// </summary>
+        public void SearchMethod2()
+        {
+            #region Variable Declarations
+            WinEdit uIAllTaskBoxEdit = this.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit;
+            WinEdit uICommandInputBoxEdit = this.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit1 = this.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit2 = this.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit3 = this.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit4 = this.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit5 = this.UIMagicMemoWindow.UICommandInputBoxWindow5.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit6 = this.UIMagicMemoWindow.UICommandInputBoxWindow6.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit7 = this.UIMagicMemoWindow.UICommandInputBoxWindow7.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit8 = this.UIMagicMemoWindow.UICommandInputBoxWindow8.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit9 = this.UIMagicMemoWindow.UICommandInputBoxWindow9.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit10 = this.UIMagicMemoWindow.UICommandInputBoxWindow10.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit11 = this.UIMagicMemoWindow.UICommandInputBoxWindow11.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit12 = this.UIMagicMemoWindow.UICommandInputBoxWindow12.UICommandInputBoxEdit;
+            #endregion
+
+            // Click 'allTaskBox' text box
+            Mouse.Click(uIAllTaskBoxEdit, new Point(44, 218));
+
+            // Last mouse action was not recorded.
+
+            // Type 'clear' in 'commandInputBox' text box
+            uICommandInputBoxEdit.Text = this.SearchMethod2Params.UICommandInputBoxEditText;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit, this.SearchMethod2Params.UICommandInputBoxEditSendKeys, ModifierKeys.None);
+
+            // The control for this action was not recorded.
+
+            // Type 'add hahaha on 15/5 22:33' in 'commandInputBox' text box
+            uICommandInputBoxEdit1.Text = this.SearchMethod2Params.UICommandInputBoxEditText1;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit1, this.SearchMethod2Params.UICommandInputBoxEditSendKeys1, ModifierKeys.None);
+
+            // The control for this action was not recorded.
+
+            // Last mouse action was not recorded.
+
+            // Last mouse action was not recorded.
+
+            // Type 'add task manager to be installed by 16/6 12p' in 'commandInputBox' text box
+            uICommandInputBoxEdit2.Text = this.SearchMethod2Params.UICommandInputBoxEditText2;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit2, this.SearchMethod2Params.UICommandInputBoxEditSendKeys2, ModifierKeys.None);
+
+            // Type 'add finish report by 7/5 11:59p' in 'commandInputBox' text box
+            uICommandInputBoxEdit3.Text = this.SearchMethod2Params.UICommandInputBoxEditText3;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit3, this.SearchMethod2Params.UICommandInputBoxEditSendKeys3, ModifierKeys.None);
+
+            // Type 'add have lunch with friends from 11/5 to 12/5 12' in 'commandInputBox' text box
+            uICommandInputBoxEdit4.Text = this.SearchMethod2Params.UICommandInputBoxEditText4;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit4, this.SearchMethod2Params.UICommandInputBoxEditSendKeys4, ModifierKeys.None);
+
+            // Last mouse action was not recorded.
+
+            // Last mouse action was not recorded.
+
+            // Type 'add do laundry on 9/5 13:30' in 'commandInputBox' text box
+            uICommandInputBoxEdit5.Text = this.SearchMethod2Params.UICommandInputBoxEditText5;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit5, this.SearchMethod2Params.UICommandInputBoxEditSendKeys5, ModifierKeys.None);
+
+            // Last mouse action was not recorded.
+
+            // Type 'search 12p 16/6' in 'commandInputBox' text box
+            uICommandInputBoxEdit6.Text = this.SearchMethod2Params.UICommandInputBoxEditText6;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit6, this.SearchMethod2Params.UICommandInputBoxEditSendKeys6, ModifierKeys.None);
+
+            // Type 'd{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit7, this.SearchMethod2Params.UICommandInputBoxEditSendKeys7, ModifierKeys.None);
+
+            // Type 'search 12p-1p 11/5' in 'commandInputBox' text box
+            uICommandInputBoxEdit8.Text = this.SearchMethod2Params.UICommandInputBoxEditText7;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit8, this.SearchMethod2Params.UICommandInputBoxEditSendKeys8, ModifierKeys.None);
+
+            // The control for this action was not recorded.
+
+            // Type 'display' in 'commandInputBox' text box
+            uICommandInputBoxEdit9.Text = this.SearchMethod2Params.UICommandInputBoxEditText8;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit9, this.SearchMethod2Params.UICommandInputBoxEditSendKeys9, ModifierKeys.None);
+
+            // Type 'search ' in 'commandInputBox' text box
+            uICommandInputBoxEdit10.Text = this.SearchMethod2Params.UICommandInputBoxEditText9;
+
+            // Last mouse action was not recorded.
+
+            // Type 'search 10:33p 15 may' in 'commandInputBox' text box
+            uICommandInputBoxEdit10.Text = this.SearchMethod2Params.UICommandInputBoxEditText10;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit10, this.SearchMethod2Params.UICommandInputBoxEditSendKeys10, ModifierKeys.None);
+
+            // The control for this action was not recorded.
+
+            // Type 'display' in 'commandInputBox' text box
+            uICommandInputBoxEdit11.Text = this.SearchMethod2Params.UICommandInputBoxEditText11;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit11, this.SearchMethod2Params.UICommandInputBoxEditSendKeys11, ModifierKeys.None);
+
+            // The control for this action was not recorded.
+
+            // Type 'search 10:33p-11:33p 15/5' in 'commandInputBox' text box
+            uICommandInputBoxEdit12.Text = this.SearchMethod2Params.UICommandInputBoxEditText12;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit12, this.SearchMethod2Params.UICommandInputBoxEditSendKeys12, ModifierKeys.None);
+        }
+        
+        /// <summary>
+        /// AssertSearchMethod2 - Use 'AssertSearchMethod2ExpectedValues' to pass parameters into this method.
+        /// </summary>
+        public void AssertSearchMethod2()
+        {
+            #region Variable Declarations
+            WinEdit uIAllTaskBoxEdit = this.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit;
+            #endregion
+
+            // Verify that the 'Text' property of 'allTaskBox' text box equals 'Friday, 15 May 2015            //4. [10:33p-11:33p] hahaha            //            //'
+            Assert.AreEqual(this.AssertSearchMethod2ExpectedValues.UIAllTaskBoxEditText, uIAllTaskBoxEdit.Text);
+        }
+        
+        /// <summary>
+        /// trash - Use 'trashParams' to pass parameters into this method.
+        /// </summary>
+        public void trash()
+        {
+            #region Variable Declarations
+            WinEdit uICommandInputBoxEdit = this.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit1 = this.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit2 = this.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit3 = this.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit;
+            #endregion
+
+            // Type 'clear' in 'commandInputBox' text box
+            uICommandInputBoxEdit.Text = this.trashParams.UICommandInputBoxEditText;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit, this.trashParams.UICommandInputBoxEditSendKeys, ModifierKeys.None);
+
+            // Type 'add task1 on 7/7 6p' in 'commandInputBox' text box
+            uICommandInputBoxEdit1.Text = this.trashParams.UICommandInputBoxEditText1;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit1, this.trashParams.UICommandInputBoxEditSendKeys1, ModifierKeys.None);
+
+            // The control for this action was not recorded.
+
+            // Type 'add tsk2 by 5/6 3:45pm' in 'commandInputBox' text box
+            uICommandInputBoxEdit2.Text = this.trashParams.UICommandInputBoxEditText2;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit2, this.trashParams.UICommandInputBoxEditSendKeys2, ModifierKeys.None);
+
+            // The control for this action was not recorded.
+
+            // Type 'add task3 on 15/5 4pm to 12p' in 'commandInputBox' text box
+            uICommandInputBoxEdit3.Text = this.trashParams.UICommandInputBoxEditText3;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit3, this.trashParams.UICommandInputBoxEditSendKeys3, ModifierKeys.None);
+        }
+        
+        /// <summary>
+        /// TwentyFourHrMethod - Use 'TwentyFourHrMethodParams' to pass parameters into this method.
+        /// </summary>
+        public void TwentyFourHrMethod()
+        {
+            #region Variable Declarations
+            WinEdit uICommandInputBoxEdit = this.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit1 = this.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit2 = this.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit3 = this.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit;
+            #endregion
+
+            // Type 'clear' in 'commandInputBox' text box
+            uICommandInputBoxEdit.Text = this.TwentyFourHrMethodParams.UICommandInputBoxEditText;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit1, this.TwentyFourHrMethodParams.UICommandInputBoxEditSendKeys, ModifierKeys.None);
+
+            // Type 'add task1 on 7/7 17 ' in 'commandInputBox' text box
+            uICommandInputBoxEdit2.Text = this.TwentyFourHrMethodParams.UICommandInputBoxEditText1;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit2, this.TwentyFourHrMethodParams.UICommandInputBoxEditSendKeys1, ModifierKeys.None);
+
+            // Type 'add task3 on 5/5 14:44 to 23:59' in 'commandInputBox' text box
+            uICommandInputBoxEdit3.Text = this.TwentyFourHrMethodParams.UICommandInputBoxEditText2;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit3, this.TwentyFourHrMethodParams.UICommandInputBoxEditSendKeys2, ModifierKeys.None);
+        }
+        
+        /// <summary>
+        /// AssertTwentyFourHrMethod - Use 'AssertTwentyFourHrMethodExpectedValues' to pass parameters into this method.
+        /// </summary>
+        public void AssertTwentyFourHrMethod()
+        {
+            #region Variable Declarations
+            WinEdit uIAllTaskBoxEdit = this.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit;
+            #endregion
+
+            // Verify that the 'Text' property of 'allTaskBox' text box equals 'Tuesday, 5 May 2015            //2. [2:44p-11:59p] task3            //Tuesday, 7 Jul 2015            //3. [5p-6p] task1            //            //'
+            Assert.AreEqual(this.AssertTwentyFourHrMethodExpectedValues.UIAllTaskBoxEditText, uIAllTaskBoxEdit.Text);
+        }
+        
+        /// <summary>
+        /// UndoMethod - Use 'UndoMethodParams' to pass parameters into this method.
+        /// </summary>
+        public void UndoMethod()
+        {
+            #region Variable Declarations
+            WinEdit uICommandInputBoxEdit = this.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit1 = this.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit2 = this.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit3 = this.UIMagicMemoWindow.UICommandInputBoxWindow3.UICommandInputBoxEdit;
+            WinEdit uICommandInputBoxEdit4 = this.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit;
+            #endregion
+
+            // Type 'clear' in 'commandInputBox' text box
+            uICommandInputBoxEdit.Text = this.UndoMethodParams.UICommandInputBoxEditText;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit, this.UndoMethodParams.UICommandInputBoxEditSendKeys, ModifierKeys.None);
+
+            // Type 'add task1 on 5/5 12:32' in 'commandInputBox' text box
+            uICommandInputBoxEdit1.Text = this.UndoMethodParams.UICommandInputBoxEditText1;
+
+            // Type '{Left}{Left}{Left}{Left}{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit1, this.UndoMethodParams.UICommandInputBoxEditSendKeys1, ModifierKeys.None);
+
+            // The control for this action was not recorded.
+
+            // Type 'add task2 on 6/7 4pm' in 'commandInputBox' text box
+            uICommandInputBoxEdit2.Text = this.UndoMethodParams.UICommandInputBoxEditText2;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit2, this.UndoMethodParams.UICommandInputBoxEditSendKeys2, ModifierKeys.None);
+
+            // Type 'u{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit3, this.UndoMethodParams.UICommandInputBoxEditSendKeys3, ModifierKeys.None);
+
+            // Type 'u{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit4, this.UndoMethodParams.UICommandInputBoxEditSendKeys4, ModifierKeys.None);
+        }
+        
+        /// <summary>
+        /// AssertUndoMethod - Use 'AssertUndoMethodExpectedValues' to pass parameters into this method.
+        /// </summary>
+        public void AssertUndoMethod()
+        {
+            #region Variable Declarations
+            WinEdit uIAllTaskBoxEdit = this.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit;
+            #endregion
+
+            // Verify that the 'Text' property of 'allTaskBox' text box equals '            //'
+            Assert.AreEqual(this.AssertUndoMethodExpectedValues.UIAllTaskBoxEditText, uIAllTaskBoxEdit.Text);
+        }
+        
         #region Properties
         public virtual AddMethodParams AddMethodParams
         {
@@ -758,6 +1135,114 @@ namespace GUITest
             }
         }
         
+        public virtual SearchMethodParams SearchMethodParams
+        {
+            get
+            {
+                if ((this.mSearchMethodParams == null))
+                {
+                    this.mSearchMethodParams = new SearchMethodParams();
+                }
+                return this.mSearchMethodParams;
+            }
+        }
+        
+        public virtual AssertSerachMethodExpectedValues AssertSerachMethodExpectedValues
+        {
+            get
+            {
+                if ((this.mAssertSerachMethodExpectedValues == null))
+                {
+                    this.mAssertSerachMethodExpectedValues = new AssertSerachMethodExpectedValues();
+                }
+                return this.mAssertSerachMethodExpectedValues;
+            }
+        }
+        
+        public virtual SearchMethod2Params SearchMethod2Params
+        {
+            get
+            {
+                if ((this.mSearchMethod2Params == null))
+                {
+                    this.mSearchMethod2Params = new SearchMethod2Params();
+                }
+                return this.mSearchMethod2Params;
+            }
+        }
+        
+        public virtual AssertSearchMethod2ExpectedValues AssertSearchMethod2ExpectedValues
+        {
+            get
+            {
+                if ((this.mAssertSearchMethod2ExpectedValues == null))
+                {
+                    this.mAssertSearchMethod2ExpectedValues = new AssertSearchMethod2ExpectedValues();
+                }
+                return this.mAssertSearchMethod2ExpectedValues;
+            }
+        }
+        
+        public virtual trashParams trashParams
+        {
+            get
+            {
+                if ((this.mtrashParams == null))
+                {
+                    this.mtrashParams = new trashParams();
+                }
+                return this.mtrashParams;
+            }
+        }
+        
+        public virtual TwentyFourHrMethodParams TwentyFourHrMethodParams
+        {
+            get
+            {
+                if ((this.mTwentyFourHrMethodParams == null))
+                {
+                    this.mTwentyFourHrMethodParams = new TwentyFourHrMethodParams();
+                }
+                return this.mTwentyFourHrMethodParams;
+            }
+        }
+        
+        public virtual AssertTwentyFourHrMethodExpectedValues AssertTwentyFourHrMethodExpectedValues
+        {
+            get
+            {
+                if ((this.mAssertTwentyFourHrMethodExpectedValues == null))
+                {
+                    this.mAssertTwentyFourHrMethodExpectedValues = new AssertTwentyFourHrMethodExpectedValues();
+                }
+                return this.mAssertTwentyFourHrMethodExpectedValues;
+            }
+        }
+        
+        public virtual UndoMethodParams UndoMethodParams
+        {
+            get
+            {
+                if ((this.mUndoMethodParams == null))
+                {
+                    this.mUndoMethodParams = new UndoMethodParams();
+                }
+                return this.mUndoMethodParams;
+            }
+        }
+        
+        public virtual AssertUndoMethodExpectedValues AssertUndoMethodExpectedValues
+        {
+            get
+            {
+                if ((this.mAssertUndoMethodExpectedValues == null))
+                {
+                    this.mAssertUndoMethodExpectedValues = new AssertUndoMethodExpectedValues();
+                }
+                return this.mAssertUndoMethodExpectedValues;
+            }
+        }
+        
         public UIMagicMemoWindow UIMagicMemoWindow
         {
             get
@@ -835,6 +1320,24 @@ namespace GUITest
         private RedoMethodParams mRedoMethodParams;
         
         private AssertRedoMethodExpectedValues mAssertRedoMethodExpectedValues;
+        
+        private SearchMethodParams mSearchMethodParams;
+        
+        private AssertSerachMethodExpectedValues mAssertSerachMethodExpectedValues;
+        
+        private SearchMethod2Params mSearchMethod2Params;
+        
+        private AssertSearchMethod2ExpectedValues mAssertSearchMethod2ExpectedValues;
+        
+        private trashParams mtrashParams;
+        
+        private TwentyFourHrMethodParams mTwentyFourHrMethodParams;
+        
+        private AssertTwentyFourHrMethodExpectedValues mAssertTwentyFourHrMethodExpectedValues;
+        
+        private UndoMethodParams mUndoMethodParams;
+        
+        private AssertUndoMethodExpectedValues mAssertUndoMethodExpectedValues;
         
         private UIMagicMemoWindow mUIMagicMemoWindow;
         
@@ -1523,6 +2026,458 @@ namespace GUITest
         /// </summary>
         public string UIAllTaskBoxEditText = "Deadline Events\r3. [11p][17/5] task2\rThursday, 7 May 2015\r1. [11-3p] task1\rMonday" +
             ", 11 May 2015\r2. [6p-7p, 12/5] task3\r\r";
+        #endregion
+    }
+    
+    /// <summary>
+    /// Parameters to be passed into 'SearchMethod'
+    /// </summary>
+    [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
+    public class SearchMethodParams
+    {
+        
+        #region Fields
+        /// <summary>
+        /// Type 'clear' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText = "clear";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add project meeting on 6/5 12 to 18:30' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText1 = "add project meeting on 6/5 12 to 18:30";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys1 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add meet friends in school on 19/5 11 to 3pm' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText2 = "add meet friends in school on 19/5 11 to 3pm";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys2 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add have lunch with Ann from 15/5 3pm to 15/5 5pm' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText3 = "add have lunch with Ann from 15/5 3pm to 15/5 5pm";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys3 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add clean the room by 13/5 12pm' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText4 = "add clean the room by 13/5 12pm";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys4 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'search clean room' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText5 = "search clean room";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys5 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'display' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText6 = "display";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys6 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'search the in lun' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText7 = "search the in lun";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys7 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'search lun' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText8 = "search lun";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys8 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'search ing' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText9 = "search ing";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys9 = "{Enter}";
+        #endregion
+    }
+    
+    /// <summary>
+    /// Parameters to be passed into 'AssertSerachMethod'
+    /// </summary>
+    [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
+    public class AssertSerachMethodExpectedValues
+    {
+        
+        #region Fields
+        /// <summary>
+        /// Verify that the 'Text' property of 'allTaskBox' text box equals 'Tuesday, 19 May 2015        ///4. [11-3p] meet friends in school        ///Wednesday, 6 May 2015        ///1. [12p-6:30p] project meeting        ///        ///'
+        /// </summary>
+        public string UIAllTaskBoxEditText = "Tuesday, 19 May 2015\r4. [11-3p] meet friends in school\rWednesday, 6 May 2015\r1. [" +
+            "12p-6:30p] project meeting\r\r";
+        #endregion
+    }
+    
+    /// <summary>
+    /// Parameters to be passed into 'SearchMethod2'
+    /// </summary>
+    [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
+    public class SearchMethod2Params
+    {
+        
+        #region Fields
+        /// <summary>
+        /// Type 'clear' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText = "clear";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add hahaha on 15/5 22:33' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText1 = "add hahaha on 15/5 22:33";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys1 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add task manager to be installed by 16/6 12p' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText2 = "add task manager to be installed by 16/6 12p";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys2 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add finish report by 7/5 11:59p' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText3 = "add finish report by 7/5 11:59p";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys3 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add have lunch with friends from 11/5 to 12/5 12' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText4 = "add have lunch with friends from 11/5 to 12/5 12";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys4 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add do laundry on 9/5 13:30' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText5 = "add do laundry on 9/5 13:30";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys5 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'search 12p 16/6' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText6 = "search 12p 16/6";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys6 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'd{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys7 = "d{Enter}";
+        
+        /// <summary>
+        /// Type 'search 12p-1p 11/5' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText7 = "search 12p-1p 11/5";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys8 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'display' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText8 = "display";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys9 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'search ' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText9 = "search ";
+        
+        /// <summary>
+        /// Type 'search 10:33p 15 may' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText10 = "search 10:33p 15 may";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys10 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'display' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText11 = "display";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys11 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'search 10:33p-11:33p 15/5' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText12 = "search 10:33p-11:33p 15/5";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys12 = "{Enter}";
+        #endregion
+    }
+    
+    /// <summary>
+    /// Parameters to be passed into 'AssertSearchMethod2'
+    /// </summary>
+    [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
+    public class AssertSearchMethod2ExpectedValues
+    {
+        
+        #region Fields
+        /// <summary>
+        /// Verify that the 'Text' property of 'allTaskBox' text box equals 'Friday, 15 May 2015        ///4. [10:33p-11:33p] hahaha        ///        ///'
+        /// </summary>
+        public string UIAllTaskBoxEditText = "Friday, 15 May 2015\r4. [10:33p-11:33p] hahaha\r\r";
+        #endregion
+    }
+    
+    /// <summary>
+    /// Parameters to be passed into 'trash'
+    /// </summary>
+    [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
+    public class trashParams
+    {
+        
+        #region Fields
+        /// <summary>
+        /// Type 'clear' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText = "clear";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add task1 on 7/7 6p' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText1 = "add task1 on 7/7 6p";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys1 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add tsk2 by 5/6 3:45pm' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText2 = "add tsk2 by 5/6 3:45pm";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys2 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add task3 on 15/5 4pm to 12p' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText3 = "add task3 on 15/5 4pm to 12p";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys3 = "{Enter}";
+        #endregion
+    }
+    
+    /// <summary>
+    /// Parameters to be passed into 'TwentyFourHrMethod'
+    /// </summary>
+    [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
+    public class TwentyFourHrMethodParams
+    {
+        
+        #region Fields
+        /// <summary>
+        /// Type 'clear' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText = "clear";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add task1 on 7/7 17 ' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText1 = "add task1 on 7/7 17 ";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys1 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add task3 on 5/5 14:44 to 23:59' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText2 = "add task3 on 5/5 14:44 to 23:59";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys2 = "{Enter}";
+        #endregion
+    }
+    
+    /// <summary>
+    /// Parameters to be passed into 'AssertTwentyFourHrMethod'
+    /// </summary>
+    [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
+    public class AssertTwentyFourHrMethodExpectedValues
+    {
+        
+        #region Fields
+        /// <summary>
+        /// Verify that the 'Text' property of 'allTaskBox' text box equals 'Tuesday, 5 May 2015        ///2. [2:44p-11:59p] task3        ///Tuesday, 7 Jul 2015        ///3. [5p-6p] task1        ///        ///'
+        /// </summary>
+        public string UIAllTaskBoxEditText = "Tuesday, 5 May 2015\r2. [2:44p-11:59p] task3\rTuesday, 7 Jul 2015\r3. [5p-6p] task1\r" +
+            "\r";
+        #endregion
+    }
+    
+    /// <summary>
+    /// Parameters to be passed into 'UndoMethod'
+    /// </summary>
+    [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
+    public class UndoMethodParams
+    {
+        
+        #region Fields
+        /// <summary>
+        /// Type 'clear' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText = "clear";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys = "{Enter}";
+        
+        /// <summary>
+        /// Type 'add task1 on 5/5 12:32' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText1 = "add task1 on 5/5 12:32";
+        
+        /// <summary>
+        /// Type '{Left}{Left}{Left}{Left}{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys1 = "{Left}{Left}{Left}{Left}{Enter}";
+        
+        /// <summary>
+        /// Type 'add task2 on 6/7 4pm' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText2 = "add task2 on 6/7 4pm";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys2 = "{Enter}";
+        
+        /// <summary>
+        /// Type 'u{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys3 = "u{Enter}";
+        
+        /// <summary>
+        /// Type 'u{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys4 = "u{Enter}";
+        #endregion
+    }
+    
+    /// <summary>
+    /// Parameters to be passed into 'AssertUndoMethod'
+    /// </summary>
+    [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
+    public class AssertUndoMethodExpectedValues
+    {
+        
+        #region Fields
+        /// <summary>
+        /// Verify that the 'Text' property of 'allTaskBox' text box equals '        ///'
+        /// </summary>
+        public string UIAllTaskBoxEditText = "\r";
         #endregion
     }
     

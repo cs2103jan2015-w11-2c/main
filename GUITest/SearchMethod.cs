@@ -27,10 +27,7 @@ namespace GUITest
         {
             // To generate code for this test, select "Generate Code for Coded UI Test" from the shortcut menu and select one of the menu items.
             // For more information on generated code, see http://go.microsoft.com/fwlink/?LinkId=179463
-            this.UIMap.SearchMethod1();
-            this.UIMap.AssertSearchMethod1();
-            this.UIMap.SerchMethod2();
-            this.UIMap.AssertSearchMethod2();
+          
         }
 
         #region Additional test attributes

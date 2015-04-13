@@ -13,21 +13,20 @@ using Keyboard = Microsoft.VisualStudio.TestTools.UITesting.Keyboard;
 namespace GUITest
 {
     /// <summary>
-    /// Summary description for CodedUITest1
+    /// Summary description for CodedUITest3
     /// </summary>
     [CodedUITest]
-    public class TwentyfourHrMethod
+    public class CodedUITest3
     {
-        public TwentyfourHrMethod()
+        public CodedUITest3()
         {
         }
 
         [TestMethod]
-        public void UITwentyfourHrMethod()
+        public void CodedUITestMethod1()
         {
             // To generate code for this test, select "Generate Code for Coded UI Test" from the shortcut menu and select one of the menu items.
             // For more information on generated code, see http://go.microsoft.com/fwlink/?LinkId=179463
-       
         }
 
         #region Additional test attributes
@@ -68,20 +67,5 @@ namespace GUITest
             }
         }
         private TestContext testContextInstance;
-
-        public UIMap UIMap
-        {
-            get
-            {
-                if ((this.map == null))
-                {
-                    this.map = new UIMap();
-                }
-
-                return this.map;
-            }
-        }
-
-        private UIMap map;
     }
 }
