@@ -27,14 +27,9 @@ namespace GUITest
         {
             // To generate code for this test, select "Generate Code for Coded UI Test" from the shortcut menu and select one of the menu items.
             // For more information on generated code, see http://go.microsoft.com/fwlink/?LinkId=179463
-            this.UIMap.AddMethod1();
-            this.UIMap.AssertMethod1();
-            this.UIMap.AddMethod2();
-            this.UIMap.AssertAddMethod2();
-            this.UIMap.AddMethod3();
-            this.UIMap.AssertAddMethod3();
-            this.UIMap.InvalidAddMethod1();
-            this.UIMap.AssertInvalidAddMethod1();
+            this.UIMap.AddMethod();
+            this.UIMap.AssertAddMethod();
+
         }
 
         #region Additional test attributes
@@ -71,6 +66,8 @@ namespace GUITest
             }
             set
             {
+
+                this.UIMap.AddMethod();
                 testContextInstance = value;
             }
         }

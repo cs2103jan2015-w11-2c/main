@@ -27,6 +27,16 @@ namespace GUITest
         {
             // To generate code for this test, select "Generate Code for Coded UI Test" from the shortcut menu and select one of the menu items.
             // For more information on generated code, see http://go.microsoft.com/fwlink/?LinkId=179463
+            this.UIMap.ClearMethod();
+            this.UIMap.AssertClearMethod();
+            this.UIMap.DeleteMethod();
+            this.UIMap.AssertDeleteMethod();
+            this.UIMap.FreeSlotMethod();
+            this.UIMap.AssertFreeSlotMethod();
+            this.UIMap.InvalidDeleteMethod();
+            this.UIMap.AssertInvalidDeleteMethod();
+            this.UIMap.RedoMethod();
+            this.UIMap.AssertRedoMethod();
         }
 
         #region Additional test attributes
@@ -67,5 +77,20 @@ namespace GUITest
             }
         }
         private TestContext testContextInstance;
+
+        public UIMap UIMap
+        {
+            get
+            {
+                if ((this.map == null))
+                {
+                    this.map = new UIMap();
+                }
+
+                return this.map;
+            }
+        }
+
+        private UIMap map;
     }
 }

@@ -27,8 +27,8 @@ namespace GUITest
         {
             // To generate code for this test, select "Generate Code for Coded UI Test" from the shortcut menu and select one of the menu items.
             // For more information on generated code, see http://go.microsoft.com/fwlink/?LinkId=179463
-            this.UIMap.DeleteMethod1();
-            this.UIMap.AssertDeleteMethod1();
+            this.UIMap.DeleteMethod();
+            this.UIMap.AssertDeleteMethod();
         }
 
         #region Additional test attributes
