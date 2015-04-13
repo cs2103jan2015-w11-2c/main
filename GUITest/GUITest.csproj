@@ -54,13 +54,9 @@
   <ItemGroup>
     <Compile Include="AddMethod.cs" />
     <Compile Include="ClearMethod.cs" />
-    <Compile Include="CodedUITest2.cs" />
     <Compile Include="FreeSlotMethod.cs" />
     <Compile Include="TwentyfourHrMethod.cs" />
-    <Compile Include="InvalidSearchMethod.cs" />
     <Compile Include="TwelveHrMethod.cs" />
-    <Compile Include="InvalidDeleteMethod.cs" />
-    <Compile Include="SearchMethod.cs" />
     <Compile Include="RedoMethod.cs" />
     <Compile Include="UndoMethod.cs" />
     <Compile Include="EditMethod.cs" />
