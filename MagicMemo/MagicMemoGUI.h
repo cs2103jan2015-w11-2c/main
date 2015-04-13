@@ -66,6 +66,8 @@ namespace MagicMemo {
 	private: System::Windows::Forms::PictureBox^  alarmPic;
 
 
+
+
 	private: System::ComponentModel::IContainer^  components;
 
 	private:
@@ -274,8 +276,6 @@ namespace MagicMemo {
 			if(e->KeyCode == Keys::Enter) {
 				String^ inputText = commandInputBox->Text;
 				setGuiText(inputText);
-
-				magicManager->updateAutoCompleteSource(commandInputBox);
 			}
 
 			// Minimize via Ctrl + W
@@ -313,7 +313,7 @@ namespace MagicMemo {
 		}
 
 	private: 
-		// return focus to the intput textbox on keypress
+		// return focus to the input textbox on keypress
 		System::Void allTaskBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
 			if((e->KeyCode != Keys::Up) && (e->KeyCode != Keys::Down) && (e->KeyCode != Keys::Left) && (e->KeyCode != Keys::Right)) {
 				commandInputBox->Focus(); 
@@ -358,6 +358,8 @@ namespace MagicMemo {
 
 			magicManager->generateMessageOutputs(userInput);
 
+			clearCommandBox();
+
 			String^ successMessage = magicManager->getSuccessMessage();
 			successMessageLabel->Text = successMessage;
 
@@ -372,7 +374,7 @@ namespace MagicMemo {
 			magicManager->colorAllTaskBox(allTaskBox);
 			magicManager->colorTodayTaskBox(todayTaskBox);
 
-			clearCommandBox();
+			magicManager->updateAutoCompleteSource(commandInputBox);
 
 			checkExit(successMessage);
 		}
@@ -409,7 +411,7 @@ namespace MagicMemo {
 	private: System::Void programHeading_Click(System::Object^  sender, System::EventArgs^  e) {
 		    }
 
-	};
+};
 
 	// hide the command prompt window
 	#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") 

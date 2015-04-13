@@ -207,12 +207,11 @@ Void MessageManager::colorTextInTaskBox(
 Void MessageManager::updateAutoCompleteSource(TextBox^ inputBox) {
 	inputBox->AutoCompleteCustomSource->Clear();
 	vector<string> autoComplete = magicMemo->getInputBank();
-
-	for(unsigned int i = 0; i < autoComplete.size(); i++) {
+	unsigned int numItems = autoComplete.size();
+	for(unsigned int i = 0; i < numItems; i++) {
 		String^ temp = "search " + convertToSystemString(autoComplete[i]);
 		inputBox->AutoCompleteCustomSource->Add(temp);
 	}
-
 }
 
 Void MessageManager::toggleTaskBoxSize(RichTextBox^ allTaskBox, RichTextBox^ todayTaskBox, PictureBox^ pictureBox) {
