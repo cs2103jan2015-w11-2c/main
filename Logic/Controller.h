@@ -226,9 +226,7 @@ public:
 
 	void markAsComplete();
 
-	void generateArchive(vector<Item>);
-
-	void viewArchive();
+	void viewArchive(Item, string);
 
 	bool isArchiveSearch();
 

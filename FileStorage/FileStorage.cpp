@@ -228,6 +228,13 @@ bool FileStorage::clearFile() {
 	return true;
 }
 
+bool FileStorage::clearArchive() {
+	fstream outFile;
+	outFile.open(_archiveFileName, fstream::out | fstream::trunc);
+	outFile.close();
+	return true;
+}
+
 bool FileStorage::clearAutoCompleteFile() {
 	fstream outFile;
 	outFile.open(_autoCompleteFileName.c_str(), fstream::out | fstream::trunc);
