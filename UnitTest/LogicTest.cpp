@@ -2017,61 +2017,6 @@ public:
 			Assert::AreEqual(expectedString[i], actualString);
 		}
 	}
-
-	//boundary case of zero vs positive non-zero line numbers
-	TEST_METHOD(deleteItemTest) {
-		CommandInvoker *invoker = new CommandInvoker;
-		vector<Item> testVector;
-		Item newItem;
-		string message = "";
-
-		newItem.event = "some event";
-		newItem.eventDate[0] = 25;
-		newItem.eventDate[1] = 3;
-		newItem.eventDate[2] = 2015;
-		newItem.eventStartTime[0] = 11;
-		newItem.eventStartTime[1] = 10;
-		newItem.eventEndTime[0] = 12;
-		newItem.eventEndTime[1] = 10;
-
-		AddItem *addItem = new AddItem(newItem);
-		invoker->executeCommand(testVector, addItem, message);
-
-		vector<int> deleteInput;
-		deleteInput.push_back(0);
-
-        DeleteItem *deleteItem = new DeleteItem(deleteInput, false);
-
-		invoker->executeCommand(testVector, deleteItem, message);
-
-		int expectedSize = 1;
-		int actualSize = testVector.size();
-
-		Assert::AreEqual(expectedSize, actualSize);
-
-		string expectedMessage = "Invalid number specified: 0";
-		string actualMessage = message;
-
-		Assert::AreEqual(expectedMessage, actualMessage);
-
-		deleteInput.clear();
-		deleteInput.push_back(1);
-
-
-		DeleteItem *deleteItem2 = new DeleteItem(deleteInput, false);
-		invoker->executeCommand(testVector, deleteItem2, message);
-
-		expectedSize = 0;
-		actualSize = testVector.size();
-
-		Assert::AreEqual(expectedSize, actualSize);
-
-		expectedMessage = "Deleted line numbers: 1\n";
-		actualMessage = message;
-
-		Assert::AreEqual(expectedMessage, actualMessage);
-
-	}
+	
 	};
-
 }
