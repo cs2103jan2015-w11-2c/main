@@ -29,6 +29,7 @@ private:
 	DateTimeParser _dateTimeParse;
 	string _userCommand;
 	bool _isDeadline;
+	bool _isDateUpdatedFromFloat;
 
 public:
 	Parser();
@@ -42,6 +43,8 @@ public:
 	//returns a vector of line numbers for operations such as delete
 	//throws out_of_range exception if line number is invalid
 	vector<int> getLineOpNumber();
+
+	vector<int> getLineOpNumberForFree();
 
 	//extracts the first word of Item.event
 	//and stores it in _userCommand
@@ -85,6 +88,8 @@ public:
 	bool checkIsDeadline(const string);
 
 	void extractSearchQuery(Item &);
+
+	bool getIsDateUpdatedFromFloat();
 
 	~Parser(void);
 };

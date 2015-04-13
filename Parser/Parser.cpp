@@ -11,6 +11,7 @@ Parser::Parser() {
 	_userCommand = "";
 	_item.initializeItem();
 	_isDeadline = false;
+	_isDateUpdatedFromFloat = false;
 }
 
 
@@ -56,6 +57,43 @@ vector<int> Parser::getLineOpNumber() {
 	}
 
 	if (numVector.empty() || lineNum < 0) {
+		throw std::out_of_range(ERROR_INVALID_LINE_NUMBER);
+	}
+
+	return numVector;
+}
+
+vector<int> Parser::getLineOpNumberForFree() {
+	if (_item.event == "") {
+		throw std::out_of_range(ERROR_NO_LINE_NUMBER);
+	}
+
+	int lineNum;
+	vector<int> numVector;
+
+	char *end;
+	lineNum = (int)strtol(_item.event.c_str(), &end, 10);
+
+	LOG(INFO) << "Line number extraction: " << lineNum;
+
+	while(lineNum > 0) {
+		char tempChar = *end;
+		int tempInt = lineNum;
+		numVector.push_back(lineNum);	
+		lineNum = (int)strtol(end + 1, &end, 10);
+		LOG(INFO) << "Line number extraction: " << lineNum;
+		if((tempChar == '-') && (lineNum > tempInt)) {
+			for(int i = 1; i < (lineNum - tempInt); i++) {
+				numVector.push_back(tempInt + i);
+			}
+		}
+	}
+	
+	if ((numVector.empty()) || lineNum < 0) {
+		if (end != _item.event) {
+			numVector.push_back(0);
+			return numVector;
+		}
 		throw std::out_of_range(ERROR_INVALID_LINE_NUMBER);
 	}
 
@@ -144,6 +182,7 @@ void Parser::extractDateAndTime() {
 
 		try {
 			_dateTimeParse.updateItemDateTime(rawDateTimeChunk, _item, _isDeadline);
+			_isDateUpdatedFromFloat = _dateTimeParse.getIsDateUpdatedFromFloat();
 		} catch (const out_of_range& e) {
 			LOG(ERROR) << e.what();
 		}
@@ -369,6 +408,10 @@ void Parser::extractSearchQuery(Item &item) {
 		}
 		item = temp;
 //	}
+}
+
+bool Parser::getIsDateUpdatedFromFloat() {
+	return _isDateUpdatedFromFloat;
 }
 
 Parser::~Parser(void) {

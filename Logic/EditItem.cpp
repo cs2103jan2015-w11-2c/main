@@ -76,40 +76,59 @@ public:
 			_message=buffer;
 			_editedItem = vectorStore[_lineNumber - 1];
 
-			if (_input.event == "") {
-				if (!isFloatingDate()) {
-					for (int i = 0; i < 3; i++) {
-						vectorStore[_lineNumber-1].eventDate[i] = _input.eventDate[i];
-						vectorStore[_lineNumber-1].eventEndDate[i] = _input.eventEndDate[i];
-						_dateHasChanged = true;
-					}
-				}
-				if (!isFloatingTime()) {
-					for (int i = 0; i < 1; i++) {
-						vectorStore[_lineNumber-1].eventStartTime[i] = _input.eventStartTime[i];
-						vectorStore[_lineNumber-1].eventEndTime[i] = _input.eventEndTime[i];
-						_timeHasChanged = true;
-					}
+			if (_input.event != "") {
+				vectorStore[_lineNumber - 1].event = _input.event;
+			}
+			if (!isFloatingDate()) {
+				for (int i = 0; i < 3; i++) {
+					vectorStore[_lineNumber - 1].eventDate[i] = _input.eventDate[i];
+					vectorStore[_lineNumber - 1].eventEndDate[i] = _input.eventEndDate[i];
+					_dateHasChanged = true;
 				}
 			} else {
-				vectorStore[_lineNumber - 1].event = _input.event;
-				_eventHasChanged = true;
+				if (_input.isDeadlineTask && 
+					(vectorStore[_lineNumber - 1].eventEndDate[0] != 0 
+					|| vectorStore[_lineNumber - 1].eventEndDate[1] != 0
+					|| vectorStore[_lineNumber - 1].eventEndDate[2] != 0)) {
+							
+					vectorStore[_lineNumber - 1].eventDate[0] = vectorStore[_lineNumber - 1].eventEndDate[0];
+					vectorStore[_lineNumber - 1].eventDate[1] = vectorStore[_lineNumber - 1].eventEndDate[1];
+					vectorStore[_lineNumber - 1].eventDate[2] = vectorStore[_lineNumber - 1].eventEndDate[2];
 
-				if (!isFloatingDate()) {
-					for (int i = 0; i < 3; i++) {
-						vectorStore[_lineNumber-1].eventDate[i] = _input.eventDate[i];
-						vectorStore[_lineNumber-1].eventEndDate[i] = _input.eventEndDate[i];
-						_dateHasChanged = true;
-					}
-				}
-				if (!isFloatingTime()) {
-					for (int i = 0; i < 1; i++) {
-						vectorStore[_lineNumber-1].eventStartTime[i] = _input.eventStartTime[i];
-						vectorStore[_lineNumber-1].eventEndTime[i] = _input.eventEndTime[i];
-						_timeHasChanged = true;
-					}
+					_dateHasChanged = true;
 				}
 			}
+			if (!isFloatingTime()) {
+				for (int i = 0; i < 1; i++) {
+					vectorStore[_lineNumber-1].eventStartTime[i] = _input.eventStartTime[i];
+					vectorStore[_lineNumber-1].eventEndTime[i] = _input.eventEndTime[i];
+					_timeHasChanged = true;
+				}
+			} else {
+				if (_input.isDeadlineTask && 
+					(vectorStore[_lineNumber - 1].eventEndTime[0] != 0 
+					|| vectorStore[_lineNumber - 1].eventEndTime[1] != 0)) {
+							
+					vectorStore[_lineNumber - 1].eventStartTime[0] = vectorStore[_lineNumber - 1].eventEndTime[0];
+					vectorStore[_lineNumber - 1].eventStartTime[1] = vectorStore[_lineNumber - 1].eventEndTime[1];
+					vectorStore[_lineNumber - 1].eventEndTime[0] = 0;
+					vectorStore[_lineNumber - 1].eventEndTime[1] = 0;
+					_timeHasChanged = true;
+				}
+			}
+			vectorStore[_lineNumber - 1].isDeadlineTask = _input.isDeadlineTask;
+
+			_input.event = vectorStore[_lineNumber - 1].event;
+			_input.eventDate[0] = vectorStore[_lineNumber - 1].eventDate[0];
+			_input.eventDate[1] = vectorStore[_lineNumber - 1].eventDate[1];
+			_input.eventDate[2] = vectorStore[_lineNumber - 1].eventDate[2];
+			_input.eventEndDate[0] = vectorStore[_lineNumber - 1].eventEndDate[0];
+			_input.eventEndDate[1] = vectorStore[_lineNumber - 1].eventEndDate[1];
+			_input.eventEndDate[2] = vectorStore[_lineNumber - 1].eventEndDate[2];
+			_input.eventStartTime[0] = vectorStore[_lineNumber - 1].eventStartTime[0]; 
+			_input.eventStartTime[1] = vectorStore[_lineNumber - 1].eventStartTime[1];
+			_input.eventEndTime[0] = vectorStore[_lineNumber - 1].eventEndTime[0];
+			_input.eventEndTime[1] = vectorStore[_lineNumber - 1].eventEndTime[1];
 		}
 	}
 
