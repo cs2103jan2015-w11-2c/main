@@ -622,6 +622,12 @@ void DateTimeParser::verifyStartEnd(
 			endMin = 0;
 		}
 
+		if((startDay == endDay) && (startMonth == endMonth) && (startYear == endYear)) {
+			endDay = 0;
+			endMonth = 0;
+			endYear = 0;
+		}
+
 		if(isError) {
 			//throw std::out_of_range(ERROR_INVALID_END_TIME);
 		}
