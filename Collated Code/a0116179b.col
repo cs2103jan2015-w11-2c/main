@@ -1,0 +1,3051 @@
+//@author: a0116179b
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\AddItem.cpp
+	 */
+
+
+#include <iostream>
+#include <vector>
+#include "Item.h"
+#include "Command.h"
+
+using namespace std;
+
+class AddItem : public Command {
+private:
+	Item _input;
+	string _message;
+
+public:
+	AddItem() {
+		_input.event = "";
+		_input.eventDate[0] = 0;
+		_input.eventDate[1] = 0;
+		_input.eventDate[2] = 0;
+		_input.eventStartTime[0] = 0;
+		_input.eventStartTime[1] = 0;
+		_input.eventEndTime[0] = 0;
+		_input.eventEndTime[1] = 0;
+
+		_message = "";
+	}
+
+	AddItem(const Item input) {
+		_input = input;
+		_message = "";
+	}
+
+	~AddItem() {
+	}
+
+	void executeAction(vector<Item> &vectorStore) {
+		if(_input.event == "") {
+			throw std::logic_error(ERROR_MISSING_EVENT);
+		}
+		vectorStore.push_back(_input);
+
+		char buffer[1000];
+		sprintf_s(buffer, SUCCESS_ADDED.c_str(), _input.event.c_str());
+		_message = buffer;
+	}
+
+	string getMessage() {
+		return _message;
+	}
+
+	bool isMatch(const Item item1, const Item item2) {
+		if (item1.event != item2.event) {
+			return false;
+		}
+		for (int i = 0; i < 3; i++) {
+			if (item1.eventDate[i] != item2.eventDate[i]) {
+				return false;
+			}
+		}
+		for (int i = 0; i < 2; i++) {
+			if (item1.eventStartTime[i] != item2.eventStartTime[i]) {
+				return false;
+			}
+		}
+		for (int i = 0; i < 2; i++) {
+			if (item1.eventEndTime[i] != item2.eventEndTime[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	void negateAction(vector<Item> &vectorStore) {
+		vector<Item>::iterator iter;
+
+		for (iter = vectorStore.begin(); iter != vectorStore.end(); iter++) {
+			if (isMatch(*iter, _input)) {
+				vectorStore.erase(iter);
+				break;
+			}
+		}
+	}
+
+};
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\AddItem.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\ClearItems.cpp
+	 */
+
+#include <iostream>
+#include <vector>
+#include "Item.h"
+#include "Command.h"
+
+using namespace std;
+
+class ClearItems : public Command {
+private:
+	vector<Item> _vectorStore;
+public:
+	ClearItems() {
+	}
+
+	~ClearItems() {
+	}
+
+	void executeAction(vector<Item>& vectorStore) {
+		_vectorStore = vectorStore;
+		vectorStore.clear();
+	}
+
+	string getMessage() {
+		return SUCCESS_CLEARED;
+	}
+
+	void negateAction(vector<Item> &vectorStore) {
+		vectorStore = _vectorStore;
+	}
+};
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\ClearItems.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Command.cpp
+	 */
+
+
+Command::Command() {
+}
+
+Command::~Command() {
+}
+
+void Command::executeAction(FileStorage *outputFile) {
+}
+
+void Command::executeAction(vector<Item>& vectorStore) {
+}
+
+void Command::negateAction(vector<Item> &vectorStore) {
+}
+
+string Command::getMessage() {
+	return "";
+}
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Command.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Command.h
+	 */
+
+
+#include <iostream>
+#include <vector>
+#include "FileStorage.h"
+#include "Item.h"
+
+using namespace std;
+
+static const string SUCCESS_ADDED  = "Added line: \"%s\"";
+static const string SUCCESS_DELETED = "Deleted line number(s): %s";
+static const string SUCCESS_DONE = "Line numbers marked as completed: %s";
+static const string SUCCESS_CLEARED = "All content deleted!";
+static const string SUCCESS_COPIED = "copied line: \"%s\" \n";
+static const string SUCCESS_SORTED_ALPHA = "All content sorted alphabetically";
+static const string SUCCESS_SORTED_CHRONO = "All content sorted chronologically";
+static const string SUCCESS_EDITED = "\"%s\" changed to \"%s\"!";
+static const string SUCCESS_SEARCH = "Search results for: \"%s\"";
+static const string SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"";
+static const string SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s";
+static const string ERROR_INVALID_LINE_NUMBER = "Invalid number specified:";
+static const string ERROR_MISSING_EVENT = "No event specified!";
+static const string ERROR_FILE_EMPTY  = "File is empty";
+static const string ERROR_NO_FILENAME = "No filename specified!";
+static const string ERROR_INVALID_FILENAME = "Invalid character in filename!";
+static const string ERROR_FILE_ALREADY_EXISTS = "A file with the same name already exists in the location specified";
+static const string ERROR_NO_SEARCH_QUERY = "No search query entered!";
+static const string ERROR_FILEPATH_NOT_FOUND = "The specified filepath was not found or the file already exists there";
+static const string ERROR_SEARCH_ITEM_NOT_FOUND = "\"%s\" Not found!";
+	
+struct RESULT {
+	string lineNumber;
+	string date;
+	string event;
+	string time;
+	bool isClash;
+	bool isDeadline;
+	bool isExpired;
+};
+
+class Command {
+public:
+	Command();
+	~Command();
+	virtual void executeAction(FileStorage *);	
+	virtual void executeAction(vector<Item> &);
+	virtual void negateAction(vector<Item> &);
+	virtual string getMessage();
+};
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Command.h
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\commandInvoker.cpp
+	 */
+
+
+CommandInvoker::CommandInvoker(void) {
+	_numRedo = 0;
+	_enableUndoFlag = true;
+	_undo = new stack<Command *>;
+	_redo = new stack<Command *>;
+}
+
+
+CommandInvoker::~CommandInvoker(void) {
+}
+
+void CommandInvoker::executeCommand(vector<Item> &vectorStore, Command *command, string &message) {
+	command->executeAction(vectorStore);
+	message = command->getMessage();
+
+	if(_enableUndoFlag) {
+		_numRedo = 0;
+		while(!_redo->empty()) {
+			_redo->pop();
+		}
+		_undo->push(command);
+	}
+	_enableUndoFlag = true;
+
+}
+
+void CommandInvoker::executeCommand(FileStorage *outputFile, Command *command, string &message) {
+	command->executeAction(outputFile);
+	message = command->getMessage();
+}
+
+void CommandInvoker::disableUndo() {
+	_enableUndoFlag = false;
+}
+
+void CommandInvoker::undo(vector<Item> &vectorStore, string &message) {
+	if(_undo->empty()) {
+		return;
+	}
+
+	_numRedo++;
+
+	Command *command = _undo->top();
+	command->negateAction(vectorStore);
+	message = _undo->top()->getMessage();
+	
+	_redo->push(_undo->top());
+	
+	_undo->pop();
+
+	message = SUCCESS_UNDO + message;
+}
+
+void CommandInvoker::redo(vector<Item> &vectorStore, string &message) {
+	if(_redo->empty() || _numRedo <= 0) {
+		return;
+	}
+
+	_numRedo--;
+
+	Command *command =_redo->top();
+	command->executeAction(vectorStore);
+	message = _redo->top()->getMessage();
+	
+	_undo->push(_redo->top());
+	
+	_redo->pop();
+}
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\commandInvoker.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\commandInvoker.h
+	 */
+
+
+#include <iostream>
+#include <vector>
+#include <stack>
+#include "FileStorage.h"
+#include "Item.h"
+#include "Command.h"
+#include "AddItem.cpp"
+#include "DeleteItem.cpp"
+#include "ClearItems.cpp"
+#include "SortAlphabetical.cpp"
+#include "CopyItem.cpp"
+#include "SearchItem.cpp"
+#include "EditItem.cpp"
+#include "RenameFile.cpp"
+#include "MoveFile.cpp"
+
+//CONSTANTS
+static const int MAX_UNDO = 20;
+static const int MAX_REDO = 20;
+static const string SUCCESS_UNDO = "Successful undo of: ";
+
+class CommandInvoker
+{
+private:
+	int _numRedo;
+	bool _enableUndoFlag;
+	stack<Command *> *_undo;
+	stack<Command *> *_redo;
+public:
+	CommandInvoker(void);
+	~CommandInvoker(void);
+	void executeCommand(vector<Item> &, Command *, string &);
+	void executeCommand(FileStorage *, Command *, string &);
+	void disableUndo();
+	void undo(vector<Item> &, string &);
+	void redo(vector<Item> &, string &);
+};
+
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\commandInvoker.h
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.cpp
+	 */
+
+#include "easylogging++.h"
+#define ELPP_THREAD_SAFE
+#define ELPP_DISABLE_LOGS
+#include "easylogging++.h"
+
+const string Controller::SUCCESS_12_HR = "Date format changed to 12-hr format";
+const string Controller::SUCCESS_24_HR = "Date format changed to 24-hr format";
+const string Controller::SUCCESS_NOTIFICATION_TIME_CHANGED = "Notification time changed from %d minute(s) to %d minute(s)";
+const string Controller::SUCCESS_SLEEP = "Sleep time changed to %d:%s - %d:%s";
+const string Controller::SUCCESS_NOTIFICATION_ON = "Notifications turned on";
+const string Controller::SUCCESS_NOTIFICATION_OFF = "Notifications turned off";
+const string Controller::SUCCESS_RESTORE_FILE_DEFAULTS = "Default filename and filepath restored";
+const string Controller::ERROR_FILE_RESTORE_FAILED = "File restore failed, unable to overwrite existing file!\n";
+const string Controller::ERROR_FILE_OPERATION_FAILED = "File updating failed!\n";
+const string Controller::ERROR_INVALID_LINE_NUMBER = "getLineOpNumber() throws: ";
+const string Controller::ERROR_INVALID_NOTIFICATION_TIME = "Invalid Notification time!";
+const string Controller::ERROR_INCORRECT_ARGUMENTS = "Invalid arguments used";
+const int Controller::MAX_NOTIFICATION = 30240;
+
+INITIALIZE_EASYLOGGINGPP;
+
+Controller::Controller(void) {
+	// Load configuration from file
+	el::Configurations conf("logging.conf");
+	// Reconfigure single logger
+	el::Loggers::reconfigureLogger("default", conf);
+	// Actually reconfigure all loggers instead
+	el::Loggers::reconfigureAllLoggers(conf);
+	// Now all the loggers will use configuration from file
+
+	_parser = new Parser;
+	_outputFile = FileStorage::getInstance();
+	_invoker = new CommandInvoker;
+	initializeOptions();
+	initializeVector();
+	_isSearch = false;
+	_isFree = false;
+	_isHelp = false;
+	_isArchiveSearch = false;
+	_sleepTime[0][0] = DEFAULT_SLEEP_START_HR;
+	_sleepTime[0][1] = DEFAULT_SLEEP_START_MIN;
+	_sleepTime[1][0] = DEFAULT_SLEEP_END_HR;
+	_sleepTime[1][1] = DEFAULT_SLEEP_END_MIN;
+}
+
+void Controller::executeCommand(string inputText) {
+	string userCommand = "";
+	string commandData = "";
+	string searchQuery = "";
+	Item data;
+
+	_parser->setStringToParse(inputText);
+	_parser->extractUserCommand();
+
+	searchQuery = _parser->getItem().event;
+	_parser->extractDateAndTime();
+
+	userCommand = _parser->getUserCommand();
+	data = _parser->getItem();
+	commandData = data.event;
+
+	if(userCommand != "") {
+		addToInputBank();
+	}
+
+	_isSearch = false;
+
+
+	if((userCommand == "help") || (userCommand == "?")) {
+		_isHelp = true;
+	} else {
+		_isHelp = false;
+	}
+
+	if (userCommand == "display") {
+		displayAll();
+	} else if (userCommand == "add") {
+		addData(data);
+	} else if (userCommand == "delete") {
+		deleteData();
+	} else if (userCommand == "clear") {
+		clearAll();
+	} else if (userCommand == "sort") {
+		sortAlphabetical();
+	} else if (userCommand == "search") {
+		_isSearch = true;
+		search(data, searchQuery);
+	} else if (userCommand == "free") {
+		_isFree = true;
+		searchFree(data, searchQuery);
+	}else if (userCommand == "copy") {
+		copy(data);
+	} else if (userCommand == "edit") {
+		edit(data);
+	} else if (userCommand == "rename") {
+		rename(commandData);
+	} else if (userCommand == "move" || userCommand == "save") {
+		move(commandData);
+	} else if (userCommand == "undo") {
+		undo();
+	} else if (userCommand == "redo") {
+		redo();
+	} else if (userCommand == "view" || userCommand == "more") {
+		toggleIsWide();
+	} else if (userCommand == "12") {
+		setClockTo12Hour();
+	} else if (userCommand == "24") {
+		setClockTo24Hour();
+	} else if (userCommand == "help" || userCommand == "?") {
+		getHelp();
+	} else if (userCommand == "sleep") {
+		setSleepTime(data);
+	} else if ((userCommand == "notify") || (userCommand == "notification")){
+		toggleNotification();
+	} else if ((userCommand == "reminder") || (userCommand == "remind")){
+		setReminderTime();
+	} else if (userCommand == "done" || userCommand == "mark") {
+		markAsComplete();
+	} else if (userCommand == "archive") {
+		_isArchiveSearch = true;
+		viewArchive(data, searchQuery);
+	} else if (userCommand == "restore") {
+		restoreDefaultFileInfo();
+	} else if (userCommand == "exit") {
+		setSuccessMessage("exit");
+	}
+}
+
+//API for UI (Main Text Box)
+string Controller::getInputBoxMessage() {
+	return _inputBoxMessage;
+}
+
+//API for UI (Message Box)
+string Controller::getSuccessMessage() {
+	return _successMessage;
+}
+
+void Controller::setInputBoxMessage(string message) {
+	_inputBoxMessage = message;
+}
+
+void Controller::setSuccessMessage(string message) {
+	_successMessage = message;
+}
+
+void Controller::initializeVector() {
+	_vectorStore = _outputFile->getAllFileData();
+	_inputBank = _outputFile->getAutoCompleteFileData();
+}
+
+void Controller::initializeOptions() {
+	vector<int> options = _outputFile->getOptionFileData();
+	_is12HourFormat = (options[0] == 1) ? true : false;
+	_isWide = (options[1] == 1) ? true : false;
+	_isNotificationsOn = (options[2] == 1) ? true : false;
+	_notifyTime = options[3];
+	_sleepTime[0][0] = options[4];
+	_sleepTime[0][1] = options[5];
+	_sleepTime[1][0] = options[6];
+	_sleepTime[1][1] = options[7];
+}
+
+long Controller::getTimePos(const int date[3], const int time[2]) {
+	long timePos = 0;
+
+	timePos += date[2];
+	timePos *= 12;
+	timePos += date[1];
+	timePos *= 31;
+	timePos += date[0];
+	timePos *= 24;
+	timePos += time[1];
+	timePos *= 60;
+	timePos += time[0];
+
+	return timePos;
+}
+
+bool Controller::checkDateIsUnset(const int date[3]) {
+	for (int i = 0; i < 3; i++) {
+		if (date[i] != 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool Controller::checkIsClash(Item item1, Item item2) {
+	long startTimePos1 = getTimePos(item1.eventDate, item1.eventStartTime);
+	long endTimePos1;
+	if (!checkDateIsUnset(item1.eventDate) && checkDateIsUnset(item1.eventEndDate)) {
+		Item temp;
+		temp.eventEndDate[0] = item1.eventDate[0];
+		temp.eventEndDate[1] = item1.eventDate[1];
+		temp.eventEndDate[2] = item1.eventDate[2];
+		temp.eventEndTime[0] = item1.eventEndTime[0];
+		temp.eventEndTime[1] = item1.eventEndTime[1];
+		endTimePos1 =  getTimePos(temp.eventEndDate, temp.eventEndTime);
+	} else {
+		endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventEndTime);
+	}
+
+	long startTimePos2 = getTimePos(item2.eventDate, item2.eventStartTime);
+	long endTimePos2;
+	if (!checkDateIsUnset(item2.eventDate) && checkDateIsUnset(item2.eventEndDate)) {
+		Item temp;
+		temp.eventEndDate[0] = item2.eventDate[0];
+		temp.eventEndDate[1] = item2.eventDate[1];
+		temp.eventEndDate[2] = item2.eventDate[2];
+		temp.eventEndTime[0] = item2.eventEndTime[0];
+		temp.eventEndTime[1] = item2.eventEndTime[1];
+		endTimePos2 =  getTimePos(temp.eventEndDate, temp.eventEndTime);
+	} else {
+		endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
+	}
+
+	bool isDeadline1 = item1.isDeadline();
+	bool isDeadline2 = item2.isDeadline();
+
+	if (isDeadline1 && isDeadline2) {
+		if (startTimePos1 != startTimePos2) {
+			return false;
+		}
+		return true;
+	} else if (isDeadline1) {
+		if (startTimePos1 <= startTimePos2 || startTimePos1 >= endTimePos2) {
+			return false;
+		} 
+		return true;
+	} else if (isDeadline2) {
+		if (startTimePos2 <= startTimePos1 || startTimePos2 >= endTimePos1) {
+			return false;
+		} 
+		return true;
+	}
+
+	if (endTimePos2 <= startTimePos1) {
+		return false;
+	}
+	if (endTimePos1 <= startTimePos2) {
+		return false;
+	}
+	return true;
+}
+
+bool Controller::checkIsExpired(Item item) {
+	DateTime dateTime;
+
+	if (item.isDeadline()) {
+		if (item.eventDate[2] < dateTime.getCurrentYear()) {
+			return true;
+		} else if (item.eventDate[2] == dateTime.getCurrentYear()) {
+			if (item.eventDate[1] < dateTime.getCurrentMonth()) {
+				return true;
+			} else if (item.eventDate[1] == dateTime.getCurrentMonth()) {
+				if (item.eventDate[0] < dateTime.getCurrentDay()) {
+					return true;
+				} else if (item.eventDate[0] == dateTime.getCurrentDay()) {
+					if (item.eventStartTime[0] < dateTime.getCurrentHour()) {
+						return true;
+					} else if (item.eventStartTime[0] == dateTime.getCurrentHour()) {
+						if (item.eventStartTime[1] < dateTime.getCurrentMinute()) {
+							return true;
+						} else {
+							return false;
+						}
+					}
+				}
+			}
+		}
+	} else if (checkDateIsUnset(item.eventEndDate)){
+		if (item.eventDate[2] < dateTime.getCurrentYear()) {
+			return true;
+		} else if (item.eventDate[2] == dateTime.getCurrentYear()) {
+			if (item.eventDate[1] < dateTime.getCurrentMonth()) {
+				return true;
+			} else if (item.eventDate[1] == dateTime.getCurrentMonth()) {
+				if (item.eventDate[0] < dateTime.getCurrentDay()) {
+					return true;
+				} else if (item.eventDate[0] == dateTime.getCurrentDay()) {
+					if (item.eventEndTime[0] < dateTime.getCurrentHour()) {
+						return true;
+					} else if (item.eventEndTime[0] == dateTime.getCurrentHour()) {
+						if (item.eventEndTime[1] < dateTime.getCurrentMinute()) {
+							return true;
+						} else {
+							return false;
+						}
+					}
+				}
+			}
+		}
+	} else if (item.eventEndTime[0] == 0 && item.eventEndTime[1] == 0){
+		if (item.eventEndDate[2] < dateTime.getCurrentYear()) {
+			return true;
+		} else if (item.eventEndDate[2] == dateTime.getCurrentYear()) {
+			if (item.eventEndDate[1] < dateTime.getCurrentMonth()) {
+				return true;
+			} else if (item.eventEndDate[1] == dateTime.getCurrentMonth()) {
+				if (item.eventEndDate[0] < dateTime.getCurrentDay()) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+	} else {
+		if (item.eventEndDate[2] < dateTime.getCurrentYear()) {
+			return true;
+		} else if (item.eventEndDate[2] == dateTime.getCurrentYear()) {
+			if (item.eventEndDate[1] < dateTime.getCurrentMonth()) {
+				return true;
+			} else if (item.eventEndDate[1] == dateTime.getCurrentMonth()) {
+				if (item.eventEndDate[0] < dateTime.getCurrentDay()) {
+					return true;
+				} else if (item.eventEndDate[0] == dateTime.getCurrentDay()) {
+					if (item.eventEndTime[0] < dateTime.getCurrentHour()) {
+						return true;
+					} else if (item.eventEndTime[0] == dateTime.getCurrentHour()) {
+						if (item.eventEndTime[1] < dateTime.getCurrentMinute()) {
+							return true;
+						} else {
+							return false;
+						}
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
+void Controller::generateResults(const vector<Item> vectorStore) {
+	vector<Item> inputVector = vectorStore;
+	vector<RESULT> todayResult;
+	vector<RESULT> otherResult;
+	vector<RESULT> floatResult;
+	vector<RESULT> deadlineResult;
+	DateTime newDateTime;
+
+	for (unsigned int i = 0; i < inputVector.size(); i++) {
+		RESULT temp;
+
+		temp.isDeadline = inputVector[i].isDeadline();
+
+		temp.isClash = false;
+		for (unsigned int j = 0; j < inputVector.size(); j++) {
+			if (i != j && checkIsClash(vectorStore[i], vectorStore[j])) {
+				temp.isClash = true;
+				break;
+			}
+		}
+
+		temp.lineNumber = to_string(i + 1) + ".";
+		temp.date = inputVector[i].dateToString();
+		
+		if (_is12HourFormat) {
+			temp.time = inputVector[i].timeAndEndDateToString();
+		} else { 
+			temp.time = inputVector[i].timeTo24HrString();
+		}
+		if (inputVector[i].eventEndTime[0] == 0 && inputVector[i].eventEndTime[1] == 0) {
+			temp.time += inputVector[i].endDateToString();
+		}
+
+		temp.event = inputVector[i].event;
+		if(!inputVector[i].isFloating()) {
+			temp.isExpired = checkIsExpired(inputVector[i]);
+		} else {
+			temp.isExpired = false;
+		}
+		if (inputVector[i].isFloating()) {
+			floatResult.push_back(temp);
+		} else if (temp.isDeadline) {
+			for (int j = 0; j < 3; j++) {
+				inputVector[i].eventEndDate[j] = inputVector[i].eventDate[j];
+			}
+			if (_is12HourFormat) {
+				temp.time = inputVector[i].timeToString();
+			} else {
+				temp.time = inputVector[i].timeTo24HrString();
+			}
+			if (inputVector[i].eventEndTime[0] == 0 && inputVector[i].eventEndTime[1] == 0) {
+				temp.time += inputVector[i].endDateToString();
+			}
+			temp.date = DEADLINE_HEADER;
+			
+			deadlineResult.push_back(temp);
+		} else if ((inputVector[i].eventDate[0] == newDateTime.getCurrentDay() ||
+			inputVector[i].eventDate[0] == newDateTime.getCurrentDay() + 1) &&
+			inputVector[i].eventDate[1] == newDateTime.getCurrentMonth() &&
+			inputVector[i].eventDate[2] == newDateTime.getCurrentYear()) {
+				todayResult.push_back(temp);
+		} else {
+			otherResult.push_back(temp);
+		}
+	}
+
+	otherResult.insert(otherResult.begin(), deadlineResult.begin(), deadlineResult.end());
+	otherResult.insert(otherResult.begin(), floatResult.begin(), floatResult.end());
+	_todayResult = todayResult;
+	_otherResult = otherResult;
+
+}
+
+bool Controller::rewriteFile() {
+	_outputFile->clearFile();
+	for (unsigned int i = 0; i < _vectorStore.size(); i++) {
+		_outputFile->addLineToFile(_vectorStore[i]);
+	}
+	return true;
+}
+
+void Controller::addData(Item item) {
+	AddItem *addItemCommand = new AddItem(item);
+
+	try {
+		_invoker->executeCommand(_vectorStore, addItemCommand, _successMessage);
+	} catch (const logic_error& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << e.what();
+		return;
+	}
+
+	chronoSort(_vectorStore);
+
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
+
+	generateResults(_vectorStore);
+}
+
+void Controller::deleteData() {
+	DeleteItem *deleteItemCommand;
+	try {
+		deleteItemCommand = new DeleteItem(_parser->getLineOpNumber(), false, _outputFile);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
+		clog << e.what();
+		return;
+	}
+
+	_invoker->executeCommand(_vectorStore, deleteItemCommand, _successMessage);
+
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
+
+	generateResults(_vectorStore);
+}
+
+void Controller::displayAll() {
+	generateResults(_vectorStore);
+	//return _vectorStore;
+}
+
+void Controller::clearAll() {
+	ClearItems *clearItemsCommand = new ClearItems;
+
+	_invoker->executeCommand(_vectorStore, clearItemsCommand, _successMessage);
+
+	if(!_outputFile->clearFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
+
+	generateResults(_vectorStore);
+}
+
+void Controller::sortAlphabetical() {
+	SortAlphabetical *sortAlphabeticalCommand = new SortAlphabetical();
+	_invoker->executeCommand(_vectorStore, sortAlphabeticalCommand, _successMessage);
+
+	generateResults(_vectorStore);
+}
+
+void Controller::search(Item data, string message) {
+	vector<Item> tempVector = _vectorStore;
+
+	try {
+		if (data.event != "" && data.isFloating()) { 
+			_parser->extractSearchQuery(data);
+		}
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+		return;
+	}
+	SearchItem *searchItemCommand;
+
+	searchItemCommand= new SearchItem(data, message, &_otherResult, _sleepTime, false, _is12HourFormat);
+
+	_invoker->disableUndo();
+	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
+}
+
+void Controller::searchFree(Item data, string message) {
+	vector<Item> tempVector = _vectorStore;
+
+	int lineNumber;
+	try {
+		lineNumber = _parser->getLineOpNumberForFree()[0];
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
+		clog << e.what();
+		return;
+	}
+
+	_parser->extractUserCommand();
+	Item item = _parser->getItem();
+	
+	if (item.event != "" || !item.isFloating()) {
+		try {
+			_parser->extractSearchQuery(item);
+		} catch (const out_of_range& e) {
+			setSuccessMessage(e.what());
+			LOG(INFO) << e.what();
+			return;
+		}
+	}
+
+	item.event = to_string(lineNumber);
+
+	SearchItem *searchItemCommand = new SearchItem(item, message, &_otherResult, _sleepTime, true, _is12HourFormat);
+	_invoker->disableUndo();
+	try {
+		_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+		return;
+	}
+}
+
+bool Controller::isSearch() {
+	return _isSearch;
+}
+
+bool Controller::isFree() {
+	return _isFree;
+}
+
+void Controller::toggleIsWide() {
+	_isWide = !_isWide;
+	_outputFile->saveIsWide(_isWide);
+	setSuccessMessage("");
+}
+
+bool Controller::isWide() {
+	return _isWide;
+}
+
+bool Controller::isHelp() {
+	return _isHelp;
+}
+
+void Controller::copy(Item input) {
+	CopyItem *copyItemCommand;
+	try {
+		copyItemCommand = new CopyItem(_parser->getLineOpNumber()[0], input);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
+		clog << e.what();
+		return;
+	}
+	_invoker->executeCommand(_vectorStore, copyItemCommand, _successMessage);
+
+	chronoSort(_vectorStore);
+
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
+
+	generateResults(_vectorStore);
+}
+
+void Controller::edit(Item data) {
+	bool floatDateIsOverwritten = _parser->getIsDateUpdatedFromFloat();
+	
+	int lineNumber;
+	try {
+		lineNumber = _parser->getLineOpNumber()[0];
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
+		clog << e.what();
+		return;
+	}
+	_parser->extractUserCommand();
+	Item item = _parser->getItem();
+	if(_parser->getIsDateUpdatedFromFloat()) {
+		item.eventDate[0] = 0;
+		item.eventDate[1] = 0;
+		item.eventDate[2] = 0;
+	}
+
+	EditItem *editItemCommand = new EditItem(lineNumber, item);
+	try {
+		_invoker->executeCommand(_vectorStore, editItemCommand, _successMessage);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+	}
+	chronoSort(_vectorStore);
+
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
+
+	generateResults(_vectorStore);
+}
+
+void Controller::rename(string newFileName) {
+	RenameFile *renameFileCommand = new RenameFile(newFileName);
+	try {
+		_invoker->executeCommand(_outputFile, renameFileCommand, _successMessage);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+	}
+
+}
+
+void Controller::move(string newFileLocation) {
+	MoveFileLocation *moveFileCommand = new MoveFileLocation(newFileLocation);
+	try {
+		_invoker->executeCommand(_outputFile, moveFileCommand, _successMessage);
+	} catch (const invalid_argument& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+	}
+}
+
+void Controller::undo() {
+	_invoker->undo(_vectorStore, _successMessage);
+	chronoSort(_vectorStore);
+
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
+
+	generateResults(_vectorStore);
+}
+
+void Controller::redo() {
+	_invoker->redo(_vectorStore, _successMessage);
+
+	chronoSort(_vectorStore);
+
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
+
+	generateResults(_vectorStore);
+}
+
+void Controller::getHelp() {
+	vector<RESULT> otherResult;
+
+	for (int i = 0; i < NUM_HELP_COMMANDS; i++) {
+		RESULT temp;
+
+		temp.date = HELP_COMMANDS[i];
+		temp.event = "    " + HELP_DESCRIPTION[i];
+
+		otherResult.push_back(temp);
+	}
+	_otherResult = otherResult;
+}
+
+vector<RESULT> Controller::getTodayResult() {
+	return _todayResult;
+}
+
+vector<RESULT> Controller::getOtherResult() {
+	return _otherResult;
+}
+
+void Controller::swap(Item &item1, Item &item2) {
+	Item tempItem = item1;
+	item1 = item2;
+	item2 = tempItem;
+}
+
+int Controller::compareEarlierThan(const Item item1, const Item item2) {
+	if (item1.eventDate[2] < item2.eventDate[2]) {
+		return -1;
+	} else if (item1.eventDate[2] == item2.eventDate[2]) {
+		if (item1.eventDate[1] < item2.eventDate[1]) {
+			return -1;
+		} else if (item1.eventDate[1] == item2.eventDate[1]) {
+			if (item1.eventDate[0] < item2.eventDate[0]) {
+				return -1;
+			} else if (item1.eventDate[0] == item2.eventDate[0]) {
+				if (item1.eventStartTime[0] < item2.eventStartTime[0]) {
+					return -1;
+				} else if (item1.eventStartTime[0] == item2.eventStartTime[0]) {
+					if (item1.eventStartTime[1] < item2.eventStartTime[1]) {
+						return -1;
+					} else if (item1.eventStartTime[1] == item2.eventStartTime[1]) {
+						return 0;
+					}
+				}
+			}
+		}
+	}
+	return 1;
+}
+
+void Controller::chronoSort(vector<Item> &vectorStore) {
+	for (int i = 0; i < ((int)vectorStore.size() - 1); i++) {
+		int minIndex = i;
+		for (unsigned int j = i + 1; j < vectorStore.size(); j++) {
+			if (compareEarlierThan(vectorStore[j], vectorStore[minIndex]) < 0) {
+				minIndex = j;
+			}
+		}
+		if(minIndex != i) {
+			swap(vectorStore[minIndex], vectorStore[i]);
+		}
+	}
+}
+
+void Controller::addToInputBank() {
+	vector<string> fragEvent = _parser->getFragmentedEvent();
+	vector<string>::iterator iter1;
+	vector<string>::iterator iter2;
+
+	for(iter1 = fragEvent.begin(); iter1 != fragEvent.end(); iter1++) {
+		bool isFound = false;
+		for(iter2 = _inputBank.begin(); iter2 != _inputBank.end(); iter2++) {
+			if (*iter1 == *iter2) {
+				isFound = true;
+				break;
+			}
+		}
+		if (!isFound) {
+			_inputBank.push_back(*iter1);
+			_outputFile->addLineToAutoCompleteFile(*iter1);
+		}
+	}
+}
+
+vector<string> Controller::getInputBank() {
+	return _inputBank;
+}
+
+void Controller::setClockTo12Hour() {
+	_is12HourFormat = true;
+	generateResults(_vectorStore);
+	_outputFile->saveIs12Hr(_is12HourFormat);
+	_successMessage = SUCCESS_12_HR;
+}
+
+void Controller::setClockTo24Hour() {
+	_is12HourFormat = false;
+	generateResults(_vectorStore);
+	_outputFile->saveIs12Hr(_is12HourFormat);
+	_successMessage = SUCCESS_24_HR;
+}
+
+void Controller::setSleepTime(Item data) {
+	try {
+		_parser->extractSearchQuery(data);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+		return;
+	}
+	
+	bool startIsSet = false;
+	bool endIsSet = false;
+
+	for (int i = 0; i < 2; i++) {
+		if (data.eventStartTime[i] != 0) {
+			startIsSet = true;
+		
+		}
+		if (data.eventEndTime[i] != 0) {
+			endIsSet = true;
+		}
+		if (startIsSet && endIsSet) {
+			break;
+		}
+	}
+
+	if (!startIsSet || !endIsSet) {
+		setSuccessMessage(ERROR_INCORRECT_ARGUMENTS);
+		return;
+	}
+
+	if (data.eventStartTime[0] < 12) {
+		data.eventStartTime[0] += 12;
+	} else if (data.eventStartTime[0] == 12) {
+		data.eventStartTime[0] = 23;
+		data.eventStartTime[1] = 59;
+	}
+	
+	if (data.eventEndTime[0] > 12) {
+		data.eventEndTime[0] -= 12;
+	}
+
+	_sleepTime[0][0] = data.eventStartTime[0];
+	_sleepTime[0][1] = data.eventStartTime[1];
+	_sleepTime[1][0] = data.eventEndTime[0];
+	_sleepTime[1][1] = data.eventEndTime[1];
+	
+	char buffer[1000];
+	string startMins = to_string(_sleepTime[0][1]);
+	if (_sleepTime[0][1] < 10) {
+		startMins = "0" + startMins;
+	}
+	string endMins = to_string(_sleepTime[1][1]);
+	if (_sleepTime[1][1] < 10) {
+		endMins = "0" + endMins;
+	}
+	
+	sprintf_s(buffer, SUCCESS_SLEEP.c_str(), _sleepTime[0][0], startMins.c_str(), _sleepTime[1][0], endMins.c_str()); 
+	setSuccessMessage(buffer);
+	_outputFile->saveSleepTime(_sleepTime);
+	
+}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.cpp
+	 */
+
+void Controller::markAsComplete() {
+
+	DeleteItem *deleteItemCommand;
+	try {
+		deleteItemCommand = new DeleteItem(_parser->getLineOpNumber(), true, _outputFile);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(ERROR) << ERROR_INVALID_LINE_NUMBER << e.what();
+		return;
+	}
+	_invoker->executeCommand(_vectorStore, deleteItemCommand, _successMessage);
+
+	vector<Item> markedItems = deleteItemCommand->getMarkedItems();
+
+	for (unsigned int i = 0; i < markedItems.size(); i++) {
+		_outputFile->addLineToArchive(markedItems[i]);
+	}
+
+	if(!rewriteFile()) {
+		setSuccessMessage(ERROR_FILE_OPERATION_FAILED);
+	}
+
+	generateResults(_vectorStore);
+}
+
+void Controller::viewArchive(Item data, string message) {
+	vector<Item> tempVector = _outputFile->getArchiveData();
+
+	try {
+		_parser->extractSearchQuery(data);
+	} catch (const out_of_range& e) {
+		setSuccessMessage(e.what());
+		LOG(INFO) << e.what();
+		return;
+	}
+	SearchItem *searchItemCommand;
+
+	searchItemCommand= new SearchItem(data, message, &_otherResult, _sleepTime, false, _is12HourFormat);
+
+	_invoker->disableUndo();
+	_invoker->executeCommand(tempVector, searchItemCommand, _successMessage);
+}
+
+bool Controller::isArchiveSearch() {
+	return _isArchiveSearch;
+}
+
+void Controller::restoreDefaultFileInfo() {
+	if(_outputFile->restoreFileInfo()) {
+		_successMessage = SUCCESS_RESTORE_FILE_DEFAULTS;
+	} else {
+		_successMessage =  ERROR_FILE_RESTORE_FAILED;
+	}
+}
+
+Controller::~Controller(void) {
+}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.h
+	 */
+
+
+#include <assert.h>
+#include <exception>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include "DateTime.h"
+#include "Parser.h"
+#include "FileStorage.h"
+#include "Item.h"
+#include "CommandInvoker.h"
+
+using namespace std;
+
+static const int NUM_HELP_COMMANDS = 16; 
+
+static const string HELP_COMMANDS[] = {
+	"add xxx", 
+	"delete # {#, #-#}", 
+	"display", 
+	"edit # xxx",
+	"copy # xxx",
+	"clear", 
+	"sort", 
+	"search xxx",
+	"free # xxx",
+	"12/24",
+	"view/wide",
+	"undo",
+	"redo",
+	"mark/done # {#, #-#}",
+	"archive",
+	"exit"};
+
+static const string HELP_DESCRIPTION[] = {
+	"line xxx is added to the text file with a line number",
+	"the line with the corresponding # is deleted. (deletion of multiple line supported)",
+	"all data in the file is displayed",
+	"modifies the data in line # with xxx",
+	"makes a copy of line #, and applies changes in time and date specified in xxx",
+	"all data in the file is deleted",
+	"all data in the file is sorted alphabetically",
+	"all lines related to xxx are displayed",
+	"all free slots of minimum length # are displayed on day specified in xxx",
+	"sets the time format to 12 Hour and 24 Hour respectively",
+	"widens the textbox to show more items",
+	"undo the previous change",
+	"redo the a change if undo was previously called",
+	"lines with corresponding ## are removed from the list and moved in the archive",
+	"display the archive",
+	"program quits"
+};
+
+static const string DEADLINE_HEADER = "Deadline Events";
+
+static const int DEFAULT_SLEEP_START_HR = 23;
+static const int DEFAULT_SLEEP_START_MIN = 0;
+static const int DEFAULT_SLEEP_END_HR = 5;
+static const int DEFAULT_SLEEP_END_MIN = 0;
+
+class Controller {
+private:
+	static const string SUCCESS_FILENAME_CHANGED;
+	static const string SUCCESS_FILE_LOCATION_CHANGED;
+	static const string SUCCESS_12_HR;
+	static const string SUCCESS_24_HR;
+	static const string SUCCESS_NOTIFICATION_TIME_CHANGED;
+	static const string SUCCESS_NOTIFICATION_ON;
+	static const string SUCCESS_NOTIFICATION_OFF;
+	static const string SUCCESS_RESTORE_FILE_DEFAULTS;
+	static const string ERROR_FILE_RESTORE_FAILED;
+	static const string SUCCESS_SLEEP;
+	static const string ERROR_FILE_OPERATION_FAILED;
+	static const string ERROR_INVALID_LINE_NUMBER;
+	static const string ERROR_NO_FILENAME;
+	static const string ERROR_FILE_ALREADY_EXISTS;
+	static const string ERROR_FILEPATH_NOT_FOUND;
+	static const string ERROR_INVALID_NOTIFICATION_TIME;
+	static const string ERROR_INCORRECT_ARGUMENTS;
+	static const int MAX_NOTIFICATION;
+
+	FileStorage *_outputFile;
+	Parser *_parser;
+	CommandInvoker *_invoker;
+	vector<Item> _vectorStore;
+	vector<RESULT> _todayResult;
+	vector<RESULT> _otherResult;
+	vector<string> _inputBank;
+
+
+	//To be passed to the GUI
+	string _inputBoxMessage;
+	string _successMessage;
+
+	//for search function, to check tell UI to change the heading to "Search Results"
+	bool _isSearch;
+	
+	//for free function, to check tell UI to change the heading to "Free Slots"
+	bool _isFree;
+
+	//for option to allow widening of display
+	bool _isWide;
+
+	bool _isHelp;
+
+	bool _isArchiveSearch;
+
+	bool _is12HourFormat;
+
+	int _sleepTime[2][2];
+
+	//advanced notification time, in minutes
+	//maximum allowable is 30240 (3 weeks)
+	int _notifyTime;
+
+	bool _isNotificationsOn;
+
+public:
+	Controller(void);
+
+	void executeCommand(string);
+
+	string getInputBoxMessage();
+
+	string getSuccessMessage();
+
+	void setInputBoxMessage(string);
+
+	void setSuccessMessage(string);
+
+	void initializeOptions();
+
+	void initializeVector();
+
+	long getTimePos(const int [3], const int [2]);
+
+	bool checkDateIsUnset(const int [3]);
+
+	bool checkIsClash(Item, Item);
+
+	bool checkIsExpired(Item);
+
+	void generateResults(const vector<Item>);
+
+	bool rewriteFile();
+
+	void commandOptions(string);
+
+	void addData(Item);
+
+	//returns the data deleted or *#*#*#*#* if not found
+	void deleteData();
+
+	void displayAll();
+
+	void clearAll();
+
+	void sortAlphabetical();
+
+	void search(Item, string);
+
+	void searchFree(Item, string);
+
+	bool isSearch();
+
+	bool isFree();
+
+	void toggleIsWide();
+
+	bool isWide();
+
+	bool isHelp();
+
+	void copy(Item);
+
+	void edit(Item);
+
+	void rename(string newFileName);
+
+	//Example of new file path:
+	//C:\Users\Username\My Documents
+	void move(string newFileLocation);
+
+	void undo();
+
+	void redo();
+
+	//command stored in date field
+	//description stored in event field
+	void getHelp();
+
+	vector<RESULT> getTodayResult();
+
+	vector<RESULT> getOtherResult();
+
+	void swap(Item&, Item&);
+
+	int compareEarlierThan(const Item, const Item);
+
+	void chronoSort(vector<Item>&);
+
+	void addToInputBank();
+
+	vector<string> getInputBank();
+
+	void setClockTo12Hour();
+
+	void setClockTo24Hour();
+
+	void setSleepTime(Item);
+
+	bool isNotificationsOn();
+
+	string getNotifications();
+
+	void calculateTargetDateTime(int&, int&, int&, int&, int&);
+
+	string findEventMatch(int, int, int, int, int);
+
+	void setReminderTime();
+
+	void toggleNotification();
+
+	void markAsComplete();
+
+	void viewArchive(Item, string);
+
+	bool isArchiveSearch();
+
+	void restoreDefaultFileInfo();
+
+	~Controller(void);
+};
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.h
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\CopyItem.cpp
+	 */
+
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include "Item.h"
+#include "Command.h"
+
+using namespace std;
+
+class CopyItem : public Command {
+private:
+	int _lineNumber;
+	Item _input;
+	string _message;
+	Item _copiedData;
+
+public:
+	CopyItem() {
+		_lineNumber = 0;
+		_message = "";
+	}
+
+	CopyItem(const int lineNumber, const Item input) {
+		_lineNumber = lineNumber;
+		_input = input;
+		_message = "";
+	}
+
+	~CopyItem() {
+	}
+
+	void executeAction(vector<Item>& vectorStore) {
+
+		if(_lineNumber == 0  || _lineNumber > (int)vectorStore.size()) {
+			_message = ERROR_INVALID_LINE_NUMBER + " ";
+			_message += ('0'+ _lineNumber);
+			_message += "\n";
+		}
+		else {
+			_message = "";
+
+			_copiedData = vectorStore[_lineNumber - 1];
+			_copiedData.eventDate[0] = _input.eventDate[0];
+			_copiedData.eventDate[1] = _input.eventDate[1];
+			_copiedData.eventDate[2] = _input.eventDate[2];
+			_copiedData.eventStartTime[0] = _input.eventStartTime[0];
+			_copiedData.eventStartTime[1] = _input.eventStartTime[1];
+			_copiedData.eventEndTime[0] = _input.eventEndTime[0];
+			_copiedData.eventEndTime[1] = _input.eventEndTime[1];
+			
+			vectorStore.push_back(_copiedData);
+			
+			char buffer[1000];
+
+			sprintf_s(buffer, SUCCESS_COPIED.c_str(), _copiedData.toString().c_str());
+			_message = buffer;
+		}
+	}
+
+	string getMessage() {
+		return _message;
+	}
+
+	bool isMatch(const Item item1, const Item item2) {
+		if (item1.event != item2.event) {
+			return false;
+		}
+		for (int i = 0; i < 3; i++) {
+			if (item1.eventDate[i] != item2.eventDate[i]) {
+				return false;
+			}
+		}
+		for (int i = 0; i < 2; i++) {
+			if (item1.eventStartTime[i] != item2.eventStartTime[i]) {
+				return false;
+			}
+		}
+		for (int i = 0; i < 2; i++) {
+			if (item1.eventEndTime[i] != item2.eventEndTime[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	void negateAction(vector<Item> &vectorStore) {
+		for (unsigned int i = 0; i < vectorStore.size(); i++) {
+			if (isMatch(vectorStore[i], _copiedData)) {
+				vectorStore.erase(vectorStore.begin() + i);
+				break;
+			}
+		}
+	}
+};
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\CopyItem.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\DeleteItem.cpp
+	 */
+
+
+#include <iostream>
+#include <vector>
+#include <cassert>
+#include "Item.h"
+#include "Command.h"
+#include "FileStorage.h"
+
+using namespace std;
+
+class DeleteItem : public Command {
+private:
+	vector<int> _lineNumbers;
+	string _message;
+	vector<Item> _deletedItems;
+	bool _isMarkDone;
+	FileStorage *_outputFile;
+public:
+	DeleteItem() {
+		_message = "";
+		_isMarkDone = false;
+		_outputFile = FileStorage::getInstance();
+	}
+
+	DeleteItem(const vector<int> input, const bool isMarkDone, FileStorage * outputFile) {
+		_lineNumbers = input;
+		_message = "";
+		_isMarkDone = isMarkDone;
+		_outputFile = outputFile;
+	}
+
+	~DeleteItem() {
+	}
+
+	vector<Item> getMarkedItems() {
+		return _deletedItems;
+	}
+
+	bool isMatch(const Item item1, const Item item2) {
+		if (item1.event != item2.event) {
+			return false;
+		}
+		for (int i = 0; i < 3; i++) {
+			if (item1.eventDate[i] != item2.eventDate[i]) {
+				return false;
+			} 
+			if (item1.eventEndDate[i] != item2.eventEndDate[i]) {
+				return false;
+			} 
+		}
+		for (int i = 0; i < 2; i++) {
+			if (item1.eventStartTime[i] != item2.eventStartTime[i]) {
+				return false;
+			} 
+			if (item1.eventStartTime[i] != item2.eventStartTime[i]) {
+				return false;
+			} 
+		}	
+		return true;
+	}
+
+	void executeAction(vector<Item>& vectorStore) {
+		bool isFirstError = true;
+		bool isFirstSuccess= true;
+		bool alreadyDeleted;
+		int vectorSize = vectorStore.size();
+		vector<int> deletedLines;
+		ostringstream oss;
+
+		_message = "";
+		for (unsigned int i = 0; i < _lineNumbers.size(); i++) {
+			int lineToBeDeleted = _lineNumbers[i];
+
+			alreadyDeleted = false;
+			for(unsigned int j = 0; j < deletedLines.size(); j++) {
+				if (deletedLines[j] == lineToBeDeleted) {
+					alreadyDeleted = true;
+					break;
+				} else {
+					deletedLines.push_back(lineToBeDeleted);
+				}
+			}
+			if (!alreadyDeleted) {
+				if(lineToBeDeleted == 0 || lineToBeDeleted > vectorSize) {
+					if(isFirstError) {
+						_message = ERROR_INVALID_LINE_NUMBER + " ";
+						isFirstError = false;
+					} else {
+						_message += ", ";
+					}
+					_message += ('0' + _lineNumbers[i]);
+				} else {
+					_deletedItems.push_back(vectorStore[lineToBeDeleted - 1 - i]);
+					vectorStore.erase(vectorStore.begin() + (lineToBeDeleted - 1 - i));
+					if (isFirstSuccess) {
+						isFirstSuccess = false;
+					} else {
+						oss << ", ";
+					}
+					oss << lineToBeDeleted;
+				}
+			}
+		}
+		if (!isFirstSuccess) {
+			char buffer[1000];
+
+			if (_isMarkDone) {
+				sprintf_s(buffer, SUCCESS_DONE.c_str(), oss.str().c_str());
+			} else {
+				sprintf_s(buffer, SUCCESS_DELETED.c_str(), oss.str().c_str());
+			}
+			if(!isFirstError) {
+				_message = ", " + _message;
+			}
+			_message = buffer + _message;
+			_message += "\n";
+		}
+	}
+
+	string getMessage() {
+		return _message;
+	}
+
+	void negateAction(vector<Item> &vectorStore) {
+		if (_isMarkDone) {
+			vector<Item> temp = _outputFile->getArchiveData();
+			if (!temp.empty()) {
+				_outputFile->clearArchive();
+			} 
+			for (unsigned int i = 0; i < temp.size(); i++) {
+				for (unsigned int j = 0; j < _deletedItems.size(); j++) {
+					if (!isMatch(temp[i], _deletedItems[j])) {
+						_outputFile->addLineToArchive(temp[i]);
+					}
+				}
+			}
+		}
+		for (unsigned int i = 0; i < _deletedItems.size(); i++) {
+			vectorStore.push_back(_deletedItems[i]);
+		}
+
+		_deletedItems.clear();
+	}
+};
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\DeleteItem.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\DisplayItems.cpp
+	 */
+
+#include <iostream>
+#include <vector>
+#include <sstream>
+#include "Item.h"
+#include "Command.h"
+
+using namespace std;
+
+class DisplayItems :public Command {	
+public:
+	DisplayItems() {
+	}
+
+	~DisplayItems() {
+	}
+
+	void executeAction(const vector<Item> vectorStore, string &output) {
+		if (vectorStore.empty()) {
+			output = ERROR_FILE_EMPTY;
+			return;
+		}
+		else {
+			ostringstream oss;
+			for (unsigned int i = 0; i < vectorStore.size(); i++) {
+				DateTime *myDateTime = new DateTime;
+
+				string event = vectorStore[i].event;
+				int day = vectorStore[i].eventDate[0];
+				int mon = vectorStore[i].eventDate[1];
+				int hour = vectorStore[i].eventStartTime[0];
+				int min = vectorStore[i].eventStartTime[1];
+				int year = myDateTime->getCurrentYear();
+		
+				//NUMERICAL FORMAT
+				//oss << (i + 1) << ". " << event;
+				//oss << " [" << day << "/" << mon;
+				//oss << ", " << hour << ":" << min << "]";
+				//oss << endl << endl;
+
+				//WRITTEN FORMAT
+				oss << (i + 1) << ". " << event;
+				oss << " on " << myDateTime->getWeekDay(day, mon, year);
+				oss << ", " << day << " " << myDateTime->getMonth(mon);
+				oss << " at " << hour << ":" << min;
+				oss << endl << endl;
+			}
+		
+		output =  oss.str();
+		}
+	}
+
+	string getMessage() {
+		return "";
+	}
+};
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\DisplayItems.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\EditItem.cpp
+	 */
+
+
+#include <iostream>
+#include <vector>
+#include "Item.h"
+#include "Command.h"
+
+using namespace std;
+
+class EditItem :public Command {
+private:
+	int _lineNumber;
+	Item _input;
+	string _message;
+	Item _editedItem;
+	bool _eventHasChanged;
+	bool _timeHasChanged;
+	bool _dateHasChanged;
+
+public:
+	EditItem() {
+		_lineNumber = 0;
+		_message = "";
+		_eventHasChanged = false;
+		_timeHasChanged = false;
+		_dateHasChanged = false;
+	}
+
+	EditItem(int lineNumber, Item input) {
+		_lineNumber = lineNumber;
+		_input = input;
+		_message = "";
+		_eventHasChanged = false;
+		_timeHasChanged = false;
+		_dateHasChanged = false;
+	}
+
+	~EditItem() {
+	}
+
+	bool isFloatingDate() {
+		for (int i = 0; i < 3; i++) {
+			if (_input.eventDate[i] != 0) {
+				return false;
+			}
+			if (_input.eventEndDate[i] !=	0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	bool isFloatingTime() {
+		for (int i = 0; i < 2; i++) {
+			if (_input.eventStartTime[i] != 0) {
+				return false;
+			}
+			if (_input.eventStartTime[i] !=	0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	void executeAction(vector<Item> &vectorStore) {
+		if(_lineNumber <= 0   || _lineNumber > (int)vectorStore.size()) {
+			_message = ERROR_INVALID_LINE_NUMBER + " " + to_string(_lineNumber);
+			throw std::out_of_range(_message);
+		} else {
+			char buffer[1000];
+			sprintf_s(buffer, SUCCESS_EDITED.c_str(), 
+				vectorStore[_lineNumber - 1].toString().c_str(), 
+				_input.toString().c_str());
+			_message=buffer;
+			_editedItem = vectorStore[_lineNumber - 1];
+
+			if (_input.event != "") {
+				vectorStore[_lineNumber - 1].event = _input.event;
+			}
+			if (!isFloatingDate()) {
+				for (int i = 0; i < 3; i++) {
+					vectorStore[_lineNumber - 1].eventDate[i] = _input.eventDate[i];
+					vectorStore[_lineNumber - 1].eventEndDate[i] = _input.eventEndDate[i];
+					_dateHasChanged = true;
+				}
+			} else {
+				if (_input.isDeadlineTask && 
+					(vectorStore[_lineNumber - 1].eventEndDate[0] != 0 
+					|| vectorStore[_lineNumber - 1].eventEndDate[1] != 0
+					|| vectorStore[_lineNumber - 1].eventEndDate[2] != 0)) {
+							
+					vectorStore[_lineNumber - 1].eventDate[0] = vectorStore[_lineNumber - 1].eventEndDate[0];
+					vectorStore[_lineNumber - 1].eventDate[1] = vectorStore[_lineNumber - 1].eventEndDate[1];
+					vectorStore[_lineNumber - 1].eventDate[2] = vectorStore[_lineNumber - 1].eventEndDate[2];
+
+					_dateHasChanged = true;
+				}
+			}
+			if (!isFloatingTime()) {
+				for (int i = 0; i < 1; i++) {
+					vectorStore[_lineNumber-1].eventStartTime[i] = _input.eventStartTime[i];
+					vectorStore[_lineNumber-1].eventEndTime[i] = _input.eventEndTime[i];
+					_timeHasChanged = true;
+				}
+			} else {
+				if (_input.isDeadlineTask && 
+					(vectorStore[_lineNumber - 1].eventEndTime[0] != 0 
+					|| vectorStore[_lineNumber - 1].eventEndTime[1] != 0)) {
+							
+					vectorStore[_lineNumber - 1].eventStartTime[0] = vectorStore[_lineNumber - 1].eventEndTime[0];
+					vectorStore[_lineNumber - 1].eventStartTime[1] = vectorStore[_lineNumber - 1].eventEndTime[1];
+					vectorStore[_lineNumber - 1].eventEndTime[0] = 0;
+					vectorStore[_lineNumber - 1].eventEndTime[1] = 0;
+					_timeHasChanged = true;
+				}
+			}
+			vectorStore[_lineNumber - 1].isDeadlineTask = _input.isDeadlineTask;
+
+			_input.event = vectorStore[_lineNumber - 1].event;
+			_input.eventDate[0] = vectorStore[_lineNumber - 1].eventDate[0];
+			_input.eventDate[1] = vectorStore[_lineNumber - 1].eventDate[1];
+			_input.eventDate[2] = vectorStore[_lineNumber - 1].eventDate[2];
+			_input.eventEndDate[0] = vectorStore[_lineNumber - 1].eventEndDate[0];
+			_input.eventEndDate[1] = vectorStore[_lineNumber - 1].eventEndDate[1];
+			_input.eventEndDate[2] = vectorStore[_lineNumber - 1].eventEndDate[2];
+			_input.eventStartTime[0] = vectorStore[_lineNumber - 1].eventStartTime[0]; 
+			_input.eventStartTime[1] = vectorStore[_lineNumber - 1].eventStartTime[1];
+			_input.eventEndTime[0] = vectorStore[_lineNumber - 1].eventEndTime[0];
+			_input.eventEndTime[1] = vectorStore[_lineNumber - 1].eventEndTime[1];
+		}
+	}
+
+	string getMessage() {
+
+		return _message;
+	}
+
+	bool isMatch(const Item item1, const Item item2) {
+		if (_eventHasChanged && item1.event != item2.event) {
+			return false;
+		}
+		if (_dateHasChanged) {
+			for (int i = 0; i < 3; i++) {
+				if (item1.eventDate[i] != item2.eventDate[i]) {
+					return false;
+				}
+			}
+			for (int i = 0; i < 3; i++) {
+				if (item1.eventEndDate[i] != item2.eventEndDate[i]) {
+					return false;
+				}
+			}
+		}
+		if (_timeHasChanged) {
+			for (int i = 0; i < 2; i++) {
+				if (item1.eventStartTime[i] != item2.eventStartTime[i]) {
+					return false;
+				}
+			}
+			for (int i = 0; i < 2; i++) {
+				if (item1.eventEndTime[i] != item2.eventEndTime[i]) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	void negateAction(vector<Item> &vectorStore) {
+		for (unsigned int i = 0; i < vectorStore.size(); i++) {
+			if (isMatch(_input, vectorStore[i])) {
+				vectorStore[i] = _editedItem;
+				break;
+			}
+		}
+	}
+};
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\EditItem.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\RenameFile.cpp
+	 */
+
+#include <iostream>
+#include <vector>
+#include "FileStorage.h"
+#include "Item.h"
+#include "Command.h"
+
+using namespace std;
+
+class RenameFile : public Command {
+private:
+	string _fileName;
+	string _oldFileName;
+	string _message;
+
+public:
+	RenameFile() {
+		_fileName = "save.txt";
+		_oldFileName = "";
+		_message = "";
+	}
+
+	RenameFile(const string fileName) {
+		_fileName = fileName;
+		_oldFileName = "";
+		_message = "";
+	}
+
+	~RenameFile() {
+	}
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\RenameFile.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\SearchItem.cpp
+	 */
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include "Item.h"
+#include "Command.h"
+
+const int initialMinEditDist = -1;
+const int powerSearchLowThreshold = 1;
+const int DAY_NUM_MINS = 1440;
+
+const string TIME_UNIT_HOURS = " hours";
+const string TIME_UNIT_MINUTES = " minutes";
+const string STRING_FREE_SLOTS = "Free Slots";
+const string ERROR_INVALID_SLOT_LENGTH = "Invalid slot length!";
+
+static const string DEADLINE_HEADING = "Deadline Events";
+
+using namespace std;
+
+struct SEARCHRESULT {
+	int editDistance;
+	RESULT result;
+};
+
+class SearchItem : public Command {
+private:
+	Item _input;
+	string _message;
+	vector<RESULT> *_otherResult;
+	int _sleepTime[2][2];
+	bool _searchFree;
+	bool _is12HourFormat;
+public:
+	SearchItem() {
+		_message = "";
+		_sleepTime[0][0] = 0;
+		_sleepTime[0][1] = 0;
+		_sleepTime[1][0] = 0;
+		_sleepTime[1][1] = 0;
+		_searchFree = false;
+	}
+
+	SearchItem(const Item input, const string message, vector<RESULT> *otherResult, int sleepTime[][2], bool free, bool is12HourFormat) {
+		_input = input;
+		_message = message;
+		_otherResult = otherResult;
+		_sleepTime[0][0] = sleepTime[0][0];
+		_sleepTime[0][1] = sleepTime[0][1];
+		_sleepTime[1][0] = sleepTime[1][0];
+		_sleepTime[1][1] = sleepTime[1][1];
+		_searchFree = free;
+		_is12HourFormat = is12HourFormat;
+	}
+
+	~SearchItem() {
+	}
+
+	long getTimePos(const int date[3], const int time[2]) {
+		long timePos = 0;
+
+		timePos += date[2];
+		timePos *= 12;
+		timePos += date[1];
+		timePos *= 31;
+		timePos += date[0];
+		timePos *= 24;
+		timePos += time[1];
+		timePos *= 60;
+		timePos += time[0];
+
+		return timePos;
+	}
+
+	bool checkIsClash(Item item1, Item item2) {
+		long startTimePos1 = getTimePos(item1.eventDate, item1.eventStartTime);
+		long endTimePos1;
+		if (dateIsSpecified(item1.eventDate) && !dateIsSpecified(item1.eventEndDate)) {
+			Item temp;
+			temp.eventEndDate[0] = item1.eventDate[0];
+			temp.eventEndDate[1] = item1.eventDate[1];
+			temp.eventEndDate[2] = item1.eventDate[2];
+			temp.eventEndTime[0] = item1.eventEndTime[0];
+			temp.eventEndTime[1] = item1.eventEndTime[1];
+			endTimePos1 =  getTimePos(temp.eventEndDate, temp.eventEndTime);
+		} else {
+			endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventEndTime);
+		}
+
+		long startTimePos2 = getTimePos(item2.eventDate, item2.eventStartTime);
+		long endTimePos2;
+		if (dateIsSpecified(item2.eventDate) && !dateIsSpecified(item2.eventEndDate)) {
+			Item temp;
+			temp.eventEndDate[0] = item2.eventDate[0];
+			temp.eventEndDate[1] = item2.eventDate[1];
+			temp.eventEndDate[2] = item2.eventDate[2];
+			temp.eventEndTime[0] = item2.eventEndTime[0];
+			temp.eventEndTime[1] = item2.eventEndTime[1];
+			endTimePos2 =  getTimePos(temp.eventEndDate, temp.eventEndTime);
+		} else {
+			endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
+		}
+
+		bool isDeadline1 = item1.isDeadline();
+		bool isDeadline2 = item2.isDeadline();
+
+		if (isDeadline1 && isDeadline2) {
+			if (startTimePos1 != startTimePos2) {
+				return false;
+			}
+			return true;
+		} else if (isDeadline1) {
+			if (startTimePos1 <= startTimePos2 || startTimePos1 >= endTimePos2) {
+				return false;
+			} 
+			return true;
+		} else if (isDeadline2) {
+			if (startTimePos2 <= startTimePos1 || startTimePos2 >= endTimePos1) {
+				return false;
+			} 
+			return true;
+		}
+
+		if (endTimePos2 <= startTimePos1) {
+			return false;
+		}
+		if (endTimePos1 <= startTimePos2) {
+			return false;
+		}
+		return true;
+	}
+
+	bool checkIsExpired(Item item) {
+		DateTime dateTime;
+
+		if (item.isDeadline()) {
+			if (item.eventDate[2] < dateTime.getCurrentYear()) {
+				return true;
+			} else if (item.eventDate[2] == dateTime.getCurrentYear()) {
+				if (item.eventDate[1] < dateTime.getCurrentMonth()) {
+					return true;
+				} else if (item.eventDate[1] == dateTime.getCurrentMonth()) {
+					if (item.eventDate[0] < dateTime.getCurrentDay()) {
+						return true;
+					} else if (item.eventDate[0] == dateTime.getCurrentDay()) {
+						if (item.eventStartTime[0] < dateTime.getCurrentHour()) {
+							return true;
+						} else if (item.eventStartTime[0] == dateTime.getCurrentHour()) {
+							if (item.eventStartTime[1] < dateTime.getCurrentMinute()) {
+								return true;
+							} else {
+								return false;
+							}
+						}
+					}
+				}
+			}
+		} else if (!dateIsSpecified(item.eventEndDate)){
+			if (item.eventDate[2] < dateTime.getCurrentYear()) {
+				return true;
+			} else if (item.eventDate[2] == dateTime.getCurrentYear()) {
+				if (item.eventDate[1] < dateTime.getCurrentMonth()) {
+					return true;
+				} else if (item.eventDate[1] == dateTime.getCurrentMonth()) {
+					if (item.eventDate[0] < dateTime.getCurrentDay()) {
+						return true;
+					} else if (item.eventDate[0] == dateTime.getCurrentDay()) {
+						if (item.eventEndTime[0] < dateTime.getCurrentHour()) {
+							return true;
+						} else if (item.eventEndTime[0] == dateTime.getCurrentHour()) {
+							if (item.eventEndTime[1] < dateTime.getCurrentMinute()) {
+								return true;
+							} else {
+								return false;
+							}
+						}
+					}
+				}
+			}
+		} else if (item.eventEndTime[0] == 0 && item.eventEndTime[1] == 0){
+			if (item.eventEndDate[2] < dateTime.getCurrentYear()) {
+				return true;
+			} else if (item.eventEndDate[2] == dateTime.getCurrentYear()) {
+				if (item.eventEndDate[1] < dateTime.getCurrentMonth()) {
+					return true;
+				} else if (item.eventEndDate[1] == dateTime.getCurrentMonth()) {
+					if (item.eventEndDate[0] < dateTime.getCurrentDay()) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			}
+		} else {
+			if (item.eventEndDate[2] < dateTime.getCurrentYear()) {
+				return true;
+			} else if (item.eventEndDate[2] == dateTime.getCurrentYear()) {
+				if (item.eventEndDate[1] < dateTime.getCurrentMonth()) {
+					return true;
+				} else if (item.eventEndDate[1] == dateTime.getCurrentMonth()) {
+					if (item.eventEndDate[0] < dateTime.getCurrentDay()) {
+						return true;
+					} else if (item.eventEndDate[0] == dateTime.getCurrentDay()) {
+						if (item.eventEndTime[0] < dateTime.getCurrentHour()) {
+							return true;
+						} else if (item.eventEndTime[0] == dateTime.getCurrentHour()) {
+							if (item.eventEndTime[1] < dateTime.getCurrentMinute()) {
+								return true;
+							} else {
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+
+	//Levenshtein's Algorithm to get edit distance between two words
+	int getEditDist(const string input, const string item) {
+		int itemSize = item.size();
+		int inputSize = input.size();
+		int upLeftCell;
+
+		if(inputSize == 0)
+			return itemSize;
+		if(itemSize == 0)
+			return inputSize;
+
+		int *difference = new int [inputSize+1];
+
+		for(int i = 0; i <= inputSize; i++) {
+			difference[i] = i;
+		}
+
+		for(int i = 1; i <= itemSize; i++) {
+			difference[0] = i;
+			upLeftCell = i - 1;
+
+			for(int j = 1; j <= inputSize; j++) {
+				if(input[j-1] == item[i-1]) {
+					int temp = upLeftCell;
+					upLeftCell = difference[j];
+					difference[j] = temp;
+				}
+				else {
+					int minimum(upLeftCell < difference[j-1] ? upLeftCell : difference[j-1]);
+				
+					int temp = difference[j];
+					if(minimum < difference[j])
+						difference[j] = minimum;
+					upLeftCell = temp;
+					difference[j]++;
+				}
+			}
+		}
+		return difference[inputSize];
+	}
+
+	//Search to carry out if search query is an acronym, returns true if full acronym is found
+	bool acroSearch(const string currentString, const string acronym) {
+		string currentWord;
+		istringstream issWord(currentString);
+		size_t pos;
+		bool isFound = false;
+
+		pos = 0;
+		while (issWord >> currentWord) {
+			if (!isFound) {
+				if (currentWord[0] == acronym[pos]) {
+					isFound = true;
+				}
+			}
+			if (isFound && currentWord[0] == acronym[pos]) {
+				pos++;
+			} else {
+					isFound = false;
+					pos = 0;
+			}
+			if (pos == acronym.size()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	//Search returns true if query is a subset of the an event
+	bool normalSearch(const string currentString, const string fullInput) {
+		size_t position = currentString.find(fullInput);
+		if (position != string::npos) {
+			return true;
+		}
+		return false;
+	}
+
+	//gets the minimum edit distance (Levenshtein's Algorithm) between all the words in the query and the event
+	//minimum edit distance is returned via pass by reference
+	void powerSearch(const string currentString, const string inputWord, int &minEditDist) {
+		string currentWord;
+		istringstream issWord(currentString);
+
+		while (issWord >> currentWord) {
+			int editDist = getEditDist(inputWord, currentWord);
+			if(minEditDist < 0 || minEditDist > editDist) {
+				minEditDist = editDist;
+			}
+		}
+	}
+
+	//Method that executes all search algorithms, results returned via pass by pointer
+	void search(vector<RESULT> *resultVector) {
+		vector<SEARCHRESULT> powerSearchLowRes;
+		vector<SEARCHRESULT> normalSearchRes;
+		vector<SEARCHRESULT> powerSearchAcroRes;
+
+		string fullInput = _input.event;
+		transform(fullInput.begin(), fullInput.end(), fullInput.begin(), ::tolower);
+		
+		for (unsigned int i = 0; i < resultVector->size(); i++) {
+			string acronym = "";
+			string currentString = resultVector->at(i).event;
+
+			transform(currentString.begin(), currentString.end(), currentString.begin(), ::tolower);
+			
+			bool isFound = false;
+			bool isAcronym = false;
+			bool fullAcronymFound = false;
+			int minEditDist = initialMinEditDist;
+
+			string inputWord;
+			istringstream issInput(fullInput);
+			while (issInput >> inputWord) {
+				if (inputWord.size() == 1) {
+					isAcronym = true;
+				} else {
+					isAcronym = false;
+				}
+
+				if (isAcronym) {
+					acronym += inputWord;
+				} else {
+					//ACRONYM SEARCH
+					if (acronym.size() != 0) {
+						fullAcronymFound = acroSearch(currentString, acronym);
+					}
+					//POWER SEARCH
+					powerSearch(currentString, inputWord, minEditDist);
+
+					//NORMAL SEARCH
+					if (minEditDist > powerSearchLowThreshold && !isFound) {
+						isFound = normalSearch(currentString, fullInput);
+					}
+					
+				}
+			}
+			if (isAcronym) {
+				//ACRONYM SEARCH
+				if (acronym.size() != 0) {
+					fullAcronymFound = acroSearch(currentString, acronym);
+				} else {
+					powerSearch(currentString, inputWord, minEditDist);
+				}
+
+			}
+
+			SEARCHRESULT newSearchResult;
+			newSearchResult.result = resultVector->at(i);
+			newSearchResult.editDistance = minEditDist;
+
+			if (minEditDist != -1 && minEditDist <= powerSearchLowThreshold) {
+				unsigned int j = 0;
+				while (j < powerSearchLowRes.size() && powerSearchLowRes[j].editDistance <= minEditDist) {
+					j++;
+				}
+				powerSearchLowRes.insert(powerSearchLowRes.begin() + j, newSearchResult);
+			} else if (isFound) {
+				unsigned int j = 0;
+				while (j < normalSearchRes.size() && normalSearchRes[j].editDistance <= minEditDist) {
+					j++;
+				}
+				normalSearchRes.insert(normalSearchRes.begin() + j, newSearchResult);
+			} else if (fullAcronymFound) {
+				powerSearchAcroRes.push_back(newSearchResult);
+			}
+		}
+
+		vector<SEARCHRESULT> temp;
+		temp.insert(temp.end(), powerSearchLowRes.begin(), powerSearchLowRes.end());
+		temp.insert(temp.end(), normalSearchRes.begin(), normalSearchRes.end());
+		temp.insert(temp.end(), powerSearchAcroRes.begin(), powerSearchAcroRes.end());
+
+		resultVector->clear();
+
+		for (unsigned int i = 0; i < temp.size(); i++) {
+			resultVector->push_back(temp[i].result);
+		}
+	}
+
+	bool isSameStartOrEndDateAndTime(const Item item, const Item input) {
+		DateTimeParser dateTimeParser;
+		
+		bool isEndMatched = true;
+
+		int day = input.eventDate[0];
+		int mon = input.eventDate[1];
+		int year = input.eventDate[2];
+
+		dateTimeParser.getNextDayDate(day, mon, year);
+		int nextDayDate[3] = {day, mon, year};
+
+		dateTimeParser.getNextDayDate(day, mon, year);
+		int afterNextDayDate[3] = {day, mon, year};
+
+		//If deadline event, allow comparisons up to 2 days ahead, else only current day
+		if (item.isDeadlineTask) {
+			for (int i = 0; i < 3; i++) {
+				if(item.eventDate[i] != input.eventDate[i] &&
+					item.eventDate[i] != nextDayDate[i] &&
+					item.eventDate[i] != afterNextDayDate[i]) {
+					return false;
+				}
+			}
+		} else {
+			for (int i = 0; i < 3; i++) {
+				if(item.eventDate[i] != input.eventDate[i] && item.eventEndDate[i] != input.eventDate[i]) {
+					return false;
+				}
+			}
+		}
+
+		//check to see whether if the start or the end of the timed task is matched with the input
+		for (int i = 0; i < 3; i++) {
+			if (item.eventEndDate[i] != input.eventDate[i]) {
+				isEndMatched = false;
+				break;
+			}
+		}
+
+		//if IsDeadline, check against next 2 days, else check if if time matches the previously matched date
+		if (item.isDeadlineTask) {
+			for (int i = 0; i < 2; i++) {
+				if((input.eventStartTime[i] != 0 && item.eventStartTime[i] != input.eventStartTime[i]) &&
+					item.eventDate[i] != nextDayDate[i] &&
+					item.eventDate[i] != afterNextDayDate[i]) {
+					return false;
+				}
+			}
+		} else {
+			for (int i = 0; i < 2; i++) {
+				if(input.eventStartTime[i] != 0 
+					&& ((!isEndMatched && item.eventStartTime[i] != input.eventStartTime[i])
+					|| (isEndMatched && item.eventEndTime[i] != input.eventStartTime[i]))) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	//Returns -1 if first argument is an earlier date, 1 if second argument is earlier, 0 if identical
+	int compareDateEarlierThan(const int date1[3], const int date2[3]) {
+		if (date1[2] < date2[2]) {
+			return -1;
+		} else if (date1[2] == date2[2]) {
+			if (date1[1] < date2[1]) {
+				return -1;
+			} else if (date1[1] == date2[1]) {
+				if (date1[0] < date2[0]) {
+					return -1;
+				} else if (date1[0] == date2[0]) {
+					return 0;
+				}
+			}
+		}
+		return 1;
+	}
+
+	//Returns -1 if first argument is an earlier time, 1 if second argument is earlier, 0 if identical
+	int compareTimeEarlierThan(const int time1[2], const int time2[2]) {
+		if (time1[1] < time2[1]) {
+			return -1;
+		} else if (time1[1] == time2[1]) {
+			if (time1[0] < time2[0]) {
+				return -1;
+			} else if (time1[0] == time2[0]) {
+					return 0;
+			}
+		}
+		return 1;
+	}
+	
+	//Returns true if any date field is non_zero to check if date has been set
+	bool dateIsSpecified(const int dateArray[3]) {
+		for (int i = 0; i < 2; i++) {
+			if (dateArray[i] != 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	//Returns true if any time field is non_zero to check if time has been set
+	bool timeIsSpecified(const int timeArray[3]) {
+		for (int i = 0; i < 2; i++) {
+			if (timeArray[i] != 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	//Returns true if an item occurs within range specified by input
+	bool isWithinRange(const Item item, const Item input) {
+
+		DateTimeParser dateTimeParser;
+
+		int day;
+		int mon;
+		int year;
+
+
+		if (!dateIsSpecified(item.eventEndDate)) {
+			day = input.eventDate[0];
+			mon = input.eventDate[1];
+			year = input.eventDate[2];
+		} else {
+			day = input.eventEndDate[0];
+			mon = input.eventEndDate[1];
+			year = input.eventEndDate[2];
+		}
+
+		dateTimeParser.getNextDayDate(day, mon, year);
+		int nextDayDate[3] = {day, mon, year};
+
+		dateTimeParser.getNextDayDate(day, mon, year);
+		int afterNextDayDate[3] = {day, mon, year};
+
+		//If item is a deadline task, then check against the next 2 days. If there is a match, return true 
+		if (item.isDeadlineTask) {
+			bool isMatch = true;
+		
+			for ( int i = 0; i < 3; i++) {
+				if (item.eventDate[i] != nextDayDate[i] && item.eventDate[i] != afterNextDayDate[i]) {
+					isMatch = false;
+					break;
+				}
+			}
+			if (isMatch) {
+				return true;
+			}
+		}
+
+		//check if item starts earlier than input start date
+		if(compareDateEarlierThan(item.eventDate, input.eventDate) == -1) {
+			return false;
+		}
+
+		//check if item ends later than input end date. If end date unspecified, then compare with input start date
+		if (!dateIsSpecified(input.eventEndDate)) {
+			if(compareDateEarlierThan(item.eventEndDate, input.eventDate) == 1) {
+				return false;
+			}
+		} else {
+			if(compareDateEarlierThan(item.eventEndDate, input.eventEndDate) == 1) {
+				return false;
+			}
+		}
+
+		//check if item starts earlier than input start time and is specified
+		if (timeIsSpecified(input.eventStartTime) && 
+			(!timeIsSpecified(item.eventStartTime) 
+			|| compareTimeEarlierThan(item.eventStartTime, input.eventStartTime) == -1)) {
+				return false;
+		}
+		
+		//check if item ends later than input end time and is specified
+		if (timeIsSpecified(input.eventEndTime)) { 
+			if (timeIsSpecified(item.eventEndTime)) {
+				if (compareTimeEarlierThan(item.eventEndTime, input.eventEndTime) == 1) {
+					return false;
+				}
+			} else {
+				if (compareTimeEarlierThan(item.eventStartTime, input.eventEndTime) == 1) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	//Excludes items from search result depending on the specified time and date
+	//Both start and end specified: excludes events not within range
+	//Only start specified, searches for items with the same start time
+	//Nothing specified, nothing excluded
+	void filterDateAndTime(vector<Item> vectorStore, bool hasStartDate, bool hasEndDate) {
+		vector<RESULT> floatingRes;
+		vector<RESULT> deadlineRes;
+		vector<RESULT> otherRes;
+
+		_otherResult->clear();
+
+		if (!hasStartDate && !hasEndDate) {
+			for (unsigned int i = 0; i < vectorStore.size(); i++) {
+				RESULT temp;
+				temp.event = vectorStore[i].event;
+				temp.lineNumber = to_string(i + 1) + ".";
+				temp.isClash = false;
+				for (unsigned int j = 0; j < vectorStore.size(); j++) {
+					if (i != j && checkIsClash(vectorStore[i], vectorStore[j])) {
+						temp.isClash = true;
+						break;
+					}
+				}
+				temp.isExpired = checkIsExpired(vectorStore[i]);
+				if (vectorStore[i].isDeadline()) {
+					temp.date = DEADLINE_HEADING;
+					vectorStore[i].eventEndDate[0] = vectorStore[i].eventDate[0];
+					vectorStore[i].eventEndDate[1] = vectorStore[i].eventDate[1];
+					vectorStore[i].eventEndDate[2] = vectorStore[i].eventDate[2];
+					if (_is12HourFormat) {
+						temp.time = vectorStore[i].timeAndEndDateToString();
+					} else {
+						temp.time = vectorStore[i].timeTo24HrString();
+					}
+					deadlineRes.push_back(temp);
+				} else {
+					temp.date = vectorStore[i].dateToString();
+					if (_is12HourFormat) {
+						temp.time = vectorStore[i].timeAndEndDateToString();
+					} else {
+						temp.time = vectorStore[i].timeTo24HrString();
+					}
+					if (vectorStore[i].isFloating()) {
+						floatingRes.push_back(temp);
+					} else {
+						_otherResult->push_back(temp);
+					}				
+				}
+			}
+		} else if (!hasEndDate) {
+			for (unsigned int i = 0; i < vectorStore.size(); i++) {
+				if (isSameStartOrEndDateAndTime(vectorStore[i], _input)) {
+					RESULT temp;
+					temp.event = vectorStore[i].event;
+					temp.lineNumber = to_string(i + 1) + ".";
+					
+					temp.isClash = false;
+					for (unsigned int j = 0; j < vectorStore.size(); j++) {
+						if (i != j && checkIsClash(vectorStore[i], vectorStore[j])) {
+							temp.isClash = true;
+							break;
+						}
+					}
+					
+					temp.isExpired = checkIsExpired(vectorStore[i]);
+					
+					if (vectorStore[i].isDeadline()) {
+						temp.date = DEADLINE_HEADING;
+						vectorStore[i].eventEndDate[0] = vectorStore[i].eventDate[0];
+						vectorStore[i].eventEndDate[1] = vectorStore[i].eventDate[1];
+						vectorStore[i].eventEndDate[2] = vectorStore[i].eventDate[2];
+						if (_is12HourFormat) {
+							temp.time = vectorStore[i].timeAndEndDateToString();
+						} else {
+							temp.time = vectorStore[i].timeTo24HrString();
+						}
+						deadlineRes.push_back(temp);
+					} else {
+						temp.date = vectorStore[i].dateToString();
+						if (_is12HourFormat) {
+							temp.time = vectorStore[i].timeAndEndDateToString();
+						} else {
+							temp.time = vectorStore[i].timeTo24HrString();
+						}
+						if (vectorStore[i].isFloating()) {
+							floatingRes.push_back(temp);
+						} else {
+							_otherResult->push_back(temp);
+						}				
+					}
+				}
+			}	
+		} else if (hasStartDate) {
+			for (unsigned int i = 0; i < vectorStore.size(); i++) {
+				if (isWithinRange(vectorStore[i], _input)) {
+					RESULT temp;
+					temp.event = vectorStore[i].event;
+					temp.lineNumber = to_string(i + 1) + ".";
+					temp.isClash = false;
+					for (unsigned int j = 0; j < vectorStore.size(); j++) {
+						if (i != j && checkIsClash(vectorStore[i], vectorStore[j])) {
+							temp.isClash = true;
+							break;
+						}
+					}
+			
+					temp.isExpired = checkIsExpired(vectorStore[i]);
+					
+					if (vectorStore[i].isDeadline()) {
+						temp.date = DEADLINE_HEADING;
+						vectorStore[i].eventEndDate[0] = vectorStore[i].eventDate[0];
+						vectorStore[i].eventEndDate[1] = vectorStore[i].eventDate[1];
+						vectorStore[i].eventEndDate[2] = vectorStore[i].eventDate[2];
+						if (_is12HourFormat) {
+							temp.time = vectorStore[i].timeAndEndDateToString();
+						} else {
+							temp.time = vectorStore[i].timeTo24HrString();
+						}
+						deadlineRes.push_back(temp);
+					} else {
+						temp.date = vectorStore[i].dateToString();
+						if (_is12HourFormat) {
+							temp.time = vectorStore[i].timeAndEndDateToString();
+						} else {
+							temp.time = vectorStore[i].timeTo24HrString();
+						}
+						if (vectorStore[i].isFloating()) {
+							floatingRes.push_back(temp);
+						} else {
+							_otherResult->push_back(temp);
+						}				
+					}
+				}
+			}
+		}
+		_otherResult->insert(_otherResult->begin(), deadlineRes.begin(), deadlineRes.end());
+		_otherResult->insert(_otherResult->begin(), floatingRes.begin(), floatingRes.end());
+	}
+
+	//Only includes floating items for the case where search query is "float" or "floating"
+	void filterForFloating(vector<Item> &vectorStore) {
+		_otherResult->clear();
+
+		for (unsigned int i = 0; i < vectorStore.size(); i++) {
+			if (vectorStore[i].isFloating()) {
+				RESULT temp;
+				temp.event = vectorStore[i].event;
+				temp.date = vectorStore[i].dateToString();
+				temp.time = vectorStore[i].timeToString();
+				temp.lineNumber = to_string(i + 1) + ".";
+				
+				_otherResult->push_back(temp);
+			}
+		}
+	}
+
+	void initializeTimeFrame(bool timeFrames[DAY_NUM_MINS]) {
+		for (int i = 0; i < 1440; i++) {
+			timeFrames[i] = false;
+		}
+	}
+
+	void blockTimeFrame(bool timeFrame[DAY_NUM_MINS], 
+		const int startHr, 
+		const int startMin, 
+		const int endHr, 
+		const int endMin) {
+
+		int startTime = startHr * 60 + startMin;
+		int endTime = endHr * 60 + endMin;
+		
+		for (int i = startTime; i < endTime; i++) {
+			if (!timeFrame[i]) {
+				timeFrame[i] = true;
+			}
+		}
+	}
+
+	void updateResultsForFree(const bool timeFrames[DAY_NUM_MINS]) {
+		int blockLength = stoi(_input.event, NULL, 10);
+		blockLength *= 60;
+
+		bool isFound = false;
+		int count = 0;
+		int index = 0;
+		int startMin = 0;
+
+		_otherResult->clear();
+		
+		for (int i = 0; i < 1440; i++) {
+			if (!timeFrames[i]) {
+				if(!isFound && i < 1439) {
+					isFound = true;
+					startMin = i;
+				}
+				count++;
+			} else {
+				if (isFound) {
+					isFound = false;
+					if (count >= blockLength) {
+						RESULT temp;
+						Item tempItem;
+					
+						tempItem.eventStartTime[0] = startMin / 60;
+						if (tempItem.eventStartTime[0] == 0) {
+							tempItem.eventStartTime[0] = 24;
+						}
+						tempItem.eventStartTime[1] = startMin % 60;
+					
+						tempItem.eventEndTime[0] = i / 60;
+						if (tempItem.eventEndTime[0] == 0) {
+							tempItem.eventEndTime[0] = 24;
+						}
+						tempItem.eventEndTime[1] = i % 60;
+						
+						tempItem.eventEndDate[0] = 0;
+						tempItem.eventEndDate[1] = 0;
+						tempItem.eventEndDate[2] = 0;
+
+						int duration = i - startMin;
+						temp.event = to_string(duration/60) + TIME_UNIT_HOURS;
+						if (duration % 60 != 0) {
+							temp.event += ", " + to_string(duration % 60) + TIME_UNIT_MINUTES;
+						}
+						temp.date = _input.dateToString();
+						if (_is12HourFormat) {
+							temp.time = tempItem.timeAndEndDateToString();
+						} else {
+							temp.time = tempItem.timeTo24HrString();
+						}
+						temp.lineNumber = to_string(index + 1) + ".";
+						
+						temp.isClash = false;
+						temp.isDeadline = false;
+						temp.isExpired = false;
+
+						index++;
+
+						_otherResult->push_back(temp);
+					}
+				}
+				count = 0;
+			}
+		}
+	}
+
+	void updateItemToNextDay() {
+		int day = _input.eventDate[0];
+		int mon = _input.eventDate[1];
+		int year = _input.eventDate[2];
+
+		DateTimeParser dateTimeParser;
+
+		dateTimeParser.getNextDayDate(day, mon, year);
+
+		_input.eventDate[0] = day;
+		_input.eventDate[1] = mon;
+		_input.eventDate[2] = year;
+	}
+
+	void filterForFree(vector<Item> vectorStore) {
+		//Boolean array to represent every minute of a 24hour day
+		bool timeFrames[DAY_NUM_MINS];
+		//Sets entire time frame to free
+		initializeTimeFrame(timeFrames);
+
+		vector<Item> tempVector;
+
+		for (unsigned int i = 0; i < vectorStore.size(); i++) {
+			if (!vectorStore[i].isDeadline() && !vectorStore[i].isFloating()) {
+				if (compareDateEarlierThan(vectorStore[i].eventEndDate, _input.eventDate) == 0 ||
+					compareDateEarlierThan(vectorStore[i].eventDate, _input.eventDate) == 0) {
+						tempVector.push_back(vectorStore[i]);
+				} 
+			}
+		}
+
+		blockTimeFrame(timeFrames, _sleepTime[0][0] % 24, _sleepTime[0][1], 24, 0);
+		blockTimeFrame(timeFrames, 0, 0, _sleepTime[1][0] % 24, _sleepTime[1][1]);
+
+
+		for (unsigned int i = 0; i < tempVector.size(); i++) {
+			int startHour = 0;
+			int startMinute = 0;
+			int endHour = 0;
+			int endMinute = 0;
+		
+			if (compareDateEarlierThan(tempVector[i].eventDate, _input.eventDate) == 0) {
+				startHour = tempVector[i].eventStartTime[0] % 24;
+				startMinute = tempVector[i].eventStartTime[1] % 60;
+			} else {
+				startHour = _sleepTime[1][0];
+				startMinute = _sleepTime[1][1];
+			}
+			
+			if ((tempVector[i].eventEndDate[0] == 0 && tempVector[i].eventEndDate[1] == 0) ||
+				(compareDateEarlierThan(tempVector[i].eventEndDate, _input.eventDate) == 0)) {
+				endHour = tempVector[i].eventEndTime[0] % 24;
+				endMinute = tempVector[i].eventEndTime[1] % 60;
+			} else {
+				endHour = _sleepTime[0][0];
+				endMinute = _sleepTime[0][1];
+			}
+			
+			blockTimeFrame(timeFrames, startHour, startMinute, endHour, endMinute);
+
+		}
+
+		updateResultsForFree(timeFrames);
+		
+	}
+
+	void executeAction(vector<Item> &vectorStore) {
+		char buffer[1000];
+		
+		if (!_searchFree) {
+			if(_input.event != "") {
+				if (_input.isFloating()) {
+					filterDateAndTime(vectorStore, false, false);
+				} else if (!dateIsSpecified(_input.eventEndDate)) {
+					filterDateAndTime(vectorStore, true, false);
+				} else {
+					filterDateAndTime(vectorStore, true, true);
+				}
+				search(_otherResult);
+			} else {
+				if (_input.isFloating()) {
+					filterForFloating(vectorStore);
+				} else if (!dateIsSpecified(_input.eventEndDate)) {
+					filterDateAndTime(vectorStore, true, false);
+				} else {
+					filterDateAndTime(vectorStore, true, true);
+				}
+			}
+		} else {
+			int blockLength = stoi(_input.event, NULL, 10);
+			int maxLength = _sleepTime[0][1] - _sleepTime[1][1];
+			maxLength += 60 * (_sleepTime[0][0] - _sleepTime[1][0]);
+			maxLength /= 60;
+			if (blockLength > maxLength) {
+				throw std::out_of_range(ERROR_INVALID_SLOT_LENGTH);
+			}
+
+			do {
+				filterForFree(vectorStore);
+				updateItemToNextDay();
+			} while (_otherResult->empty());
+		}
+
+		if (vectorStore.size() == 0) {
+			sprintf_s(buffer, ERROR_SEARCH_ITEM_NOT_FOUND.c_str(), _message.c_str());
+		}
+		else {
+			sprintf_s(buffer, SUCCESS_SEARCH.c_str(), _message.c_str());
+		}
+		_message = buffer;
+		
+	}
+
+	string getMessage() {
+		return _message;
+	}
+
+	void negateAction(vector<Item> &vectorStore) {
+	}
+};
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\SearchItem.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	 */
+
+bool Item::isFloating() {
+	for (int i = 0; i < 3; i++) {
+		if (eventDate[i] != 0 || eventEndDate[i] != 0) {
+			return false;
+		}
+	}
+	for (int i = 0; i < 2; i++) {
+		if (eventStartTime[i] != 0 || eventEndTime[i] != 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool Item::isDeadline() {
+	return isDeadlineTask;
+}
+
+	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+
+
+
+
+
