@@ -12,11 +12,11 @@ using Keyboard = Microsoft.VisualStudio.TestTools.UITesting.Keyboard;
 
 namespace GUITest {
      /// <summary>
-     /// Summary description for CodedUITest2
+     /// Summary description for CodedUITest4
      /// </summary>
      [CodedUITest]
-     public class CodedUITest2 {
-          public CodedUITest2() {
+     public class CodedUITest4 {
+          public CodedUITest4() {
           }
 
           [TestMethod]

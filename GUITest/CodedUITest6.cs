@@ -12,11 +12,11 @@ using Keyboard = Microsoft.VisualStudio.TestTools.UITesting.Keyboard;
 
 namespace GUITest {
      /// <summary>
-     /// Summary description for CodedUITest2
+     /// Summary description for CodedUITest6
      /// </summary>
      [CodedUITest]
-     public class CodedUITest2 {
-          public CodedUITest2() {
+     public class CodedUITest6 {
+          public CodedUITest6() {
           }
 
           [TestMethod]
@@ -60,5 +60,17 @@ namespace GUITest {
                }
           }
           private TestContext testContextInstance;
+
+          public UIMap UIMap {
+               get {
+                    if ((this.map == null)) {
+                         this.map = new UIMap();
+                    }
+
+                    return this.map;
+               }
+          }
+
+          private UIMap map;
      }
 }

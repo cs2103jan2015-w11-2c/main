@@ -1340,7 +1340,7 @@ public:
 		int day;
 		int month;
 		int year;
-		int expectedDay = 13;
+		int expectedDay = 15;
 		int expectedMonth = 4;
 		int expectedYear = 2015;
 		parse.setDateFromWeekDay(-5, day, month, year);
