@@ -13,23 +13,22 @@ using Keyboard = Microsoft.VisualStudio.TestTools.UITesting.Keyboard;
 namespace GUITest
 {
     /// <summary>
-    /// Summary description for CodedUITest1
+    /// Summary description for CodedUITest2
     /// </summary>
     [CodedUITest]
-    public class TwentyfourHrMethod
+    public class FreeSlotMethod
     {
-        public TwentyfourHrMethod()
+        public FreeSlotMethod()
         {
         }
 
         [TestMethod]
-        public void UITwentyfourHrMethod()
+        public void UIFreeSlotTest()
         {
             // To generate code for this test, select "Generate Code for Coded UI Test" from the shortcut menu and select one of the menu items.
             // For more information on generated code, see http://go.microsoft.com/fwlink/?LinkId=179463
-            this.UIMap.TwentyFourHrMethod();
-            this.UIMap.AssertTwentyFourHrMethod();
-
+            this.UIMap.FreeSlotMethod();
+            this.UIMap.AssertFreeSlotMethod();
         }
 
         #region Additional test attributes

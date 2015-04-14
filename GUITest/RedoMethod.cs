@@ -16,20 +16,19 @@ namespace GUITest
     /// Summary description for CodedUITest1
     /// </summary>
     [CodedUITest]
-    public class TwentyfourHrMethod
+    public class RedoMethod
     {
-        public TwentyfourHrMethod()
+        public RedoMethod()
         {
         }
 
         [TestMethod]
-        public void UITwentyfourHrMethod()
+        public void UIRedoTest()
         {
             // To generate code for this test, select "Generate Code for Coded UI Test" from the shortcut menu and select one of the menu items.
             // For more information on generated code, see http://go.microsoft.com/fwlink/?LinkId=179463
-            this.UIMap.TwentyFourHrMethod();
-            this.UIMap.AssertTwentyFourHrMethod();
-
+            this.UIMap.RedoMethod();
+            this.UIMap.AssertRedoMethod();
         }
 
         #region Additional test attributes
