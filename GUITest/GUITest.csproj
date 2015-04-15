@@ -52,18 +52,9 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddMethod.cs" />
     <Compile Include="ClearMethod.cs" />
-    <Compile Include="CodedUITest1.cs" />
-    <Compile Include="TwentyfourHrMethod.cs" />
-    <Compile Include="InvalidSearchMethod.cs" />
-    <Compile Include="TwelveHrMethod.cs" />
-    <Compile Include="InvalidDeleteMethod.cs" />
-    <Compile Include="SearchMethod.cs" />
-    <Compile Include="RedoMethod.cs" />
-    <Compile Include="UndoMethod.cs" />
+    <Compile Include="AddMethod.cs" />
     <Compile Include="EditMethod.cs" />
-    <Compile Include="DeleteMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UIMap.cs">
       <DependentUpon>UIMap.uitest</DependentUpon>

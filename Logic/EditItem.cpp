@@ -70,9 +70,8 @@ public:
 			throw std::out_of_range(_message);
 		} else {
 			char buffer[1000];
-			sprintf_s(buffer, SUCCESS_EDITED.c_str(), 
-				vectorStore[_lineNumber - 1].toString().c_str(), 
-				_input.toString().c_str());
+			sprintf_s(buffer, SUCCESS_EDITED.c_str(), _lineNumber, 
+				vectorStore[_lineNumber - 1].event.c_str());
 			_message=buffer;
 			_editedItem = vectorStore[_lineNumber - 1];
 

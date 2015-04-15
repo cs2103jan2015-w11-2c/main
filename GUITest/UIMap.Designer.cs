@@ -35,6 +35,7 @@ namespace GUITest
         public void AddMethod1()
         {
             #region Variable Declarations
+            WinClient uIMagicMemoClient = this.UIMagicMemoWindow.UIMagicMemoClient;
             WinEdit uICommandInputBoxEdit = this.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit;
             WinEdit uICommandInputBoxEdit1 = this.UIMagicMemoWindow.UICommandInputBoxWindow1.UICommandInputBoxEdit;
             WinEdit uICommandInputBoxEdit2 = this.UIMagicMemoWindow.UICommandInputBoxWindow2.UICommandInputBoxEdit;
@@ -42,31 +43,34 @@ namespace GUITest
             WinEdit uICommandInputBoxEdit4 = this.UIMagicMemoWindow.UICommandInputBoxWindow4.UICommandInputBoxEdit;
             #endregion
 
+            // Click 'Magic Memo' client
+            Mouse.Click(uIMagicMemoClient, new Point(100, 390));
+
             // Type 'clear' in 'commandInputBox' text box
             uICommandInputBoxEdit.Text = this.AddMethod1Params.UICommandInputBoxEditText;
 
             // Type '{Enter}' in 'commandInputBox' text box
             Keyboard.SendKeys(uICommandInputBoxEdit, this.AddMethod1Params.UICommandInputBoxEditSendKeys, ModifierKeys.None);
 
-            // Type 'add task1 on 14/4/2015' in 'commandInputBox' text box
+            // Type 'add task1 on 7/6 6:00' in 'commandInputBox' text box
             uICommandInputBoxEdit1.Text = this.AddMethod1Params.UICommandInputBoxEditText1;
 
             // Type '{Enter}' in 'commandInputBox' text box
             Keyboard.SendKeys(uICommandInputBoxEdit1, this.AddMethod1Params.UICommandInputBoxEditSendKeys1, ModifierKeys.None);
 
-            // Type 'add task2 on tuesday 18' in 'commandInputBox' text box
+            // Type 'add task2 on next sunday 9 to 11' in 'commandInputBox' text box
             uICommandInputBoxEdit2.Text = this.AddMethod1Params.UICommandInputBoxEditText2;
 
             // Type '{Enter}' in 'commandInputBox' text box
             Keyboard.SendKeys(uICommandInputBoxEdit2, this.AddMethod1Params.UICommandInputBoxEditSendKeys2, ModifierKeys.None);
 
-            // Type 'add task3 on next sun 7 - 9p' in 'commandInputBox' text box
+            // Type 'add task3 by 18/5 9pm' in 'commandInputBox' text box
             uICommandInputBoxEdit3.Text = this.AddMethod1Params.UICommandInputBoxEditText3;
 
             // Type '{Enter}' in 'commandInputBox' text box
             Keyboard.SendKeys(uICommandInputBoxEdit3, this.AddMethod1Params.UICommandInputBoxEditSendKeys3, ModifierKeys.None);
 
-            // Type 'add task4 on 6p to 10p' in 'commandInputBox' text box
+            // Type 'add task4 from 9/5 to 8/6' in 'commandInputBox' text box
             uICommandInputBoxEdit4.Text = this.AddMethod1Params.UICommandInputBoxEditText4;
 
             // Type '{Enter}' in 'commandInputBox' text box
@@ -324,42 +328,29 @@ namespace GUITest
             // Type '{Enter}' in 'commandInputBox' text box
             Keyboard.SendKeys(uICommandInputBoxEdit, this.EditMethod1Params.UICommandInputBoxEditSendKeys, ModifierKeys.None);
 
-            // Type 'add meet ann for lunch on next fri 12' in 'commandInputBox' text box
+            // Type 'add task1 on 8/6 12 to 14' in 'commandInputBox' text box
             uICommandInputBoxEdit1.Text = this.EditMethod1Params.UICommandInputBoxEditText1;
 
             // Type '{Enter}' in 'commandInputBox' text box
             Keyboard.SendKeys(uICommandInputBoxEdit1, this.EditMethod1Params.UICommandInputBoxEditSendKeys1, ModifierKeys.None);
 
-            // Type 'add exam prep by 16/4 19:0' in 'commandInputBox' text box
+            // Type 'edit 1 have lunch with amy' in 'commandInputBox' text box
             uICommandInputBoxEdit2.Text = this.EditMethod1Params.UICommandInputBoxEditText2;
 
             // Type '{Enter}' in 'commandInputBox' text box
             Keyboard.SendKeys(uICommandInputBoxEdit2, this.EditMethod1Params.UICommandInputBoxEditSendKeys2, ModifierKeys.None);
 
-            // Type 'add Cs project by monday 23:59' in 'commandInputBox' text box
+            // Type 'edit 1 on 9/7' in 'commandInputBox' text box
             uICommandInputBoxEdit3.Text = this.EditMethod1Params.UICommandInputBoxEditText3;
 
             // Type '{Enter}' in 'commandInputBox' text box
             Keyboard.SendKeys(uICommandInputBoxEdit3, this.EditMethod1Params.UICommandInputBoxEditSendKeys3, ModifierKeys.None);
 
-            // Type 'edit 2 exam prep by 25/4 7p' in 'commandInputBox' text box
+            // Type 'edit 1 on 12p to 3:30' in 'commandInputBox' text box
             uICommandInputBoxEdit4.Text = this.EditMethod1Params.UICommandInputBoxEditText4;
 
             // Type '{Enter}' in 'commandInputBox' text box
             Keyboard.SendKeys(uICommandInputBoxEdit4, this.EditMethod1Params.UICommandInputBoxEditSendKeys4, ModifierKeys.None);
-        }
-        
-        /// <summary>
-        /// AssertEditMethod1 - Use 'AssertEditMethod1ExpectedValues' to pass parameters into this method.
-        /// </summary>
-        public void AssertEditMethod1()
-        {
-            #region Variable Declarations
-            WinEdit uIAllTaskBoxEdit = this.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit;
-            #endregion
-
-            // Verify that the 'Text' property of 'allTaskBox' text box equals 'Deadline Events            //1. [11:59p, 13/4] Cs project            //3. [7p, 25/4] exam prep            //Friday, 24 Apr 2015            //2. [12p-1p] meet ann for lunch            //            //'
-            Assert.AreEqual(this.AssertEditMethod1ExpectedValues.UIAllTaskBoxEditText, uIAllTaskBoxEdit.Text);
         }
         
         /// <summary>
@@ -1145,6 +1136,48 @@ namespace GUITest
             Assert.AreEqual(this.AssertTwentyfourHrMethodExpectedValues.UIAllTaskBoxEditText, uIAllTaskBoxEdit.Text);
         }
         
+        /// <summary>
+        /// clearstep - Use 'clearstepParams' to pass parameters into this method.
+        /// </summary>
+        public void clearstep()
+        {
+            #region Variable Declarations
+            WinEdit uICommandInputBoxEdit = this.UIMagicMemoWindow.UICommandInputBoxWindow.UICommandInputBoxEdit;
+            #endregion
+
+            // Type 'clear' in 'commandInputBox' text box
+            uICommandInputBoxEdit.Text = this.clearstepParams.UICommandInputBoxEditText;
+
+            // Type '{Enter}' in 'commandInputBox' text box
+            Keyboard.SendKeys(uICommandInputBoxEdit, this.clearstepParams.UICommandInputBoxEditSendKeys, ModifierKeys.None);
+        }
+        
+        /// <summary>
+        /// AssertAddMethod1 - Use 'AssertAddMethod1ExpectedValues' to pass parameters into this method.
+        /// </summary>
+        public void AssertAddMethod1()
+        {
+            #region Variable Declarations
+            WinEdit uIAllTaskBoxEdit = this.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit;
+            #endregion
+
+            // Verify that the 'Text' property of 'allTaskBox' text box equals 'Deadline Events            //3. [9p][18/5] task3            //Sunday, 26 Apr 2015            //1. [9-11] task2            //Saturday, 9 May 2015            //2. [8/6] task4            //Sunday, 7 Jun 2015            //4. [6-7] task1            //            //'
+            Assert.AreEqual(this.AssertAddMethod1ExpectedValues.UIAllTaskBoxEditText, uIAllTaskBoxEdit.Text);
+        }
+        
+        /// <summary>
+        /// AssertEditMethod1 - Use 'AssertEditMethod1ExpectedValues' to pass parameters into this method.
+        /// </summary>
+        public void AssertEditMethod1()
+        {
+            #region Variable Declarations
+            WinEdit uIAllTaskBoxEdit = this.UIMagicMemoWindow.UIAllTaskBoxWindow.UIAllTaskBoxEdit;
+            #endregion
+
+            // Verify that the 'Text' property of 'allTaskBox' text box equals 'Thursday, 9 Jul 2015            //1. [12p-3p] have lunch with amy            //            //'
+            Assert.AreEqual(this.AssertEditMethod1ExpectedValues.UIAllTaskBoxEditText, uIAllTaskBoxEdit.Text);
+        }
+        
         #region Properties
         public virtual AddMethod1Params AddMethod1Params
         {
@@ -1251,18 +1284,6 @@ namespace GUITest
                     this.mEditMethod1Params = new EditMethod1Params();
                 }
                 return this.mEditMethod1Params;
-            }
-        }
-        
-        public virtual AssertEditMethod1ExpectedValues AssertEditMethod1ExpectedValues
-        {
-            get
-            {
-                if ((this.mAssertEditMethod1ExpectedValues == null))
-                {
-                    this.mAssertEditMethod1ExpectedValues = new AssertEditMethod1ExpectedValues();
-                }
-                return this.mAssertEditMethod1ExpectedValues;
             }
         }
         
@@ -1530,6 +1551,42 @@ namespace GUITest
             }
         }
         
+        public virtual clearstepParams clearstepParams
+        {
+            get
+            {
+                if ((this.mclearstepParams == null))
+                {
+                    this.mclearstepParams = new clearstepParams();
+                }
+                return this.mclearstepParams;
+            }
+        }
+        
+        public virtual AssertAddMethod1ExpectedValues AssertAddMethod1ExpectedValues
+        {
+            get
+            {
+                if ((this.mAssertAddMethod1ExpectedValues == null))
+                {
+                    this.mAssertAddMethod1ExpectedValues = new AssertAddMethod1ExpectedValues();
+                }
+                return this.mAssertAddMethod1ExpectedValues;
+            }
+        }
+        
+        public virtual AssertEditMethod1ExpectedValues AssertEditMethod1ExpectedValues
+        {
+            get
+            {
+                if ((this.mAssertEditMethod1ExpectedValues == null))
+                {
+                    this.mAssertEditMethod1ExpectedValues = new AssertEditMethod1ExpectedValues();
+                }
+                return this.mAssertEditMethod1ExpectedValues;
+            }
+        }
+        
         public UIMagicMemoWindow UIMagicMemoWindow
         {
             get
@@ -1573,8 +1630,6 @@ namespace GUITest
         private AssertDeleteMethod1ExpectedValues mAssertDeleteMethod1ExpectedValues;
         
         private EditMethod1Params mEditMethod1Params;
-        
-        private AssertEditMethod1ExpectedValues mAssertEditMethod1ExpectedValues;
         
         private trash1Params mtrash1Params;
         
@@ -1620,6 +1675,12 @@ namespace GUITest
         
         private AssertTwentyfourHrMethodExpectedValues mAssertTwentyfourHrMethodExpectedValues;
         
+        private clearstepParams mclearstepParams;
+        
+        private AssertAddMethod1ExpectedValues mAssertAddMethod1ExpectedValues;
+        
+        private AssertEditMethod1ExpectedValues mAssertEditMethod1ExpectedValues;
+        
         private UIMagicMemoWindow mUIMagicMemoWindow;
         
         private UIMagicMemoWindow1 mUIMagicMemoWindow1;
@@ -1645,9 +1706,9 @@ namespace GUITest
         public string UICommandInputBoxEditSendKeys = "{Enter}";
         
         /// <summary>
-        /// Type 'add task1 on 14/4/2015' in 'commandInputBox' text box
+        /// Type 'add task1 on 7/6 6:00' in 'commandInputBox' text box
         /// </summary>
-        public string UICommandInputBoxEditText1 = "add task1 on 14/4/2015";
+        public string UICommandInputBoxEditText1 = "add task1 on 7/6 6:00";
         
         /// <summary>
         /// Type '{Enter}' in 'commandInputBox' text box
@@ -1655,9 +1716,9 @@ namespace GUITest
         public string UICommandInputBoxEditSendKeys1 = "{Enter}";
         
         /// <summary>
-        /// Type 'add task2 on tuesday 18' in 'commandInputBox' text box
+        /// Type 'add task2 on next sunday 9 to 11' in 'commandInputBox' text box
         /// </summary>
-        public string UICommandInputBoxEditText2 = "add task2 on tuesday 18";
+        public string UICommandInputBoxEditText2 = "add task2 on next sunday 9 to 11";
         
         /// <summary>
         /// Type '{Enter}' in 'commandInputBox' text box
@@ -1665,9 +1726,9 @@ namespace GUITest
         public string UICommandInputBoxEditSendKeys2 = "{Enter}";
         
         /// <summary>
-        /// Type 'add task3 on next sun 7 - 9p' in 'commandInputBox' text box
+        /// Type 'add task3 by 18/5 9pm' in 'commandInputBox' text box
         /// </summary>
-        public string UICommandInputBoxEditText3 = "add task3 on next sun 7 - 9p";
+        public string UICommandInputBoxEditText3 = "add task3 by 18/5 9pm";
         
         /// <summary>
         /// Type '{Enter}' in 'commandInputBox' text box
@@ -1675,9 +1736,9 @@ namespace GUITest
         public string UICommandInputBoxEditSendKeys3 = "{Enter}";
         
         /// <summary>
-        /// Type 'add task4 on 6p to 10p' in 'commandInputBox' text box
+        /// Type 'add task4 from 9/5 to 8/6' in 'commandInputBox' text box
         /// </summary>
-        public string UICommandInputBoxEditText4 = "add task4 on 6p to 10p";
+        public string UICommandInputBoxEditText4 = "add task4 from 9/5 to 8/6";
         
         /// <summary>
         /// Type '{Enter}' in 'commandInputBox' text box
@@ -2013,9 +2074,9 @@ namespace GUITest
         public string UICommandInputBoxEditSendKeys = "{Enter}";
         
         /// <summary>
-        /// Type 'add meet ann for lunch on next fri 12' in 'commandInputBox' text box
+        /// Type 'add task1 on 8/6 12 to 14' in 'commandInputBox' text box
         /// </summary>
-        public string UICommandInputBoxEditText1 = "add meet ann for lunch on next fri 12";
+        public string UICommandInputBoxEditText1 = "add task1 on 8/6 12 to 14";
         
         /// <summary>
         /// Type '{Enter}' in 'commandInputBox' text box
@@ -2023,9 +2084,9 @@ namespace GUITest
         public string UICommandInputBoxEditSendKeys1 = "{Enter}";
         
         /// <summary>
-        /// Type 'add exam prep by 16/4 19:0' in 'commandInputBox' text box
+        /// Type 'edit 1 have lunch with amy' in 'commandInputBox' text box
         /// </summary>
-        public string UICommandInputBoxEditText2 = "add exam prep by 16/4 19:0";
+        public string UICommandInputBoxEditText2 = "edit 1 have lunch with amy";
         
         /// <summary>
         /// Type '{Enter}' in 'commandInputBox' text box
@@ -2033,9 +2094,9 @@ namespace GUITest
         public string UICommandInputBoxEditSendKeys2 = "{Enter}";
         
         /// <summary>
-        /// Type 'add Cs project by monday 23:59' in 'commandInputBox' text box
+        /// Type 'edit 1 on 9/7' in 'commandInputBox' text box
         /// </summary>
-        public string UICommandInputBoxEditText3 = "add Cs project by monday 23:59";
+        public string UICommandInputBoxEditText3 = "edit 1 on 9/7";
         
         /// <summary>
         /// Type '{Enter}' in 'commandInputBox' text box
@@ -2043,30 +2104,14 @@ namespace GUITest
         public string UICommandInputBoxEditSendKeys3 = "{Enter}";
         
         /// <summary>
-        /// Type 'edit 2 exam prep by 25/4 7p' in 'commandInputBox' text box
+        /// Type 'edit 1 on 12p to 3:30' in 'commandInputBox' text box
         /// </summary>
-        public string UICommandInputBoxEditText4 = "edit 2 exam prep by 25/4 7p";
+        public string UICommandInputBoxEditText4 = "edit 1 on 12p to 3:30";
         
         /// <summary>
         /// Type '{Enter}' in 'commandInputBox' text box
         /// </summary>
         public string UICommandInputBoxEditSendKeys4 = "{Enter}";
-        #endregion
-    }
-    
-    /// <summary>
-    /// Parameters to be passed into 'AssertEditMethod1'
-    /// </summary>
-    [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
-    public class AssertEditMethod1ExpectedValues
-    {
-        
-        #region Fields
-        /// <summary>
-        /// Verify that the 'Text' property of 'allTaskBox' text box equals 'Deadline Events        ///1. [11:59p, 13/4] Cs project        ///3. [7p, 25/4] exam prep        ///Friday, 24 Apr 2015        ///2. [12p-1p] meet ann for lunch        ///        ///'
-        /// </summary>
-        public string UIAllTaskBoxEditText = "Deadline Events\r1. [11:59p, 13/4] Cs project\r3. [7p, 25/4] exam prep\rFriday, 24 A" +
-            "pr 2015\r2. [12p-1p] meet ann for lunch\r\r";
         #endregion
     }
     
@@ -3087,6 +3132,57 @@ namespace GUITest
         #endregion
     }
     
+    /// <summary>
+    /// Parameters to be passed into 'clearstep'
+    /// </summary>
+    [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
+    public class clearstepParams
+    {
+        
+        #region Fields
+        /// <summary>
+        /// Type 'clear' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditText = "clear";
+        
+        /// <summary>
+        /// Type '{Enter}' in 'commandInputBox' text box
+        /// </summary>
+        public string UICommandInputBoxEditSendKeys = "{Enter}";
+        #endregion
+    }
+    
+    /// <summary>
+    /// Parameters to be passed into 'AssertAddMethod1'
+    /// </summary>
+    [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
+    public class AssertAddMethod1ExpectedValues
+    {
+        
+        #region Fields
+        /// <summary>
+        /// Verify that the 'Text' property of 'allTaskBox' text box equals 'Deadline Events        ///3. [9p][18/5] task3        ///Sunday, 26 Apr 2015        ///1. [9-11] task2        ///Saturday, 9 May 2015        ///2. [8/6] task4        ///Sunday, 7 Jun 2015        ///4. [6-7] task1        ///        ///'
+        /// </summary>
+        public string UIAllTaskBoxEditText = "Deadline Events\r3. [9p][18/5] task3\rSunday, 26 Apr 2015\r1. [9-11] task2\rSaturday," +
+            " 9 May 2015\r2. [8/6] task4\rSunday, 7 Jun 2015\r4. [6-7] task1\r\r";
+        #endregion
+    }
+    
+    /// <summary>
+    /// Parameters to be passed into 'AssertEditMethod1'
+    /// </summary>
+    [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
+    public class AssertEditMethod1ExpectedValues
+    {
+        
+        #region Fields
+        /// <summary>
+        /// Verify that the 'Text' property of 'allTaskBox' text box equals 'Thursday, 9 Jul 2015        ///1. [12p-3p] have lunch with amy        ///        ///'
+        /// </summary>
+        public string UIAllTaskBoxEditText = "Thursday, 9 Jul 2015\r1. [12p-3p] have lunch with amy\r\r";
+        #endregion
+    }
+    
     [GeneratedCode("Coded UITest Builder", "11.0.60315.1")]
     public class UIMagicMemoWindow : WinWindow
     {
@@ -3280,6 +3376,22 @@ namespace GUITest
                 return this.mUIDeletedlinenumbers12Window;
             }
         }
+        
+        public WinClient UIMagicMemoClient
+        {
+            get
+            {
+                if ((this.mUIMagicMemoClient == null))
+                {
+                    this.mUIMagicMemoClient = new WinClient(this);
+                    #region Search Criteria
+                    this.mUIMagicMemoClient.SearchProperties[WinControl.PropertyNames.Name] = "Magic Memo";
+                    this.mUIMagicMemoClient.WindowTitles.Add("Magic Memo");
+                    #endregion
+                }
+                return this.mUIMagicMemoClient;
+            }
+        }
         #endregion
         
         #region Fields
@@ -3312,6 +3424,8 @@ namespace GUITest
         private UICommandInputBoxWindow12 mUICommandInputBoxWindow12;
         
         private UIDeletedlinenumbers12Window mUIDeletedlinenumbers12Window;
+        
+        private WinClient mUIMagicMemoClient;
         #endregion
     }
     

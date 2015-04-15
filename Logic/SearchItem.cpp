@@ -67,9 +67,9 @@ public:
 		timePos *= 31;
 		timePos += date[0];
 		timePos *= 24;
-		timePos += time[1];
-		timePos *= 60;
 		timePos += time[0];
+		timePos *= 60;
+		timePos += time[1];
 
 		return timePos;
 	}
@@ -77,30 +77,34 @@ public:
 	bool checkIsClash(Item item1, Item item2) {
 		long startTimePos1 = getTimePos(item1.eventDate, item1.eventStartTime);
 		long endTimePos1;
-		if (dateIsSpecified(item1.eventDate) && !dateIsSpecified(item1.eventEndDate)) {
-			Item temp;
-			temp.eventEndDate[0] = item1.eventDate[0];
-			temp.eventEndDate[1] = item1.eventDate[1];
-			temp.eventEndDate[2] = item1.eventDate[2];
-			temp.eventEndTime[0] = item1.eventEndTime[0];
-			temp.eventEndTime[1] = item1.eventEndTime[1];
-			endTimePos1 =  getTimePos(temp.eventEndDate, temp.eventEndTime);
+		if (!dateIsSpecified(item1.eventEndDate)) {
+			if (item1.eventEndDate[0] == 0 && item1.eventEndDate[1] == 0) {
+				endTimePos1 =  getTimePos(item1.eventDate, item1.eventStartTime);
+			} else {
+				endTimePos1 =  getTimePos(item1.eventDate, item1.eventEndTime);
+			}
 		} else {
-			endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventEndTime);
+			if (item1.eventEndDate[0] == 0 && item1.eventEndDate[1] == 0) {
+				endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventStartTime);
+			} else {
+				endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventEndTime);
+			}
 		}
 
 		long startTimePos2 = getTimePos(item2.eventDate, item2.eventStartTime);
 		long endTimePos2;
-		if (dateIsSpecified(item2.eventDate) && !dateIsSpecified(item2.eventEndDate)) {
-			Item temp;
-			temp.eventEndDate[0] = item2.eventDate[0];
-			temp.eventEndDate[1] = item2.eventDate[1];
-			temp.eventEndDate[2] = item2.eventDate[2];
-			temp.eventEndTime[0] = item2.eventEndTime[0];
-			temp.eventEndTime[1] = item2.eventEndTime[1];
-			endTimePos2 =  getTimePos(temp.eventEndDate, temp.eventEndTime);
+		if (!dateIsSpecified(item2.eventEndDate)) {
+			if (item2.eventEndDate[0] == 0 && item2.eventEndDate[1] == 0) {
+				endTimePos2 =  getTimePos(item2.eventDate, item2.eventStartTime);
+			} else {
+				endTimePos2 =  getTimePos(item2.eventDate, item2.eventEndTime);
+			}
 		} else {
-			endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
+			if (item2.eventEndDate[0] == 0 && item2.eventEndDate[1] == 0) {
+				endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventStartTime);
+			} else {
+				endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
+			}
 		}
 
 		bool isDeadline1 = item1.isDeadline();

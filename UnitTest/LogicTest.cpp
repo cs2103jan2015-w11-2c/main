@@ -686,7 +686,7 @@ public:
 		DateTimeParser parse;
 		string input = ""; 
 		parse.calculateDateTime(input);
-		int expectedDate = 13;
+		int expectedDate = 15;
 		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
 		int expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
@@ -1336,7 +1336,7 @@ public:
 		int day;
 		int month;
 		int year;
-		int expectedDay = 13;
+		int expectedDay = 15;
 		int expectedMonth = 4;
 		int expectedYear = 2015;
 		parse.setDateFromWeekDay(-5, day, month, year);
