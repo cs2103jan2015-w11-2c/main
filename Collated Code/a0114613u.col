@@ -3,7 +3,7 @@
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\DateTimeParser.cpp
 	 */
 
 int DateTimeParser::mapWeekDay(string weekDay) {
@@ -123,14 +123,14 @@ void DateTimeParser::setDateFromWeekDay(int weekDayIndex, int& day, int& month, 
 	handleDayOverflow(day, month, year);
 }
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\DateTimeParser.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Item.cpp
 	 */
 
 string Item::dateToString() {
@@ -160,14 +160,14 @@ string Item::endDateToString() {
 	return oss.str();
 }
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Item.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Parser.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Parser.cpp
 	 */
 
 vector <string> Parser::getFragmentedEvent(){
@@ -362,14 +362,14 @@ bool Parser::getIsDateUpdatedFromFloat() {
 
 Parser::~Parser(void) {
 }
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Parser.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Parser.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\ControllerTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\ControllerTest.cpp
 	 */
 
 		TEST_METHOD(sortAlphabeticalTest) {
@@ -692,14 +692,14 @@ Parser::~Parser(void) {
 	};
 }
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\ControllerTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\ControllerTest.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	TEST_METHOD(setStringToParseTest) {
@@ -761,14 +761,14 @@ Parser::~Parser(void) {
 		string output = parse.getUserCommand();
 		Assert::AreEqual(expectedOutput, output);	
 	}
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	TEST_METHOD(isDateKeywordTest) {
@@ -929,7 +929,7 @@ Parser::~Parser(void) {
 		DateTimeParser parse;
 		string input = ""; 
 		parse.calculateDateTime(input);
-		int expectedDate = 13;
+		int expectedDate = 15;
 		Assert::AreEqual(expectedDate, parse.getItem().eventDate[0]);
 		int expectedMonth = 4;
 		Assert::AreEqual(expectedMonth, parse.getItem().eventDate[1]);
@@ -938,14 +938,14 @@ Parser::~Parser(void) {
 
 	}
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	TEST_METHOD(VerifyAllDateTimeTest1) {
@@ -979,14 +979,14 @@ Parser::~Parser(void) {
 		Assert::AreEqual(expectedEventEndDate2, parse.getItem().eventEndDate[2]);
 	}
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	/*test for the case where all three day/month/year are present*/
@@ -1039,14 +1039,14 @@ Parser::~Parser(void) {
 		Assert::AreEqual(expectedEventDate2, parse.getItem().eventDate[2]);
 	}
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	/*test for the case where the input string is a number string*/
@@ -1083,7 +1083,7 @@ Parser::~Parser(void) {
 
 	};
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 

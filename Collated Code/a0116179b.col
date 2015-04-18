@@ -3,7 +3,7 @@
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\AddItem.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\AddItem.cpp
 	 */
 
 
@@ -90,14 +90,14 @@ public:
 	}
 
 };
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\AddItem.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\AddItem.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\ClearItems.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\ClearItems.cpp
 	 */
 
 #include <iostream>
@@ -131,14 +131,14 @@ public:
 	}
 };
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\ClearItems.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\ClearItems.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Command.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\Command.cpp
 	 */
 
 
@@ -160,14 +160,14 @@ void Command::negateAction(vector<Item> &vectorStore) {
 string Command::getMessage() {
 	return "";
 }
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Command.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\Command.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Command.h
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\Command.h
 	 */
 
 
@@ -185,7 +185,7 @@ static const string SUCCESS_CLEARED = "All content deleted!";
 static const string SUCCESS_COPIED = "copied line: \"%s\" \n";
 static const string SUCCESS_SORTED_ALPHA = "All content sorted alphabetically";
 static const string SUCCESS_SORTED_CHRONO = "All content sorted chronologically";
-static const string SUCCESS_EDITED = "\"%s\" changed to \"%s\"!";
+static const string SUCCESS_EDITED = "Successful edit of line %d: \"%s\"!";
 static const string SUCCESS_SEARCH = "Search results for: \"%s\"";
 static const string SUCCESS_FILENAME_CHANGED = "Filename changed to \"%s\"";
 static const string SUCCESS_FILE_LOCATION_CHANGED = "File location changed to %s";
@@ -218,14 +218,14 @@ public:
 	virtual void negateAction(vector<Item> &);
 	virtual string getMessage();
 };
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Command.h
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\Command.h
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\commandInvoker.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\commandInvoker.cpp
 	 */
 
 
@@ -297,14 +297,14 @@ void CommandInvoker::redo(vector<Item> &vectorStore, string &message) {
 	
 	_redo->pop();
 }
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\commandInvoker.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\commandInvoker.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\commandInvoker.h
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\commandInvoker.h
 	 */
 
 
@@ -347,14 +347,14 @@ public:
 };
 
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\commandInvoker.h
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\commandInvoker.h
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\Controller.cpp
 	 */
 
 #include "easylogging++.h"
@@ -529,9 +529,9 @@ long Controller::getTimePos(const int date[3], const int time[2]) {
 	timePos *= 31;
 	timePos += date[0];
 	timePos *= 24;
-	timePos += time[1];
-	timePos *= 60;
 	timePos += time[0];
+	timePos *= 60;
+	timePos += time[1];
 
 	return timePos;
 }
@@ -548,30 +548,34 @@ bool Controller::checkDateIsUnset(const int date[3]) {
 bool Controller::checkIsClash(Item item1, Item item2) {
 	long startTimePos1 = getTimePos(item1.eventDate, item1.eventStartTime);
 	long endTimePos1;
-	if (!checkDateIsUnset(item1.eventDate) && checkDateIsUnset(item1.eventEndDate)) {
-		Item temp;
-		temp.eventEndDate[0] = item1.eventDate[0];
-		temp.eventEndDate[1] = item1.eventDate[1];
-		temp.eventEndDate[2] = item1.eventDate[2];
-		temp.eventEndTime[0] = item1.eventEndTime[0];
-		temp.eventEndTime[1] = item1.eventEndTime[1];
-		endTimePos1 =  getTimePos(temp.eventEndDate, temp.eventEndTime);
+	if (checkDateIsUnset(item1.eventEndDate)) {
+		if (item1.eventEndTime[0] == 0 && item1.eventEndTime[1] == 0) {
+			endTimePos1 =  getTimePos(item1.eventDate, item1.eventStartTime);
+		} else {
+			endTimePos1 =  getTimePos(item1.eventDate, item1.eventEndTime);
+		}
 	} else {
-		endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventEndTime);
+		if (item1.eventEndTime[0] == 0 && item1.eventEndTime[1] == 0) {
+			endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventStartTime);
+		} else {
+			endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventEndTime);
+		}
 	}
 
 	long startTimePos2 = getTimePos(item2.eventDate, item2.eventStartTime);
 	long endTimePos2;
-	if (!checkDateIsUnset(item2.eventDate) && checkDateIsUnset(item2.eventEndDate)) {
-		Item temp;
-		temp.eventEndDate[0] = item2.eventDate[0];
-		temp.eventEndDate[1] = item2.eventDate[1];
-		temp.eventEndDate[2] = item2.eventDate[2];
-		temp.eventEndTime[0] = item2.eventEndTime[0];
-		temp.eventEndTime[1] = item2.eventEndTime[1];
-		endTimePos2 =  getTimePos(temp.eventEndDate, temp.eventEndTime);
+	if (checkDateIsUnset(item2.eventEndDate)) {
+		if (item2.eventEndTime[0] == 0 && item2.eventEndTime[1] == 0) {
+			endTimePos2 =  getTimePos(item2.eventDate, item2.eventStartTime);
+		} else {
+			endTimePos2 =  getTimePos(item2.eventDate, item2.eventEndTime);
+		}
 	} else {
-		endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
+		if (item2.eventEndTime[0] == 0 && item2.eventEndTime[1] == 0) {
+			endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventStartTime);
+		} else {
+			endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
+		}
 	}
 
 	bool isDeadline1 = item1.isDeadline();
@@ -1183,14 +1187,14 @@ void Controller::setSleepTime(Item data) {
 	
 }
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\Controller.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\Controller.cpp
 	 */
 
 void Controller::markAsComplete() {
@@ -1251,14 +1255,14 @@ void Controller::restoreDefaultFileInfo() {
 Controller::~Controller(void) {
 }
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\Controller.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.h
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\Controller.h
 	 */
 
 
@@ -1495,14 +1499,14 @@ public:
 	~Controller(void);
 };
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.h
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\Controller.h
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\CopyItem.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\CopyItem.cpp
 	 */
 
 
@@ -1600,14 +1604,14 @@ public:
 	}
 };
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\CopyItem.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\CopyItem.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\DeleteItem.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\DeleteItem.cpp
 	 */
 
 
@@ -1755,14 +1759,14 @@ public:
 	}
 };
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\DeleteItem.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\DeleteItem.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\DisplayItems.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\DisplayItems.cpp
 	 */
 
 #include <iostream>
@@ -1821,14 +1825,14 @@ public:
 	}
 };
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\DisplayItems.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\DisplayItems.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\EditItem.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\EditItem.cpp
 	 */
 
 
@@ -1900,9 +1904,8 @@ public:
 			throw std::out_of_range(_message);
 		} else {
 			char buffer[1000];
-			sprintf_s(buffer, SUCCESS_EDITED.c_str(), 
-				vectorStore[_lineNumber - 1].toString().c_str(), 
-				_input.toString().c_str());
+			sprintf_s(buffer, SUCCESS_EDITED.c_str(), _lineNumber, 
+				vectorStore[_lineNumber - 1].event.c_str());
 			_message=buffer;
 			_editedItem = vectorStore[_lineNumber - 1];
 
@@ -2008,14 +2011,14 @@ public:
 	}
 };
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\EditItem.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\EditItem.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\RenameFile.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\RenameFile.cpp
 	 */
 
 #include <iostream>
@@ -2047,14 +2050,14 @@ public:
 
 	~RenameFile() {
 	}
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\RenameFile.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\RenameFile.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\SearchItem.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\SearchItem.cpp
 	 */
 
 #include <iostream>
@@ -2123,9 +2126,9 @@ public:
 		timePos *= 31;
 		timePos += date[0];
 		timePos *= 24;
-		timePos += time[1];
-		timePos *= 60;
 		timePos += time[0];
+		timePos *= 60;
+		timePos += time[1];
 
 		return timePos;
 	}
@@ -2133,30 +2136,34 @@ public:
 	bool checkIsClash(Item item1, Item item2) {
 		long startTimePos1 = getTimePos(item1.eventDate, item1.eventStartTime);
 		long endTimePos1;
-		if (dateIsSpecified(item1.eventDate) && !dateIsSpecified(item1.eventEndDate)) {
-			Item temp;
-			temp.eventEndDate[0] = item1.eventDate[0];
-			temp.eventEndDate[1] = item1.eventDate[1];
-			temp.eventEndDate[2] = item1.eventDate[2];
-			temp.eventEndTime[0] = item1.eventEndTime[0];
-			temp.eventEndTime[1] = item1.eventEndTime[1];
-			endTimePos1 =  getTimePos(temp.eventEndDate, temp.eventEndTime);
+		if (!dateIsSpecified(item1.eventEndDate)) {
+			if (item1.eventEndDate[0] == 0 && item1.eventEndDate[1] == 0) {
+				endTimePos1 =  getTimePos(item1.eventDate, item1.eventStartTime);
+			} else {
+				endTimePos1 =  getTimePos(item1.eventDate, item1.eventEndTime);
+			}
 		} else {
-			endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventEndTime);
+			if (item1.eventEndDate[0] == 0 && item1.eventEndDate[1] == 0) {
+				endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventStartTime);
+			} else {
+				endTimePos1 =  getTimePos(item1.eventEndDate, item1.eventEndTime);
+			}
 		}
 
 		long startTimePos2 = getTimePos(item2.eventDate, item2.eventStartTime);
 		long endTimePos2;
-		if (dateIsSpecified(item2.eventDate) && !dateIsSpecified(item2.eventEndDate)) {
-			Item temp;
-			temp.eventEndDate[0] = item2.eventDate[0];
-			temp.eventEndDate[1] = item2.eventDate[1];
-			temp.eventEndDate[2] = item2.eventDate[2];
-			temp.eventEndTime[0] = item2.eventEndTime[0];
-			temp.eventEndTime[1] = item2.eventEndTime[1];
-			endTimePos2 =  getTimePos(temp.eventEndDate, temp.eventEndTime);
+		if (!dateIsSpecified(item2.eventEndDate)) {
+			if (item2.eventEndDate[0] == 0 && item2.eventEndDate[1] == 0) {
+				endTimePos2 =  getTimePos(item2.eventDate, item2.eventStartTime);
+			} else {
+				endTimePos2 =  getTimePos(item2.eventDate, item2.eventEndTime);
+			}
 		} else {
-			endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
+			if (item2.eventEndDate[0] == 0 && item2.eventEndDate[1] == 0) {
+				endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventStartTime);
+			} else {
+				endTimePos2 =  getTimePos(item2.eventEndDate, item2.eventEndTime);
+			}
 		}
 
 		bool isDeadline1 = item1.isDeadline();
@@ -3015,14 +3022,14 @@ public:
 	}
 };
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\SearchItem.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\SearchItem.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Item.cpp
 	 */
 
 bool Item::isFloating() {
@@ -3043,7 +3050,7 @@ bool Item::isDeadline() {
 	return isDeadlineTask;
 }
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Item.cpp
 
 
 

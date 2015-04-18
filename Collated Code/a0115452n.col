@@ -3,7 +3,7 @@
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage\FileStorage.cpp
 	 */
 
 FileStorage::FileStorage(void) {
@@ -257,14 +257,14 @@ bool FileStorage::clearAutoCompleteFile() {
 	return true;
 }
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage\FileStorage.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage\FileStorage.cpp
 	 */
 
 bool FileStorage::restoreFileInfo() {
@@ -283,14 +283,14 @@ bool FileStorage::restoreFileInfo() {
 FileStorage::~FileStorage(void) {
 }
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage\FileStorage.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.h
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage\FileStorage.h
 	 */
 
 #include <assert.h>
@@ -417,14 +417,14 @@ public:
 };
 
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.h
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage\FileStorage.h
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Item.cpp
 	 */
 
 string Item::timeToString() {
@@ -503,14 +503,14 @@ string Item::toString() {
 }
 
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Item.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.h
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Item.h
 	 */
 
 
@@ -573,14 +573,14 @@ public:
 	void logItemValues();
 };
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.h
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Item.h
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\ControllerTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\ControllerTest.cpp
 	 */
 
 		TEST_METHOD(checkDateIsUnsetTest1) {
@@ -680,7 +680,7 @@ public:
 		}
 
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\ControllerTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\ControllerTest.cpp
 
 
 

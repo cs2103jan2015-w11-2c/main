@@ -1,0 +1,42 @@
+//@author: a0111951n-reused
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage\FileStorage.cpp
+	 */
+
+bool FileStorage::directoryExists(const string& dirName) {
+	DWORD ftyp = GetFileAttributesA(dirName.c_str());
+	if (ftyp == INVALID_FILE_ATTRIBUTES)
+		return false;  // wrong path!
+
+	if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
+		return true;   // valid directory!
+
+	return false;    // invalid directory!
+}
+
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage\FileStorage.cpp
+
+
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage\FileStorage.cpp
+	 */
+
+string FileStorage::getProgramFilePath() {
+	char buffer[MAX_PATH];
+	GetModuleFileName( NULL, buffer, MAX_PATH );
+	string::size_type pos = string( buffer ).find_last_of( "\\/" );
+	return string( buffer ).substr( 0, pos);
+}
+
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage\FileStorage.cpp
+
+
+
+
+

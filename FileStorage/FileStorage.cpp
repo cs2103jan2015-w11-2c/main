@@ -293,6 +293,7 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 	return true;
 }
 
+//@author A0111951N-reused
 bool FileStorage::directoryExists(const string& dirName) {
 	DWORD ftyp = GetFileAttributesA(dirName.c_str());
 	if (ftyp == INVALID_FILE_ATTRIBUTES)
@@ -304,6 +305,7 @@ bool FileStorage::directoryExists(const string& dirName) {
 	return false;    // invalid directory!
 }
 
+//@author A0111951N
 bool FileStorage::isFileEmpty(string file) {
 	string x;
 	ifstream inFile(file.c_str());
@@ -337,6 +339,7 @@ void FileStorage::updateFileConfigInfo() {
 	outFile.close();
 }
 
+//@author A0111951N-reused
 string FileStorage::getProgramFilePath() {
 	char buffer[MAX_PATH];
 	GetModuleFileName( NULL, buffer, MAX_PATH );

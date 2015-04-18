@@ -3,7 +3,7 @@
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage\FileStorage.cpp
 	 */
 
 bool FileStorage::changeFileName(string newFileName) {
@@ -46,16 +46,15 @@ bool FileStorage::changeFileLocation(string newFilePath) {
 	return true;
 }
 
-bool FileStorage::directoryExists(const string& dirName) {
-	DWORD ftyp = GetFileAttributesA(dirName.c_str());
-	if (ftyp == INVALID_FILE_ATTRIBUTES)
-		return false;  // wrong path!
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage\FileStorage.cpp
 
-	if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
-		return true;   // valid directory!
 
-	return false;    // invalid directory!
-}
+
+
+
+	/**
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage\FileStorage.cpp
+	 */
 
 bool FileStorage::isFileEmpty(string file) {
 	string x;
@@ -90,21 +89,14 @@ void FileStorage::updateFileConfigInfo() {
 	outFile.close();
 }
 
-string FileStorage::getProgramFilePath() {
-	char buffer[MAX_PATH];
-	GetModuleFileName( NULL, buffer, MAX_PATH );
-	string::size_type pos = string( buffer ).find_last_of( "\\/" );
-	return string( buffer ).substr( 0, pos);
-}
-
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\FileStorage\FileStorage.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\FileStorage\FileStorage.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\Controller.cpp
 	 */
 
 bool Controller::isNotificationsOn() {
@@ -219,14 +211,14 @@ void Controller::toggleNotification() {
 	}
 }
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\Controller.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\Controller.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\MoveFile.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\MoveFile.cpp
 	 */
 
 #include <iostream>
@@ -275,14 +267,14 @@ public:
 	}
 };
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\MoveFile.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\MoveFile.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\RenameFile.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\RenameFile.cpp
 	 */
 
 	void executeAction(FileStorage *outputFile) {
@@ -313,14 +305,14 @@ public:
 	}
 };
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\RenameFile.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\RenameFile.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Logic\SortAlphabetical.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\SortAlphabetical.cpp
 	 */
 
 #include <iostream>
@@ -395,14 +387,14 @@ public:
 	}
 };
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Logic\SortAlphabetical.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Logic\SortAlphabetical.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MagicMemoGUI.h
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\MagicMemo\MagicMemoGUI.h
 	 */
 
 #include <vector>
@@ -471,6 +463,8 @@ namespace MagicMemo {
 	private: System::Windows::Forms::PictureBox^  alarmPic;
 
 
+
+
 	private: System::ComponentModel::IContainer^  components;
 
 	private:
@@ -480,14 +474,14 @@ namespace MagicMemo {
 		/// </summary>
 
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MagicMemoGUI.h
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\MagicMemo\MagicMemoGUI.h
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MagicMemoGUI.h
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\MagicMemo\MagicMemoGUI.h
 	 */
 
 
@@ -496,8 +490,6 @@ namespace MagicMemo {
 			if(e->KeyCode == Keys::Enter) {
 				String^ inputText = commandInputBox->Text;
 				setGuiText(inputText);
-
-				magicManager->updateAutoCompleteSource(commandInputBox);
 			}
 
 			// Minimize via Ctrl + W
@@ -535,7 +527,7 @@ namespace MagicMemo {
 		}
 
 	private: 
-		// return focus to the intput textbox on keypress
+		// return focus to the input textbox on keypress
 		System::Void allTaskBox_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
 			if((e->KeyCode != Keys::Up) && (e->KeyCode != Keys::Down) && (e->KeyCode != Keys::Left) && (e->KeyCode != Keys::Right)) {
 				commandInputBox->Focus(); 
@@ -580,6 +572,8 @@ namespace MagicMemo {
 
 			magicManager->generateMessageOutputs(userInput);
 
+			clearCommandBox();
+
 			String^ successMessage = magicManager->getSuccessMessage();
 			successMessageLabel->Text = successMessage;
 
@@ -594,7 +588,7 @@ namespace MagicMemo {
 			magicManager->colorAllTaskBox(allTaskBox);
 			magicManager->colorTodayTaskBox(todayTaskBox);
 
-			clearCommandBox();
+			magicManager->updateAutoCompleteSource(commandInputBox);
 
 			checkExit(successMessage);
 		}
@@ -631,20 +625,20 @@ namespace MagicMemo {
 	private: System::Void programHeading_Click(System::Object^  sender, System::EventArgs^  e) {
 		    }
 
-	};
+};
 
 	// hide the command prompt window
 	#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"") 
 
 }
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MagicMemoGUI.h
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\MagicMemo\MagicMemoGUI.h
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MessageManager.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\MagicMemo\MessageManager.cpp
 	 */
 
 MessageManager::MessageManager(void) {
@@ -853,12 +847,11 @@ Void MessageManager::colorTextInTaskBox(
 Void MessageManager::updateAutoCompleteSource(TextBox^ inputBox) {
 	inputBox->AutoCompleteCustomSource->Clear();
 	vector<string> autoComplete = magicMemo->getInputBank();
-
-	for(unsigned int i = 0; i < autoComplete.size(); i++) {
+	unsigned int numItems = autoComplete.size();
+	for(unsigned int i = 0; i < numItems; i++) {
 		String^ temp = "search " + convertToSystemString(autoComplete[i]);
 		inputBox->AutoCompleteCustomSource->Add(temp);
 	}
-
 }
 
 Void MessageManager::toggleTaskBoxSize(RichTextBox^ allTaskBox, RichTextBox^ todayTaskBox, PictureBox^ pictureBox) {
@@ -1026,14 +1019,14 @@ string MessageManager::convertToStdString(String^ inputString) {
 	return msclr::interop::marshal_as< std::string >(inputString);
 }
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MessageManager.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\MagicMemo\MessageManager.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MessageManager.h
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\MagicMemo\MessageManager.h
 	 */
 
 
@@ -1162,14 +1155,14 @@ public:
 };
 
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\MagicMemo\MessageManager.h
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\MagicMemo\MessageManager.h
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTime.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\DateTime.cpp
 	 */
 
 
@@ -1273,14 +1266,14 @@ bool DateTime::isValidDate(int day, int month, int year) {
 bool DateTime::isValidTime(int hour, int minute) {
 	return (hour >= 0 && hour <= 24 && minute >= 0 && minute <= 60);
 }
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTime.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\DateTime.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTime.h
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\DateTime.h
 	 */
 
 
@@ -1344,14 +1337,14 @@ public:
 	bool isValidTime(int, int);
 };
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTime.h
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\DateTime.h
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\DateTimeParser.cpp
 	 */
 
 #include "DateTimeParser.h"
@@ -1565,14 +1558,14 @@ void DateTimeParser::extractDateTime(string inputArray[], int arrSize) {
 	verifyAllDateTime();
 }
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\DateTimeParser.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\DateTimeParser.cpp
 	 */
 
 void DateTimeParser::handleNextWeekDay(int& day, int& month, int& year) {
@@ -1761,7 +1754,7 @@ void DateTimeParser::verifyItemDate(int& day, int& month, int& year) {
 		day = 0;
 		month = 0;
 		year = 0;
-		throw std::out_of_range(ERROR_INVALID_DATE_INPUT);
+		//throw std::out_of_range(ERROR_INVALID_DATE_INPUT);
 	}
 }
 
@@ -1875,7 +1868,7 @@ void DateTimeParser::verifyStartEnd(
 		}
 
 		if(isError) {
-			throw std::out_of_range(ERROR_INVALID_END_TIME);
+			//throw std::out_of_range(ERROR_INVALID_END_TIME);
 		}
 }
 
@@ -1912,14 +1905,14 @@ bool DateTimeParser::getEndTimeAdjusted() {
 	return _isEndTimeAdjusted;
 }
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\DateTimeParser.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.h
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\DateTimeParser.h
 	 */
 
 
@@ -2118,14 +2111,14 @@ public:
 };
 
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\DateTimeParser.h
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\DateTimeParser.h
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Item.cpp
 	 */
 
 const string Item::MESSAGE_UNDATED_TASK = "Floating";
@@ -2200,14 +2193,14 @@ string Item::getPM(int hour) {
 	}
 }
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Item.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Item.cpp
 	 */
 
 void Item::logItemValues() {
@@ -2223,14 +2216,14 @@ void Item::logItemValues() {
 	LOG(INFO) << eventEndTime[0];
 	LOG(INFO) << eventEndTime[1];
 }
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Item.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Item.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Parser.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Parser.cpp
 	 */
 
 #include "Parser.h"
@@ -2457,14 +2450,14 @@ void Parser::assertItemValues() {
 }
 
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Parser.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Parser.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Parser.h
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Parser.h
 	 */
 
 
@@ -2560,14 +2553,14 @@ public:
 
 	~Parser(void);
 };
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\Parser\Parser.h
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\Parser\Parser.h
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	TEST_METHOD(ExtractUserCommandTest1) {
@@ -2655,14 +2648,14 @@ public:
 	}
 
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	TEST_METHOD(extractDateAndTimeTest) {
@@ -2910,14 +2903,14 @@ public:
 		Assert::AreEqual(isExpectedFloating,parse.checkIsFloating(item));
 	}
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	TEST_METHOD(clearStartAndEndDateTest1){
@@ -2959,14 +2952,14 @@ public:
 
 	TEST_CLASS(DateTimeParserTest) {
 public:
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	/* boundary test for end time less than start time */
@@ -3030,14 +3023,14 @@ public:
 
 
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	TEST_METHOD(resetItemDateTimeTest) {
@@ -3067,14 +3060,14 @@ public:
 
 	}
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	TEST_METHOD(extractDateTimeTest1) {
@@ -3536,14 +3529,14 @@ public:
 		Assert::AreEqual(expectedEndMinute, endMin);
 	}
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	TEST_METHOD(is12HourTest) {
@@ -3615,14 +3608,14 @@ public:
 		Assert::AreEqual(expected, minute);
 	}
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	TEST_METHOD(VerifyItemDateTest) {
@@ -3658,14 +3651,14 @@ public:
 		Assert::AreEqual(expected, year);
 	}
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	TEST_METHOD(VerifyItemTimeTest) {
@@ -3726,14 +3719,14 @@ public:
 
 	}
 
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 
 
 
 	/**
-	 * origin: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	 * origin: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 	 */
 
 	TEST_CLASS(DateTimeTest) {
@@ -3881,7 +3874,7 @@ public:
 	};
 
 }
-	// End of segment: C:\Users\CXY\Desktop\Github\W11-2C\UnitTest\LogicTest.cpp
+	// End of segment: C:\Users\CXY\Desktop\GitHub\W11-2C\UnitTest\LogicTest.cpp
 
 
 
